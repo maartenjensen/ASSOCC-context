@@ -1,0 +1,421 @@
+__includes ["macro_economic_model.nls" "economy/subsidies.nls" "economy/stock_management.nls" "economy/transaction.nls"]
+
+globals[
+  government-reserve-of-capital
+  total-amount-of-transaction-for-this-tick
+  goods-production-of-total-system
+]
+
+;;this function puts altogether some code lying in the wrong place in the code
+to reset-economy-measurements
+  set total-amount-of-transaction-for-this-tick 0
+  
+  set goods-production-of-total-system 0
+  
+  ask people [   
+    set my-current-income 0
+    set my-target-amount-of-capital precision (my-target-amount-of-capital + financial-stability-learning-rate * (my-amount-of-capital - my-target-amount-of-capital) ) 12]
+  
+  ;;weird, shouldn't people expected to be pain only when they plan on working?
+  ;;e.g. lower pay when working from home; or no/less pay when staying at home taking care of a child? (holiday leave)
+  ask people [
+    if is-working-day-for-me? and member? slice-of-the-day ["afternoon" "evening"] [
+      set my-expected-income my-current-income
+    ]
+  ]
+  
+  ask gathering-points [set current-profit 0]
+end
+
+to run-economic-cycle
+;  run-macro-economics
+  perform-payment-of-fixed-costs
+  perform-trades-between-gathering-points
+  perform-government-actions
+end
+
+; from the perspective of agents, so get instead of pay.
+to get-salary
+ let amount-to-earn workers-wages
+          
+          let amount-earned min (list amount-to-earn max (list [amount-of-capital] of my-work 0))
+          perform-transaction self my-work (list "salary" amount-earned) (list "nothing")
+          
+          if government-pays-wages?
+          [
+            if amount-earned < amount-to-earn
+            [
+              let worker-subsidy ratio-of-wage-paid-by-the-government * (amount-to-earn - amount-earned)
+              perform-transaction self "government" (list "subsidy" worker-subsidy) (list "nothing")
+            ]
+          ]
+end
+
+to perform-payment-of-fixed-costs
+  ask non-essential-shops
+  [
+    if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me?
+    [
+      ; If the shop is closed, the workers cannot go there to get payed. Therefore, this code makes sure that in those cases, they get payed
+      ifelse not is-accessible?
+      [
+        
+        ask hired-workers
+        [
+          get-salary
+        ]
+      ]
+      ;else, check all agents that are sick and pay them
+      [
+        ask hired-workers with [is-believing-to-be-infected? and not is-working?] [get-salary]
+      ]
+    ]
+  ]
+  
+  ask essential-shops
+  [
+    if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me?
+    [
+      ask hired-workers with [is-believing-to-be-infected? and not is-working?] [get-salary]
+    ]
+  ]
+  
+end
+
+to-report bankrupt-businesses
+  report businesses with [is-bankrupt?]
+end
+
+to-report is-bankrupt?
+  report amount-of-capital = 0
+end
+
+
+to-report businesses
+  report (turtle-set essential-shops non-essential-shops workplaces)
+end
+
+to perform-trades-between-gathering-points
+  
+  let total-amount-of-goods-available-in-workplaces sum [stock-of-goods] of workplaces
+  let virtual-total-amount-of-goods-available-in-workplaces total-amount-of-goods-available-in-workplaces
+  let virtual-total-amount-of-goods-available-in-workplaces-converted-to-capital virtual-total-amount-of-goods-available-in-workplaces * unit-price-of-goods
+  let actual-amount-of-stocks-bought 0
+  
+  ;Depricated?
+  ;refresh-stocks-of-essential-shops
+  
+  ;essential-shop
+  let total-capital-available-in-essential-shops-to-buy-goods 0
+  ask essential-shops
+  [
+    let capital-available-to-buy-goods amount-of-capital - max-amount-of-capital-to-retain
+    set capital-available-to-buy-goods max (list capital-available-to-buy-goods 0)
+    set total-capital-available-in-essential-shops-to-buy-goods total-capital-available-in-essential-shops-to-buy-goods + capital-available-to-buy-goods
+  ]
+  
+  let total-capital-to-be-spent-by-essential-shops min (list total-capital-available-in-essential-shops-to-buy-goods virtual-total-amount-of-goods-available-in-workplaces-converted-to-capital)
+  
+  if total-capital-to-be-spent-by-essential-shops > 0
+  [
+    ask essential-shops
+    [
+      let capital-available-to-buy-goods amount-of-capital - max-amount-of-capital-to-retain
+      set capital-available-to-buy-goods max (list capital-available-to-buy-goods 0)
+      
+      let amount-charged capital-available-to-buy-goods / total-capital-available-in-essential-shops-to-buy-goods * total-capital-to-be-spent-by-essential-shops
+      let stock-bought (floor amount-charged / unit-price-of-goods)
+      set stock-bought min (list (max-stock-of-goods-in-a-shop - stock-of-goods) stock-bought)
+      set amount-charged stock-bought * unit-price-of-goods
+      
+      set amount-of-capital amount-of-capital - amount-charged
+      set current-profit current-profit - amount-charged
+      set stock-of-goods stock-of-goods + stock-bought
+      set actual-amount-of-stocks-bought actual-amount-of-stocks-bought + stock-bought
+    ]
+  ]
+  
+  ;updating "virtual" amount of goods available in workplaces
+  set virtual-total-amount-of-goods-available-in-workplaces virtual-total-amount-of-goods-available-in-workplaces - actual-amount-of-stocks-bought
+  set virtual-total-amount-of-goods-available-in-workplaces-converted-to-capital virtual-total-amount-of-goods-available-in-workplaces * unit-price-of-goods
+  
+  ;non-essential-shop
+  let total-capital-available-in-non-essential-shops-to-buy-goods 0
+  ask non-essential-shops
+  [
+    let capital-available-to-buy-goods amount-of-capital - max-amount-of-capital-to-retain
+    set capital-available-to-buy-goods max (list capital-available-to-buy-goods 0)
+    set total-capital-available-in-non-essential-shops-to-buy-goods total-capital-available-in-non-essential-shops-to-buy-goods + capital-available-to-buy-goods
+  ]
+  
+  let total-capital-to-be-spent-by-non-essential-shops min (list total-capital-available-in-non-essential-shops-to-buy-goods virtual-total-amount-of-goods-available-in-workplaces-converted-to-capital)
+  
+  if total-capital-to-be-spent-by-non-essential-shops > 0
+  [
+    ask non-essential-shops
+    [
+      let capital-available-to-buy-goods amount-of-capital - max-amount-of-capital-to-retain
+      set capital-available-to-buy-goods max (list capital-available-to-buy-goods 0)
+      let amount-charged capital-available-to-buy-goods / total-capital-available-in-non-essential-shops-to-buy-goods * total-capital-to-be-spent-by-non-essential-shops
+      
+      let stock-bought (floor amount-charged / unit-price-of-goods)
+      set stock-bought min (list (max-stock-of-goods-in-a-shop - stock-of-goods) stock-bought)
+      set amount-charged stock-bought * unit-price-of-goods
+      
+      set amount-of-capital amount-of-capital - amount-charged
+      set current-profit current-profit - amount-charged
+      set stock-of-goods stock-of-goods + stock-bought
+      set actual-amount-of-stocks-bought actual-amount-of-stocks-bought + stock-bought
+    ]
+  ]
+  
+  ;workplace
+  let total-capital-spent-by-all-shops actual-amount-of-stocks-bought * unit-price-of-goods
+  set total-amount-of-transaction-for-this-tick total-amount-of-transaction-for-this-tick + total-capital-spent-by-all-shops
+  
+  if total-capital-spent-by-all-shops > 0
+  [
+    ask workplaces
+    [
+      let capital-income stock-of-goods / total-amount-of-goods-available-in-workplaces * total-capital-spent-by-all-shops
+      set amount-of-capital amount-of-capital + capital-income
+      set current-profit current-profit + capital-income
+      set stock-of-goods stock-of-goods - capital-income / unit-price-of-goods
+    ]
+  ]
+end
+
+to perform-the-effect-of-working [workr place]  
+  ifelse is-person? workr and is-gathering-point? place
+    [
+      if [is-workplace?] of place
+      [
+        let goods-produced goods-produced-by-work-performed
+        
+        if [is-at-home?] of workr
+        [
+          set goods-produced goods-produced * productivity-at-home
+        ]
+        
+        ask place [
+          set stock-of-goods stock-of-goods + goods-produced 
+          export-surplus-if-any
+        ]
+        set goods-production-of-total-system goods-production-of-total-system + goods-produced
+      ]
+  ]
+  [error (sentence workr place)]
+end
+
+
+to export-surplus-if-any
+  if stock-of-goods >  my-max-stock-of-goods
+          [
+            ;;overstock => export = make profit & give money to the state + instant disappear
+            let excedent stock-of-goods - my-max-stock-of-goods
+            let price-sold unit-price-of-goods * excedent * export-value-decay-factor
+            let vat export-value-decay-factor * 0.2
+            set amount-of-capital amount-of-capital + price-sold
+            pay-taxes-to-the-governement vat
+            set stock-of-goods my-max-stock-of-goods
+  ]
+end
+
+to increase-capital-by [val]
+  
+  if is-person? self
+  [
+    set my-amount-of-capital my-amount-of-capital + val
+    set my-current-income my-current-income + val
+  ]
+  
+  if is-gathering-point? self
+  [
+    set amount-of-capital amount-of-capital + val
+    set current-profit current-profit + val
+  ]
+  
+  if is-macro-sector? self
+  [
+    set amount-of-capital amount-of-capital + val
+  ]
+  
+  if is-central-bank? self
+  [
+    set reserve-of-capital reserve-of-capital + val
+  ]
+end
+
+to increase-credit-by [val]
+  if is-central-bank? self
+  [
+    set total-credit total-credit + val
+  ]
+end
+
+to increase-debt-by [val]
+  if is-macro-sector? self
+  [
+    set debt-with-central-bank debt-with-central-bank + val
+  ]
+end
+
+
+to perform-loan-transfer [a1 a2 amount]
+  ;amount > 0: a1 grants a loan, a2 get a loan
+  ;amount < 0: a1 receives payment of a debt, a2 pays a debt
+  
+  ask a1 [increase-capital-by (- amount)]
+  ask a2 [increase-capital-by amount]
+  
+  ask a1 [increase-credit-by amount]
+  ask a2 [increase-debt-by amount]
+end
+
+
+to-report my-tax-ratio
+  if is-essential-shop? [report ratio-tax-on-essential-shops]
+  if is-non-essential-shop? [report ratio-tax-on-non-essential-shops]
+  if is-workplace? [report ratio-tax-on-workplaces]
+end
+
+to-report taxable-economic-actors
+  report businesses
+end
+to perform-government-actions
+  ;collect taxes
+  
+  ;;not good, taxes are about income, not profit
+  ask taxable-economic-actors with [current-profit > 0]
+  [
+    let tax-amount current-profit * my-tax-ratio
+    pay-taxes-to-the-governement tax-amount 
+  ]
+  
+  ;;not good, taxes are about income, not profit
+  ask workers with [my-current-income > 0]
+  [
+      let tax-amount my-current-income * ratio-tax-on-workers  
+      pay-taxes-to-the-governement tax-amount 
+  ]
+  
+
+  allocate-personal-subsidies
+  
+  ask economic-activities-funded-by-the-government with [ my-default-available-liquidities > amount-of-capital]
+  [
+    let missing-money my-default-available-liquidities - amount-of-capital
+    perform-transaction self "government" (to-subsidy-counterpart  missing-money) no-counterpart
+  ]
+end
+
+to-report my-wealth-price-increase-factor
+
+  let default-wealth-for-scaling 70
+  let minimum-for-survival default-wealth-for-scaling / 3
+  let res (my-amount-of-capital + minimum-for-survival) / default-wealth-for-scaling
+  ;let res (my-amount-of-capital + 23) / 70
+
+  
+  ;report res
+  ;Hack to fix way too high price increases, 2 is still arbitrairy but should be better.
+  report min (list res 2)
+;if you have no money, you pay "half of the price" of what a normal person would get
+  ; if you get 70, you pay a bit more than average
+end
+
+to-report my-default-available-liquidities
+  report 250
+end
+
+to-report economic-activities-funded-by-the-government 
+  report (turtle-set schools hospitals universities)
+end
+
+to-report #adult-people-out-of-capital
+  report count people with [age != "young" and my-amount-of-capital <= 0]
+end
+
+to-report #retired-out-of-capital
+  report count people with [age = "retired" and my-amount-of-capital <= 0]
+end
+
+to-report #workers-out-of-capital
+  report count people with [age = "worker" and my-amount-of-capital <= 0]
+end
+
+to-report #students-out-of-capital
+  report count people with [age = "student" and my-amount-of-capital <= 0]
+end
+
+to-report #essential-shops-out-of-capital
+  report count gathering-points with [gathering-type = "essential-shop" and amount-of-capital <= 0]
+end
+
+to-report #non-essential-shops-out-of-capital
+  report count gathering-points with [gathering-type = "non-essential-shop" and amount-of-capital <= 0]
+end
+
+to-report #universities-out-of-capital
+  report count gathering-points with [gathering-type = "university" and amount-of-capital <= 0]
+end
+
+to-report #hospitals-out-of-capital
+  report count gathering-points with [gathering-type = "hospital" and amount-of-capital <= 0]
+end
+
+to-report #workplaces-out-of-capital
+  report count gathering-points with [gathering-type = "workplace" and amount-of-capital <= 0]
+end
+
+to-report #schools-out-of-capital
+  report count gathering-points with [gathering-type = "school" and amount-of-capital <= 0]
+end
+
+to-report velocity-of-money-in-total-system
+  report total-amount-of-transaction-for-this-tick / total-amount-of-capital-in-the-system
+end
+
+to-report is-in-poverty?
+  report price-of-rations-in-essential-shops * days-of-rations-bought > my-amount-of-capital
+end
+
+to-report gathering-points-total-amount-of-capital
+  report sum [amount-of-capital] of gathering-points
+end
+
+to-report essential-shop-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "essential-shop"]
+end
+
+to-report non-essential-shop-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "non-essential-shop"]
+end
+
+to-report university-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "university"]
+end
+
+to-report hospital-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "hospital"]
+end
+
+to-report school-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "school"]
+end
+
+to-report workplace-amount-of-capital
+  report sum [amount-of-capital] of gathering-points with [gathering-type = "workplace"]
+end
+
+to-report essential-shop-amount-of-goods-in-stock
+  report sum [stock-of-goods] of gathering-points with [gathering-type = "essential-shop"]
+end
+
+to-report non-essential-shop-amount-of-goods-in-stock
+  report sum [stock-of-goods] of gathering-points with [gathering-type = "non-essential-shop"]
+end
+
+to-report workplace-amount-of-goods-in-stock
+  report sum [stock-of-goods] of gathering-points with [gathering-type = "workplace"]
+end
