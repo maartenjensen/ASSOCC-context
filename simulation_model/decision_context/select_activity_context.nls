@@ -1,0 +1,19 @@
+
+to context-select-activity
+  let c-a (list my-home "rest" true)
+  ;my-preferred-available-activity-descriptor
+  
+  ;;select if migration takes over and people move around
+  if (migration? and random-float 1 < probability-going-abroad) [
+    set c-a (list away-gathering-point travelling-motive false)
+  ]
+  
+  let loc location-of c-a
+  select-activity-wtf? loc
+  set current-activity loc
+  set current-motivation motive-of c-a
+  set chosen-available-activity-descriptor c-a
+  set is-I-apply-social-distancing? social-distancing-of c-a
+  if current-activity != away-gathering-point and current-motivation = travelling-motive [error "wrong place while travelling"]
+  if log-violating-quarantine? [ process-quarantine-violation-event]
+end

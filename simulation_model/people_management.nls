@@ -159,6 +159,8 @@ people-own [
   #days-I-should-remain-in-self-quarantining
   events-to-process
   deliberation-cost
+  
+  chosen-available-activity-descriptor
 ]
 
 to update-people-epistemic-status
