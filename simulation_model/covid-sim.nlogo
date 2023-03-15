@@ -15,6 +15,7 @@ globals [
   away-gathering-point
   #who-became-sick-while-travelling-locally
   import-scenario-name
+  global-deliberation-time
 ]
 
 to go
@@ -26,7 +27,10 @@ to go
   update-within-agent-disease-status
   update-people-mind
 
+  ; timer is reset in perform-people-activities
   perform-people-activities
+  ; set global-deliberation-time timer
+
   run-economic-cycle
   update-display
   inspect-agents
@@ -43,7 +47,7 @@ to go-profile
   profiler:reset
   profiler:start
 
-  repeat 10 [go]
+  repeat 50 [go]
   export-profiling
 end
 
@@ -497,9 +501,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-910
+905
 600
-1159
+1154
 633
 probability-school-personel
 probability-school-personel
@@ -512,9 +516,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-907
+905
 636
-1155
+1153
 669
 probability-university-personel
 probability-university-personel
@@ -527,9 +531,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-910
+907
 673
-1155
+1152
 706
 probability-shopkeeper
 probability-shopkeeper
@@ -3703,10 +3707,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-836
-240
-999
-273
+839
+229
+1002
+262
 clear-log-on-setup?
 clear-log-on-setup?
 0
@@ -4100,10 +4104,10 @@ is-quarantining-for-14-days-people-in-contact-with-a-sick-person-track-and-trace
 -1000
 
 SWITCH
-832
-277
-984
-310
+835
+266
+987
+299
 inspect-to-file?
 inspect-to-file?
 1
@@ -4250,6 +4254,41 @@ TEXTBOX
 Context-sensitive deliberation
 16
 125.0
+1
+
+PLOT
+1171
+500
+1558
+650
+Global deliberation time
+NIL
+NIL
+0.0
+10.0
+0.0
+0.001
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot global-deliberation-time"
+
+BUTTON
+1042
+272
+1127
+305
+NIL
+go-profile
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
 1
 
 @#$#@#$#@

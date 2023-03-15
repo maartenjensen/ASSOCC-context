@@ -317,10 +317,13 @@ to perform-people-activities
     ]
   ]
   
+  reset-timer
   ask people [
     if not is-being-away? current-activity and current-motivation = travelling-motive [error "wrong place while travelling"]
+    ; ===============================================================================
     ; Context: use original need-based deliberation or context-sensitive deliberation
     ifelse context-sensitive-deliberation? [context-select-activity][select-activity]
+    
     if not is-being-away? current-activity and current-motivation = travelling-motive [error (sentence "wrong place while travelling" current-activity current-motivation)]
 
     if is-currently-in-sitation-of-active-dependence? and current-person-I-depend-on != nobody
@@ -329,6 +332,7 @@ to perform-people-activities
       set current-motivation follow-person-in-charge-motive
     ]
   ]
+  set global-deliberation-time timer
 
   travelling-to-activity-phase
   

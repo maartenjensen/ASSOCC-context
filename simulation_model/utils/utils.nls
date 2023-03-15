@@ -31,7 +31,7 @@ end
 
 to export-profiling
   profiler:stop
-  let _fname "report.log"
+  let _fname "report.csv"
   carefully [file-delete _fname] []
   file-open _fname
   file-print profiler:report
