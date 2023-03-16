@@ -20,23 +20,40 @@ end
 
 to-report contextual-deliberation-select-activity
   
+  let actions []
   let activity (list my-home "rest" false)
-
-  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me?
+  ifelse (slice-of-the-day = "night")
+  [ set actions (lput (list my-home "rest" false) actions) ] 
+  [
+    if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me?
     [
-      if is-child? [set activity (list my-school "mandatory" false)]
+      if is-child? [set actions (lput (list my-school "mandatory" false) actions)]
       if is-student?
       [
-        set activity (list my-university "learning" false)
+        set actions (lput (list my-university "learning" false) actions) 
       ]
 
       if is-worker? [
-        if is-technically-feasible-to-work-from-home? and I-know-of-working-from-home? [
-          set activity (list my-home work-motive false)
-        ]
+        ; by default work from work!
+        ;if is-technically-feasible-to-work-from-home? and I-know-of-working-from-home? [
+        ;  set actions (lput (list my-home work-motive false) actions)
+        ;]
         
-        set activity (list my-work work-motive false)
+        set actions (lput (list my-work work-motive false) actions)
       ]
+    ]
   ]
-  report activity
+  
+  if length actions = 1 
+  [ report first actions ]
+  if length actions > 1
+  [ 
+    print(actions)
+    report first actions
+  ]
+  
+  ; Do the full need based deliberation
+  report my-preferred-available-activity-descriptor
+  
 end
+
