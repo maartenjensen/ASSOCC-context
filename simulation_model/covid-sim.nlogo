@@ -1047,7 +1047,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-1
+0
 1
 -1000
 
@@ -1472,7 +1472,7 @@ SWITCH
 80
 static-seed?
 static-seed?
-1
+0
 1
 -1000
 
@@ -1988,7 +1988,7 @@ INPUTBOX
 631
 626
 #households
-100.0
+90.0
 1
 0
 Number
@@ -5642,7 +5642,7 @@ load-scenario-specific-parameter-settings</setup>
       <value value="0.8"/>
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="#random-seed" first="1" step="1" last="30"/>
+    <steppedValueSet variable="#random-seed" first="1" step="1" last="2"/>
     <enumeratedValueSet variable="is-tracking-app-testing-recursive?">
       <value value="true"/>
     </enumeratedValueSet>

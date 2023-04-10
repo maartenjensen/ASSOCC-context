@@ -172,8 +172,6 @@ to-report just-learned-I-am-infected-event
 end
 
 
-
-
 to update-people-mind
   update-people-epistemic-status
   

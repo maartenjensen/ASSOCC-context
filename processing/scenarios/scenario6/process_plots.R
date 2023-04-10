@@ -1,10 +1,14 @@
 rm(list=ls())
 
+# Run Netlogo Behaviourspace
+# Export as Spreadsheet or table?
+
 #args <- commandArgs(trailingOnly=TRUE)
 args <- commandArgs(trailingOnly=TRUE)
+args <- "D:/SimulationToolkits/ASSOCC-context/processing/scenarios/scenario6"
 #args <- "C:/Users/Fabian/Documents/GitHub/COVID-sim/processing/scenarios/scenario6"
 #args <- "C:/Users/Fabian/Documents/GitHub/COVID-sim/processing/scenarios/scenario6"
-args <- "C:/Users/loisv/Desktop/git/github_0912/COVID-sim/processing/scenarios/scenario6"
+#args <- "C:/Users/loisv/Desktop/git/github_0912/COVID-sim/processing/scenarios/scenario6"
 #args <- "/Users/christiankammler/Documents/R/COVID-sim/processing/scenarios/scenario6"
 #args <-"D:/absoluteNewCVOID/COVID-sim/processing/scenarios/scenario6"
 if (length(args)==0) {
