@@ -1,0 +1,37 @@
+; Time and such
+to-report time-morning
+  report "morning"
+end
+
+to-report time-afternoon
+  report "afternoon"
+end
+
+to-report time-evening
+  report "evening"
+end
+
+to-report time-night
+  report "night"
+end
+
+to-report get-time
+  let time (ticks mod 4)
+  if time = 0 [ report time-morning ]
+  if time = 1 [ report time-afternoon ]
+  if time = 2 [ report time-evening ]
+  if time = 3 [ report time-night ]
+end
+
+to-report time-workday
+  report "workday"
+end
+
+to-report time-weekday
+  report "weekendday"
+end
+
+; TODO make this dependent on the time
+to-report get-day-type
+  report time-workday
+end

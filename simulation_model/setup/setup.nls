@@ -336,7 +336,7 @@ to setup-activities
   set universities (turtle-set)
   set public-leisure-points (turtle-set)
   set private-leisure-points (turtle-set)
-
+ 
   create-gathering-points #schools-gp [
     set schools (turtle-set schools self)
     set hired-workers (turtle-set)

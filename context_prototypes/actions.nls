@@ -1,0 +1,40 @@
+; The actions
+to-report action-hospital
+  report "hospital"
+end
+
+to-report action-workplace
+  report "workplace"
+end
+
+to-report action-work-at-home
+  report "home-work"
+end
+
+to-report action-be-at-home
+  report "home"
+end
+
+to-report action-public-leisure
+  report "public-leisure"
+end
+
+to-report action-private-leisure
+  report "private-leisure"
+end
+
+to-report action-school
+  report "school"
+end
+
+to-report action-university
+  report "university"
+end
+
+to-report action-essential-shop
+  report "essential-shop"
+end
+
+to-report action-non-essential-shop
+  report "non-essential-shop"
+end
