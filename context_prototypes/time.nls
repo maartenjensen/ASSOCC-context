@@ -15,7 +15,7 @@ to-report time-night
   report "night"
 end
 
-to-report get-time
+to-report get-time-of-day
   let time (ticks mod 4)
   if time = 0 [ report time-morning ]
   if time = 1 [ report time-afternoon ]
@@ -27,11 +27,16 @@ to-report time-workday
   report "workday"
 end
 
-to-report time-weekday
+to-report time-weekendday
   report "weekendday"
 end
 
-; TODO make this dependent on the time
+to-report get-day-of-week
+  report ((ticks - (ticks mod 4)) / 4) mod 7
+end
+
 to-report get-day-type
-  report time-workday
+  ifelse get-day-of-week < 5
+  [ report time-workday ]
+  [ report time-weekendday ]
 end

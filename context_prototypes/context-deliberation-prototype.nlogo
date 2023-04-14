@@ -1,19 +1,45 @@
-__includes [ "actions.nls" "time.nls" ]
+__includes [ "actions.nls" "time.nls" "ages.nls" ]
 extensions [ table ]
+
+turtles-own
+[
+  age
+  table-typical-actions
+]
 
 ; Make this sorted on alphabet???
 to-report context-to-string
   report ""
 end
 
-to-report get-typical-actions [context]
-  let typical-actions table:make
-  table:put typical-actions ["morning" "workday"] (list action-workplace)
-  table:put typical-actions ["afternoon" "workday"] (list action-workplace)
-  table:put typical-actions ["evening" "workday"] (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop)
-  table:put typical-actions ["night" "workday"] (list action-be-at-home)
-  ifelse table:has-key? typical-actions context
-  [ report table:get typical-actions context ]
+to set-table-typical-actions
+  let free-time-activities (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop)
+  set table-typical-actions table:make
+  table:put table-typical-actions (sort-by < (list time-evening time-workday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-night time-workday)) (list action-be-at-home)
+  table:put table-typical-actions (sort-by < (list time-morning time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-afternoon time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-evening time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-night time-weekendday)) (list action-be-at-home)
+end
+
+to add-table-typical-actions-age
+
+  let actions-lists []
+  if age = young-age   [ set actions-lists (list action-school) ]
+  if age = student-age [ set actions-lists (list action-university) ]
+  if age = worker-age  [ set actions-lists (list action-workplace) ]
+  if age = retired-age [ set actions-lists (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop) ]
+
+  if not empty? actions-lists [
+    table:put table-typical-actions (sort-by < (list time-morning time-workday)) actions-lists
+    table:put table-typical-actions (sort-by < (list time-afternoon time-workday)) actions-lists
+  ]
+end
+
+to-report check-typical-actions [context]
+  ifelse table:has-key? table-typical-actions context
+  [ report table:get table-typical-actions context ]
   [ report [] ]
 end
 
@@ -22,10 +48,12 @@ to setup
   print " Run setup "
   print "-------------------------------"
 
-  let d_context "morning"
-  print (word "Context is " d_context)
-  print word "activities is " (activities-from-context d_context)
-
+  clear-all
+  create-turtles 1 [
+    set age young-age
+    set-table-typical-actions
+    add-table-typical-actions-age
+  ]
   reset-ticks
 end
 
@@ -34,7 +62,7 @@ to-report deliberate
   let tb-context get-context
   print tb-context
   let list-context sort-by < (table:values tb-context)
-  let typical-actions get-typical-actions list-context
+  let typical-actions check-typical-actions list-context
   ifelse length typical-actions > 0
   [ report first typical-actions ]
   [ report "No action"]
@@ -43,16 +71,19 @@ end
 ; The values should be
 to-report get-context
   let context table:make
-  table:put context "time" get-time
+  table:put context "time" get-time-of-day
   table:put context "day-type" get-day-type
+  if is-working-from-home-recommended?
+  [ table:put context "recommendation" "work-from-home" ]
   report context
 end
 
-
 to go
-  print "-- GO -------------------------"
-  let selected-action deliberate
-  print (word "Selected actions: " selected-action)
+  print (word "-- GO: " ticks " -----------------------")
+  ask turtles [
+    let selected-action deliberate
+    print (word "Selected actions: " selected-action)
+  ]
   tick
 end
 
@@ -63,7 +94,6 @@ to-report activities-from-context [context]
 
   report [] ; empty list
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -93,10 +123,10 @@ ticks
 30.0
 
 BUTTON
-57
-40
-134
-73
+56
+128
+133
+161
 Go once
 go
 NIL
@@ -125,6 +155,17 @@ NIL
 NIL
 NIL
 1
+
+SWITCH
+44
+468
+307
+501
+is-working-from-home-recommended?
+is-working-from-home-recommended?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
