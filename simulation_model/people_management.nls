@@ -158,8 +158,9 @@ people-own [
   number-of-people-I-infected
   #days-I-should-remain-in-self-quarantining
   events-to-process
-  deliberation-cost
   
+  ;Context variables
+  deliberation-cost  
   chosen-available-activity-descriptor
 ]
 

@@ -4,7 +4,9 @@ extensions [ table ]
 turtles-own
 [
   age
+  friend
   table-typical-actions
+  performed-action
 ]
 
 ; Make this sorted on alphabet???
@@ -49,8 +51,11 @@ to setup
   print "-------------------------------"
 
   clear-all
-  create-turtles 1 [
-    set age young-age
+  create-turtles 5 [
+    set age worker-age
+    set performed-action "Spawned"
+    set friend one-of other turtles
+    setxy random-xcor random-ycor
     set-table-typical-actions
     add-table-typical-actions-age
   ]
@@ -58,14 +63,30 @@ to setup
 end
 
 to-report deliberate
-  print "Start deliberating"
+  if who = 0 [ print "Start deliberating" ]
   let tb-context get-context
-  print tb-context
+  if who = 0 [ print tb-context ]
   let list-context sort-by < (table:values tb-context)
   let typical-actions check-typical-actions list-context
-  ifelse length typical-actions > 0
+  if length typical-actions = 1
   [ report first typical-actions ]
-  [ report "No action"]
+  ifelse length typical-actions = 0
+  [
+    let imitated-actions (imitate-action-of-friend list-context)
+    if length imitated-actions = 1
+    [ report first typical-actions ]
+  ]
+  [ report first typical-actions ]
+  report []
+end
+
+to-report imitate-action-of-friend [list-context]
+  ; imitate friend
+  let imitated-actions []
+  ask friend [
+    set imitated-actions check-typical-actions list-context
+  ]
+  report imitated-actions
 end
 
 ; The values should be
@@ -73,7 +94,7 @@ to-report get-context
   let context table:make
   table:put context "time" get-time-of-day
   table:put context "day-type" get-day-type
-  if is-working-from-home-recommended?
+  if is-working-from-home-recommended? and age = worker-age ; Only relevant for people that work at a workplace (not at a school, uni, non-es/es shop, hospital)
   [ table:put context "recommendation" "work-from-home" ]
   report context
 end
@@ -82,7 +103,8 @@ to go
   print (word "-- GO: " ticks " -----------------------")
   ask turtles [
     let selected-action deliberate
-    print (word "Selected actions: " selected-action)
+    set performed-action selected-action
+    if who = 0 [ print (word "Performed action: " performed-action) ]
   ]
   tick
 end
