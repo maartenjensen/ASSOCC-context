@@ -38,3 +38,7 @@ end
 to-report action-non-essential-shop
   report "non-essential-shop"
 end
+
+to-report action-imitate-network
+  report "imitate-network"
+end

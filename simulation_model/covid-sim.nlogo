@@ -18,6 +18,14 @@ globals [
   global-deliberation-time
 ]
 
+to go-profile
+  profiler:reset
+  profiler:start
+
+  repeat 50 [go]
+  export-profiling
+end
+
 to go
 
   reset-timer
@@ -42,15 +50,6 @@ to go
   ; Tick goes at the end of the go procedure for better plot updating
   tick
 end
-
-to go-profile
-  profiler:reset
-  profiler:start
-
-  repeat 50 [go]
-  export-profiling
-end
-
 
 to startup
   setup

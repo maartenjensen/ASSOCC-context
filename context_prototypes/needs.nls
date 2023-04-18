@@ -1,0 +1,53 @@
+; The needs
+to-report need-urgent-risk-avoidance
+  report "urgent-risk-avoidance"
+end
+
+to-report need-urgent-compliance
+  report "urgent-compliance"
+end
+
+to-report need-urgent-financial-stability
+  report "urgent-financial-stability"
+end
+
+to-report need-urgent-belonging
+  report "urgent-belonging"
+end
+
+to-report need-urgent-leisure
+  report "urgent-leisure"
+end
+
+to-report need-urgent-luxury
+  report "urgent-luxury"
+end
+
+to-report need-urgent-autonomy
+  report "urgent-autonomy"
+end
+
+to-report need-urgent-food-safety
+  report "urgent-food-safety"
+end
+
+to-report need-urgent-financial-survival
+  report "urgent-financial-survival"
+end
+
+to-report need-urgent-health
+  report "urgent-health"
+end
+
+to-report need-urgent-sleep
+  report "urgent-sleep"
+end
+
+to-report need-urgent-conformity
+  report "urgent-conformity"
+end
+
+to-report take-random-need
+  let all-needs (list need-urgent-risk-avoidance need-urgent-compliance need-urgent-financial-stability need-urgent-belonging need-urgent-leisure need-urgent-luxury need-urgent-autonomy need-urgent-food-safety need-urgent-financial-survival need-urgent-health need-urgent-sleep need-urgent-conformity)
+  report first shuffle all-needs
+end

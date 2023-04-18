@@ -1,0 +1,66 @@
+to set-table-typical-actions
+  let free-time-activities (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop)
+  set table-typical-actions table:make
+  ; Determine workingday
+  table:put table-typical-actions (sort-by < (list time-evening time-workday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-night time-workday)) (list action-be-at-home)
+  ; Determine weekend
+  table:put table-typical-actions (sort-by < (list time-morning time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-afternoon time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-evening time-weekendday)) free-time-activities
+  table:put table-typical-actions (sort-by < (list time-night time-weekendday)) (list action-be-at-home)
+end
+
+to add-table-typical-actions-age
+
+  let actions-lists []
+  if age = young-age   [ set actions-lists (list action-school) ]
+  if age = student-age [ set actions-lists (list action-university) ]
+  if age = worker-age  [ set actions-lists (list action-workplace) ]
+  if age = retired-age [ set actions-lists (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop) ]
+
+  if not empty? actions-lists [
+    table:put table-typical-actions (sort-by < (list time-morning time-workday)) actions-lists
+    table:put table-typical-actions (sort-by < (list time-afternoon time-workday)) actions-lists
+  ]
+end
+
+to set-table-need-actions
+  set table-need-actions table:make
+  table:put table-need-actions (sort-by < (list need-urgent-risk-avoidance)) (list action-be-at-home)
+  ;table:put table-need-actions (sort-by < (list need-urgent-compliance)) (list )
+  ;table:put table-need-actions (sort-by < (list need-urgent-financial-stability)) (list )
+  table:put table-need-actions (sort-by < (list need-urgent-belonging)) (list action-be-at-home action-public-leisure action-private-leisure action-non-essential-shop)
+  table:put table-need-actions (sort-by < (list need-urgent-leisure)) (list action-be-at-home action-public-leisure action-private-leisure)
+  table:put table-need-actions (sort-by < (list need-urgent-luxury)) (list action-non-essential-shop)
+  ;table:put table-need-actions (sort-by < (list need-urgent-autonomy)) (list )
+  table:put table-need-actions (sort-by < (list need-urgent-food-safety)) (list action-essential-shop)
+  ;table:put table-need-actions (sort-by < (list need-urgent-financial-survival)) (list )
+  ;table:put table-need-actions (sort-by < (list need-urgent-health)) (list )
+  table:put table-need-actions (sort-by < (list need-urgent-sleep)) (list action-be-at-home)
+  table:put table-need-actions (sort-by < (list need-urgent-conformity)) (list action-imitate-network) 
+end
+
+to set-table-need-actions-working-hours
+  set table-need-actions-working-hours table:make
+  if age = young-age   [ 
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-compliance)) (list action-school)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-belonging)) (list action-school)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-autonomy)) (list action-school)
+  ]
+  if age = student-age [
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-compliance)) (list action-university)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-belonging)) (list action-university)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-autonomy)) (list action-university)
+  ]
+  if age = worker-age  [
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-risk-avoidance)) (list action-work-at-home)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-compliance)) (list action-workplace)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-financial-stability)) (list action-workplace action-work-at-home)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-belonging)) (list action-work-at-home)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-autonomy)) (list action-workplace)
+    table:put table-need-actions-working-hours (sort-by < (list need-urgent-financial-survival)) (list action-workplace action-work-at-home)
+  ]
+
+end
+

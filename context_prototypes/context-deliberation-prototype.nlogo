@@ -1,4 +1,4 @@
-__includes [ "actions.nls" "time.nls" "ages.nls" ]
+__includes [ "actions.nls" "time.nls" "ages.nls" "typical_actions.nls" "needs.nls" ]
 extensions [ table ]
 
 turtles-own
@@ -6,44 +6,10 @@ turtles-own
   age
   friend
   table-typical-actions
+  table-need-actions
+  table-need-actions-working-hours
   performed-action
 ]
-
-; Make this sorted on alphabet???
-to-report context-to-string
-  report ""
-end
-
-to set-table-typical-actions
-  let free-time-activities (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop)
-  set table-typical-actions table:make
-  table:put table-typical-actions (sort-by < (list time-evening time-workday)) free-time-activities
-  table:put table-typical-actions (sort-by < (list time-night time-workday)) (list action-be-at-home)
-  table:put table-typical-actions (sort-by < (list time-morning time-weekendday)) free-time-activities
-  table:put table-typical-actions (sort-by < (list time-afternoon time-weekendday)) free-time-activities
-  table:put table-typical-actions (sort-by < (list time-evening time-weekendday)) free-time-activities
-  table:put table-typical-actions (sort-by < (list time-night time-weekendday)) (list action-be-at-home)
-end
-
-to add-table-typical-actions-age
-
-  let actions-lists []
-  if age = young-age   [ set actions-lists (list action-school) ]
-  if age = student-age [ set actions-lists (list action-university) ]
-  if age = worker-age  [ set actions-lists (list action-workplace) ]
-  if age = retired-age [ set actions-lists (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop) ]
-
-  if not empty? actions-lists [
-    table:put table-typical-actions (sort-by < (list time-morning time-workday)) actions-lists
-    table:put table-typical-actions (sort-by < (list time-afternoon time-workday)) actions-lists
-  ]
-end
-
-to-report check-typical-actions [context]
-  ifelse table:has-key? table-typical-actions context
-  [ report table:get table-typical-actions context ]
-  [ report [] ]
-end
 
 to setup
   print "-------------------------------"
@@ -54,39 +20,49 @@ to setup
   create-turtles 5 [
     set age worker-age
     set performed-action "Spawned"
-    set friend one-of other turtles
     setxy random-xcor random-ycor
     set-table-typical-actions
     add-table-typical-actions-age
+
+    set-table-need-actions
+    set-table-need-actions-working-hours
   ]
   reset-ticks
 end
+
+to go
+  print (word "-- GO: " ticks " -----------------------")
+  ask turtles [
+    let selected-action deliberate
+    set performed-action selected-action
+    if who = 0 [ print (word "Performed action: " performed-action) ]
+  ]
+  tick
+end
+
+; ---------------------------------------------------------
+; Agent stuff
 
 to-report deliberate
   if who = 0 [ print "Start deliberating" ]
   let tb-context get-context
   if who = 0 [ print tb-context ]
+  ; Get typical action
   let list-context sort-by < (table:values tb-context)
-  let typical-actions check-typical-actions list-context
+  let typical-actions get-typical-actions list-context
+  if who = 0 [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1
   [ report first typical-actions ]
-  ifelse length typical-actions = 0
+  ; Action based on need
+  if length typical-actions > 1
   [
-    let imitated-actions (imitate-action-of-friend list-context)
-    if length imitated-actions = 1
-    [ report first typical-actions ]
+    let need-actions (get-actions-from-relevant-need tb-context typical-actions)
+    if who = 0 [ print (word "Need actions: " need-actions) ]
+    if length need-actions = 1
+    [ report first need-actions ]
   ]
-  [ report first typical-actions ]
-  report []
-end
-
-to-report imitate-action-of-friend [list-context]
-  ; imitate friend
-  let imitated-actions []
-  ask friend [
-    set imitated-actions check-typical-actions list-context
-  ]
-  report imitated-actions
+  ; Complex deliberation
+  report ["Complex need deliberation"]
 end
 
 ; The values should be
@@ -99,14 +75,33 @@ to-report get-context
   report context
 end
 
-to go
-  print (word "-- GO: " ticks " -----------------------")
-  ask turtles [
-    let selected-action deliberate
-    set performed-action selected-action
-    if who = 0 [ print (word "Performed action: " performed-action) ]
+to-report get-typical-actions [context]
+  ifelse table:has-key? table-typical-actions context
+  [ report table:get table-typical-actions context ]
+  [ report [] ]
+end
+
+to-report get-actions-from-relevant-need [context typical-actions]
+  let relevant-need (list take-random-need) ; Change to update decision context
+  let actions-from-needs []
+  if table:has-key? table-need-actions relevant-need
+  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions relevant-need))  ]
+  if (table:get context "time" = time-morning or table:get context "time" = time-afternoon) and table:get context "day-type" = time-workday
+  [ if table:has-key? table-need-actions-working-hours relevant-need
+    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
   ]
-  tick
+  if who = 0 [ print (word relevant-need ":" actions-from-needs) ]
+  report intersect typical-actions actions-from-needs
+end
+
+to-report intersect [a b] ; Make more efficient
+  let the-intersect []
+  foreach a
+  [
+    x -> if member? x b
+    [ set the-intersect (sentence the-intersect x) ]
+  ]
+  report the-intersect
 end
 
 to-report activities-from-context [context]
