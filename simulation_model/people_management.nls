@@ -118,7 +118,8 @@ people-own [
 
   ;Need satisfaction levels (i.e. level of watertanks)
   ;The need satisfaction levels of food-safety, financial-survival, health, and financial-stability are reporters (see need_definition.nls)
-
+  ; health-satisfaction-level, food-safety-satisfaction-level, financial-survival-satisfaction-level, financial-stability-satisfaction-level
+  
   ;SURVIVAL:
   sleep-satisfaction-level
   conformity-satisfaction-level
@@ -159,9 +160,25 @@ people-own [
   #days-I-should-remain-in-self-quarantining
   events-to-process
   
-  ;Context variables
+  ; -------- Added by Maarten: Context-Sensitive Deliberation --------
+  ; Variables
   deliberation-cost  
+  delib-count-typical
+  delib-count-one-need
+  delib-count-full-need
+  delib-count-total-typical
+  delib-count-total-one-need
+  delib-count-total-full-need
+  
+  ; Variables
   chosen-available-activity-descriptor
+  
+  ; Tables for quick search
+  table-typical-actions
+  table-need-actions
+  table-need-actions-working-hours
+  
+  string-action-to-activity
 ]
 
 to update-people-epistemic-status

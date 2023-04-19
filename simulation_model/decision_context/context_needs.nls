@@ -1,0 +1,105 @@
+; The needs
+to-report need-urgent-risk-avoidance
+  report "urgent-risk-avoidance"
+end
+
+to-report need-urgent-compliance
+  report "urgent-compliance"
+end
+
+to-report need-urgent-financial-stability
+  report "urgent-financial-stability"
+end
+
+to-report need-urgent-belonging
+  report "urgent-belonging"
+end
+
+to-report need-urgent-leisure
+  report "urgent-leisure"
+end
+
+to-report need-urgent-luxury
+  report "urgent-luxury"
+end
+
+to-report need-urgent-autonomy
+  report "urgent-autonomy"
+end
+
+to-report need-urgent-food-safety
+  report "urgent-food-safety"
+end
+
+to-report need-urgent-financial-survival
+  report "urgent-financial-survival"
+end
+
+to-report need-urgent-health
+  report "urgent-health"
+end
+
+to-report need-urgent-sleep
+  report "urgent-sleep"
+end
+
+to-report need-urgent-conformity
+  report "urgent-conformity"
+end
+
+to-report get-most-urgent-need
+  
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-urgent-risk-avoidance
+  if compliance-satisfaction-level < lowest-need-level [
+    set lowest-need-level compliance-satisfaction-level
+    set lowest-need need-urgent-compliance 
+  ]
+  if financial-stability-satisfaction-level < lowest-need-level [
+    set lowest-need-level financial-stability-satisfaction-level
+    set lowest-need need-urgent-financial-stability 
+  ]
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-urgent-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-urgent-leisure 
+  ]
+  if luxury-satisfaction-level < lowest-need-level [
+    set lowest-need-level luxury-satisfaction-level
+    set lowest-need need-urgent-luxury 
+  ]
+  if autonomy-satisfaction-level < lowest-need-level [
+    set lowest-need-level autonomy-satisfaction-level
+    set lowest-need need-urgent-autonomy 
+  ] 
+  if food-safety-satisfaction-level < lowest-need-level [
+    set lowest-need-level food-safety-satisfaction-level
+    set lowest-need need-urgent-food-safety 
+  ]
+  if financial-survival-satisfaction-level < lowest-need-level [
+    set lowest-need-level financial-survival-satisfaction-level
+    set lowest-need need-urgent-financial-survival 
+  ] 
+  if health-satisfaction-level < lowest-need-level [
+    set lowest-need-level health-satisfaction-level
+    set lowest-need need-urgent-health 
+  ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-urgent-sleep 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-urgent-conformity 
+  ]
+ 
+  report lowest-need
+end
+
+to-report take-random-need
+  let all-needs (list need-urgent-risk-avoidance need-urgent-compliance need-urgent-financial-stability need-urgent-belonging need-urgent-leisure need-urgent-luxury need-urgent-autonomy need-urgent-food-safety need-urgent-financial-survival need-urgent-health need-urgent-sleep need-urgent-conformity)
+  report first shuffle all-needs
+end

@@ -1,3 +1,6 @@
+__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_needs.nls" ]
+
+; This function should stay the same
 to context-select-activity
   let c-a contextual-deliberation-select-activity
   ;let c-a my-preferred-available-activity-descriptor
@@ -19,41 +22,87 @@ to context-select-activity
 end
 
 to-report contextual-deliberation-select-activity
-  
-  let actions []
-  let activity (list my-home "rest" false)
-  ifelse (slice-of-the-day = "night")
-  [ set actions (lput (list my-home "rest" false) actions) ] 
-  [
-    if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me?
-    [
-      if is-child? [set actions (lput (list my-school "mandatory" false) actions)]
-      if is-student?
-      [
-        set actions (lput (list my-university "learning" false) actions) 
-      ]
-
-      if is-worker? [
-        ; by default work from work!
-        ;if is-technically-feasible-to-work-from-home? and I-know-of-working-from-home? [
-        ;  set actions (lput (list my-home work-motive false) actions)
-        ;]
-        
-        set actions (lput (list my-work work-motive false) actions)
-      ]
-    ]
+  reset-delib-count
+  if who = 151 [ print "Start deliberating" ]
+  let tb-context get-context
+  if who = 151 [ print tb-context ]
+  ; Get typical action
+  let list-context sort-by < (table:values tb-context)
+  let typical-actions get-typical-actions list-context
+  set delib-count-typical 1
+  if who = 151 [ print (word "Typical actions: " typical-actions) ]
+  if length typical-actions = 1 [ 
+    update-delib-count
+    report get-full-activity-from-string-action (first typical-actions)
   ]
   
-  if length actions = 1 
-  [ report first actions ]
-  if length actions > 1
-  [ 
-    print(actions)
-    report first actions
+  ; Action based on need
+  if length typical-actions > 1
+  [
+    set delib-count-one-need 1
+    let need-actions (get-actions-from-relevant-need tb-context typical-actions)
+    if who = 151 [ print (word "Need actions: " need-actions) ]
+    if length need-actions = 1 [ 
+      update-delib-count
+      report get-full-activity-from-string-action (first need-actions) ]
   ]
   
   ; Do the full need based deliberation
+  if who = 151 [ print (word "Full ASSOCC need based deliberation") ]
+  set delib-count-full-need 1
+  update-delib-count
   report my-preferred-available-activity-descriptor
-  
 end
 
+; The values should be
+to-report get-context
+  let context table:make
+  table:put context "time" slice-of-the-day
+  ifelse is-working-day-for-me?
+  [ table:put context "working-day" "is-working-day"]
+  [ table:put context "working-day" "is-weekend-day"]
+  if is-working-from-home-recommended? and age = worker-age ; Only relevant for people that work at a workplace (not at a school, uni, non-es/es shop, hospital)
+  [ table:put context "recommendation" "work-from-home" ]
+  report context
+end
+
+to-report get-typical-actions [context]
+  ifelse table:has-key? table-typical-actions context
+  [ report table:get table-typical-actions context ]
+  [ report [] ]
+end
+
+to-report get-actions-from-relevant-need [context typical-actions]
+  let relevant-need (list get-most-urgent-need) ; Change to update decision context
+  let actions-from-needs []
+  if table:has-key? table-need-actions relevant-need
+  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions relevant-need))  ]
+  if (table:get context "time" = time-morning or table:get context "time" = time-afternoon) and table:get context "working-day" = true
+  [ if table:has-key? table-need-actions-working-hours relevant-need
+    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
+  ]
+  if who = 151 [ print (word relevant-need ":" actions-from-needs) ]
+  report intersect typical-actions actions-from-needs
+end
+
+to-report intersect [a b] ; Make more efficient
+  let the-intersect []
+  foreach a
+  [
+    x -> if member? x b
+    [ set the-intersect (sentence the-intersect x) ]
+  ]
+  report the-intersect
+end
+
+to update-delib-count
+  set delib-count-total-typical delib-count-typical
+  set delib-count-total-one-need delib-count-one-need
+  set delib-count-total-full-need delib-count-full-need
+end
+
+to reset-delib-count
+  set delib-count-typical 0
+  set delib-count-one-need 0
+  set delib-count-full-need 0  
+end

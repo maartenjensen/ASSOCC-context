@@ -15,7 +15,7 @@ to-report time-night
   report "night"
 end
 
-to-report slice-of-the-day
+to-report get-time-of-day
   let time (ticks mod 4)
   if time = 0 [ report time-morning ]
   if time = 1 [ report time-afternoon ]
@@ -24,11 +24,11 @@ to-report slice-of-the-day
 end
 
 to-report time-workday
-  report "workday"
+  report "is-working-day"
 end
 
 to-report time-weekendday
-  report "weekendday"
+  report "is-weekend-day"
 end
 
 to-report get-day-of-week

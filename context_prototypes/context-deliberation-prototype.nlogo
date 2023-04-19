@@ -1,6 +1,10 @@
 __includes [ "actions.nls" "time.nls" "ages.nls" "typical_actions.nls" "needs.nls" ]
 extensions [ table ]
 
+globals [
+  inspected-agent
+]
+
 turtles-own
 [
   age
@@ -15,6 +19,8 @@ to setup
   print "-------------------------------"
   print " Run setup "
   print "-------------------------------"
+
+  set inspected-agent 0
 
   clear-all
   create-turtles 5 [
@@ -44,20 +50,20 @@ end
 ; Agent stuff
 
 to-report deliberate
-  if who = 0 [ print "Start deliberating" ]
+  if who = inspected-agent  [ print "Start deliberating" ]
   let tb-context get-context
-  if who = 0 [ print tb-context ]
+  if who = inspected-agent  [ print tb-context ]
   ; Get typical action
   let list-context sort-by < (table:values tb-context)
   let typical-actions get-typical-actions list-context
-  if who = 0 [ print (word "Typical actions: " typical-actions) ]
+  if who = inspected-agent  [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1
   [ report first typical-actions ]
   ; Action based on need
   if length typical-actions > 1
   [
     let need-actions (get-actions-from-relevant-need tb-context typical-actions)
-    if who = 0 [ print (word "Need actions: " need-actions) ]
+    if who = inspected-agent  [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1
     [ report first need-actions ]
   ]
@@ -68,7 +74,7 @@ end
 ; The values should be
 to-report get-context
   let context table:make
-  table:put context "time" get-time-of-day
+  table:put context "time" slice-of-the-day
   table:put context "day-type" get-day-type
   if is-working-from-home-recommended? and age = worker-age ; Only relevant for people that work at a workplace (not at a school, uni, non-es/es shop, hospital)
   [ table:put context "recommendation" "work-from-home" ]
@@ -90,7 +96,7 @@ to-report get-actions-from-relevant-need [context typical-actions]
   [ if table:has-key? table-need-actions-working-hours relevant-need
     [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
   ]
-  if who = 0 [ print (word relevant-need ":" actions-from-needs) ]
+  if who = inspected-agent  [ print (word relevant-need ":" actions-from-needs) ]
   report intersect typical-actions actions-from-needs
 end
 
@@ -102,14 +108,6 @@ to-report intersect [a b] ; Make more efficient
     [ set the-intersect (sentence the-intersect x) ]
   ]
   report the-intersect
-end
-
-to-report activities-from-context [context]
-
-  if context = "morning" [ report (list action-workplace action-work-at-home) ]
-  if context = "night"   [ report (list action-be-at-home) ]
-
-  report [] ; empty list
 end
 @#$#@#$#@
 GRAPHICS-WINDOW

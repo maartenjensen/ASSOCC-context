@@ -28,8 +28,6 @@ to-report travelling-reason
   report travelling-motive
 end
 
-
-
 to-report is-currently-in-sitation-of-active-dependence?
   report is-child? and closed-schools?
 end

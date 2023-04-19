@@ -22,7 +22,7 @@ to go-profile
   profiler:reset
   profiler:start
 
-  repeat 50 [go]
+  repeat 100 [go]
   export-profiling
 end
 
@@ -4289,6 +4289,26 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+1658
+218
+2058
+382
+Delib-count
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Typical" 1.0 0 -16777216 true "" "plot count people with [delib-count-typical = 1]"
+"One need" 1.0 0 -7500403 true "" "plot count people with [delib-count-one-need = 1]"
+"All needs" 1.0 0 -2674135 true "" "plot count people with [delib-count-full-need = 1]"
 
 @#$#@#$#@
 ## WHAT IS IT?
