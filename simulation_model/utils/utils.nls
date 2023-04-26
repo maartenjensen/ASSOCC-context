@@ -35,7 +35,7 @@ end
 
 to behavior-space-export-profiling [p-list]
   profiler:stop
-  let _fname (word "C://Users//maartenj//Documents//2023_NetlogoWorkspaceprofiler//report-" p-list ".csv")
+  let _fname (word "report-" p-list ".csv")
   carefully [file-delete _fname] []
   file-open _fname
   file-print profiler:report
@@ -44,7 +44,7 @@ end
 
 to export-profiling
   profiler:stop
-  let _fname "D://SimulationToolkits//report.csv"
+  let _fname "report.csv"
   carefully [file-delete _fname] []
   file-open _fname
   file-print profiler:report
