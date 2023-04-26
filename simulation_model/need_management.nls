@@ -38,7 +38,7 @@ to update-needs-for-playing [current-activity-descriptor]
 
   set belonging-satisfaction-level clamp 0 1 (belonging-satisfaction-level + SDA-belonging current-activity-descriptor)
  
-  set compliance-satisfaction-level clamp 0 1 (compliance-satisfaction-level + SDE-compliance current-activity-descriptor)
+  set compliance-satisfaction-level 0 ; clamp 0 1 (compliance-satisfaction-level + SDE-compliance current-activity-descriptor)
 
   set risk-avoidance-satisfaction-level  clamp 0 1 (risk-avoidance-satisfaction-level + SDA-risk-avoidance current-activity-descriptor)
 

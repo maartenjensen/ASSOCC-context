@@ -165,11 +165,13 @@ people-own [
   deliberation-cost  
   delib-count-typical
   delib-count-one-need
+  delib-count-conformity
   delib-count-full-need
   delib-count-total-typical
   delib-count-total-one-need
+  delib-count-total-conformity
   delib-count-total-full-need
-  
+ 
   ; Variables
   chosen-available-activity-descriptor
   

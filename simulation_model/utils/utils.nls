@@ -28,10 +28,23 @@ to-report clamp-soft [number]
   report exp(-5 * exp(-4 * number))
 end
 
+to behavior-space-start-profiling
+  profiler:reset
+  profiler:start
+end
+
+to behavior-space-export-profiling [p-list]
+  profiler:stop
+  let _fname (word "C://Users//maartenj//Documents//2023_NetlogoWorkspaceprofiler//report-" p-list ".csv")
+  carefully [file-delete _fname] []
+  file-open _fname
+  file-print profiler:report
+  file-close
+end
 
 to export-profiling
   profiler:stop
-  let _fname "report.csv"
+  let _fname "D://SimulationToolkits//report.csv"
   carefully [file-delete _fname] []
   file-open _fname
   file-print profiler:report

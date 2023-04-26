@@ -1,8 +1,10 @@
 __includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_needs.nls" ]
 
-; This function should stay the same
+; This function is the same as in select_activity.nls, with the exception
+; of calling conextual-deliberation-select-activity instead of
+; my-preferred-available-activity-descriptor
 to context-select-activity
-  let c-a contextual-deliberation-select-activity
+  let c-a func-contextual-deliberation-select-activity
   ;let c-a my-preferred-available-activity-descriptor
   set deliberation-cost 0
   
@@ -21,7 +23,7 @@ to context-select-activity
   if log-violating-quarantine? [ process-quarantine-violation-event]
 end
 
-to-report contextual-deliberation-select-activity
+to-report func-contextual-deliberation-select-activity
   reset-delib-count
   if who = 151 [ print "Start deliberating" ]
   let tb-context get-context
@@ -43,6 +45,11 @@ to-report contextual-deliberation-select-activity
     let need-actions (get-actions-from-relevant-need tb-context typical-actions)
     if who = 151 [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1 [ 
+      if (first need-actions) = action-imitate-network [
+        set delib-count-conformity 1
+        error "Conformity not implemented"
+        ; Implement actual conformity
+      ]
       update-delib-count
       report get-full-activity-from-string-action (first need-actions) ]
   ]
@@ -99,10 +106,12 @@ to update-delib-count
   set delib-count-total-typical delib-count-typical
   set delib-count-total-one-need delib-count-one-need
   set delib-count-total-full-need delib-count-full-need
+  set delib-count-total-conformity delib-count-conformity
 end
 
 to reset-delib-count
   set delib-count-typical 0
   set delib-count-one-need 0
+  set delib-count-conformity 0
   set delib-count-full-need 0  
 end
