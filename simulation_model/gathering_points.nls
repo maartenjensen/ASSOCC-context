@@ -134,6 +134,10 @@ to-report is-at-university?
   report [is-university?] of current-activity
 end
 
+to-report is-at-school?
+  report [is-school?] of current-activity
+end
+
 to-report is-public-leisure?
   report gathering-type = "public-leisure"
 end

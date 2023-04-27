@@ -1929,8 +1929,8 @@ PENS
 PLOT
 1170
 661
-1634
-825
+1652
+844
 Activities
 NIL
 NIL
@@ -1950,6 +1950,7 @@ PENS
 "Treated" 1.0 0 -7500403 true "" "plot count people with [current-motivation = treatment-motive]"
 "@E-Shop" 1.0 0 -8630108 true "" "plot count people-at-essential-shops"
 "@NE-Shop" 1.0 0 -5825686 true "" "plot count people-at-non-essential-shops"
+"@School" 1.0 0 -6459832 true "" "plot count children with [is-at-school?]"
 
 SLIDER
 551
@@ -1987,7 +1988,7 @@ INPUTBOX
 631
 626
 #households
-420.0
+208.0
 1
 0
 Number
@@ -4317,7 +4318,7 @@ INPUTBOX
 1268
 376
 #households-for-context-scenario
-250.0
+208.0
 1
 0
 Number
@@ -4670,101 +4671,63 @@ NetLogo 6.1.1
 @#$#@#$#@
 <experiments>
   <experiment name="ContextExperiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>behavior-space-start-profiling
+    <setup>setup
+behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed)</final>
     <timeLimit steps="50"/>
-    <metric>#infected</metric>
-    <metric>count people with [epistemic-infection-status = "infected"]</metric>
-    <metric>#admissions-last-tick</metric>
-    <metric>#taken-hospital-beds</metric>
-    <metric>#denied-requests-for-hospital-beds</metric>
-    <metric>#dead-people</metric>
-    <metric>#tests-performed</metric>
-    <metric>count officially-quarantiners</metric>
-    <metric>count should-be-isolators</metric>
-    <metric>count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]</metric>
     <metric>#contacts-last-tick</metric>
-    <metric>#people-infected-in-hospitals</metric>
-    <metric>#people-infected-in-workplaces</metric>
-    <metric>#people-infected-in-homes</metric>
-    <metric>#people-infected-in-public-leisure</metric>
-    <metric>#people-infected-in-private-leisure</metric>
-    <metric>#people-infected-in-schools</metric>
-    <metric>#people-infected-in-universities</metric>
-    <metric>#people-infected-in-essential-shops</metric>
-    <metric>#people-infected-in-non-essential-shops</metric>
-    <metric>#people-infected-in-pubtrans</metric>
-    <metric>#people-infected-in-shared-cars</metric>
-    <metric>#people-infected-in-queuing</metric>
-    <metric>#contacts-in-pubtrans</metric>
-    <metric>#contacts-in-shared-cars</metric>
-    <metric>#contacts-in-queuing</metric>
-    <metric>#contacts-in-pubtrans</metric>
-    <metric>#contacts-in-hospitals</metric>
-    <metric>#contacts-in-workplaces</metric>
-    <metric>#contacts-in-homes</metric>
-    <metric>#contacts-in-public-leisure</metric>
-    <metric>#contacts-in-private-leisure</metric>
-    <metric>#contacts-in-schools</metric>
-    <metric>#contacts-in-universities</metric>
-    <metric>#contacts-in-essential-shops</metric>
-    <metric>#contacts-in-non-essential-shops</metric>
-    <metric>#cumulative-youngs-infected</metric>
-    <metric>#cumulative-students-infected</metric>
-    <metric>#cumulative-workers-infected</metric>
-    <metric>#cumulative-retireds-infected</metric>
-    <metric>#cumulative-youngs-infector</metric>
-    <metric>#cumulative-students-infector</metric>
-    <metric>#cumulative-workers-infector</metric>
-    <metric>#cumulative-retireds-infector</metric>
-    <metric>ratio-quarantiners-currently-complying-to-quarantine</metric>
-    <metric>ratio-infected-youngs</metric>
-    <metric>ratio-infected-students</metric>
-    <metric>ratio-infected-workers</metric>
-    <metric>ratio-infected-retireds</metric>
-    <metric>#hospitalizations-youngs-this-tick</metric>
-    <metric>#hospitalizations-students-this-tick</metric>
-    <metric>#hospitalizations-workers-this-tick</metric>
-    <metric>#hospitalizations-retired-this-tick</metric>
-    <metric>ratio-age-group-to-age-group-#infections young-age young-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections young-age student-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections young-age worker-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections young-age retired-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections student-age young-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections student-age student-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections student-age worker-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections student-age retired-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections worker-age young-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections worker-age student-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections worker-age worker-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections worker-age retired-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections retired-age young-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections retired-age student-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections retired-age worker-age</metric>
-    <metric>ratio-age-group-to-age-group-#infections retired-age retired-age</metric>
-    <metric>age-group-to-age-group-#contacts young-age young-age</metric>
-    <metric>age-group-to-age-group-#contacts young-age student-age</metric>
-    <metric>age-group-to-age-group-#contacts young-age worker-age</metric>
-    <metric>age-group-to-age-group-#contacts young-age retired-age</metric>
-    <metric>age-group-to-age-group-#contacts student-age young-age</metric>
-    <metric>age-group-to-age-group-#contacts student-age student-age</metric>
-    <metric>age-group-to-age-group-#contacts student-age worker-age</metric>
-    <metric>age-group-to-age-group-#contacts student-age retired-age</metric>
-    <metric>age-group-to-age-group-#contacts worker-age young-age</metric>
-    <metric>age-group-to-age-group-#contacts worker-age student-age</metric>
-    <metric>age-group-to-age-group-#contacts worker-age worker-age</metric>
-    <metric>age-group-to-age-group-#contacts worker-age retired-age</metric>
-    <metric>age-group-to-age-group-#contacts retired-age young-age</metric>
-    <metric>age-group-to-age-group-#contacts retired-age student-age</metric>
-    <metric>age-group-to-age-group-#contacts retired-age worker-age</metric>
-    <metric>age-group-to-age-group-#contacts retired-age retired-age</metric>
     <metric>#youngs-at-start</metric>
     <metric>#students-at-start</metric>
     <metric>#workers-at-start</metric>
     <metric>#retireds-at-start</metric>
+    <metric>count people with [is-at-work?]</metric>
+    <metric>count people with [is-at-public-leisure-place?]</metric>
+    <metric>count people with [is-at-private-leisure-place?]</metric>
+    <metric>count people with [is-at-home?]</metric>
+    <metric>count people with [is-at-school?]</metric>
+    <metric>count people with [is-at-university?]</metric>
+    <metric>count people with [current-motivation = treatment-motive]</metric>
+    <metric>count people-at-essential-shops</metric>
+    <metric>count people-at-non-essential-shops</metric>
+    <metric>count children with [is-at-work?]</metric>
+    <metric>count children with [is-at-public-leisure-place?]</metric>
+    <metric>count children with [is-at-private-leisure-place?]</metric>
+    <metric>count children with [is-at-home?]</metric>
+    <metric>count children with [is-at-school?]</metric>
+    <metric>count children with [is-at-university?]</metric>
+    <metric>count children with [current-motivation = treatment-motive]</metric>
+    <metric>count children with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count children with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count students with [is-at-work?]</metric>
+    <metric>count students with [is-at-public-leisure-place?]</metric>
+    <metric>count students with [is-at-private-leisure-place?]</metric>
+    <metric>count students with [is-at-home?]</metric>
+    <metric>count students with [is-at-school?]</metric>
+    <metric>count students with [is-at-university?]</metric>
+    <metric>count students with [current-motivation = treatment-motive]</metric>
+    <metric>count students with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count students with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [is-at-work?]</metric>
+    <metric>count workers with [is-at-public-leisure-place?]</metric>
+    <metric>count workers with [is-at-private-leisure-place?]</metric>
+    <metric>count workers with [is-at-home?]</metric>
+    <metric>count workers with [is-at-school?]</metric>
+    <metric>count workers with [is-at-university?]</metric>
+    <metric>count workers with [current-motivation = treatment-motive]</metric>
+    <metric>count workers with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [is-at-work?]</metric>
+    <metric>count retireds with [is-at-public-leisure-place?]</metric>
+    <metric>count retireds with [is-at-private-leisure-place?]</metric>
+    <metric>count retireds with [is-at-home?]</metric>
+    <metric>count retireds with [is-at-school?]</metric>
+    <metric>count retireds with [is-at-university?]</metric>
+    <metric>count retireds with [current-motivation = treatment-motive]</metric>
+    <metric>count retireds with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [[is-non-essential-shop?] of current-activity]</metric>
     <enumeratedValueSet variable="context-sensitive-deliberation?">
       <value value="false"/>
       <value value="true"/>
@@ -4773,9 +4736,7 @@ setup</setup>
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
-      <value value="104"/>
       <value value="208"/>
-      <value value="314"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
