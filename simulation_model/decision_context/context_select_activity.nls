@@ -25,14 +25,14 @@ end
 
 to-report func-contextual-deliberation-select-activity
   reset-delib-count
-  if who = 151 [ print "Start deliberating" ]
+  ;if who = 151 [ print "Start deliberating" ]
   let tb-context get-context
-  if who = 151 [ print tb-context ]
+  ;if who = 151 [ print tb-context ]
   ; Get typical action
   let list-context sort-by < (table:values tb-context)
   let typical-actions get-typical-actions list-context
   set delib-count-typical 1
-  if who = 151 [ print (word "Typical actions: " typical-actions) ]
+  ;if who = 151 [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1 [ 
     update-delib-count
     report get-full-activity-from-string-action (first typical-actions)
@@ -43,7 +43,7 @@ to-report func-contextual-deliberation-select-activity
   [
     set delib-count-one-need 1
     let need-actions (get-actions-from-relevant-need tb-context typical-actions)
-    if who = 151 [ print (word "Need actions: " need-actions) ]
+    ;if who = 151 [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1 [ 
       if (first need-actions) = action-imitate-network [
         set delib-count-conformity 1
@@ -55,7 +55,7 @@ to-report func-contextual-deliberation-select-activity
   ]
   
   ; Do the full need based deliberation
-  if who = 151 [ print (word "Full ASSOCC need based deliberation") ]
+  ;if who = 151 [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor

@@ -4242,7 +4242,7 @@ SWITCH
 260
 context-sensitive-deliberation?
 context-sensitive-deliberation?
-1
+0
 1
 -1000
 
@@ -4319,6 +4319,17 @@ INPUTBOX
 376
 #households-for-context-scenario
 208.0
+1
+0
+Number
+
+INPUTBOX
+1039
+385
+1194
+445
+#action-space
+6.0
 1
 0
 Number
@@ -4676,7 +4687,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed)</final>
+    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
     <timeLimit steps="50"/>
     <metric>#contacts-last-tick</metric>
     <metric>#youngs-at-start</metric>
@@ -4737,6 +4748,14 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="208"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#action-space">
+      <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">

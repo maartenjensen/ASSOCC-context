@@ -1,5 +1,5 @@
 to set-table-typical-actions
-  let free-time-activities (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop)
+  let free-time-activities get-free-time-activities
   set table-typical-actions table:make
   ; Determine workingday
   table:put table-typical-actions (sort-by < (list time-evening time-workday)) free-time-activities
@@ -14,10 +14,13 @@ end
 to add-table-typical-actions-age
 
   let actions-lists []
-  if age = young-age   [ set actions-lists (list action-school) ]
-  if age = student-age [ set actions-lists (list action-university) ]
-  if age = worker-age  [ set actions-lists (list action-workplace) ]
-  if age = retired-age [ set actions-lists (list action-be-at-home action-public-leisure action-private-leisure action-essential-shop action-non-essential-shop) ]
+  ifelse #action-space >= 2 [
+    if age = young-age   [ set actions-lists (list action-school) ]
+    if age = student-age [ set actions-lists (list action-university) ]
+    if age = worker-age  [ set actions-lists (list action-workplace) ]
+  ]
+  [ set actions-lists (list action-be-at-home) ]
+  if age = retired-age [ set actions-lists get-free-time-activities ]
 
   if not empty? actions-lists [
     table:put table-typical-actions (sort-by < (list time-morning time-workday)) actions-lists
@@ -64,3 +67,15 @@ to set-table-need-actions-working-hours
 
 end
 
+to-report get-free-time-activities
+  let free-time-activities (list action-be-at-home)
+  if #action-space >= 3 and age != young-age
+  [ set free-time-activities lput action-essential-shop free-time-activities ]
+  if #action-space >= 4
+  [ set free-time-activities lput action-private-leisure free-time-activities ]
+  if #action-space >= 5 and age != young-age
+  [ set free-time-activities lput action-non-essential-shop free-time-activities ] 
+  if #action-space >= 6
+  [ set free-time-activities lput action-public-leisure free-time-activities ]
+  report free-time-activities
+end
