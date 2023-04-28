@@ -4309,8 +4309,9 @@ true
 PENS
 "Typical" 1.0 0 -16777216 true "" "plot count people with [delib-count-typical = 1]"
 "One need" 1.0 0 -7500403 true "" "plot count people with [delib-count-one-need = 1]"
-"Conformity" 1.0 0 -955883 true "" "plot count people with [delib-count-conformity = 1]"
-"All needs" 1.0 0 -2674135 true "" "plot count people with [delib-count-full-need = 1]"
+"One need Conformity" 1.0 0 -4079321 true "" "plot count people with [delib-count-one-need-conformity = 1]"
+"One need Multi act" 1.0 0 -955883 true "" "plot count people with [delib-count-one-need-multi-actions = 1]"
+"All needs" 1.0 0 -8053223 true "" "plot count people with [delib-count-full-need = 1]"
 
 INPUTBOX
 1041
@@ -4324,10 +4325,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-1039
-385
-1194
-445
+1040
+384
+1195
+444
 #action-space
 6.0
 1
