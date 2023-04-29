@@ -13,6 +13,8 @@ to context-select-activity
     set c-a (list away-gathering-point travelling-motive false)
   ]
   
+  ;if who = 151 [ print (word "Chosen activity: " c-a) ]
+  
   let loc location-of c-a
   select-activity-wtf? loc
   set current-activity loc
@@ -25,14 +27,14 @@ end
 
 to-report func-contextual-deliberation-select-activity
   reset-delib-count
-  if who = 151 [ print "Start deliberating" ]
+  ;if who = 151 [ print "Start deliberating" ]
   let tb-context get-context
-  if who = 151 [ print tb-context ]
+  ;if who = 151 [ print tb-context ]
   ; Get typical action
   let list-context sort-by < (table:values tb-context)
   let typical-actions get-typical-actions list-context
   set delib-count-typical 1
-  if who = 151 [ print (word "Typical actions: " typical-actions) ]
+  ;if who = 151 [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1 [ 
     update-delib-count
     report get-full-activity-from-string-action (first typical-actions)
@@ -42,8 +44,8 @@ to-report func-contextual-deliberation-select-activity
   if length typical-actions > 1
   [
     set delib-count-one-need 1
-    let need-actions (get-actions-from-relevant-need tb-context typical-actions)
-    if who = 151 [ print (word "Need actions: " need-actions) ]
+    let need-actions (get-actions-from-relevant-need-new tb-context typical-actions) ; get-actions-from-relevant-need-new can be changed to get-actions-from-relevant-need
+    ;if who = 151 [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1 [ 
       if (first need-actions) = action-imitate-network [
         set delib-count-one-need-conformity 1
@@ -57,7 +59,7 @@ to-report func-contextual-deliberation-select-activity
   ]
   
   ; Do the full need based deliberation
-  if who = 151 [ print (word "Full ASSOCC need based deliberation") ]
+  ;if who = 151 [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor
@@ -81,6 +83,7 @@ to-report get-typical-actions [context]
   [ report [] ]
 end
 
+; This function looks at all needs and determines the most urgent one, then looks for an action that satisfies this need
 to-report get-actions-from-relevant-need [context typical-actions]
   let relevant-need (list get-most-urgent-need) ; Change to update decision context
   let actions-from-needs []
@@ -90,7 +93,38 @@ to-report get-actions-from-relevant-need [context typical-actions]
   [ if table:has-key? table-need-actions-working-hours relevant-need
     [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
   ]
-  if who = 151 [ print (word relevant-need ":" actions-from-needs) ]
+  ;if who = 151 [ print (word relevant-need ":" actions-from-needs) ]
+  report intersect typical-actions actions-from-needs
+end
+
+; This function looks at all needs 'relevant to the actions' and determines the most urgent one, then looks for an action that satisfies this need
+to-report get-actions-from-relevant-need-new [context typical-actions]
+  let table-relevant-needs table:make
+  foreach typical-actions
+  [
+    the-action -> if table:has-key? table-actions-with-related-needs the-action
+    [
+      foreach (table:get table-actions-with-related-needs the-action)
+      [
+        a-need -> if not (table:has-key? table-relevant-needs a-need)
+        [
+          table:put table-relevant-needs a-need (get-need-value a-need)
+        ]
+      ]
+    ]
+  ]
+  if table:length table-relevant-needs = 0 [ report [] ]
+  ;if who = 151 [ print table-relevant-needs ]
+  let relevant-need (list get-most-urgent-need-from-table table-relevant-needs ) ; Change to update decision context
+  ;if who = 151 [ print relevant-need]
+  let actions-from-needs []
+  if table:has-key? table-need-actions relevant-need
+  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions relevant-need))  ]
+  if (table:get context "time" = time-morning or table:get context "time" = time-afternoon) and table:get context "working-day" = true
+  [ if table:has-key? table-need-actions-working-hours relevant-need
+    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
+  ]
+  ;if who = 151 [ print (word relevant-need ":" actions-from-needs) ]
   report intersect typical-actions actions-from-needs
 end
 

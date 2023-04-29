@@ -47,6 +47,47 @@ to-report need-urgent-conformity
   report "urgent-conformity"
 end
 
+to-report get-need-value [the-need]
+  if the-need = need-urgent-risk-avoidance 
+  [ report risk-avoidance-satisfaction-level ]
+  if the-need = need-urgent-compliance 
+  [ report compliance-satisfaction-level ]
+  if the-need = need-urgent-financial-stability 
+  [ report financial-stability-satisfaction-level ]
+  if the-need = need-urgent-belonging 
+  [ report belonging-satisfaction-level ]
+  if the-need = need-urgent-leisure 
+  [ report leisure-satisfaction-level ]
+  if the-need = need-urgent-luxury 
+  [ report luxury-satisfaction-level ]
+  if the-need = need-urgent-autonomy 
+  [ report autonomy-satisfaction-level ]
+  if the-need = need-urgent-food-safety 
+  [ report food-safety-satisfaction-level ]
+  if the-need = need-urgent-financial-survival 
+  [ report financial-survival-satisfaction-level ]
+  if the-need = need-urgent-health 
+  [ report health-satisfaction-level ]
+  if the-need = need-urgent-sleep 
+  [ report sleep-satisfaction-level ]
+  if the-need = need-urgent-conformity 
+  [ report conformity-satisfaction-level ]
+  error (word the-need " is not found")
+  report ""
+end
+
+to-report get-most-urgent-need-from-table [need-table]
+    let lowest-need-level 10
+    let lowest-need ""
+    foreach ( table:keys need-table ) [
+      a-need -> if table:get need-table a-need < lowest-need-level
+      [ set lowest-need-level table:get need-table a-need
+        set lowest-need a-need
+        ]
+    ]
+    report lowest-need
+end
+
 to-report get-most-urgent-need
   
   let lowest-need-level risk-avoidance-satisfaction-level

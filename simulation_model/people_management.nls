@@ -183,6 +183,7 @@ people-own [
   table-typical-actions
   table-need-actions
   table-need-actions-working-hours
+  table-actions-with-related-needs
   
   string-action-to-activity
 ]

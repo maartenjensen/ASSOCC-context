@@ -53,7 +53,7 @@ to set-string-action-to-activity
   table:put string-action-to-activity action-public-leisure (list my-public-leisure "relaxing" false)  
   table:put string-action-to-activity action-private-leisure (list my-private-leisure "relaxing" false) 
   table:put string-action-to-activity action-essential-shop (list one-of my-essential-shops "essential shopping" false)
-  table:put string-action-to-activity action-non-essential-shop (list one-of my-essential-shops "essential shopping" false) ; Is this important? To take a random one?
+  table:put string-action-to-activity action-non-essential-shop (list my-non-essential-shop "shopping" false) ; Is this important? To take a random one?
   table:put string-action-to-activity action-imitate-network (list my-home "rest" false)
   table:put string-action-to-activity action-hospital (list my-hospital "get-tested" false)
 end
