@@ -1,4 +1,4 @@
-; The actions
+; The actions, these are actually the same as gathering-type except for home-work and imitate-network
 to-report action-hospital
   report "hospital"
 end
@@ -39,6 +39,7 @@ to-report action-non-essential-shop
   report "non-essential-shop"
 end
 
+; depricated
 to-report action-imitate-network
   report "imitate-network"
 end
