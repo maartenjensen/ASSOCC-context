@@ -979,9 +979,9 @@ count people with [[gathering-type] of current-activity = \"hospital\"]
 
 PLOT
 10
-834
-516
-1153
+852
+522
+1171
 Average need satisfaction
 time
 need satisfaction
@@ -1096,7 +1096,7 @@ ratio-omniscious-infected-that-trigger-school-closing-measure
 ratio-omniscious-infected-that-trigger-school-closing-measure
 0
 1
-1.0
+0.96
 0.01
 1
 NIL
@@ -1530,10 +1530,10 @@ count retireds
 11
 
 TEXTBOX
-1799
-976
-1882
-994
+1797
+967
+1880
+985
 Closing schools\n
 11
 105.0
@@ -1927,10 +1927,10 @@ PENS
 "school" 1.0 0 -8630108 true "" "plot #schools-out-of-capital"
 
 PLOT
-1170
-661
-1652
-844
+1162
+542
+1675
+825
 Activities
 NIL
 NIL
@@ -3324,10 +3324,10 @@ disease-fsm-model
 1
 
 MONITOR
-1768
-826
-1853
-871
+1813
+817
+1898
+862
 NIL
 r0
 17
@@ -3747,10 +3747,10 @@ PENS
 "queuing" 1.0 0 -13345367 true "" "plot  #contacts-in-queuing"
 
 PLOT
-1849
+1894
 726
 2183
-901
+897
 #people infected in
 NIL
 NIL
@@ -3776,8 +3776,8 @@ PENS
 "queuing" 1.0 0 -13345367 true "" "plot #people-infected-in-queuing"
 
 PLOT
-1850
-548
+1894
+551
 2182
 728
 infection per age
@@ -3869,10 +3869,10 @@ contagion-model
 0
 
 PLOT
-1643
-660
-1851
-780
+1688
+651
+1896
+771
 avg-infectiousity per person
 NIL
 NIL
@@ -3887,10 +3887,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "ifelse not any? people with [is-infected?] [plot 0]\n[plot mean [oxford-contagion-factor-between self (one-of people) (one-of gathering-points)] of people with [is-infected?]]"
 
 MONITOR
-1642
-780
-1850
-825
+1687
+771
+1895
+816
 NIL
 count people with [is-officially-asked-to-quarantine?]
 17
@@ -4242,7 +4242,7 @@ SWITCH
 260
 context-sensitive-deliberation?
 context-sensitive-deliberation?
-0
+1
 1
 -1000
 
@@ -4257,10 +4257,10 @@ Context-sensitive deliberation
 1
 
 PLOT
-1171
-500
-1558
-650
+1182
+388
+1423
+538
 Global deliberation time
 NIL
 NIL
@@ -4292,10 +4292,10 @@ NIL
 1
 
 PLOT
-1658
-218
-2058
-382
+1430
+395
+1888
+526
 Delib-count
 NIL
 NIL
