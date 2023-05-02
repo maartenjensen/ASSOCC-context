@@ -4,7 +4,7 @@ __includes [ "decision_context/context_actions.nls" "decision_context/context_ti
 ; of calling conextual-deliberation-select-activity instead of
 ; my-preferred-available-activity-descriptor
 to context-select-activity
-  let c-a func-contextual-deliberation-select-activity
+  let c-a contextual-deliberation-select-activity
   ;let c-a my-preferred-available-activity-descriptor
   set deliberation-cost 0
   
@@ -25,7 +25,7 @@ to context-select-activity
   if log-violating-quarantine? [ process-quarantine-violation-event]
 end
 
-to-report func-contextual-deliberation-select-activity
+to-report contextual-deliberation-select-activity
   reset-delib-count
   ;if who = 376 [ print "Start deliberating" ]
   let tb-context get-context
