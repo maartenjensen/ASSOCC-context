@@ -39,6 +39,7 @@ to load-scenario-specifics
     set with-infected? false
     set probability-infection-when-abroad 0
     set #households #households-for-context-scenario
+    load-number-of-gathering-points-based-on-number-of-households #households
     stop
   ]
   
