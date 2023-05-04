@@ -82,6 +82,12 @@ colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames
 colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
 colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
 
+colnames(df_renamed)[match("count_people_with_delib_count_typical_1", colnames(df_renamed))] = "Typical";
+colnames(df_renamed)[match("count_people_with_delib_count_one_need_1", colnames(df_renamed))] = "One_need";
+colnames(df_renamed)[match("count_people_with_delib_count_one_need_conformity_1", colnames(df_renamed))] = "ON_Conformity";
+colnames(df_renamed)[match("count_people_with_delib_count_one_need_multi_actions_1", colnames(df_renamed))] = "ON_Multi_act";
+colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "All_needs";
+
 df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
 print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
 
@@ -265,31 +271,37 @@ plot_ggplot_needs <- function(data_to_plot, p_title, p_limits) {
                group = Level,
                fill = Level), fill=NA) +
     geom_line(aes(col=Level)) +
-    guides(colour = guide_legend(override.aes = list(size=5, alpha=1))) +
     xlab("Ticks") +
     ylab("Need level") +
     labs(title=p_title) +
-    gl_plot_guides + gl_plot_theme + p_limits
+    guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=8, alpha=1))) +
+    gl_plot_theme + p_limits +
+    scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted")) +
+    scale_color_manual(values=c('#f16a15','#000000','#9d6e48','#43a0a0','#E69F00','#881556','#1A4B09','#d73229','#f2ccd5','#80e389','#345da9','#8d8d8d'))
 }
+
+#scale_linetype_manual(values=c("twodash", "dotted"))+
+#scale_color_manual(values=c('#999999','#E69F00'))+
 
 df_needs <- df_final %>% 
   group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(belonging = mean(belonging, na.rm = TRUE),
-            risk_avoidance = mean(risk_avoidance, na.rm = TRUE),
-            autonomy = mean(autonomy, na.rm = TRUE),
-            luxury = mean(luxury, na.rm = TRUE),
-            health = mean(health, na.rm = TRUE),
-            sleep = mean(sleep, na.rm = TRUE),
-            compliance = mean(compliance, na.rm = TRUE),
-            financial_stability = mean(financial_stability, na.rm = TRUE),
-            food_safety = mean(food_safety, na.rm = TRUE),
-            leisure = mean(leisure, na.rm = TRUE),
-            financial_survival = mean(financial_survival, na.rm = TRUE),
-            conformity = mean(conformity, na.rm = TRUE))
+  summarise(AUT = mean(autonomy, na.rm = TRUE),
+            BEL = mean(belonging, na.rm = TRUE),
+            COM = mean(compliance, na.rm = TRUE),
+            CON = mean(conformity, na.rm = TRUE),
+            FST = mean(financial_stability, na.rm = TRUE),
+            FSU = mean(financial_survival, na.rm = TRUE),
+            FOO = mean(food_safety, na.rm = TRUE),
+            HEA = mean(health, na.rm = TRUE),
+            LEI = mean(leisure, na.rm = TRUE),
+            LUX = mean(luxury, na.rm = TRUE),
+            RIS = mean(risk_avoidance, na.rm = TRUE),
+            SLE = mean(sleep, na.rm = TRUE))
+            
 colnames(df_needs)
 
 
-seg_acc_need_level <- gather(df_needs, Level, measurement, belonging:conformity)
+seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
 
 x_limits = c(0,55) #c(28,83)
 
@@ -298,18 +310,46 @@ limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
 plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
 plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
 
-seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
+pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
+dev.off()
 
-limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-#gl_x_lim_days
+pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
+dev.off()
 
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
+#=============================================================
+#================ PLOT DELIBERATION TYPE =====================
+#=============================================================
 
-seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
+plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = DelibType,
+               fill = DelibType), fill=NA) +
+    geom_line(aes(col=DelibType)) +
+    xlab("Ticks") +
+    ylab("Used by n agents") +
+    labs(title=p_title) +
+    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
+    gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+}
 
-limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-#gl_x_lim_days
+df_deliberation_type <- df_final %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(Typical = mean(Typical, na.rm = TRUE),
+            One_need = mean(One_need, na.rm = TRUE),
+            ON_Conf = mean(ON_Conformity, na.rm = TRUE),
+            ON_Multi = mean(ON_Multi_act, na.rm = TRUE),
+            All_needs = mean(All_needs, na.rm = TRUE))
 
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
+seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
+
+limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
+plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
+
+pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
+dev.off()

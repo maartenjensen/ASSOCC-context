@@ -72,3 +72,20 @@ for (i in 1:length(p_files_names)) {
     }
   }
 }
+
+
+
+plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = DelibType,
+               fill = DelibType), fill=NA) +
+    geom_line(aes(col=DelibType)) +
+    xlab("Ticks") +
+    ylab("Used by n agents") +
+    labs(title=p_title) +
+    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
+    gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+}
