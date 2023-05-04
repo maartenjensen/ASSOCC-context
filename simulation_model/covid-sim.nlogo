@@ -1942,7 +1942,7 @@ true
 true
 "" ""
 PENS
-"@Work" 1.0 0 -14070903 true "" "plot count people with [is-at-work?]"
+"@Work" 1.0 0 -14070903 true "" "plot count people with [is-working-at-work?]"
 "@Pu-Leisure" 1.0 0 -2674135 true "" "plot count people with [is-at-public-leisure-place?]"
 "@Pr-Leisure" 1.0 0 -955883 true "" "plot count people with [is-at-private-leisure-place?]"
 "@Home" 1.0 0 -14439633 true "" "plot count people with [is-at-home?]"
@@ -4242,7 +4242,7 @@ SWITCH
 260
 context-sensitive-deliberation?
 context-sensitive-deliberation?
-0
+1
 1
 -1000
 
@@ -4740,6 +4740,18 @@ setup</setup>
     <metric>count retireds with [current-motivation = treatment-motive]</metric>
     <metric>count retireds with [[is-essential-shop?] of current-activity]</metric>
     <metric>count retireds with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>mean [belonging-satisfaction-level] of people</metric>
+    <metric>mean [risk-avoidance-satisfaction-level] of people</metric>
+    <metric>mean [autonomy-satisfaction-level] of people</metric>
+    <metric>mean [luxury-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [health-satisfaction-level] of people</metric>
+    <metric>mean [sleep-satisfaction-level] of people</metric>
+    <metric>mean [compliance-satisfaction-level] of people</metric>
+    <metric>mean [financial-stability-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [food-safety-satisfaction-level] of people</metric>
+    <metric>mean [leisure-satisfaction-level] of people</metric>
+    <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [conformity-satisfaction-level] of people</metric>
     <enumeratedValueSet variable="context-sensitive-deliberation?">
       <value value="false"/>
       <value value="true"/>

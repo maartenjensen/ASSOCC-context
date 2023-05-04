@@ -17,7 +17,6 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-#dataFileName <- c("output-s6-app-usage-87220b5.csv")
 dataFileName <- c("covid-sim ContextExperiment-table.csv")
 
 filesNames   <- dataFileName
@@ -76,6 +75,34 @@ print("Renamed the dateframe, please check the df_names_compare dataframe for co
 
 df_final = df_renamed
 
+#======================================================================
+#------------------------- PLOTTING FUNCTIONS -------------------------
+
+multiplier = 1
+gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
+                                      axis.text = element_text(size = rel(1.3 * multiplier)),
+                                      axis.title = element_text(size = rel(1.3 * multiplier)),
+                                      legend.text = element_text(size = rel(1 * multiplier)),
+                                      legend.title = element_text(size = rel(1 * multiplier)),
+                                      title = element_text(size = rel(1.3 * multiplier)) )
+
+gl_plot_guides <- guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1)))
+
+plot_ggplot <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = Location_type,
+               fill = Location_type), fill=NA) +
+    geom_line(aes(col=Location_type)) +
+    guides(colour = guide_legend(override.aes = list(size=5, alpha=1))) +
+    xlab("Ticks") +
+    ylab("Agents per tick") +
+    labs(title=p_title) +
+    gl_plot_guides + gl_plot_theme + p_limits
+}
+
 #=============================================================
 #========================= PLOT DATA =========================
 #=============================================================
@@ -97,67 +124,103 @@ colnames(df_people_at_locations)
 
 seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, measurement, essential_shops:workplaces)
 
-plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "false")
-plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "true")
+x_limits = c(0,55) #c(28,83)
 
-seg_acc_people_at_locations_limited <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
+limits = coord_cartesian(xlim = x_limits, ylim = c(0, 600))
 
-plot_ggplot(filter(seg_acc_people_at_locations_limited, context_sensitive_deliberation=="false"), "false")
-plot_ggplot(filter(seg_acc_people_at_locations_limited, context_sensitive_deliberation=="true"), "true")
+plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Orignal ASSOCC", limits)
+plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
+
+seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
+
+limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 600))
+#gl_x_lim_days
+
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Orignal ASSOCC", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
+
+seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
+
+limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 500))
+#gl_x_lim_days
+
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Orignal ASSOCC", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
+
+# Printing as PDF's
+gl_pdf_width = 7
+gl_pdf_height = 5
+pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Orignal ASSOCC", limits_1)
+dev.off()
+pdf("plot_agents_per_location_context_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
+dev.off()
+pdf("plot_agents_per_location_original_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Orignal ASSOCC", limits_2)
+dev.off()
+pdf("plot_agents_per_location_context_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
+dev.off()
 
 
-
-df_people_at_locations_mean <- df_final %>% 
+df_people_at_locations_sum <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
-            homes = mean(count_people_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
-            private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_people_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE))
-colnames(df_people_at_locations_mean)
+  summarise(essential_shops = sum(count_people_at_essential_shops, na.rm = TRUE),
+            homes = sum(count_people_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = sum(count_people_at_non_essential_shops, na.rm = TRUE),
+            private_leisure = sum(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = sum(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = sum(count_people_with_is_at_school, na.rm = TRUE),
+            universities = sum(count_people_with_is_at_university, na.rm = TRUE),
+            workplaces = sum(count_people_with_is_at_work, na.rm = TRUE))
 
-
-df_workers_at_locations_mean <- df_final %>% 
+df_children_at_locations_sum <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = mean(count_workers_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = mean(count_workers_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_workers_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = mean(count_workers_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_workers_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_workers_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_workers_with_is_at_work, na.rm = TRUE))
-colnames(df_workers_at_locations_mean)
+  summarise(essential_shops = sum(count_children_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = sum(count_children_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = sum(count_children_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = sum(count_children_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = sum(count_children_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = sum(count_children_with_is_at_school, na.rm = TRUE),
+            universities = sum(count_children_with_is_at_university, na.rm = TRUE),
+            workplaces = sum(count_children_with_is_at_work, na.rm = TRUE))
 
+df_students_at_locations_sum <- df_final %>% 
+  group_by(context_sensitive_deliberation) %>% 
+  summarise(essential_shops = sum(count_students_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = sum(count_students_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = sum(count_students_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = sum(count_students_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = sum(count_students_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = sum(count_students_with_is_at_school, na.rm = TRUE),
+            universities = sum(count_students_with_is_at_university, na.rm = TRUE),
+            workplaces = sum(count_students_with_is_at_work, na.rm = TRUE))
 
+df_workers_at_locations_sum <- df_final %>% 
+  group_by(context_sensitive_deliberation) %>% 
+  summarise(essential_shops = sum(count_workers_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = sum(count_workers_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = sum(count_workers_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = sum(count_workers_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = sum(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = sum(count_workers_with_is_at_school, na.rm = TRUE),
+            universities = sum(count_workers_with_is_at_university, na.rm = TRUE),
+            workplaces = sum(count_workers_with_is_at_work, na.rm = TRUE))
 
-#------------------------- PLOTTING FUNCTIONS -------------------------
+df_retireds_at_locations_sum <- df_final %>% 
+  group_by(context_sensitive_deliberation) %>% 
+  summarise(essential_shops = sum(count_retireds_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = sum(count_retireds_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = sum(count_retireds_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = sum(count_retireds_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = sum(count_retireds_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = sum(count_retireds_with_is_at_school, na.rm = TRUE),
+            universities = sum(count_retireds_with_is_at_university, na.rm = TRUE),
+            workplaces = sum(count_retireds_with_is_at_work, na.rm = TRUE))
 
-multiplier = 1
-gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
-                                      axis.text = element_text(size = rel(1.3 * multiplier)),
-                                      axis.title = element_text(size = rel(1.3 * multiplier)),
-                                      legend.text = element_text(size = rel(1 * multiplier)),
-                                      legend.title = element_text(size = rel(1 * multiplier)),
-                                      title = element_text(size = rel(1.3 * multiplier)) )
-
-gl_plot_guides <- guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1)))
-
-plot_ggplot <- function(data_to_plot, uses_context_reasoning) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = Location_type,
-               fill = Location_type), fill=NA) +
-    geom_line(aes(col=Location_type)) +
-    guides(colour = guide_legend(override.aes = list(size=5, alpha=1))) +
-    xlab("Ticks") +
-    ylab("Agents per tick") +
-    labs(title=paste("Agents at location type - Context ASSOCC:", uses_context_reasoning),
-         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)") +
-    gl_plot_guides + gl_plot_theme 
-}
+print(df_people_at_locations_sum)
+print(df_children_at_locations_sum)
+print(df_students_at_locations_sum)
+print(df_workers_at_locations_sum)
+print(df_retireds_at_locations_sum)
