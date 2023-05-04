@@ -17,7 +17,7 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileName <- c("covid-sim ContextExperiment-table.csv")
+dataFileName <- c("covid-sim realism.csv")
 
 filesNames   <- dataFileName
 
@@ -69,6 +69,18 @@ df_renamed = df_initial
 old_variable_names <- names(t_df)
 # Custom column names
 colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
+colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
+colnames(df_renamed)[match("mean_risk_avoidance_satisfaction_level_of_people", colnames(df_renamed))] = "risk_avoidance";
+colnames(df_renamed)[match("mean_autonomy_satisfaction_level_of_people", colnames(df_renamed))] = "autonomy";
+colnames(df_renamed)[match("mean_luxury_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "luxury";
+colnames(df_renamed)[match("mean_health_satisfaction_level_of_people", colnames(df_renamed))] = "health";
+colnames(df_renamed)[match("mean_sleep_satisfaction_level_of_people", colnames(df_renamed))] = "sleep";
+colnames(df_renamed)[match("mean_compliance_satisfaction_level_of_people", colnames(df_renamed))] = "compliance";
+colnames(df_renamed)[match("mean_financial_stability_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_stability";
+colnames(df_renamed)[match("mean_food_safety_satisfaction_level_of_people", colnames(df_renamed))] = "food_safety";
+colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames(df_renamed))] = "leisure";
+colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
+colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
 
 df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
 print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
@@ -126,101 +138,178 @@ seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, mea
 
 x_limits = c(0,55) #c(28,83)
 
-limits = coord_cartesian(xlim = x_limits, ylim = c(0, 600))
+limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 
-plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Orignal ASSOCC", limits)
+plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Original ASSOCC", limits)
 plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
 
 seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
 
-limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 600))
+limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 #gl_x_lim_days
 
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Orignal ASSOCC", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
 
 seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
 
-limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 500))
+limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 #gl_x_lim_days
 
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Orignal ASSOCC", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
+
 
 # Printing as PDF's
 gl_pdf_width = 7
 gl_pdf_height = 5
 pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Orignal ASSOCC", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
 dev.off()
 pdf("plot_agents_per_location_context_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
 dev.off()
 pdf("plot_agents_per_location_original_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Orignal ASSOCC", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
 dev.off()
 pdf("plot_agents_per_location_context_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
 dev.off()
 
+agent_n = df_final$youngs_at_start[1] + df_final$students_at_start[1] + df_final$workers_at_start[1] + df_final$retireds_at_start[1]
 
-df_people_at_locations_sum <- df_final %>% 
+df_people_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = sum(count_people_at_essential_shops, na.rm = TRUE),
-            homes = sum(count_people_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = sum(count_people_at_non_essential_shops, na.rm = TRUE),
-            private_leisure = sum(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = sum(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = sum(count_people_with_is_at_school, na.rm = TRUE),
-            universities = sum(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = sum(count_people_with_is_at_work, na.rm = TRUE))
+  summarise(agents = agent_n,
+            essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
+            homes = mean(count_people_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
+            private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = mean(count_people_with_is_at_school, na.rm = TRUE),
+            universities = mean(count_people_with_is_at_university, na.rm = TRUE),
+            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE))
 
-df_children_at_locations_sum <- df_final %>% 
+df_children_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = sum(count_children_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = sum(count_children_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = sum(count_children_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = sum(count_children_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = sum(count_children_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = sum(count_children_with_is_at_school, na.rm = TRUE),
-            universities = sum(count_children_with_is_at_university, na.rm = TRUE),
-            workplaces = sum(count_children_with_is_at_work, na.rm = TRUE))
+  summarise(agents = mean(youngs_at_start, na.rm = TRUE),
+            essential_shops = mean(count_children_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = mean(count_children_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = mean(count_children_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = mean(count_children_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = mean(count_children_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = mean(count_children_with_is_at_school, na.rm = TRUE),
+            universities = mean(count_children_with_is_at_university, na.rm = TRUE),
+            workplaces = mean(count_children_with_is_at_work, na.rm = TRUE))
 
-df_students_at_locations_sum <- df_final %>% 
+df_students_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = sum(count_students_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = sum(count_students_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = sum(count_students_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = sum(count_students_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = sum(count_students_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = sum(count_students_with_is_at_school, na.rm = TRUE),
-            universities = sum(count_students_with_is_at_university, na.rm = TRUE),
-            workplaces = sum(count_students_with_is_at_work, na.rm = TRUE))
+  summarise(agents = mean(students_at_start, na.rm = TRUE),
+            essential_shops = mean(count_students_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = mean(count_students_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = mean(count_students_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = mean(count_students_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = mean(count_students_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = mean(count_students_with_is_at_school, na.rm = TRUE),
+            universities = mean(count_students_with_is_at_university, na.rm = TRUE),
+            workplaces = mean(count_students_with_is_at_work, na.rm = TRUE))
 
-df_workers_at_locations_sum <- df_final %>% 
+df_workers_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = sum(count_workers_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = sum(count_workers_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = sum(count_workers_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = sum(count_workers_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = sum(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = sum(count_workers_with_is_at_school, na.rm = TRUE),
-            universities = sum(count_workers_with_is_at_university, na.rm = TRUE),
-            workplaces = sum(count_workers_with_is_at_work, na.rm = TRUE))
+  summarise(agents = mean(workers_at_start, na.rm = TRUE),
+            essential_shops = mean(count_workers_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = mean(count_workers_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = mean(count_workers_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = mean(count_workers_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = mean(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = mean(count_workers_with_is_at_school, na.rm = TRUE),
+            universities = mean(count_workers_with_is_at_university, na.rm = TRUE),
+            workplaces = mean(count_workers_with_is_at_work, na.rm = TRUE))
 
-df_retireds_at_locations_sum <- df_final %>% 
+df_retireds_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
-  summarise(essential_shops = sum(count_retireds_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = sum(count_retireds_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = sum(count_retireds_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = sum(count_retireds_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = sum(count_retireds_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = sum(count_retireds_with_is_at_school, na.rm = TRUE),
-            universities = sum(count_retireds_with_is_at_university, na.rm = TRUE),
-            workplaces = sum(count_retireds_with_is_at_work, na.rm = TRUE))
+  summarise(agents = mean(retireds_at_start, na.rm = TRUE),
+            essential_shops = mean(count_retireds_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
+            homes = mean(count_retireds_with_is_at_home, na.rm = TRUE),
+            non_essential_shops = mean(count_retireds_with_is_essential_shop_of_current_activity, na.rm = TRUE),
+            private_leisure = mean(count_retireds_with_is_at_private_leisure_place, na.rm = TRUE),
+            public_leisure = mean(count_retireds_with_is_at_public_leisure_place, na.rm = TRUE),
+            schools = mean(count_retireds_with_is_at_school, na.rm = TRUE),
+            universities = mean(count_retireds_with_is_at_university, na.rm = TRUE),
+            workplaces = mean(count_retireds_with_is_at_work, na.rm = TRUE))
 
-print(df_people_at_locations_sum)
-print(df_children_at_locations_sum)
-print(df_students_at_locations_sum)
-print(df_workers_at_locations_sum)
-print(df_retireds_at_locations_sum)
+
+print(df_people_at_locations_mean)
+print(df_children_at_locations_mean)
+print(df_students_at_locations_mean)
+print(df_workers_at_locations_mean)
+print(df_retireds_at_locations_mean)
+
+df_total = df_people_at_locations_mean
+df_total = rbind(df_total, df_children_at_locations_mean)
+df_total = rbind(df_total, df_students_at_locations_mean)
+df_total = rbind(df_total, df_workers_at_locations_mean)
+df_total = rbind(df_total, df_retireds_at_locations_mean)
+
+print(df_total)
+
+#=============================================================
+#======================== PLOT NEEDS =========================
+#=============================================================
+
+plot_ggplot_needs <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = Level,
+               fill = Level), fill=NA) +
+    geom_line(aes(col=Level)) +
+    guides(colour = guide_legend(override.aes = list(size=5, alpha=1))) +
+    xlab("Ticks") +
+    ylab("Need level") +
+    labs(title=p_title) +
+    gl_plot_guides + gl_plot_theme + p_limits
+}
+
+df_needs <- df_final %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(belonging = mean(belonging, na.rm = TRUE),
+            risk_avoidance = mean(risk_avoidance, na.rm = TRUE),
+            autonomy = mean(autonomy, na.rm = TRUE),
+            luxury = mean(luxury, na.rm = TRUE),
+            health = mean(health, na.rm = TRUE),
+            sleep = mean(sleep, na.rm = TRUE),
+            compliance = mean(compliance, na.rm = TRUE),
+            financial_stability = mean(financial_stability, na.rm = TRUE),
+            food_safety = mean(food_safety, na.rm = TRUE),
+            leisure = mean(leisure, na.rm = TRUE),
+            financial_survival = mean(financial_survival, na.rm = TRUE),
+            conformity = mean(conformity, na.rm = TRUE))
+colnames(df_needs)
+
+
+seg_acc_need_level <- gather(df_needs, Level, measurement, belonging:conformity)
+
+x_limits = c(0,55) #c(28,83)
+
+limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
+
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
+
+seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
+
+limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
+#gl_x_lim_days
+
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
+
+seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
+
+limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
+#gl_x_lim_days
+
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
