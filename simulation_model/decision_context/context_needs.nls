@@ -76,6 +76,18 @@ to-report get-need-value [the-need]
   report ""
 end
 
+to-report get-most-urgent-need-from-list [need-list]
+  let lowest-need-level 10
+  let lowest-need ""
+  foreach ( need-list ) [
+    a-need -> if get-need-value a-need < lowest-need-level
+      [ set lowest-need-level get-need-value a-need
+        set lowest-need a-need
+        ]
+  ]
+  report lowest-need
+end
+  
 to-report get-most-urgent-need-from-table [need-table]
     let lowest-need-level 10
     let lowest-need ""

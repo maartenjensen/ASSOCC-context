@@ -13,7 +13,7 @@ to context-select-activity
     set c-a (list away-gathering-point travelling-motive false)
   ]
   
-  if who = 376 [ print (word "Chosen activity: " c-a) ] ; who 151
+  ;if who = 375 [ print (word "Chosen activity: " c-a) ] ; who 151
   
   let loc location-of c-a
   select-activity-wtf? loc
@@ -27,13 +27,13 @@ end
 
 to-report contextual-deliberation-select-activity
   reset-delib-count
-  if who = 376 [ print "Start deliberating" ]
+  ;if who = 375 [ print "Start deliberating" ]
   let list-context get-context
-  if who = 376 [ print list-context ]
+  ;if who = 375 [ print list-context ]
   ; Get typical action
   let typical-actions get-typical-actions list-context
   set delib-count-typical 1
-  if who = 376 [ print (word "Typical actions: " typical-actions) ]
+  ;if who = 375 [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1 [ 
     update-delib-count
     report get-full-activity-from-string-action (first typical-actions)
@@ -44,7 +44,7 @@ to-report contextual-deliberation-select-activity
   [
     set delib-count-one-need 1
     let need-actions get-actions-from-relevant-need typical-actions ; get-actions-from-relevant-need-new can be changed to get-actions-from-relevant-need
-    if who = 376 [ print (word "Need actions: " need-actions) ]
+    ;if who = 375 [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1 [ 
       update-delib-count
       report get-full-activity-from-string-action (first need-actions) ]
@@ -55,7 +55,7 @@ to-report contextual-deliberation-select-activity
   ]
   
   ; Do the full need based deliberation
-  if who = 376 [ print (word "Full ASSOCC need based deliberation") ]
+  ;if who = 375 [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor
@@ -79,39 +79,31 @@ end
 ; This function looks at all needs 'relevant to the actions' and determines the most urgent one, then looks for an action that satisfies this need
 to-report get-actions-from-relevant-need [typical-actions]
   
-  let table-relevant-needs table:make
+  let list-relevant-needs []
+  ifelse table:has-key? table-actions-with-related-needs typical-actions 
+  [ set list-relevant-needs table:get table-actions-with-related-needs typical-actions ]
+  [ error (word typical-actions " does not have a key in table-actions-with-related-needs")]
+ 
   let network-action ""
   ; For conformity
   let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
   if length relevant-memory >= 4 [
     let network-gp (location-of first relevant-memory)
-    if who = 376 [ print network-gp ]
+    ;if who = 375 [ print network-gp ]
     set network-action network-gp
     if member? network-action typical-actions [
-      table:put table-relevant-needs need-urgent-conformity (get-need-value need-urgent-conformity)
+      set list-relevant-needs lput need-urgent-conformity list-relevant-needs
     ]
   ]
-  
-  foreach typical-actions
-  [
-    the-action -> if table:has-key? table-actions-with-related-needs the-action
-    [
-      foreach (table:get table-actions-with-related-needs the-action)
-      [
-        a-need -> if not (table:has-key? table-relevant-needs a-need)
-        [
-          table:put table-relevant-needs a-need (get-need-value a-need)
-        ]
-      ]
-    ]
-  ]
-  if table:length table-relevant-needs = 0 [ report [] ]
-  if who = 376 [ print table-relevant-needs ]
-  let relevant-need (list get-most-urgent-need-from-table table-relevant-needs ) ; Change to update decision context
-  if who = 376 [ print relevant-need]
+
+  ;get-need-value a-need
+  if length list-relevant-needs = 0 [ report [] ]
+  ;if who = 375 [ print (word "All relevant-needs: "list-relevant-needs) ]
+  let relevant-need (list get-most-urgent-need-from-list list-relevant-needs ) ; Change to update decision context
+  ;if who = 375 [ print (word "Relevant-need: " relevant-need) ]
   if relevant-need = (list need-urgent-conformity) and not (network-action = "")
   [ set delib-count-one-need-conformity 1
-    if who = 376 [ print (word "Selected network action: " network-action) ]
+    ;if who = 375 [ print (word "Selected network action: " network-action) ]
     report (list network-action) ]
   let actions-from-needs []
   if table:has-key? table-need-actions relevant-need
@@ -120,7 +112,7 @@ to-report get-actions-from-relevant-need [typical-actions]
   [ if table:has-key? table-need-actions-working-hours relevant-need
     [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
   ]
-  if who = 376 [ print (word relevant-need ":" actions-from-needs) ]
+  ;if who = 375 [ print (word relevant-need ":" actions-from-needs) ]
   report intersect typical-actions actions-from-needs
 end
 

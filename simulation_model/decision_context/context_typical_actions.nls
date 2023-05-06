@@ -68,21 +68,13 @@ end
 
 to set-table-actions-with-related-needs
   set table-actions-with-related-needs table:make
-  table:put table-actions-with-related-needs action-be-at-home (list need-urgent-belonging need-urgent-leisure) ; need-urgent-sleep need-urgent-risk-avoidance 
-  table:put table-actions-with-related-needs action-private-leisure (list need-urgent-belonging need-urgent-leisure) ; need-urgent-risk-avoidance 
-  table:put table-actions-with-related-needs action-public-leisure (list need-urgent-belonging need-urgent-leisure) ; need-urgent-risk-avoidance 
-  ifelse age != young-age   [ 
-    table:put table-actions-with-related-needs action-essential-shop (list need-urgent-food-safety need-urgent-financial-stability need-urgent-financial-survival) ; Negatively influencing needs are added since they should be considered ; need-urgent-risk-avoidance 
-    table:put table-actions-with-related-needs action-non-essential-shop (list need-urgent-belonging need-urgent-luxury need-urgent-financial-stability need-urgent-financial-survival) ; need-urgent-risk-avoidance 
-  ]
-  [ table:put table-actions-with-related-needs action-school (list need-urgent-compliance need-urgent-belonging need-urgent-autonomy) ] ; need-urgent-risk-avoidance 
-  if age = student-age [
-    table:put table-actions-with-related-needs action-university (list need-urgent-compliance need-urgent-belonging need-urgent-autonomy) ; need-urgent-risk-avoidance 
-  ]
-  if age = worker-age  [
-    table:put table-actions-with-related-needs action-work-at-home (list need-urgent-financial-stability need-urgent-belonging need-urgent-financial-survival) ; need-urgent-risk-avoidance 
-    table:put table-actions-with-related-needs action-workplace (list need-urgent-compliance need-urgent-financial-stability need-urgent-autonomy need-urgent-financial-survival) ; need-urgent-risk-avoidance 
-  ]
+  table:put table-actions-with-related-needs (list action-be-at-home action-essential-shop) (list need-urgent-belonging need-urgent-leisure need-urgent-food-safety need-urgent-financial-stability need-urgent-financial-survival)
+  table:put table-actions-with-related-needs (list action-be-at-home action-essential-shop action-private-leisure) (list need-urgent-belonging need-urgent-leisure need-urgent-food-safety need-urgent-financial-stability need-urgent-financial-survival )
+  table:put table-actions-with-related-needs (list action-be-at-home action-essential-shop action-private-leisure action-non-essential-shop) (list need-urgent-belonging need-urgent-leisure need-urgent-food-safety need-urgent-financial-stability need-urgent-financial-survival need-urgent-luxury )
+  table:put table-actions-with-related-needs (list action-be-at-home action-essential-shop action-private-leisure action-non-essential-shop action-public-leisure) (list need-urgent-belonging need-urgent-leisure need-urgent-food-safety need-urgent-financial-stability need-urgent-financial-survival need-urgent-luxury )
+  
+  table:put table-actions-with-related-needs (list action-be-at-home action-private-leisure) (list need-urgent-belonging need-urgent-leisure)
+  table:put table-actions-with-related-needs (list action-be-at-home action-private-leisure action-public-leisure) (list need-urgent-belonging need-urgent-leisure)
 end
 
 to-report get-free-time-activities

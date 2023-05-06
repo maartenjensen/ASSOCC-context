@@ -1046,7 +1046,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-0
+1
 1
 -1000
 
@@ -4330,7 +4330,7 @@ INPUTBOX
 1176
 444
 #action-space
-6.0
+3.0
 1
 0
 Number
