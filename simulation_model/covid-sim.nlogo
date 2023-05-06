@@ -182,7 +182,7 @@ INPUTBOX
 915
 899
 #schools-gp
-12.0
+8.0
 1
 0
 Number
@@ -193,7 +193,7 @@ INPUTBOX
 1006
 899
 #universities-gp
-4.0
+3.0
 1
 0
 Number
@@ -204,7 +204,7 @@ INPUTBOX
 1098
 899
 #workplaces-gp
-23.0
+17.0
 1
 0
 Number
@@ -225,7 +225,7 @@ INPUTBOX
 1211
 899
 #public-leisure-gp
-18.0
+13.0
 1
 0
 Number
@@ -236,7 +236,7 @@ INPUTBOX
 1331
 899
 #private-leisure-gp
-50.0
+36.0
 1
 0
 Number
@@ -412,7 +412,7 @@ INPUTBOX
 1448
 899
 #essential-shops-gp
-9.0
+6.0
 1
 0
 Number
@@ -453,7 +453,7 @@ INPUTBOX
 1575
 899
 #non-essential-shops-gp
-9.0
+6.0
 1
 0
 Number
@@ -464,7 +464,7 @@ INPUTBOX
 829
 899
 #hospital-gp
-4.0
+3.0
 1
 0
 Number
@@ -1046,7 +1046,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-1
+0
 1
 -1000
 
@@ -1988,7 +1988,7 @@ INPUTBOX
 631
 626
 #households
-350.0
+250.0
 1
 0
 Number
@@ -2010,7 +2010,7 @@ INPUTBOX
 2443
 102
 #beds-in-hospital
-11.0
+8.0
 1
 0
 Number
@@ -2379,7 +2379,7 @@ INPUTBOX
 3471
 748
 #bus-per-timeslot
-27.0
+19.0
 1
 0
 Number
@@ -4319,7 +4319,7 @@ INPUTBOX
 1249
 376
 #households-for-context-scenario
-350.0
+250.0
 1
 0
 Number
