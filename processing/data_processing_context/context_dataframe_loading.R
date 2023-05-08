@@ -17,7 +17,8 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileName <- c("covid-sim realism.csv")
+#dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
+dataFileName <- c("covid-sim action-space.csv")
 
 filesNames   <- dataFileName
 
@@ -118,8 +119,13 @@ plot_ggplot <- function(data_to_plot, p_title, p_limits) {
     xlab("Ticks") +
     ylab("Agents per tick") +
     labs(title=p_title) +
-    gl_plot_guides + gl_plot_theme + p_limits
+    gl_plot_guides + gl_plot_theme + p_limits +
+    scale_color_manual(values=c('#000000', '#E69F00', '#d73229', '#1A4B09'))
 }
+
+# Printing as PDF's
+gl_pdf_width = 7
+gl_pdf_height = 5
 
 #=============================================================
 #========================= PLOT DATA =========================
@@ -146,8 +152,8 @@ x_limits = c(0,55) #c(28,83)
 
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 
-plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Original ASSOCC", limits)
-plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
+#plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Original ASSOCC", limits)
+#plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
 
 seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
 
@@ -166,9 +172,6 @@ plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deli
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
 
 
-# Printing as PDF's
-gl_pdf_width = 7
-gl_pdf_height = 5
 pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
 dev.off()
@@ -322,6 +325,8 @@ dev.off()
 #================ PLOT DELIBERATION TYPE =====================
 #=============================================================
 
+df_action_space = df_final[df_final$action_space==6, ]
+
 plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
   
   data_to_plot %>%
@@ -337,7 +342,7 @@ plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
     gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
 }
 
-df_deliberation_type <- df_final %>% 
+df_deliberation_type <- df_action_space %>% 
   group_by(tick, context_sensitive_deliberation) %>% 
   summarise(Typical = mean(Typical, na.rm = TRUE),
             One_need = mean(One_need, na.rm = TRUE),
@@ -347,7 +352,7 @@ df_deliberation_type <- df_final %>%
 
 seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
 
-limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
+limits = coord_cartesian(xlim = c(0, 55), ylim = c(0, 1000))
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 
 pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height)
