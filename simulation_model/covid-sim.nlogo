@@ -31,6 +31,7 @@ to go
   reset-timer
   reset-metrics
   reset-economy-measurements
+  reset-gp-number ; Custom by Maarten
   spread-contagion
   update-within-agent-disease-status
   update-people-mind
@@ -51,8 +52,15 @@ to go
   tick
 end
 
+to reset-gp-number ; Custom by Maarten
+  ask gathering-points [
+    set n-agents-at-this-gp 0
+  ]
+end
+
 to startup
   setup
+  reset-gp-number ; Custom by Maarten
 end
 
 to-report epistemic-accuracy if #infected = 0 [report 1] report count people with [is-infected? and is-believing-to-be-infected?] / #infected end

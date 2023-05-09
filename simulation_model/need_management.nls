@@ -156,7 +156,11 @@ to-report SUA-belonging [ad]
   ; Only your home, and public and private leisure places satisfy belonging needs
   if gp != my-work and not member? ([gathering-type] of gp) (list home-gathering-type private-leisure-gathering-type public-leisure-gathering-type university-gathering-type school-gathering-type non-essential-shop-gathering-type)
   [ report 0 ]
-  let number count people with [current-activity = gp]
+  let number 0
+  ask gp [
+    set number n-agents-at-this-gp
+  ]
+  ; This code was inefficient with large numbers of agents (Maarten) let number count people with [current-activity = gp]
   let base 0
   let network-bonus 1
   let social-distancing-cut 1
@@ -226,7 +230,11 @@ end
 
 to-report SUA-risk-avoidance [ad]
   let gp location-of ad
-  report risk-avoidance-increase ad count people with [current-activity = gp]
+  let n-agents 0
+  ask gp [
+    set n-agents n-agents-at-this-gp
+  ]
+  report risk-avoidance-increase ad n-agents ; This code is not efficient so its replaced (Maarten), count people with [current-activity = gp]
 end
 
 

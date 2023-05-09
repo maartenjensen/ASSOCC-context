@@ -113,6 +113,9 @@ end
 to move-on-display 
   ask people
   [
+    ask current-activity [
+	    set n-agents-at-this-gp (n-agents-at-this-gp + 1)
+	  ]
     if not animate? [
       move-to one-of [patches in-radius 3  with [pxcor > [pxcor] of myself]] of current-activity
       set heading towards current-activity

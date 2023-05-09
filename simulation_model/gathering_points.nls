@@ -24,6 +24,8 @@ gathering-points-own [gathering-type
   cached-number-of-participants
   capacity
   
+  ; Maarten: Added for efficiency in the model
+  n-agents-at-this-gp
 ]
 
 
