@@ -4697,7 +4697,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="60"/>
+    <timeLimit steps="120"/>
     <metric>#contacts-last-tick</metric>
     <metric>#youngs-at-start</metric>
     <metric>#students-at-start</metric>
@@ -4776,6 +4776,11 @@ setup</setup>
       <value value="350"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
+      <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
       <value value="6"/>
     </enumeratedValueSet>
   </experiment>
@@ -4864,9 +4869,10 @@ setup</setup>
     <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="350"/>
       <value value="700"/>
-      <value value="1050"/>
-      <value value="1500"/>
-      <value value="1850"/>
+      <value value="1400"/>
+      <value value="2100"/>
+      <value value="2800"/>
+      <value value="3500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
       <value value="6"/>
