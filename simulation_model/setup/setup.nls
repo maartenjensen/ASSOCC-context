@@ -253,13 +253,18 @@ to setup-person [current-home l-age]
     
     set deliberation-cost 1
     set delib-count-typical 0
+    set delib-count-critical-need 0
     set delib-count-one-need 0
     set delib-count-full-need 0
     set delib-count-total-typical 0
+    set delib-count-total-critical-need 0
     set delib-count-total-one-need 0
     set delib-count-total-full-need 0
     
     set chosen-available-activity-descriptor (list away-gathering-point travelling-reason false)
+    
+    ; Variables for context-sensitive deliberation
+    set need-critical-threshold 0.4
     
     set-table-typical-actions
     add-table-typical-actions-age

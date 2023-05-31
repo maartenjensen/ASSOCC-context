@@ -1,4 +1,4 @@
-__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_needs.nls" ]
+__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_need_actions.nls" "decision_context/context_needs.nls" "decision_context/context_variables.nls" ]
 
 ; This function is the same as in select_activity.nls, with the exception
 ; of calling conextual-deliberation-select-activity instead of
@@ -12,8 +12,7 @@ to context-select-activity
   if (migration? and random-float 1 < probability-going-abroad) [
     set c-a (list away-gathering-point travelling-motive false)
   ]
-  
-  ;if who = 375 [ print (word "Chosen activity: " c-a) ] ; who 151
+  if who = 375 [ print (word "Chosen activity: " c-a) ] ; who 151
   
   let loc location-of c-a
   select-activity-wtf? loc
@@ -27,16 +26,22 @@ end
 
 to-report contextual-deliberation-select-activity
   reset-delib-count
-  ;if who = 375 [ print "Start deliberating" ]
+  if who = 375 [ print "Start deliberating" ]
   let list-context get-context
-  ;if who = 375 [ print list-context ]
+  if who = 375 [ print list-context ]
   ; Get typical action
   let typical-actions get-typical-actions list-context
+  ; Additional typical actions from critical need
+  let additional-typical-actions get-typical-actions-from-critical-needs
+  if not empty? additional-typical-actions
+  [ set delib-count-critical-need 1
+    set typical-actions (remove-duplicates (sentence typical-actions additional-typical-actions)) ]
+  
   set delib-count-typical 1
-  ;if who = 375 [ print (word "Typical actions: " typical-actions) ]
+  if who = 375 [ print (word "Typical actions: " typical-actions) ]
   if length typical-actions = 1 [ 
     update-delib-count
-    report get-full-activity-from-string-action (first typical-actions)
+    report get-full-activity-from-string-action (first typical-actions) false
   ]
   
   ; Action based on need
@@ -44,18 +49,18 @@ to-report contextual-deliberation-select-activity
   [
     set delib-count-one-need 1
     let need-actions get-actions-from-relevant-need typical-actions ; get-actions-from-relevant-need-new can be changed to get-actions-from-relevant-need
-    ;if who = 375 [ print (word "Need actions: " need-actions) ]
+    if who = 375 [ print (word "Need actions: " need-actions) ]
     if length need-actions = 1 [ 
       update-delib-count
-      report get-full-activity-from-string-action (first need-actions) ]
+      report get-full-activity-from-string-action (first need-actions) false ]
     if length need-actions > 1 [
       set delib-count-one-need-multi-actions 1
-      report get-full-activity-from-string-action (one-of need-actions)
+      report get-full-activity-from-string-action (one-of need-actions) false
     ]
   ]
   
   ; Do the full need based deliberation
-  ;if who = 375 [ print (word "Full ASSOCC need based deliberation") ]
+  if who = 375 [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor
@@ -63,9 +68,11 @@ end
 
 ; The values should be
 to-report get-context
+  if is-officially-asked-to-quarantine?
+  [ report (list get-context-quarantine) ]
   ifelse is-working-day-for-me?
-  [ report (sort-by < (list slice-of-the-day "is-working-day"))]
-  [ report (sort-by < (list slice-of-the-day "is-weekend-day"))]
+  [ report (sort-by < (list slice-of-the-day "is-working-day")) ]
+  [ report (sort-by < (list slice-of-the-day "is-weekend-day")) ]
   ;if is-working-from-home-recommended? and age = worker-age ; Only relevant for people that work at a workplace (not at a school, uni, non-es/es shop, hospital)
   ;[ table:put context "recommendation" "work-from-home" ]
 end
@@ -76,6 +83,48 @@ to-report get-typical-actions [context]
   [ report [] ]
 end
 
+; CRITICAL NEEDS
+to-report get-typical-actions-from-critical-needs
+  let additional-typical-actions (list)
+  if risk-avoidance-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-risk-avoidance)) ]
+  if compliance-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-compliance)) ]
+  if financial-stability-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-financial-stability)) ]
+  if belonging-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-belonging)) ]
+  if leisure-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-leisure)) ]
+  if luxury-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-luxury)) ]
+  if autonomy-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-autonomy)) ]
+  if food-safety-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-food-safety)) ]
+  if financial-survival-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-financial-survival)) ]
+  if health-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-health)) ]
+  if sleep-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-sleep)) ]
+  if conformity-satisfaction-level < need-critical-threshold
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-conformity)) ]
+  report remove-duplicates additional-typical-actions
+end
+
+to-report get-typical-actions-from-a-need [a-need]
+  let actions-from-needs (list)
+  if table:has-key? table-need-actions a-need
+  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions a-need))  ]
+  if (slice-of-the-day = time-morning or slice-of-the-day = time-afternoon) and is-working-day-for-me?
+  [ if table:has-key? table-need-actions-working-hours a-need
+    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours a-need)) ]
+  ]
+  report actions-from-needs
+end
+
+; MOST SALIENT NEED
 ; This function looks at all needs 'relevant to the actions' and determines the most urgent one, then looks for an action that satisfies this need
 to-report get-actions-from-relevant-need [typical-actions]
   
@@ -89,7 +138,7 @@ to-report get-actions-from-relevant-need [typical-actions]
   let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
   if length relevant-memory >= 4 [
     let network-gp (location-of first relevant-memory)
-    ;if who = 375 [ print network-gp ]
+    if who = 375 [ print network-gp ]
     set network-action network-gp
     if member? network-action typical-actions [
       set list-relevant-needs lput need-urgent-conformity list-relevant-needs
@@ -98,12 +147,12 @@ to-report get-actions-from-relevant-need [typical-actions]
 
   ;get-need-value a-need
   if length list-relevant-needs = 0 [ report [] ]
-  ;if who = 375 [ print (word "All relevant-needs: "list-relevant-needs) ]
+  if who = 375 [ print (word "All relevant-needs: "list-relevant-needs) ]
   let relevant-need (list get-most-urgent-need-from-list list-relevant-needs ) ; Change to update decision context
-  ;if who = 375 [ print (word "Relevant-need: " relevant-need) ]
+  if who = 375 [ print (word "Relevant-need: " relevant-need) ]
   if relevant-need = (list need-urgent-conformity) and not (network-action = "")
   [ set delib-count-one-need-conformity 1
-    ;if who = 375 [ print (word "Selected network action: " network-action) ]
+    if who = 375 [ print (word "Selected network action: " network-action) ]
     report (list network-action) ]
   let actions-from-needs []
   if table:has-key? table-need-actions relevant-need
@@ -112,7 +161,7 @@ to-report get-actions-from-relevant-need [typical-actions]
   [ if table:has-key? table-need-actions-working-hours relevant-need
     [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
   ]
-  ;if who = 375 [ print (word relevant-need ":" actions-from-needs) ]
+  if who = 375 [ print (word relevant-need ":" actions-from-needs) ]
   report intersect typical-actions actions-from-needs
 end
 
@@ -128,6 +177,7 @@ end
 
 to update-delib-count
   set delib-count-total-typical delib-count-typical
+  set delib-count-total-critical-need delib-count-critical-need
   set delib-count-total-one-need delib-count-one-need
   set delib-count-total-one-need-conformity delib-count-one-need-conformity
   set delib-count-total-one-need-multi-actions delib-count-one-need-multi-actions
@@ -136,6 +186,7 @@ end
 
 to reset-delib-count
   set delib-count-typical 0
+  set delib-count-critical-need 0
   set delib-count-one-need 0
   set delib-count-one-need-conformity 0
   set delib-count-one-need-multi-actions 0

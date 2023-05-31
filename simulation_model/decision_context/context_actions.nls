@@ -46,22 +46,22 @@ end
 
 to set-string-action-to-activity
   set string-action-to-activity table:make
-  table:put string-action-to-activity action-be-at-home (list my-home "rest" false)
-  table:put string-action-to-activity action-workplace (list my-work work-motive false)
-  table:put string-action-to-activity action-school (list my-school "mandatory" false) 
-  table:put string-action-to-activity action-university (list my-university "learning" false) 
-  table:put string-action-to-activity action-work-at-home (list my-home work-motive false)
-  table:put string-action-to-activity action-public-leisure (list my-public-leisure "relaxing" false)  
-  table:put string-action-to-activity action-private-leisure (list my-private-leisure "relaxing" false) 
-  table:put string-action-to-activity action-essential-shop (list one-of my-essential-shops "essential shopping" false)
-  table:put string-action-to-activity action-non-essential-shop (list my-non-essential-shop "shopping" false) ; Is this important? To take a random one?
-  table:put string-action-to-activity action-imitate-network (list my-home "rest" false)
-  table:put string-action-to-activity action-hospital (list my-hospital "get-tested" false)
+  table:put string-action-to-activity action-be-at-home (list my-home "rest")
+  table:put string-action-to-activity action-workplace (list my-work work-motive)
+  table:put string-action-to-activity action-school (list my-school "mandatory") 
+  table:put string-action-to-activity action-university (list my-university "learning") 
+  table:put string-action-to-activity action-work-at-home (list my-home work-motive)
+  table:put string-action-to-activity action-public-leisure (list my-public-leisure "relaxing")  
+  table:put string-action-to-activity action-private-leisure (list my-private-leisure "relaxing") 
+  table:put string-action-to-activity action-essential-shop (list one-of my-essential-shops "essential shopping") ; Is this important? To take a random one?
+  table:put string-action-to-activity action-non-essential-shop (list my-non-essential-shop "shopping") 
+  table:put string-action-to-activity action-imitate-network (list my-home "rest")
+  table:put string-action-to-activity action-hospital (list my-hospital "get-tested")
 end
 
-to-report get-full-activity-from-string-action [string-action]
+to-report get-full-activity-from-string-action [string-action social-distance]
   ifelse table:has-key? string-action-to-activity string-action
-  [ report table:get string-action-to-activity string-action]
+  [ report (lput social-distance table:get string-action-to-activity string-action) ]
   [ error (word string-action " was not found in Hashmap: string-action-to-activity") ]
   report away-gathering-point
 end

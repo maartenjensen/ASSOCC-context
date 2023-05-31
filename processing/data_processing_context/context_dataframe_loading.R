@@ -18,7 +18,7 @@ filesPath <- ""
 
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
-dataFileName <- c("covid-sim action-space.csv")
+dataFileName <- c("action-space.csv")
 
 filesNames   <- dataFileName
 
@@ -345,9 +345,9 @@ plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
 df_deliberation_type <- df_action_space %>% 
   group_by(tick, context_sensitive_deliberation) %>% 
   summarise(Typical = mean(Typical, na.rm = TRUE),
-            One_need = mean(One_need, na.rm = TRUE),
-            ON_Conf = mean(ON_Conformity, na.rm = TRUE),
-            ON_Multi = mean(ON_Multi_act, na.rm = TRUE),
+            Most_salient = mean(One_need, na.rm = TRUE),
+            MS_Conf = mean(ON_Conformity, na.rm = TRUE),
+            MS_Multi = mean(ON_Multi_act, na.rm = TRUE),
             All_needs = mean(All_needs, na.rm = TRUE))
 
 seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)

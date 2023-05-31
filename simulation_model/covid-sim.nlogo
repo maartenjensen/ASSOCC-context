@@ -360,14 +360,14 @@ Measures (Interventions) Model
 1
 
 CHOOSER
-2242
-1072
-2457
-1117
+2241
+1073
+2456
+1118
 global-confinement-measures
 global-confinement-measures
 "none" "total-lockdown" "lockdown-10-5"
-0
+1
 
 PLOT
 10
@@ -1054,7 +1054,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-1
+0
 1
 -1000
 
@@ -4320,6 +4320,7 @@ PENS
 "One need Conformity" 1.0 0 -4079321 true "" "plot count people with [delib-count-one-need-conformity = 1]"
 "One need Multi act" 1.0 0 -955883 true "" "plot count people with [delib-count-one-need-multi-actions = 1]"
 "All needs" 1.0 0 -8053223 true "" "plot count people with [delib-count-full-need = 1]"
+"Critical need" 1.0 0 -10899396 true "" "plot count people with [delib-count-critical-need = 1]"
 
 INPUTBOX
 1022
@@ -4338,10 +4339,29 @@ INPUTBOX
 1176
 444
 #action-space
-3.0
+6.0
 1
 0
 Number
+
+PLOT
+1167
+1206
+1605
+1326
+Social Distancing
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -2674135 true "" "plot count people with [is-i-apply-social-distancing?]"
+"pen-1" 1.0 0 -13840069 true "" "plot count people"
 
 @#$#@#$#@
 ## WHAT IS IT?
