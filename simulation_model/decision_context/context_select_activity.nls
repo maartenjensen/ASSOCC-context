@@ -1,4 +1,5 @@
 __includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_need_actions.nls" "decision_context/context_needs.nls" "decision_context/context_variables.nls" ]
+; context_select_activity.nls
 
 ; This function is the same as in select_activity.nls, with the exception
 ; of calling conextual-deliberation-select-activity instead of
@@ -87,29 +88,29 @@ end
 to-report get-typical-actions-from-critical-needs
   let additional-typical-actions (list)
   if risk-avoidance-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-risk-avoidance)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-risk-avoidance)) ]
   if compliance-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-compliance)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-compliance)) ]
   if financial-stability-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-financial-stability)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-financial-stability)) ]
   if belonging-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-belonging)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-belonging)) ]
   if leisure-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-leisure)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-leisure)) ]
   if luxury-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-luxury)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-luxury)) ]
   if autonomy-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-autonomy)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-autonomy)) ]
   if food-safety-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-food-safety)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-food-safety)) ]
   if financial-survival-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-financial-survival)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-financial-survival)) ]
   if health-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-health)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-health)) ]
   if sleep-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-sleep)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-sleep)) ]
   if conformity-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-urgent-conformity)) ]
+  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-conformity)) ]
   report remove-duplicates additional-typical-actions
 end
 
@@ -131,7 +132,9 @@ to-report get-actions-from-relevant-need [typical-actions]
   let list-relevant-needs []
   ifelse table:has-key? table-actions-with-related-needs typical-actions 
   [ set list-relevant-needs table:get table-actions-with-related-needs typical-actions ]
-  [ error (word typical-actions " does not have a key in table-actions-with-related-needs")]
+  [ ;error (word typical-actions " does not have a key in table-actions-with-related-needs"), this function should still be optimized
+    set list-relevant-needs (get-related-needs-from-action-list typical-actions)
+  ]
  
   let network-action ""
   ; For conformity
@@ -141,16 +144,16 @@ to-report get-actions-from-relevant-need [typical-actions]
     if who = 375 [ print network-gp ]
     set network-action network-gp
     if member? network-action typical-actions [
-      set list-relevant-needs lput need-urgent-conformity list-relevant-needs
+      set list-relevant-needs lput need-conformity list-relevant-needs
     ]
   ]
 
   ;get-need-value a-need
   if length list-relevant-needs = 0 [ report [] ]
   if who = 375 [ print (word "All relevant-needs: "list-relevant-needs) ]
-  let relevant-need (list get-most-urgent-need-from-list list-relevant-needs ) ; Change to update decision context
+  let relevant-need (list get-most-need-from-list list-relevant-needs ) ; Change to update decision context
   if who = 375 [ print (word "Relevant-need: " relevant-need) ]
-  if relevant-need = (list need-urgent-conformity) and not (network-action = "")
+  if relevant-need = (list need-conformity) and not (network-action = "")
   [ set delib-count-one-need-conformity 1
     if who = 375 [ print (word "Selected network action: " network-action) ]
     report (list network-action) ]

@@ -1,82 +1,84 @@
-; The needs
-to-report need-urgent-risk-avoidance
-  report "urgent-risk-avoidance"
+; File: context_needs.nls
+
+; The needs, order them according to alphabet
+to-report need-risk-avoidance
+  report "risk-avoidance"
 end
 
-to-report need-urgent-compliance
-  report "urgent-compliance"
+to-report need-compliance
+  report "compliance"
 end
 
-to-report need-urgent-financial-stability
-  report "urgent-financial-stability"
+to-report need-financial-stability
+  report "financial-stability"
 end
 
-to-report need-urgent-belonging
-  report "urgent-belonging"
+to-report need-belonging
+  report "belonging"
 end
 
-to-report need-urgent-leisure
-  report "urgent-leisure"
+to-report need-leisure
+  report "leisure"
 end
 
-to-report need-urgent-luxury
-  report "urgent-luxury"
+to-report need-luxury
+  report "luxury"
 end
 
-to-report need-urgent-autonomy
-  report "urgent-autonomy"
+to-report need-autonomy
+  report "autonomy"
 end
 
-to-report need-urgent-food-safety
-  report "urgent-food-safety"
+to-report need-food-safety
+  report "food-safety"
 end
 
-to-report need-urgent-financial-survival
-  report "urgent-financial-survival"
+to-report need-financial-survival
+  report "financial-survival"
 end
 
-to-report need-urgent-health
-  report "urgent-health"
+to-report need-health
+  report "health"
 end
 
-to-report need-urgent-sleep
-  report "urgent-sleep"
+to-report need-sleep
+  report "sleep"
 end
 
-to-report need-urgent-conformity
-  report "urgent-conformity"
+to-report need-conformity
+  report "conformity"
 end
 
 to-report get-need-value [the-need]
-  if the-need = need-urgent-risk-avoidance 
+  if the-need = need-risk-avoidance 
   [ report risk-avoidance-satisfaction-level ]
-  if the-need = need-urgent-compliance 
+  if the-need = need-compliance 
   [ report compliance-satisfaction-level ]
-  if the-need = need-urgent-financial-stability 
+  if the-need = need-financial-stability 
   [ report financial-stability-satisfaction-level ]
-  if the-need = need-urgent-belonging 
+  if the-need = need-belonging 
   [ report belonging-satisfaction-level ]
-  if the-need = need-urgent-leisure 
+  if the-need = need-leisure 
   [ report leisure-satisfaction-level ]
-  if the-need = need-urgent-luxury 
+  if the-need = need-luxury 
   [ report luxury-satisfaction-level ]
-  if the-need = need-urgent-autonomy 
+  if the-need = need-autonomy 
   [ report autonomy-satisfaction-level ]
-  if the-need = need-urgent-food-safety 
+  if the-need = need-food-safety 
   [ report food-safety-satisfaction-level ]
-  if the-need = need-urgent-financial-survival 
+  if the-need = need-financial-survival 
   [ report financial-survival-satisfaction-level ]
-  if the-need = need-urgent-health 
+  if the-need = need-health 
   [ report health-satisfaction-level ]
-  if the-need = need-urgent-sleep 
+  if the-need = need-sleep 
   [ report sleep-satisfaction-level ]
-  if the-need = need-urgent-conformity 
+  if the-need = need-conformity 
   [ report conformity-satisfaction-level ]
   error (word the-need " is not found")
   report ""
 end
 
-to-report get-most-urgent-need-from-list [need-list]
+to-report get-most-need-from-list [need-list]
   let lowest-need-level 10
   let lowest-need ""
   foreach ( need-list ) [
@@ -88,7 +90,7 @@ to-report get-most-urgent-need-from-list [need-list]
   report lowest-need
 end
   
-to-report get-most-urgent-need-from-table [need-table]
+to-report get-most-need-from-table [need-table]
     let lowest-need-level 10
     let lowest-need ""
     foreach ( table:keys need-table ) [
@@ -100,59 +102,59 @@ to-report get-most-urgent-need-from-table [need-table]
     report lowest-need
 end
 
-to-report get-most-urgent-need
+to-report get-most-need
   
   let lowest-need-level risk-avoidance-satisfaction-level
-  let lowest-need need-urgent-risk-avoidance
+  let lowest-need need-risk-avoidance
   if compliance-satisfaction-level < lowest-need-level [
     set lowest-need-level compliance-satisfaction-level
-    set lowest-need need-urgent-compliance 
+    set lowest-need need-compliance 
   ]
   if financial-stability-satisfaction-level < lowest-need-level [
     set lowest-need-level financial-stability-satisfaction-level
-    set lowest-need need-urgent-financial-stability 
+    set lowest-need need-financial-stability 
   ]
   if belonging-satisfaction-level < lowest-need-level [
     set lowest-need-level belonging-satisfaction-level
-    set lowest-need need-urgent-belonging 
+    set lowest-need need-belonging 
   ]
   if leisure-satisfaction-level < lowest-need-level [
     set lowest-need-level leisure-satisfaction-level
-    set lowest-need need-urgent-leisure 
+    set lowest-need need-leisure 
   ]
   if luxury-satisfaction-level < lowest-need-level [
     set lowest-need-level luxury-satisfaction-level
-    set lowest-need need-urgent-luxury 
+    set lowest-need need-luxury 
   ]
   if autonomy-satisfaction-level < lowest-need-level [
     set lowest-need-level autonomy-satisfaction-level
-    set lowest-need need-urgent-autonomy 
+    set lowest-need need-autonomy 
   ] 
   if food-safety-satisfaction-level < lowest-need-level [
     set lowest-need-level food-safety-satisfaction-level
-    set lowest-need need-urgent-food-safety 
+    set lowest-need need-food-safety 
   ]
   if financial-survival-satisfaction-level < lowest-need-level [
     set lowest-need-level financial-survival-satisfaction-level
-    set lowest-need need-urgent-financial-survival 
+    set lowest-need need-financial-survival 
   ] 
   if health-satisfaction-level < lowest-need-level [
     set lowest-need-level health-satisfaction-level
-    set lowest-need need-urgent-health 
+    set lowest-need need-health 
   ]
   if sleep-satisfaction-level < lowest-need-level [
     set lowest-need-level sleep-satisfaction-level
-    set lowest-need need-urgent-sleep 
+    set lowest-need need-sleep 
   ]
   if conformity-satisfaction-level < lowest-need-level [
     set lowest-need-level conformity-satisfaction-level
-    set lowest-need need-urgent-conformity 
+    set lowest-need need-conformity 
   ]
  
   report lowest-need
 end
 
 to-report take-random-need
-  let all-needs (list need-urgent-risk-avoidance need-urgent-compliance need-urgent-financial-stability need-urgent-belonging need-urgent-leisure need-urgent-luxury need-urgent-autonomy need-urgent-food-safety need-urgent-financial-survival need-urgent-health need-urgent-sleep need-urgent-conformity)
+  let all-needs (list need-risk-avoidance need-compliance need-financial-stability need-belonging need-leisure need-luxury need-autonomy need-food-safety need-financial-survival need-health need-sleep need-conformity)
   report first shuffle all-needs
 end
