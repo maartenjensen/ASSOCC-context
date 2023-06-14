@@ -30,7 +30,8 @@ to setup
   set when-has-2%-infected-threshold-first-been-met? "never"
   set when-has-5%-infected-threshold-first-been-met? "never"
   set start-tick-of-global-quarantine "never"
-
+  set action_saving_table table:make ; Maarten temporary
+  
   setup-activities
   create-all-households
   setup-gathering-point-capacities

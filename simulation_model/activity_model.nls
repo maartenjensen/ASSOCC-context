@@ -318,6 +318,7 @@ to perform-people-activities
   ]
   
   reset-timer
+  
   ask people [
     if not is-being-away? current-activity and current-motivation = travelling-motive [error "wrong place while travelling"]
     ; ===============================================================================
@@ -331,7 +332,14 @@ to perform-people-activities
       set current-activity [current-activity] of current-person-I-depend-on
       set current-motivation follow-person-in-charge-motive
     ]
+    ; Added by Maarten, temporarily
+    ;let action_string (word ([gathering-type] of current-activity) ":" current-motivation ":" is-i-apply-social-distancing?) 
+    ;ifelse not table:has-key? action_saving_table action_string
+    ;[ table:put action_saving_table action_string 1 ]
+    ;[ table:put action_saving_table action_string ((table:get action_saving_table action_string) + 1) ]
   ]
+  ;print action_saving_table, Added by Maarten for analysing action frequency.
+  
   set global-deliberation-time timer
 
   travelling-to-activity-phase

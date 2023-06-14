@@ -16,6 +16,7 @@ globals [
   #who-became-sick-while-travelling-locally
   import-scenario-name
   global-deliberation-time
+  action_saving_table ; temporary
 ]
 
 to go-profile
@@ -367,7 +368,7 @@ CHOOSER
 global-confinement-measures
 global-confinement-measures
 "none" "total-lockdown" "lockdown-10-5"
-1
+0
 
 PLOT
 10
