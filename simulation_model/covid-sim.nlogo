@@ -1221,9 +1221,9 @@ HORIZONTAL
 
 PLOT
 12
-1215
+1628
 524
-1365
+1778
 Average amount of capital per people age
 NIL
 NIL
@@ -1241,9 +1241,9 @@ PENS
 
 PLOT
 12
-1370
+1783
 524
-1520
+1933
 Amount of capital per gathering point
 NIL
 NIL
@@ -1263,10 +1263,10 @@ PENS
 "school" 1.0 0 -6917194 true "" "plot school-amount-of-capital"
 
 PLOT
-1098
-1503
-1560
-1653
+1100
+1430
+1538
+1580
 Total amount of capital available in the system
 NIL
 NIL
@@ -1425,9 +1425,9 @@ HORIZONTAL
 
 PLOT
 13
-1524
+1937
 524
-1674
+2087
 Accumulated amount of goods in stock per type of business
 NIL
 NIL
@@ -3075,10 +3075,10 @@ PENS
 "student" 1.0 0 -13840069 true "" "histogram [my-amount-of-capital] of students"
 
 PLOT
-1098
-1330
-1539
-1480
+1100
+1276
+1538
+1426
 Quality of Life Indicator
 Time
 Quality of Life
@@ -3727,10 +3727,10 @@ clear-log-on-setup?
 -1000
 
 PLOT
-7
-1852
-518
-2077
+543
+1865
+1054
+2090
 contacts
 NIL
 NIL
@@ -3878,10 +3878,10 @@ contagion-model
 0
 
 PLOT
-1688
-651
-1896
-771
+1686
+652
+1894
+772
 avg-infectiousity per person
 NIL
 NIL
@@ -3896,7 +3896,7 @@ PENS
 "default" 1.0 0 -16777216 true "" "ifelse not any? people with [is-infected?] [plot 0]\n[plot mean [oxford-contagion-factor-between self (one-of people) (one-of gathering-points)] of people with [is-infected?]]"
 
 MONITOR
-1687
+1686
 771
 1895
 816
@@ -4169,7 +4169,7 @@ PENS
 "Retired" 1.0 0 -2674135 true "" "plot standard-deviation [my-amount-of-capital] of retireds"
 
 SWITCH
-1533
+1547
 1097
 1729
 1130
@@ -4195,7 +4195,7 @@ NIL
 HORIZONTAL
 
 CHOOSER
-1519
+1551
 1159
 1731
 1204
@@ -4245,10 +4245,10 @@ PENS
 "delib cost" 1.0 0 -16777216 true "" "plot mean [deliberation-cost] of people"
 
 SWITCH
-1041
-227
-1267
-260
+1044
+214
+1270
+247
 context-sensitive-deliberation?
 context-sensitive-deliberation?
 0
@@ -4256,10 +4256,10 @@ context-sensitive-deliberation?
 -1000
 
 TEXTBOX
-1039
-196
-1269
-236
+1042
+183
+1272
+223
 Context-sensitive deliberation
 16
 125.0
@@ -4284,10 +4284,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot global-deliberation-time"
 
 BUTTON
-1042
-272
-1127
-305
+1061
+253
+1146
+286
 NIL
 go-profile
 NIL
@@ -4301,10 +4301,10 @@ NIL
 1
 
 PLOT
-1430
-395
-1888
-526
+1429
+389
+1886
+538
 Delib-count
 NIL
 NIL
@@ -4324,10 +4324,10 @@ PENS
 "Critical need" 1.0 0 -10899396 true "" "plot count people with [delib-count-critical-need = 1]"
 
 INPUTBOX
-1022
-316
-1249
-376
+1023
+292
+1250
+352
 #households-for-context-scenario
 250.0
 1
@@ -4335,10 +4335,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-1021
-384
-1176
-444
+1023
+355
+1178
+415
 #action-space
 6.0
 1
@@ -4346,10 +4346,10 @@ INPUTBOX
 Number
 
 PLOT
-1167
-1206
-1605
-1326
+1100
+1153
+1538
+1273
 Social Distancing
 NIL
 NIL
@@ -4363,6 +4363,46 @@ false
 PENS
 "default" 1.0 0 -2674135 true "" "plot count people with [is-i-apply-social-distancing?]"
 "pen-1" 1.0 0 -13840069 true "" "plot count people"
+
+INPUTBOX
+1022
+420
+1176
+480
+#agent-id
+307.0
+1
+0
+Number
+
+PLOT
+10
+1179
+522
+1493
+Specific agent need satisfaction
+time
+need satisfaction
+0.0
+10.0
+0.0
+1.0
+true
+true
+"" ""
+PENS
+"belonging" 1.0 0 -16777216 true "" "plot [belonging-satisfaction-level] of turtle #agent-id"
+"risk avoidance" 1.0 0 -13345367 true "" "plot [risk-avoidance-satisfaction-level] of turtle #agent-id"
+"autonomy" 1.0 0 -955883 true "" "plot [autonomy-satisfaction-level] of turtle #agent-id"
+"luxury" 1.0 0 -8330359 true "" "plot [luxury-satisfaction-level] of turtle #agent-id"
+"health" 1.0 0 -2674135 true "" "plot [health-satisfaction-level] of turtle #agent-id"
+"sleep" 1.0 0 -7500403 true "" "plot [sleep-satisfaction-level] of turtle #agent-id"
+"compliance" 1.0 0 -6459832 true "" "plot [compliance-satisfaction-level] of turtle #agent-id"
+"financial-stability" 1.0 0 -1184463 true "" "plot [financial-stability-satisfaction-level] of turtle #agent-id"
+"food-safety" 1.0 0 -10899396 true "" "plot [food-safety-satisfaction-level] of turtle #agent-id"
+"leisure" 1.0 0 -1264960 true "" "plot [leisure-satisfaction-level] of turtle #agent-id"
+"financial-survival" 1.0 0 -7858858 true "" "plot [financial-survival-satisfaction-level] of turtle #agent-id"
+"conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 @#$#@#$#@
 ## WHAT IS IT?

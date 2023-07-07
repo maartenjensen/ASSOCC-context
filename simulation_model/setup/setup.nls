@@ -267,15 +267,15 @@ to setup-person [current-home l-age]
     ; Variables for context-sensitive deliberation
     set need-critical-threshold 0.4
     
-    set-table-typical-actions
-    add-table-typical-actions-age
+    ;set-table-typical-actions
+    ;add-table-typical-actions-age
 
-    set-table-need-actions
-    set-table-need-actions-working-hours
+    ;set-table-need-actions
+    ;set-table-need-actions-working-hours
     
-    set-table-actions-with-related-needs
+    ;set-table-actions-with-related-needs
     
-    set-string-action-to-activity
+    ;set-string-action-to-activity
   ]
 end
 

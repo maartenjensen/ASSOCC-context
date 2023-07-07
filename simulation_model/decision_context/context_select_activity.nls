@@ -1,4 +1,6 @@
-__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_need_actions.nls" "decision_context/context_needs.nls" "decision_context/context_variables.nls" ]
+__includes [ "decision_context/context_worker_working.nls" ]
+
+;__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_need_actions.nls" "decision_context/context_needs.nls" "decision_context/context_variables.nls" ]
 ; context_select_activity.nls
 
 ; This function is the same as in select_activity.nls, with the exception
@@ -13,8 +15,6 @@ to context-select-activity
   if (migration? and random-float 1 < probability-going-abroad) [
     set c-a (list away-gathering-point travelling-motive false)
   ]
-  if who = 375 [ print (word "Chosen activity: " c-a) ] ; who 151
-  
   let loc location-of c-a
   select-activity-wtf? loc
   set current-activity loc
@@ -23,159 +23,72 @@ to context-select-activity
   set is-I-apply-social-distancing? social-distancing-of c-a
   if current-activity != away-gathering-point and current-motivation = travelling-motive [error "wrong place while travelling"]
   if log-violating-quarantine? [ process-quarantine-violation-event]
+  
+  if who = #agent-id [ print (word "- Final action: " ([gathering-type] of current-activity) ", " current-motivation ", " is-i-apply-social-distancing?)  ]
 end
 
 to-report contextual-deliberation-select-activity
   reset-delib-count
-  if who = 375 [ print "Start deliberating" ]
-  let list-context get-context
-  if who = 375 [ print list-context ]
-  ; Get typical action
-  let typical-actions get-typical-actions list-context
-  ; Additional typical actions from critical need
-  let additional-typical-actions get-typical-actions-from-critical-needs
-  if not empty? additional-typical-actions
-  [ set delib-count-critical-need 1
-    set typical-actions (remove-duplicates (sentence typical-actions additional-typical-actions)) ]
-  
-  set delib-count-typical 1
-  if who = 375 [ print (word "Typical actions: " typical-actions) ]
-  if length typical-actions = 1 [ 
-    update-delib-count
-    report get-full-activity-from-string-action (first typical-actions) false
-  ]
-  
-  ; Action based on need
-  if length typical-actions > 1
+  if who = #agent-id [ print (word "== Delib start agent: " #agent-id " ==") ]
+  ; Check whether not night (day time) and (retired or not a working day)
+  if (age = retired-age and slice-of-the-day != "night") or (slice-of-the-day = "evening" or (not is-working-day-for-me?))
   [
-    set delib-count-one-need 1
-    let need-actions get-actions-from-relevant-need typical-actions ; get-actions-from-relevant-need-new can be changed to get-actions-from-relevant-need
-    if who = 375 [ print (word "Need actions: " need-actions) ]
-    if length need-actions = 1 [ 
-      update-delib-count
-      report get-full-activity-from-string-action (first need-actions) false ]
-    if length need-actions > 1 [
-      set delib-count-one-need-multi-actions 1
-      report get-full-activity-from-string-action (one-of need-actions) false
+    ; Check whether sick, we are only considering not sick
+    if not (has-internally-visible-symptoms? or is-believing-to-be-infected?)
+    [
+      ; The time is morning, afternoon or evening
+      if who = #agent-id [ print "Custom leisure time deliberation" ]
+      ; most important need??
+      let most-salient-need get-most-salient-need
+      if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+      if most-salient-need = need-belonging [
+        
+      ]
+      let final-action lput func-determine-social-distancing (list my-home "rest")
+      report final-action
     ]
   ]
   
   ; Do the full need based deliberation
-  if who = 375 [ print (word "Full ASSOCC need based deliberation") ]
+  if who = #agent-id [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor
 end
 
-; The values should be
-to-report get-context
-  if is-officially-asked-to-quarantine?
-  [ report (list get-context-quarantine) ]
-  ifelse is-working-day-for-me?
-  [ report (sort-by < (list slice-of-the-day "is-working-day")) ]
-  [ report (sort-by < (list slice-of-the-day "is-weekend-day")) ]
-  ;if is-working-from-home-recommended? and age = worker-age ; Only relevant for people that work at a workplace (not at a school, uni, non-es/es shop, hospital)
-  ;[ table:put context "recommendation" "work-from-home" ]
+; determining between food, home and leisure
+to-report get-most-salient-need
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-risk-avoidance
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if luxury-satisfaction-level < lowest-need-level [
+    set lowest-need-level luxury-satisfaction-level
+    set lowest-need need-luxury 
+  ]
+  if food-safety-satisfaction-level < lowest-need-level [
+    set lowest-need-level food-safety-satisfaction-level
+    set lowest-need need-food-safety 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  report lowest-need
 end
 
-to-report get-typical-actions [context]
-  ifelse table:has-key? table-typical-actions context
-  [ report table:get table-typical-actions context ]
-  [ report [] ]
-end
 
-; CRITICAL NEEDS
-to-report get-typical-actions-from-critical-needs
-  let additional-typical-actions (list)
-  if risk-avoidance-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-risk-avoidance)) ]
-  if compliance-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-compliance)) ]
-  if financial-stability-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-financial-stability)) ]
-  if belonging-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-belonging)) ]
-  if leisure-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-leisure)) ]
-  if luxury-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-luxury)) ]
-  if autonomy-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-autonomy)) ]
-  if food-safety-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-food-safety)) ]
-  if financial-survival-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-financial-survival)) ]
-  if health-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-health)) ]
-  if sleep-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-sleep)) ]
-  if conformity-satisfaction-level < need-critical-threshold
-  [ set additional-typical-actions sentence additional-typical-actions (get-typical-actions-from-a-need (list need-conformity)) ]
-  report remove-duplicates additional-typical-actions
-end
 
-to-report get-typical-actions-from-a-need [a-need]
-  let actions-from-needs (list)
-  if table:has-key? table-need-actions a-need
-  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions a-need))  ]
-  if (slice-of-the-day = time-morning or slice-of-the-day = time-afternoon) and is-working-day-for-me?
-  [ if table:has-key? table-need-actions-working-hours a-need
-    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours a-need)) ]
-  ]
-  report actions-from-needs
-end
-
-; MOST SALIENT NEED
-; This function looks at all needs 'relevant to the actions' and determines the most urgent one, then looks for an action that satisfies this need
-to-report get-actions-from-relevant-need [typical-actions]
-  
-  let list-relevant-needs []
-  ifelse table:has-key? table-actions-with-related-needs typical-actions 
-  [ set list-relevant-needs table:get table-actions-with-related-needs typical-actions ]
-  [ ;error (word typical-actions " does not have a key in table-actions-with-related-needs"), this function should still be optimized
-    set list-relevant-needs (get-related-needs-from-action-list typical-actions)
-  ]
- 
-  let network-action ""
-  ; For conformity
-  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
-  if length relevant-memory >= 4 [
-    let network-gp (location-of first relevant-memory)
-    if who = 375 [ print network-gp ]
-    set network-action network-gp
-    if member? network-action typical-actions [
-      set list-relevant-needs lput need-conformity list-relevant-needs
-    ]
-  ]
-
-  ;get-need-value a-need
-  if length list-relevant-needs = 0 [ report [] ]
-  if who = 375 [ print (word "All relevant-needs: "list-relevant-needs) ]
-  let relevant-need (list get-most-need-from-list list-relevant-needs ) ; Change to update decision context
-  if who = 375 [ print (word "Relevant-need: " relevant-need) ]
-  if relevant-need = (list need-conformity) and not (network-action = "")
-  [ set delib-count-one-need-conformity 1
-    if who = 375 [ print (word "Selected network action: " network-action) ]
-    report (list network-action) ]
-  let actions-from-needs []
-  if table:has-key? table-need-actions relevant-need
-  [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions relevant-need))  ]
-  if (slice-of-the-day = time-morning or slice-of-the-day = time-afternoon) and is-working-day-for-me?
-  [ if table:has-key? table-need-actions-working-hours relevant-need
-    [ set actions-from-needs (sentence actions-from-needs (table:get table-need-actions-working-hours relevant-need)) ]
-  ]
-  if who = 375 [ print (word relevant-need ":" actions-from-needs) ]
-  report intersect typical-actions actions-from-needs
-end
-
-to-report intersect [a b] ; Make more efficient
-  let the-intersect []
-  foreach a
-  [
-    x -> if member? x b
-    [ set the-intersect (sentence the-intersect x) ]
-  ]
-  report the-intersect
+to-report func-determine-social-distancing
+  if not with-infected?
+  [ report False ]
+  report True
 end
 
 to update-delib-count
@@ -194,4 +107,53 @@ to reset-delib-count
   set delib-count-one-need-conformity 0
   set delib-count-one-need-multi-actions 0
   set delib-count-full-need 0  
+end
+
+; The needs, order them according to alphabet
+to-report need-risk-avoidance
+  report "risk-avoidance"
+end
+
+to-report need-compliance
+  report "compliance"
+end
+
+to-report need-financial-stability
+  report "financial-stability"
+end
+
+to-report need-belonging
+  report "belonging"
+end
+
+to-report need-leisure
+  report "leisure"
+end
+
+to-report need-luxury
+  report "luxury"
+end
+
+to-report need-autonomy
+  report "autonomy"
+end
+
+to-report need-food-safety
+  report "food-safety"
+end
+
+to-report need-financial-survival
+  report "financial-survival"
+end
+
+to-report need-health
+  report "health"
+end
+
+to-report need-sleep
+  report "sleep"
+end
+
+to-report need-conformity
+  report "conformity"
 end

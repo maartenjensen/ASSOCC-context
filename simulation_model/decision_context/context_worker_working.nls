@@ -1,0 +1,6 @@
+to-report deliberate-worker-working
+  
+  
+  
+  report lput func-determine-social-distancing (list my-home "rest")
+end

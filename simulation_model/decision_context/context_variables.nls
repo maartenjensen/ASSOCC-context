@@ -1,3 +1,0 @@
-to-report get-context-quarantine
-  report "quarantine"
-end
