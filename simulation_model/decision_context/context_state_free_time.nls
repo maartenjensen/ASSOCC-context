@@ -1,0 +1,131 @@
+to-report context-state-free-time
+  ; The time is morning, afternoon or evening
+  if who = #agent-id [ print "Custom leisure time deliberation" ]
+  ; most important need??
+  let most-salient-need context-most-salient-need-free-time
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  
+  if most-salient-need = need-belonging [
+    ifelse context-normative-should-I-stay-home-with-need belonging-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ]
+    [ report func-determine-social-distancing (context-heuristic-random-action context-add-actions-by-need (list (list my-home "rest")
+      (activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
+    ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
+    [ report func-determine-social-distancing (context-heuristic-random-action context-add-actions-by-need (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  if most-salient-need = need-luxury [
+    ifelse context-normative-should-I-stay-home-with-need luxury-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ] 
+    [ report func-determine-social-distancing context-add-actions-by-need (activity-descriptor my-non-essential-shop "shopping") ]
+  ]
+  if most-salient-need = need-food-safety [
+    ifelse context-normative-should-I-stay-home-with-need food-safety-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ] 
+    [ report func-determine-social-distancing context-add-actions-by-need (activity-descriptor one-of my-essential-shops "essential shopping") ]
+  ]
+  if most-salient-need = need-risk-avoidance [
+     report func-determine-social-distancing context-add-actions-by-need (list my-home "rest")
+  ]
+;  if most-salient-need = need-conformity [
+;    let network-action ""
+;    ; For conformity
+;    let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
+;    if length relevant-memory >= 4 [
+;      let network-gp (location-of first relevant-memory)
+;      if who = #agent-id [ print network-gp ]
+;      set network-action network-gp
+;      if member? network-action typical-actions [
+;        set list-relevant-needs lput need-conformity list-relevant-needs
+;      ]
+;    ]
+;  ]
+  ; I'm not going to consider the normative aspects, where an agent is not in quarantine, but because
+  ; the whole network is in quarantine maybe it should also consider being in quarantine, here I can
+  ; just link to work of Rene or something, because this is actual argumentation, team reasoning and such.
+  ;  ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+  ;  [ report func-determine-social-distancing (list my-home "rest") ] 
+  ;  [ report func-determine-social-distancing (list (activity-descriptor my-non-essential-shop "shopping")) ]
+  ;]
+  ; report func-determine-social-distancing (list my-home "rest")
+  report []
+end
+
+
+to-report context-state-free-time-young
+  ; The time is morning, afternoon or evening
+  if who = #agent-id [ print "Custom leisure time deliberation" ]
+  ; most important need??
+  let most-salient-need context-most-salient-need-free-time-young
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  
+  if most-salient-need = need-belonging [
+    ifelse context-normative-should-I-stay-home-with-need belonging-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ]
+    [ report func-determine-social-distancing (context-heuristic-random-action context-add-actions-by-need (list (list my-home "rest")
+      (activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
+    ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+    [ report func-determine-social-distancing context-add-actions-by-need (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
+    [ report func-determine-social-distancing (context-heuristic-random-action context-add-actions-by-need (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  if most-salient-need = need-risk-avoidance [
+     report func-determine-social-distancing context-add-actions-by-need (list my-home "rest")
+  ]
+  ;if most-salient-need = need-conformity [
+  ;  ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+  ;  [ report func-determine-social-distancing (list my-home "rest") ] 
+  ;  [ report func-determine-social-distancing (list (activity-descriptor my-non-essential-shop "shopping")) ]
+  ;]
+  ; report func-determine-social-distancing (list my-home "rest")
+  report []
+end
+
+to-report context-most-salient-need-free-time
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-risk-avoidance
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if luxury-satisfaction-level < lowest-need-level [
+    set lowest-need-level luxury-satisfaction-level
+    set lowest-need need-luxury 
+  ]
+  if food-safety-satisfaction-level < lowest-need-level [
+    set lowest-need-level food-safety-satisfaction-level
+    set lowest-need need-food-safety 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  report lowest-need
+end
+
+; This function compares without the luxury and food safety need, since young don't do shopping
+to-report context-most-salient-need-free-time-young
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-risk-avoidance
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  report lowest-need
+end
+

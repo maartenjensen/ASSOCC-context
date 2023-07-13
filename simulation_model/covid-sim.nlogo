@@ -191,7 +191,7 @@ INPUTBOX
 915
 899
 #schools-gp
-8.0
+12.0
 1
 0
 Number
@@ -202,7 +202,7 @@ INPUTBOX
 1006
 899
 #universities-gp
-3.0
+4.0
 1
 0
 Number
@@ -213,7 +213,7 @@ INPUTBOX
 1098
 899
 #workplaces-gp
-17.0
+23.0
 1
 0
 Number
@@ -234,7 +234,7 @@ INPUTBOX
 1211
 899
 #public-leisure-gp
-13.0
+18.0
 1
 0
 Number
@@ -245,7 +245,7 @@ INPUTBOX
 1331
 899
 #private-leisure-gp
-36.0
+50.0
 1
 0
 Number
@@ -421,7 +421,7 @@ INPUTBOX
 1448
 899
 #essential-shops-gp
-6.0
+9.0
 1
 0
 Number
@@ -462,7 +462,7 @@ INPUTBOX
 1575
 899
 #non-essential-shops-gp
-6.0
+9.0
 1
 0
 Number
@@ -473,7 +473,7 @@ INPUTBOX
 829
 899
 #hospital-gp
-3.0
+4.0
 1
 0
 Number
@@ -1055,7 +1055,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-0
+1
 1
 -1000
 
@@ -1997,7 +1997,7 @@ INPUTBOX
 631
 626
 #households
-250.0
+350.0
 1
 0
 Number
@@ -2019,7 +2019,7 @@ INPUTBOX
 2443
 102
 #beds-in-hospital
-8.0
+11.0
 1
 0
 Number
@@ -2388,7 +2388,7 @@ INPUTBOX
 3471
 748
 #bus-per-timeslot
-19.0
+27.0
 1
 0
 Number
@@ -4329,7 +4329,7 @@ INPUTBOX
 1250
 352
 #households-for-context-scenario
-250.0
+350.0
 1
 0
 Number
@@ -4929,11 +4929,6 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="350"/>
-      <value value="700"/>
-      <value value="1400"/>
-      <value value="2100"/>
-      <value value="2800"/>
-      <value value="3500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
       <value value="6"/>

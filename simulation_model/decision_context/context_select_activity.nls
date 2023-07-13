@@ -1,4 +1,4 @@
-;__includes [ "decision_context/context_worker_working.nls" ]
+__includes [ "decision_context/context_state_free_time.nls" ]
 
 ;__includes [ "decision_context/context_actions.nls" "decision_context/context_time.nls" "decision_context/context_typical_actions.nls" "decision_context/context_need_actions.nls" "decision_context/context_needs.nls" "decision_context/context_variables.nls" ]
 ; context_select_activity.nls
@@ -7,7 +7,7 @@
 ; of calling conextual-deliberation-select-activity instead of
 ; my-preferred-available-activity-descriptor
 to context-select-activity
-  let c-a contextual-deliberation-select-activity
+  let c-a context-deliberation-select-activity
   ;let c-a my-preferred-available-activity-descriptor
   set deliberation-cost 0
   
@@ -27,53 +27,27 @@ to context-select-activity
   if who = #agent-id [ print (word "- Final action: " ([gathering-type] of current-activity) ", " current-motivation ", " is-i-apply-social-distancing?)  ]
 end
 
-to-report contextual-deliberation-select-activity
+; This function contains the statemachine used for context-sensitive deliberation
+to-report context-deliberation-select-activity
   reset-delib-count
-  if who = #agent-id [ print (word "== Delib start agent: " #agent-id ", time: " slice-of-the-day ", working-day:" is-working-day-for-me? " ==") ]
+  let chosen-action []
+  if who = #agent-id [ print (word "== Delib start agent: " #agent-id ", time: " slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) " ==") ]
   ; Check whether not night (day time) and (retired or not a working day)
   if (slice-of-the-day != "night")
+  [
+    if age = retired-age or (slice-of-the-day = "evening" or (not is-working-day-for-me?))
     [
-      if age = retired-age or (slice-of-the-day = "evening" or (not is-working-day-for-me?))
+      ; Check whether sick, we are only considering not sick
+      if not (has-internally-visible-symptoms? or is-believing-to-be-infected?)
       [
-        ; Check whether sick, we are only considering not sick
-        if not (has-internally-visible-symptoms? or is-believing-to-be-infected?)
-        [
-          ; The time is morning, afternoon or evening
-          if who = #agent-id [ print "Custom leisure time deliberation" ]
-          ; most important need??
-          let most-salient-need get-most-salient-need
-          if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
-          ;let final-action lput func-determine-social-distancing (list my-home "rest")
-          if most-salient-need = need-belonging [
-            ifelse context-normative-should-I-stay-home-with-need belonging-satisfaction-level
-            [ report func-determine-social-distancing (list my-home "rest") ]
-            [ report func-determine-social-distancing (context-heuristic-take-random-action context-rational-choice-add-actions-by-need (list (list my-home "rest")
-              (activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
-          ]
-          if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
-            ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
-            [ report func-determine-social-distancing (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
-            [ report func-determine-social-distancing (context-heuristic-take-random-action context-rational-choice-add-actions-by-need (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
-          ]
-          if most-salient-need = need-luxury [
-            ifelse context-normative-should-I-stay-home-with-need luxury-satisfaction-level
-            [ report func-determine-social-distancing (list my-home "rest") ] 
-            [ report func-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
-          ]
-          if most-salient-need = need-food-safety [
-            ifelse context-normative-should-I-stay-home-with-need food-safety-satisfaction-level
-            [ report func-determine-social-distancing (list my-home "rest") ] 
-            [ report func-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
-          ]
-          ;if most-salient-need = need-conformity [
-          ;  ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
-          ;  [ report func-determine-social-distancing (list my-home "rest") ] 
-          ;  [ report func-determine-social-distancing (list (activity-descriptor my-non-essential-shop "shopping")) ]
-          ;]
-          ; report func-determine-social-distancing (list my-home "rest")
-        ]
+        ifelse age != young-age
+        [ set chosen-action context-state-free-time ]
+        [ set chosen-action context-state-free-time-young ]
+        if not empty? chosen-action
+        [ report chosen-action ]
       ]
     ]
+  ]
   
   ; Do the full need based deliberation
   if who = #agent-id [ print (word "Full ASSOCC need based deliberation") ]
@@ -85,12 +59,12 @@ end
 ; Context functions
 
 ; This function is specifically made for the profiler to measure how often it is called
-to-report context-rational-choice-add-actions-by-need [p-list-of-actions]
+to-report context-add-actions-by-need [p-list-of-actions]
   if who = #agent-id [ print (word "Add actions by need" ) ]
   report p-list-of-actions
 end
 
-to-report context-heuristic-take-random-action [p-list-of-actions]
+to-report context-heuristic-random-action [p-list-of-actions]
   if who = #agent-id [ print (word "Heuristic: Take random action of " p-list-of-actions ) ]
   report one-of p-list-of-actions
 end
@@ -109,38 +83,13 @@ to-report context-normative-should-I-stay-home-with-need [p-most-salient-need-le
     report False ]
 end
 
-; determining between food, home and leisure
-to-report get-most-salient-need
-  let lowest-need-level risk-avoidance-satisfaction-level
-  let lowest-need need-risk-avoidance
-  if belonging-satisfaction-level < lowest-need-level [
-    set lowest-need-level belonging-satisfaction-level
-    set lowest-need need-belonging 
-  ]
-  if leisure-satisfaction-level < lowest-need-level [
-    set lowest-need-level leisure-satisfaction-level
-    set lowest-need need-leisure 
-  ]
-  if luxury-satisfaction-level < lowest-need-level [
-    set lowest-need-level luxury-satisfaction-level
-    set lowest-need need-luxury 
-  ]
-  if food-safety-satisfaction-level < lowest-need-level [
-    set lowest-need-level food-safety-satisfaction-level
-    set lowest-need need-food-safety 
-  ]
-  if conformity-satisfaction-level < lowest-need-level [
-    set lowest-need-level conformity-satisfaction-level
-    set lowest-need need-conformity 
-  ]
-  report lowest-need
-end
-
-; Make this dependent on risk-avoidance need (and potentially on, but this is probably too much work)
+; Make this dependent on location??
 to-report func-determine-social-distancing [gp-and-motive]
   if not with-infected?
   [ report lput False gp-and-motive ]
-  report lput True gp-and-motive
+  if risk-avoidance-satisfaction-level < 0.75
+  [ report lput True gp-and-motive ]
+  report lput False gp-and-motive
 end
 
 to update-delib-count
