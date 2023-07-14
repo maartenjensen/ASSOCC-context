@@ -36,7 +36,7 @@ to load-scenario-specifics
   if preset-scenario = "context-assocc"
   [
     load-default-household-profiles ; great-britain is the default
-    set with-infected? false
+    set with-infected? true
     set probability-infection-when-abroad 0
     set #households #households-for-context-scenario
     load-number-of-gathering-points-based-on-number-of-households #households

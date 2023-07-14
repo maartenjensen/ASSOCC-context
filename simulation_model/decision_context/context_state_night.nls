@@ -1,0 +1,64 @@
+; Filename: context_state_night.nls
+; What we know from the context within these functions
+; Location: Does not matter in implementation, as the agent just travels to the location where the agent can perform the action.
+; Time: Night! Regardless of working day or non working day
+; Age: All
+; Sickness: The agent is not sick
+
+to-report context-state-night
+  ; The time is morning, afternoon or evening
+  ;if who = #agent-id [ print "Custom night deliberation" ]
+  ; most important need??
+  let most-salient-need context-most-salient-need-night
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  
+  ; Sleep is first checked since its most probable that this is the lowest need
+  if most-salient-need = need-sleep 
+  [ report context-determine-social-distancing (list my-home "rest")]
+  if most-salient-need = need-risk-avoidance 
+  [ report (list my-home "rest" True)]
+  if most-salient-need = need-belonging 
+  [ report context-determine-social-distancing (list my-home "rest")]
+  if most-salient-need = need-autonomy 
+  [ report context-determine-social-distancing (list my-home "rest")]
+  ; Need leisure and conformity require further implementation or Full ASSOCC deliberation
+  ; The conformity need can probably be implemented easily when the network stays home, the leisure need is probably best determined by full ASSOCC
+  ; Because this is actually dependent on the combination of needs, if leisure is lowest but sleep AND risk avoidance AND autonomy is also important 
+  ; then the agent should probably still stay at home and sleep (rest).
+
+  report []
+end
+
+;important needs: 
+;Sleep -> Home (most probable)
+;Risk avoidance -> Home
+;Belonging -> Home (home, private leisure and public leisure give belonging however the agent should by default be at home to sleep)
+;Leisure -> Full ASSOCC (since the agent can gain more leisure at a leisure place)
+;Autonomy -> Home
+;Conformity -> Depends on the network
+
+to-report context-most-salient-need-night
+  let lowest-need-level sleep-satisfaction-level
+  let lowest-need need-sleep
+  if risk-avoidance-satisfaction-level < lowest-need-level [
+    set lowest-need-level risk-avoidance-satisfaction-level
+    set lowest-need need-risk-avoidance
+  ]
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if autonomy-satisfaction-level < lowest-need-level [
+    set lowest-need-level autonomy-satisfaction-level
+    set lowest-need need-autonomy 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  report lowest-need
+end

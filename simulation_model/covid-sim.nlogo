@@ -1055,7 +1055,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-1
+0
 1
 -1000
 
@@ -4852,7 +4852,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="120"/>
+    <timeLimit steps="240"/>
     <metric>#contacts-last-tick</metric>
     <metric>#youngs-at-start</metric>
     <metric>#students-at-start</metric>
