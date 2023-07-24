@@ -5,7 +5,6 @@ to execute-activity-effect
     release-bed-in-hospital
   ]
 
-
   if not is-currently-allocated-a-bed-in-hospital? and (current-motivation = treatment-motive)
   [
     try-acquire-a-bed-in-hospital

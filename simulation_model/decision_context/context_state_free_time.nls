@@ -40,10 +40,14 @@ to-report context-state-free-time
   if most-salient-need = need-risk-avoidance [ ; If the need for risk avoidance is most salient the agent will always perform social distancing?
      report (list my-home "rest" true)
   ]
+  if most-salient-need = need-sleep [
+     report context-determine-social-distancing (list my-home "rest")
+  ]
   if most-salient-need = need-conformity [
     let network-action context-conformity-get-network-action
     ifelse empty? network-action
     [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
+      report [] 
     ]
     [
       let network-g-type (location-of network-action)
@@ -55,19 +59,19 @@ to-report context-state-free-time
       if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
       [
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ report lput network-sd (activity-descriptor my-public-leisure "relaxing") ]
       ]
       if network-g-type = private-leisure-gathering-type and network-motive = "relaxing"
       [ 
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ report lput network-sd (activity-descriptor my-private-leisure "relaxing") ]
       ]
       if network-g-type = non-essential-shop-gathering-type and network-motive = "shopping"
       [ 
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ if context-financial-need-check luxury-satisfaction-level
           [ report lput network-sd (activity-descriptor my-non-essential-shop "shopping") ]
         ]
@@ -75,7 +79,7 @@ to-report context-state-free-time
       if network-g-type = essential-shop-gathering-type and network-motive = "essential shopping"
       [
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ if context-financial-need-check food-safety-satisfaction-level
           [ report lput network-sd (activity-descriptor one-of my-essential-shops "essential shopping") ]
         ]
@@ -114,6 +118,9 @@ to-report context-state-free-time-young
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
   if most-salient-need = need-risk-avoidance [
+     report (list my-home "rest" True)
+  ]
+  if most-salient-need = need-sleep [
      report context-determine-social-distancing (list my-home "rest")
   ]
   if most-salient-need = need-conformity [
@@ -131,13 +138,13 @@ to-report context-state-free-time-young
       if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
       [
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ report lput network-sd (activity-descriptor my-public-leisure "relaxing") ]
       ]
       if network-g-type = private-leisure-gathering-type and network-motive = "relaxing"
       [ 
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
-        [ report context-determine-social-distancing (list my-home "rest") ] 
+        [ report (list my-home "rest" network-sd) ] 
         [ report lput network-sd (activity-descriptor my-private-leisure "relaxing") ]
       ]
       ; Treatment is not implemented since this agent is not sick
@@ -147,6 +154,7 @@ to-report context-state-free-time-young
   report []
 end
 
+; All the relevant needs are considered
 to-report context-most-salient-need-free-time
   let lowest-need-level risk-avoidance-satisfaction-level
   let lowest-need need-risk-avoidance
@@ -170,6 +178,10 @@ to-report context-most-salient-need-free-time
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-sleep 
+  ]
   report lowest-need
 end
 
@@ -188,6 +200,10 @@ to-report context-most-salient-need-free-time-young
   if conformity-satisfaction-level < lowest-need-level [
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
+  ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-sleep 
   ]
   report lowest-need
 end
