@@ -28,7 +28,7 @@ to-report context-state-obligation-worker ; This should be ONLY young since ther
   
   if most-salient-need = need-compliance [ ; It seems that the agents get a boost of following compliance before morning, so in morning and afternoon their need for compliance is very high.
     ifelse context-normative-should-I-stay-home
-    [ report (list my-home "rest" True) ]
+    [ report context-determine-social-distancing (list my-home "rest") ]
     [ report context-determine-social-distancing (activity-descriptor my-work work-motive) ]
   ]
   if most-salient-need = need-belonging [ ; Belonging is both achieved home and school (and other places) so it depends on the rules
@@ -36,27 +36,39 @@ to-report context-state-obligation-worker ; This should be ONLY young since ther
     [ report context-determine-social-distancing (list my-home "rest") ]
     [ report context-determine-social-distancing (activity-descriptor my-work work-motive) ]
   ]
-  if most-salient-need = need-autonomy [
-    ifelse context-normative-should-I-stay-home-with-need autonomy-satisfaction-level
-    [ report context-determine-social-distancing (list my-home "rest") ]
-    [ report context-determine-social-distancing (activity-descriptor my-work work-motive) ]
+  if most-salient-need = need-autonomy [ ; Autonomy is more important than compliance, so the agent just goes to work
+    report lput False (activity-descriptor my-work work-motive)
   ]
   if most-salient-need = need-risk-avoidance [
-    ifelse context-normative-should-I-stay-home
-    [ report (list my-home "rest" True) ]
-    [ ifelse context-normative-should-I-stay-home-with-need-new risk-avoidance-satisfaction-level
-      [ report (list my-home "rest" True) ]
-      [ report (lput True (activity-descriptor my-work work-motive)) ]
+    report (list my-home "rest" True)
+  ]
+  if most-salient-need = need-financial-stability [ ; Financial stability is more important than compliance, so the agent just goes to work
+    report context-determine-social-distancing (activity-descriptor my-work work-motive)
+  ]
+  if most-salient-need = need-financial-survival [ ; Financial survival is more important than compliance, so the agent just goes to work
+    report context-determine-social-distancing (activity-descriptor my-work work-motive)
+  ]
+  if most-salient-need = need-conformity [
+    let network-action context-conformity-get-network-action
+    ifelse empty? network-action
+    [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
+      report []
+    ]
+    [
+      let network-g-type (location-of network-action)
+      let network-motive motive-of network-action
+      let network-sd did-my-network-socially-distance?
+      
+      if network-motive = "mandatory" or network-motive = work-motive
+      [
+        report lput network-sd (activity-descriptor my-work work-motive)
+      ]
     ]
   ]
-  ; TODO implement
-  ; Conformity: if the network is doing something you want to do that as well, whether they are in quarantine or not
   ; Sleep
   ; Leisure
   ; Food safety
   ; Luxury
-  ; Financial stability
-  ; Financial survival
   report []
 end
 

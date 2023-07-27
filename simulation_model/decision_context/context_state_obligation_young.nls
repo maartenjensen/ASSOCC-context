@@ -13,7 +13,7 @@
 ; Leisure        : Full ASSOCC (to difficult to determine with simple rules)
 ; Autonomy       : 
 ; Sleep          : 
-; Conformity     : 
+; Conformity     : If the network is going to school (or university or work) the young agent will go to school, otherwise full ASSOCC will determine it.
 
 ; Reconsider these states as they don't make so much sense (at least the risk avoidance part). Maybe autonomy and risk avoidance should be switched
 to-report context-state-obligation-young ; This should be ONLY young since there is a different action
@@ -52,18 +52,11 @@ to-report context-state-obligation-young ; This should be ONLY young since there
       
       if network-motive = "mandatory" or network-motive = work-motive
       [
-        report context-determine-social-distancing (activity-descriptor my-school "mandatory")
-      ]
-      if not (network-motive = "essential shopping") and not (network-motive = "shopping")
-      [
-        ; What's wrong with this?? [home rest true], maybe home??? should be my home
-        print lput network-sd network-action
-        report lput network-sd network-action
+        report lput network-sd (activity-descriptor my-school "mandatory")
       ]
     ]
   ]
-  ; TODO implement
-  ; Conformity: if the network is doing something you want to do that as well, whether they are in quarantine or not
+  ; Conformity: if the network is going to school (or university or work) the young agent will go to school, otherwise full ASSOCC will determine it.
   ; Sleep
   ; Leisure
   report []

@@ -4852,7 +4852,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="240"/>
+    <timeLimit steps="60"/>
     <metric>#contacts-last-tick</metric>
     <metric>#youngs-at-start</metric>
     <metric>#students-at-start</metric>

@@ -1,0 +1,105 @@
+; Filename: profiler_speed_test_functions.nls
+
+to profiler-speed-test-init ; Called from ? 
+  
+end 
+
+to profiler-speed-test-functions ; Called from context_select_activity.nls
+  if who = #agent-id [ print ("Start speed test") ]
+  
+  ; Compare 7 needs since it seems like a nice average
+  let result profiler-speed-test-needs-1
+  set result profiler-speed-test-needs-2
+end
+
+to-report profiler-speed-test-needs-1
+
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-risk-avoidance
+  if compliance-satisfaction-level < lowest-need-level [
+    set lowest-need-level compliance-satisfaction-level
+    set lowest-need need-compliance 
+  ]
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if autonomy-satisfaction-level < lowest-need-level [
+    set lowest-need-level autonomy-satisfaction-level
+    set lowest-need need-autonomy 
+  ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-sleep 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  
+  if lowest-need = need-risk-avoidance
+  [ report [] ]
+  if lowest-need = need-compliance 
+  [ report [] ]
+  if lowest-need = need-belonging 
+  [ report [] ]
+  if lowest-need = need-leisure
+  [ report [] ]
+  if lowest-need = need-autonomy
+  [ report [] ]
+  if lowest-need = need-sleep
+  [ report [] ]
+  if lowest-need = need-conformity
+  [ report [] ]
+  ;report lowest-need
+
+end
+
+to-report profiler-speed-test-needs-2
+
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-n-risk-avoidance
+  if compliance-satisfaction-level < lowest-need-level [
+    set lowest-need-level compliance-satisfaction-level
+    set lowest-need need-n-compliance 
+  ]
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-n-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-n-leisure 
+  ]
+  if autonomy-satisfaction-level < lowest-need-level [
+    set lowest-need-level autonomy-satisfaction-level
+    set lowest-need need-n-autonomy 
+  ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-n-sleep 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-n-conformity 
+  ]
+  
+  if lowest-need = need-n-risk-avoidance
+  [ report [] ]
+  if lowest-need = need-n-compliance 
+  [ report [] ]
+  if lowest-need = need-n-belonging 
+  [ report [] ]
+  if lowest-need = need-n-leisure
+  [ report [] ]
+  if lowest-need = need-n-autonomy
+  [ report [] ]
+  if lowest-need = need-n-sleep
+  [ report [] ]
+  if lowest-need = need-n-conformity
+  [ report [] ]
+end
