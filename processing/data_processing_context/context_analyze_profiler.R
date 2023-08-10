@@ -29,10 +29,46 @@ dataFileName <- c("report-[C= false -H= 100 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 300 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 350 -R= 1 -A= 6].csv")
 
-dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
+dataFileName <- c("report-[C= false -H= 175 -R= 1 -A= 6].csv",
+                  "report-[C= false -H= 350 -R= 1 -A= 6].csv",
+                  "report-[C= true -H= 175 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 350 -R= 1 -A= 6].csv")
 
 filesNames   <- dataFileName
+
+
+str_to_v_without_white_spaces <- function(p_str) {
+  t_vector <- c()
+  t_str = ""
+  
+  str_split <- strsplit(p_str, "")[[1]]
+  for(char in str_split) {
+    if (char == ' ') {
+      if (t_str != "") {
+        t_vector <- c(t_vector, t_str)
+        t_str = ""
+      }
+    }
+    else {
+      t_str = paste(t_str, char, sep = "")
+    }
+  }
+  t_vector <- c(t_vector, t_str)
+  return(t_vector)
+}
+
+setting_str_to_v <- function(p_str) {
+  t_setting_vector <- c()
+  
+  # Check Context False or True
+  t_context <- substr(p_str, 12, 12)
+  if (t_context == "f")      { t_settings_vector <- c(t_settings_vector, FALSE) }
+  else if (t_context == "t") { t_settings_vector <- c(t_settings_vector, FALSE) }
+  else { stop(paste(p_str, " is not a valid string", sep = "")) }
+  
+  return(t_setting_vector)
+}
+# Solution for tomorrow, a for loop through the characters and find C, then 3 steps further, then find H, then further until space, do the same for R and A, etc.
 
 #=============================================================
 #========================= LOAD DATA =========================
@@ -57,7 +93,8 @@ for (i in 1:length(p_files_names)) {
     if (str_contains(df_initial[i,1], "GO ") || str_contains(df_initial[i,1], "SELECT-ACTIVITY ") || 
         str_contains(df_initial[i,1], "CONTEXT") || str_contains(df_initial[i,1], "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")) {
       print(paste(file_name, df_initial[i,1], sep = ":    "))
-      result_v <- v_convert_result_to_float(str_to_v_without_white_spaces(df_initial[i,1]))
+      result_v <- str_to_v_without_white_spaces(df_initial[i,1])
+      setting_v <- setting_str_to_v(result_v[1])
       df_results <- rbind(df_results, c(file_name, result_v[1], as.double(result_v[2]), result_v[3], result_v[4], result_v[5]))
     }
     if (str_contains(df_initial[i,1], "Sorted by Inclusive Time")) {
@@ -75,25 +112,12 @@ print(df_results)
 
 df_results <- df_results[order(df_results$settings, df_results$function_name),]
 
-str_to_v_without_white_spaces <- function(p_str) {
-  t_vector <- c()
-  t_str = ""
-  
-  str_split <- strsplit(p_str, "")[[1]]
-  for(char in str_split) {
-    if (char == ' ') {
-      if (t_str != "") {
-        t_vector <- c(t_vector, t_str)
-        t_str = ""
-      }
-    }
-    else {
-      t_str = paste(t_str, char, sep = "")
-    }
-  }
-  t_vector <- c(t_vector, t_str)
-  return(t_vector)
-}
+#=============================================================
+#====================== PREPARE DATA =========================
+#=============================================================
+
+df_results_go <- df_results[df_results$function_name=="GO", ]
+
 
 plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
   
