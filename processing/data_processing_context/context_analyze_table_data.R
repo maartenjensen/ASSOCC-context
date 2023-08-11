@@ -18,7 +18,7 @@ filesPath <- ""
 
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
-dataFileName <- c("covid-sim original-vs-context H 175 350.csv")
+dataFileName <- c("covid-sim realism (-H= 350 -R= 1 -A= 6).csv")
 
 filesNames   <- dataFileName
 
@@ -148,7 +148,7 @@ colnames(df_people_at_locations)
 
 seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, measurement, essential_shops:workplaces)
 
-x_limits = c(0,55) #c(28,83)
+x_limits = c(0,239) #c(28,83)
 
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 
@@ -306,7 +306,7 @@ colnames(df_needs)
 
 seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
 
-x_limits = c(0,55) #c(28,83)
+x_limits = c(0,239) #c(28,83)
 
 limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
 
@@ -352,9 +352,14 @@ df_deliberation_type <- df_action_space %>%
 
 seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
 
-limits = coord_cartesian(xlim = c(0, 55), ylim = c(0, 1000))
+limits = coord_cartesian(xlim = c(0, 239), ylim = c(0, 1000))
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 
 pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height)
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 dev.off()
+
+
+#=============================================================
+#==================== PLOT INFECTIONS  =======================
+#=============================================================

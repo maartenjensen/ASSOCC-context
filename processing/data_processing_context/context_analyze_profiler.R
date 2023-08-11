@@ -16,13 +16,27 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileName <- c("report-[C= false -H= 175 -R= 1 -A= 6].csv",
-                  "report-[C= false -H= 350 -R= 1 -A= 6].csv",
-                  "report-[C= true -H= 175 -R= 1 -A= 6].csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6].csv")
-
+dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
+                  "report-[C= false -H= 350 -R= 2 -A= 6].csv",
+                  "report-[C= false -H= 350 -R= 3 -A= 6].csv",
+                  "report-[C= false -H= 350 -R= 4 -A= 6].csv",
+                  "report-[C= false -H= 350 -R= 5 -A= 6].csv",
+                  "report-[C= false -H= 700 -R= 1 -A= 6].csv",
+                  "report-[C= false -H= 700 -R= 2 -A= 6].csv",
+                  "report-[C= false -H= 700 -R= 3 -A= 6].csv",
+                  "report-[C= false -H= 700 -R= 4 -A= 6].csv",
+                  "report-[C= false -H= 700 -R= 5 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 2 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 3 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 4 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 5 -A= 6].csv",
+                  "report-[C= true -H= 700 -R= 1 -A= 6].csv",
+                  "report-[C= true -H= 700 -R= 2 -A= 6].csv",
+                  "report-[C= true -H= 700 -R= 3 -A= 6].csv",
+                  "report-[C= true -H= 700 -R= 4 -A= 6].csv",
+                  "report-[C= true -H= 700 -R= 5 -A= 6].csv")
 filesNames   <- dataFileName
-
 
 str_to_v_without_white_spaces <- function(p_str) {
   t_vector <- c()
@@ -191,12 +205,13 @@ plot_ggplot_execution_time <- function(data_to_plot, p_title, p_limits) {
 #pdf("plot_context_assocc_profiler.pdf", width=gl_pdf_width, height=gl_pdf_height)
 
 df_results_go <- df_results[df_results$function_name=="GO", ]
-df_grouped_go <- df_results_go[ , c('context', 'households', 'incl_t_ms')] %>% group_by(context, households)
-plot_ggplot_execution_time(df_grouped_go, "Execution time ms - GO", coord_cartesian(xlim = c(175, 350), ylim = c(0, 250000)))
+df_grouped_go <- df_results_go[ , c('context', 'households', 'random_seed', 'incl_t_ms')] %>% group_by(context, households)  %>% 
+  summarise(incl_t_ms = mean(incl_t_ms, na.rm = TRUE))
+plot_ggplot_execution_time(df_grouped_go, "Execution time ms - GO (n=5)", coord_cartesian(xlim = c(350, 700), ylim = c(0, 950000)))
 
-df_results_select_activity <- df_results[(df_results$function_name=="CONTEXT-SELECT-ACTIVITY" | df_results$function_name=="SELECT-ACTIVITY"), ]
-df_grouped_select_activity <-  df_results_select_activity[ , c('context', 'households', 'incl_t_ms')] %>% group_by(context, households)
-plot_ggplot_execution_time(df_grouped_select_activity, "Execution time ms - Select Activity", coord_cartesian(xlim = c(175, 350), ylim = c(0, 120000)))
+df_results_select_activity <- df_results[(df_results$function_name=="CONTEXT-SELECT-ACTIVITY (n=5)" | df_results$function_name=="SELECT-ACTIVITY"), ]
+df_grouped_select_activity <-  df_results_select_activity[ , c('context', 'households', 'random_seed', 'incl_t_ms')] %>% group_by(context, households) %>% 
+  summarise(incl_t_ms = mean(incl_t_ms, na.rm = TRUE))
+plot_ggplot_execution_time(df_grouped_select_activity, "Execution time ms - Select Activity", coord_cartesian(xlim = c(350, 700), ylim = c(0, 500000)))
 
-# TODO for later, make the function group the random seeds together for an average. I can at least show it with a t-test no?? Or shall I ask Frank first?
 #dev.off()
