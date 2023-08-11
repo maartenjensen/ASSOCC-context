@@ -4926,9 +4926,101 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="175"/>
+      <value value="350"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#action-space">
+      <value value="6"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="ContextRealism" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup
+behavior-space-start-profiling
+load-scenario-specific-parameter-settings
+setup</setup>
+    <go>go</go>
+    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
+    <timeLimit steps="240"/>
+    <metric>#contacts-last-tick</metric>
+    <metric>#youngs-at-start</metric>
+    <metric>#students-at-start</metric>
+    <metric>#workers-at-start</metric>
+    <metric>#retireds-at-start</metric>
+    <metric>count people with [is-at-work?]</metric>
+    <metric>count people with [is-at-public-leisure-place?]</metric>
+    <metric>count people with [is-at-private-leisure-place?]</metric>
+    <metric>count people with [is-at-home?]</metric>
+    <metric>count people with [is-at-school?]</metric>
+    <metric>count people with [is-at-university?]</metric>
+    <metric>count people with [current-motivation = treatment-motive]</metric>
+    <metric>count people-at-essential-shops</metric>
+    <metric>count people-at-non-essential-shops</metric>
+    <metric>count children with [is-at-work?]</metric>
+    <metric>count children with [is-at-public-leisure-place?]</metric>
+    <metric>count children with [is-at-private-leisure-place?]</metric>
+    <metric>count children with [is-at-home?]</metric>
+    <metric>count children with [is-at-school?]</metric>
+    <metric>count children with [is-at-university?]</metric>
+    <metric>count children with [current-motivation = treatment-motive]</metric>
+    <metric>count children with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count children with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count students with [is-at-work?]</metric>
+    <metric>count students with [is-at-public-leisure-place?]</metric>
+    <metric>count students with [is-at-private-leisure-place?]</metric>
+    <metric>count students with [is-at-home?]</metric>
+    <metric>count students with [is-at-school?]</metric>
+    <metric>count students with [is-at-university?]</metric>
+    <metric>count students with [current-motivation = treatment-motive]</metric>
+    <metric>count students with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count students with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [is-at-work?]</metric>
+    <metric>count workers with [is-at-public-leisure-place?]</metric>
+    <metric>count workers with [is-at-private-leisure-place?]</metric>
+    <metric>count workers with [is-at-home?]</metric>
+    <metric>count workers with [is-at-school?]</metric>
+    <metric>count workers with [is-at-university?]</metric>
+    <metric>count workers with [current-motivation = treatment-motive]</metric>
+    <metric>count workers with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [is-at-work?]</metric>
+    <metric>count retireds with [is-at-public-leisure-place?]</metric>
+    <metric>count retireds with [is-at-private-leisure-place?]</metric>
+    <metric>count retireds with [is-at-home?]</metric>
+    <metric>count retireds with [is-at-school?]</metric>
+    <metric>count retireds with [is-at-university?]</metric>
+    <metric>count retireds with [current-motivation = treatment-motive]</metric>
+    <metric>count retireds with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>mean [belonging-satisfaction-level] of people</metric>
+    <metric>mean [risk-avoidance-satisfaction-level] of people</metric>
+    <metric>mean [autonomy-satisfaction-level] of people</metric>
+    <metric>mean [luxury-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [health-satisfaction-level] of people</metric>
+    <metric>mean [sleep-satisfaction-level] of people</metric>
+    <metric>mean [compliance-satisfaction-level] of people</metric>
+    <metric>mean [financial-stability-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [food-safety-satisfaction-level] of people</metric>
+    <metric>mean [leisure-satisfaction-level] of people</metric>
+    <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [conformity-satisfaction-level] of people</metric>
+    <metric>count people with [delib-count-typical = 1]</metric>
+    <metric>count people with [delib-count-one-need = 1]</metric>
+    <metric>count people with [delib-count-one-need-conformity = 1]</metric>
+    <metric>count people with [delib-count-one-need-multi-actions = 1]</metric>
+    <metric>count people with [delib-count-full-need = 1]</metric>
+    <enumeratedValueSet variable="context-sensitive-deliberation?">
+      <value value="false"/>
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#random-seed">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="350"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">

@@ -18,7 +18,7 @@ filesPath <- ""
 
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
-dataFileName <- c("action-space.csv")
+dataFileName <- c("covid-sim original-vs-context H 175 350.csv")
 
 filesNames   <- dataFileName
 
