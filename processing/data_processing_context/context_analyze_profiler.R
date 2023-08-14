@@ -209,9 +209,11 @@ df_grouped_go <- df_results_go[ , c('context', 'households', 'random_seed', 'inc
   summarise(incl_t_ms = mean(incl_t_ms, na.rm = TRUE))
 plot_ggplot_execution_time(df_grouped_go, "Execution time ms - GO (n=5)", coord_cartesian(xlim = c(350, 700), ylim = c(0, 950000)))
 
-df_results_select_activity <- df_results[(df_results$function_name=="CONTEXT-SELECT-ACTIVITY (n=5)" | df_results$function_name=="SELECT-ACTIVITY"), ]
+df_results_select_activity <- df_results[(df_results$function_name=="CONTEXT-SELECT-ACTIVITY" | df_results$function_name=="SELECT-ACTIVITY"), ]
 df_grouped_select_activity <-  df_results_select_activity[ , c('context', 'households', 'random_seed', 'incl_t_ms')] %>% group_by(context, households) %>% 
   summarise(incl_t_ms = mean(incl_t_ms, na.rm = TRUE))
-plot_ggplot_execution_time(df_grouped_select_activity, "Execution time ms - Select Activity", coord_cartesian(xlim = c(350, 700), ylim = c(0, 500000)))
+plot_ggplot_execution_time(df_grouped_select_activity, "Execution time ms - Select Activity (n=5)", coord_cartesian(xlim = c(350, 700), ylim = c(0, 500000)))
 
 #dev.off()
+
+df_check <- df_results[df_results$random_seed==1 & df_results$households==350, ]

@@ -2838,7 +2838,7 @@ INPUTBOX
 914
 87
 #random-seed
-1.0
+2.0
 1
 0
 Number
@@ -4905,7 +4905,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="120"/>
+    <timeLimit steps="240"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
     <metric>#admissions-last-tick</metric>
@@ -5031,13 +5031,9 @@ setup</setup>
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
-      <value value="1"/>
       <value value="2"/>
-      <value value="3"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
-      <value value="175"/>
       <value value="350"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">

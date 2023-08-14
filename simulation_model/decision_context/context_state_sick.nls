@@ -12,7 +12,7 @@ to-report context-state-sick-treatment
   ;if who = #agent-id [ print "Custom deliberation: So sick need treatment?" ]
   
   ; This function is all about determining whether the agent needs treatment. Critical symptoms or very low health need (this would overwrite all other needs)
-  if is-observing-critical-symptoms? and health-satisfaction-level < 0.1 ; Health is depricated since probably everyone gets a very low health satisfaction when sick EDIT: too many people requesting for hospital so added health level as constraint
+  if is-observing-critical-symptoms? and health-satisfaction-level < 0.0001 ; Health is depricated since probably everyone gets a very low health satisfaction when sick EDIT: too many people requesting for hospital so added health level as constraint
   [ report lput True (activity-descriptor my-hospital treatment-motive)  ]
   ;if who = #agent-id [ print "No treatment needed, however sick" ]
   report []

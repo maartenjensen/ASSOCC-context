@@ -18,9 +18,11 @@ filesPath <- ""
 
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
-dataFileName <- c("covid-sim realism (-H= 350 -R= 1 -A= 6).csv")
+dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
 
 filesNames   <- dataFileName
+
+one_plot <- TRUE
 
 #=============================================================
 #========================= LOAD DATA =========================
@@ -34,11 +36,11 @@ for (i in 1:length(p_files_names)) {
   print(paste("read csv from:", p_files_path, p_files_names[i], sep=""))
   #bind data from dataframe into new dataframe
   if (exists('t_df') && is.data.frame(get('t_df'))) { # Create additional rows, skips first 6 lines
-    temp_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",",head=TRUE, stringsAsFactors = TRUE)
+    temp_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",", head=TRUE, stringsAsFactors = TRUE)
     temp_df$X.run.number. <- temp_df$X.run.number + max_run_number
     t_df <- rbind(t_df, temp_df)
   } else { # Create the first row
-    t_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",",head=TRUE, stringsAsFactors = TRUE)
+    t_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",", head=TRUE, stringsAsFactors = TRUE)
   }
   max_run_number <- max(t_df$X.run.number.)
 }
@@ -89,6 +91,8 @@ colnames(df_renamed)[match("count_people_with_delib_count_one_need_conformity_1"
 colnames(df_renamed)[match("count_people_with_delib_count_one_need_multi_actions_1", colnames(df_renamed))] = "ON_Multi_act";
 colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "All_needs";
 
+colnames(df_renamed)[match("count_people_with_epistemic_infection_status_infected", colnames(df_renamed))] = "believe_infected";
+
 df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
 print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
 
@@ -120,7 +124,7 @@ plot_ggplot <- function(data_to_plot, p_title, p_limits) {
     ylab("Agents per tick") +
     labs(title=p_title) +
     gl_plot_guides + gl_plot_theme + p_limits +
-    scale_color_manual(values=c('#000000', '#E69F00', '#d73229', '#1A4B09'))
+    scale_color_manual(values=c('#000000', '#E69F00', '#d73229', '#1A4B09', '#1133FF'))
 }
 
 # Printing as PDF's
@@ -143,47 +147,44 @@ df_people_at_locations <- df_final %>%
             public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_people_with_is_at_school, na.rm = TRUE),
             universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
 colnames(df_people_at_locations)
-
-seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, measurement, essential_shops:workplaces)
 
 x_limits = c(0,239) #c(28,83)
 
+#----------- All the locations -------------
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-
+seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, measurement, essential_shops:workplaces)
 #plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Original ASSOCC", limits)
 #plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
 
-seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
-
+#----------- Location type 1 -------------
 limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-#gl_x_lim_days
-
+seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
 
-seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure))
-
-limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-#gl_x_lim_days
-
+#----------- Location type 2 -------------
+limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 500))
+seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure, treatment))
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
 
+if (one_plot) { pdf("plot_context_assocc_infections.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 
-pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) { pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
-dev.off()
-pdf("plot_agents_per_location_context_1.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) { dev.off() }
+if (!one_plot) { pdf("plot_agents_per_location_context_1.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
-dev.off()
-pdf("plot_agents_per_location_original_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) { dev.off() }
+if (!one_plot) { pdf("plot_agents_per_location_original_2.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
-dev.off()
-pdf("plot_agents_per_location_context_2.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) { dev.off() }
+if (!one_plot) { pdf("plot_agents_per_location_context_2.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
-dev.off()
+if (!one_plot) { dev.off() }
 
 agent_n = df_final$youngs_at_start[1] + df_final$students_at_start[1] + df_final$workers_at_start[1] + df_final$retireds_at_start[1]
 
@@ -197,7 +198,8 @@ df_people_at_locations_mean <- df_final %>%
             public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_people_with_is_at_school, na.rm = TRUE),
             universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
 
 df_children_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
@@ -209,7 +211,8 @@ df_children_at_locations_mean <- df_final %>%
             public_leisure = mean(count_children_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_children_with_is_at_school, na.rm = TRUE),
             universities = mean(count_children_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_children_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_children_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_children_with_current_motivation_treatment_motive, na.rm = TRUE))
 
 df_students_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
@@ -221,7 +224,8 @@ df_students_at_locations_mean <- df_final %>%
             public_leisure = mean(count_students_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_students_with_is_at_school, na.rm = TRUE),
             universities = mean(count_students_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_students_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_students_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_students_with_current_motivation_treatment_motive, na.rm = TRUE))
 
 df_workers_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
@@ -233,7 +237,8 @@ df_workers_at_locations_mean <- df_final %>%
             public_leisure = mean(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_workers_with_is_at_school, na.rm = TRUE),
             universities = mean(count_workers_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_workers_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_workers_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_workers_with_current_motivation_treatment_motive, na.rm = TRUE))
 
 df_retireds_at_locations_mean <- df_final %>% 
   group_by(context_sensitive_deliberation) %>% 
@@ -245,7 +250,8 @@ df_retireds_at_locations_mean <- df_final %>%
             public_leisure = mean(count_retireds_with_is_at_public_leisure_place, na.rm = TRUE),
             schools = mean(count_retireds_with_is_at_school, na.rm = TRUE),
             universities = mean(count_retireds_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_retireds_with_is_at_work, na.rm = TRUE))
+            workplaces = mean(count_retireds_with_is_at_work, na.rm = TRUE),
+            treatment = mean(count_retireds_with_current_motivation_treatment_motive, na.rm = TRUE))
 
 
 print(df_people_at_locations_mean)
@@ -310,16 +316,16 @@ x_limits = c(0,239) #c(28,83)
 
 limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
 
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
+#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
+#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
 
-pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) {pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-dev.off()
+if (!one_plot) { dev.off() }
 
-pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) {pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-dev.off()
+if (!one_plot) { dev.off() }
 
 #=============================================================
 #================ PLOT DELIBERATION TYPE =====================
@@ -353,13 +359,58 @@ df_deliberation_type <- df_action_space %>%
 seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
 
 limits = coord_cartesian(xlim = c(0, 239), ylim = c(0, 1000))
-plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 
-pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height)
+if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
-dev.off()
+if (!one_plot) { dev.off() }
 
 
 #=============================================================
 #==================== PLOT INFECTIONS  =======================
 #=============================================================
+
+plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
+                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement)) +
+    geom_line(aes(col=as.factor(context_sensitive_deliberation))) +
+    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
+    scale_colour_viridis_d(name="Context") +
+    labs(title=p_title,
+         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
+         x="Days", y=p_y_lab) +
+    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 239)) 
+}
+
+df_data <- df_final %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(infected = mean(infected, na.rm = TRUE),
+            believe_infected = mean(believe_infected, na.rm = TRUE),
+            tests_performed = mean(tests_performed, na.rm = TRUE),
+            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
+            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
+
+plots_data_infected <- gather(df_data, variable, measurement, infected)
+
+if (!one_plot) { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected")
+if (!one_plot) { dev.off() }
+
+# Epistemic infected
+plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
+
+if (!one_plot) { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
+                       "Number of agents believing they are infected")
+if (!one_plot) { dev.off() }
+
+# Total deaths
+plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
+
+if (!one_plot) { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
+if (!one_plot) { dev.off() }
+
+if (one_plot) { dev.off() }
