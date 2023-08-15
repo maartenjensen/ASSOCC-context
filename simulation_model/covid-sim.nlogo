@@ -251,10 +251,10 @@ INPUTBOX
 Number
 
 TEXTBOX
-651
-544
-801
-562
+652
+579
+802
+597
 Age model
 11
 53.0
@@ -494,10 +494,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-905
-563
-1155
-596
+906
+598
+1156
+631
 probability-hospital-personel
 probability-hospital-personel
 0
@@ -509,12 +509,27 @@ NIL
 HORIZONTAL
 
 SLIDER
-905
-600
+906
+635
+1155
+668
+probability-school-personel
+probability-school-personel
+0
+1
+0.03
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+906
+671
 1154
-633
-probability-school-personel
-probability-school-personel
+704
+probability-university-personel
+probability-university-personel
 0
 1
 0.03
@@ -524,25 +539,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-905
-636
+908
+708
 1153
-669
-probability-university-personel
-probability-university-personel
-0
-1
-0.03
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-907
-673
-1152
-706
+741
 probability-shopkeeper
 probability-shopkeeper
 0
@@ -812,20 +812,20 @@ Simulation management
 1
 
 TEXTBOX
-558
-414
-766
-452
+556
+448
+764
+486
 Demographics Model
 16
 53.0
 1
 
 MONITOR
-729
-488
-856
-533
+728
+530
+855
+575
 Adults rooming together
 count houses-hosting-adults2
 17
@@ -833,10 +833,10 @@ count houses-hosting-adults2
 11
 
 MONITOR
-914
-488
-1004
-533
+913
+530
+1003
+575
 Retired couples
 count houses-hosting-retired-couple
 17
@@ -844,10 +844,10 @@ count houses-hosting-retired-couple
 11
 
 MONITOR
-860
-488
-910
-533
+859
+530
+909
+575
 Family
 count houses-hosting-family
 17
@@ -855,10 +855,10 @@ count houses-hosting-family
 11
 
 MONITOR
-1009
-488
-1094
-533
+1008
+530
+1093
+575
 Multi-gen living
 count houses-hosting-multiple-generations
 17
@@ -1082,10 +1082,10 @@ is-closing-school-when-any-reported-case-measure?
 -1000
 
 SLIDER
-645
-598
-893
-631
+646
+633
+894
+666
 ratio-family-homes
 ratio-family-homes
 0
@@ -1160,10 +1160,10 @@ closed-non-essential?
 11
 
 SLIDER
-645
-563
-897
-596
+646
+598
+898
+631
 ratio-adults-homes
 ratio-adults-homes
 0
@@ -1175,10 +1175,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-645
-633
-893
-666
+646
+668
+894
+701
 ratio-retired-couple-homes
 ratio-retired-couple-homes
 0
@@ -1190,10 +1190,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-644
-670
-896
-703
+645
+705
+897
+738
 ratio-multi-generational-homes
 ratio-multi-generational-homes
 0
@@ -1352,10 +1352,10 @@ Taxes charged by the government
 1
 
 CHOOSER
-552
-447
-712
-492
+550
+481
+710
+526
 household-profiles
 household-profiles
 "custom" "Belgium" "Canada" "Germany" "Great Britain" "France" "Italy" "Korea South" "Netherlands" "Norway" "Spain" "Singapore" "Sweden" "U.S.A."
@@ -1495,10 +1495,10 @@ preset-scenario
 1
 
 MONITOR
-731
-441
-787
-486
+727
+482
+783
+527
 #children
 count children
 17
@@ -1506,10 +1506,10 @@ count children
 11
 
 MONITOR
-792
-441
-854
-486
+788
+482
+850
+527
 #students
 count students
 17
@@ -1517,10 +1517,10 @@ count students
 11
 
 MONITOR
-859
-440
-918
-485
+855
+481
+914
+526
 #workers
 count workers
 17
@@ -1528,10 +1528,10 @@ count workers
 11
 
 MONITOR
-924
-440
-983
-485
+920
+481
+979
+526
 #retired
 count retireds
 17
@@ -1569,10 +1569,10 @@ Closing universities
 1
 
 TEXTBOX
-910
-543
-1230
-592
+911
+578
+1231
+627
 Worker distribution (relevant for economic model)
 11
 53.0
@@ -1992,10 +1992,10 @@ NIL
 HORIZONTAL
 
 INPUTBOX
-551
-563
-631
-626
+552
+598
+632
+661
 #households
 350.0
 1
@@ -2003,10 +2003,10 @@ INPUTBOX
 Number
 
 MONITOR
-551
-506
-626
-551
+552
+541
+627
+586
 #people
 count people
 17
@@ -2952,10 +2952,10 @@ count people with [is-user-of-tracking-app?]
 11
 
 BUTTON
-647
-504
-710
-537
+648
+539
+711
+572
 set
 load-population-profile-based-on-current-preset-profile
 NIL
@@ -4405,10 +4405,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-941
-356
-1020
-416
+940
+381
+1019
+441
 #luxury-add
 0.2
 1
@@ -4416,10 +4416,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-852
-356
-937
-416
+851
+381
+936
+441
 #sleep-day-add
 0.2
 1
@@ -4427,12 +4427,34 @@ INPUTBOX
 Number
 
 INPUTBOX
-725
-356
-848
-416
+724
+381
+847
+441
 #leisure-free-time-add
--0.1
+-0.2
+1
+0
+Number
+
+INPUTBOX
+863
+316
+1018
+376
+#risk-avoid-treatment-threshold
+0.05
+1
+0
+Number
+
+INPUTBOX
+723
+317
+858
+377
+#risk-avoidance-private-leisure-preference
+0.75
 1
 0
 Number

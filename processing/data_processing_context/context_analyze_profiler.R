@@ -36,6 +36,10 @@ dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 3 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 4 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 5 -A= 6].csv")
+
+dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6].csv")
+
 filesNames   <- dataFileName
 
 str_to_v_without_white_spaces <- function(p_str) {

@@ -32,7 +32,7 @@ to-report context-deliberation-select-activity
   reset-delib-count
   ;profiler-speed-test-functions
   let chosen-action []
-  if who = #agent-id [ print "-" ]
+  if who = #agent-id [ ifelse (slice-of-the-day = "morning") [ print "-- MORNING --" ][ print "" ] ]
   if who = #agent-id [ print (word "== Delib start agent: " #agent-id ", time: " slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) " ==") ]
   ; Check whether not night (day time) and (retired or not a working day)
   ifelse (slice-of-the-day != "night")

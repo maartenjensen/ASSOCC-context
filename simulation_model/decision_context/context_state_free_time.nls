@@ -21,7 +21,9 @@ to-report context-state-free-time
   if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
     ifelse context-normative-should-I-stay-home-with-need get-leisure-satisfaction-free-time
     [ report context-determine-social-distancing (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
-    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+    [ ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+      [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+      [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ] ]
   ]
   if most-salient-need = need-luxury [
     ifelse context-normative-should-I-stay-home-with-need (luxury-satisfaction-level + #luxury-add)
@@ -115,7 +117,10 @@ to-report context-state-free-time-young
   if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
     ifelse context-normative-should-I-stay-home-with-need get-leisure-satisfaction-free-time
     [ report context-determine-social-distancing (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
-    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+    [ ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+      [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+      [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+    ]
   ]
   if most-salient-need = need-risk-avoidance [
      report (list my-home "rest" True)
