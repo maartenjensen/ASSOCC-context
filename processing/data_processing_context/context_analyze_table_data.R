@@ -19,7 +19,7 @@ filesPath <- ""
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
 #dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
-dataFileName <- c("covid-sim tweaks r 1 h 350.csv")
+dataFileName <- c("covid-sim R 1 H 350.csv")
 filesNames   <- dataFileName
 
 one_plot <- TRUE
@@ -30,7 +30,7 @@ one_plot <- TRUE
 
 p_files_path = filesPath
 p_files_names = filesNames
-  
+
 #read in datafiles using filesNames and filesPath variables
 for (i in 1:length(p_files_names)) {
   print(paste("read csv from:", p_files_path, p_files_names[i], sep=""))
@@ -109,7 +109,7 @@ gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
                                       legend.title = element_text(size = rel(1 * multiplier)),
                                       title = element_text(size = rel(1.3 * multiplier)) )
 
-gl_plot_guides <- guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1)))
+gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
 
 plot_ggplot <- function(data_to_plot, p_title, p_limits) {
   

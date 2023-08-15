@@ -4410,7 +4410,7 @@ INPUTBOX
 1019
 441
 #luxury-add
-0.2
+0.1
 1
 0
 Number
@@ -4432,18 +4432,7 @@ INPUTBOX
 847
 441
 #leisure-free-time-add
--0.2
-1
-0
-Number
-
-INPUTBOX
-863
-316
-1018
-376
-#risk-avoid-treatment-threshold
-0.05
+-0.18
 1
 0
 Number
@@ -4454,7 +4443,7 @@ INPUTBOX
 858
 377
 #risk-avoidance-private-leisure-preference
-0.75
+0.8
 1
 0
 Number
@@ -5093,6 +5082,18 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
       <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
+      <value value="0.8"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#leisure-free-time-add">
+      <value value="-0.18"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#sleep-day-add">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#luxury-add">
+      <value value="0.1"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="ContextRealism" repetitions="1" runMetricsEveryStep="true">
