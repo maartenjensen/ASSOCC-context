@@ -2838,7 +2838,7 @@ INPUTBOX
 914
 87
 #random-seed
-2.0
+1.0
 1
 0
 Number
@@ -4370,7 +4370,7 @@ INPUTBOX
 1176
 480
 #agent-id
-1059.0
+386.0
 1
 0
 Number
@@ -4403,6 +4403,39 @@ PENS
 "leisure" 1.0 0 -1264960 true "" "plot [leisure-satisfaction-level] of turtle #agent-id"
 "financial-survival" 1.0 0 -7858858 true "" "plot [financial-survival-satisfaction-level] of turtle #agent-id"
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
+
+INPUTBOX
+941
+356
+1020
+416
+#luxury-add
+0.2
+1
+0
+Number
+
+INPUTBOX
+852
+356
+937
+416
+#sleep-day-add
+0.2
+1
+0
+Number
+
+INPUTBOX
+725
+356
+848
+416
+#leisure-free-time-add
+-0.1
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5031,7 +5064,7 @@ setup</setup>
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
-      <value value="2"/>
+      <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#households-for-context-scenario">
       <value value="350"/>

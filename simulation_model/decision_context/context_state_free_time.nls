@@ -7,10 +7,10 @@
 
 to-report context-state-free-time
   ; The time is morning, afternoon or evening
-  ;if who = #agent-id [ print "Custom leisure time deliberation" ]
+  if who = #agent-id [ print "Custom leisure time deliberation" ]
   ; most important need??
   let most-salient-need context-most-salient-need-free-time
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   if most-salient-need = need-belonging [
     ifelse context-normative-should-I-stay-home-with-need belonging-satisfaction-level
@@ -19,14 +19,14 @@ to-report context-state-free-time
       (activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
   if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
-    ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+    ifelse context-normative-should-I-stay-home-with-need get-leisure-satisfaction-free-time
     [ report context-determine-social-distancing (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
   if most-salient-need = need-luxury [
-    ifelse context-normative-should-I-stay-home-with-need luxury-satisfaction-level
+    ifelse context-normative-should-I-stay-home-with-need (luxury-satisfaction-level + #luxury-add)
     [ report context-determine-social-distancing (list my-home "rest") ] 
-    [ if context-financial-need-check luxury-satisfaction-level
+    [ if context-financial-need-check (luxury-satisfaction-level + #luxury-add)
       [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ] 
     ]
   ]
@@ -46,14 +46,14 @@ to-report context-state-free-time
   if most-salient-need = need-conformity [
     let network-action context-conformity-get-network-action
     ifelse empty? network-action
-    [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
+    [ if who = #agent-id [ print (word "Get network action: No action found") ] 
       report [] 
     ]
     [
       let network-g-type (location-of network-action)
       let network-motive motive-of network-action
       let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
-      ;if who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+      if who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
       if network-g-type = home-gathering-type and network-motive = "rest"
       [ report (list my-home "rest" network-sd) ]
       if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
@@ -72,7 +72,7 @@ to-report context-state-free-time
       [ 
         ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
         [ report (list my-home "rest" network-sd) ] 
-        [ if context-financial-need-check luxury-satisfaction-level
+        [ if context-financial-need-check (luxury-satisfaction-level + #luxury-add)
           [ report lput network-sd (activity-descriptor my-non-essential-shop "shopping") ]
         ]
       ]
@@ -101,10 +101,10 @@ end
 
 to-report context-state-free-time-young
   ; The time is morning, afternoon or evening
-  ;if who = #agent-id [ print "Custom leisure time deliberation" ]
+  if who = #agent-id [ print "Custom leisure time deliberation" ]
   ; most important need??
   let most-salient-need context-most-salient-need-free-time-young
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   if most-salient-need = need-belonging [
     ifelse context-normative-should-I-stay-home-with-need belonging-satisfaction-level
@@ -113,7 +113,7 @@ to-report context-state-free-time-young
       (activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
   if most-salient-need = need-leisure [ ; In this function we chose private and public leisure, and not home because the agent get's more leisure satisfaction from private and public leisure. This can be broken down as well
-    ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level
+    ifelse context-normative-should-I-stay-home-with-need get-leisure-satisfaction-free-time
     [ report context-determine-social-distancing (list my-home "rest") ] ; TODO break the following thing up, if in quarantine the agent will just stay home because leisure can also be retrieved from staying home, otherwise the agent will go out for max leisure
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
@@ -126,13 +126,13 @@ to-report context-state-free-time-young
   if most-salient-need = need-conformity [
     let network-action context-conformity-get-network-action
     ifelse empty? network-action
-    [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
+    [ if who = #agent-id [ print (word "Get network action: No action found") ] 
     ]
     [
       let network-g-type (location-of network-action)
       let network-motive motive-of network-action
       let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
-      ;if who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+      if who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
       if network-g-type = home-gathering-type and network-motive = "rest"
       [ report (list my-home "rest" network-sd) ]
       if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
@@ -162,12 +162,12 @@ to-report context-most-salient-need-free-time
     set lowest-need-level belonging-satisfaction-level
     set lowest-need need-belonging 
   ]
-  if leisure-satisfaction-level < lowest-need-level [
-    set lowest-need-level leisure-satisfaction-level
+  if get-leisure-satisfaction-free-time < lowest-need-level [
+    set lowest-need-level get-leisure-satisfaction-free-time
     set lowest-need need-leisure 
   ]
-  if luxury-satisfaction-level < lowest-need-level [
-    set lowest-need-level luxury-satisfaction-level
+  if (luxury-satisfaction-level + #luxury-add) < lowest-need-level [
+    set lowest-need-level (luxury-satisfaction-level + #luxury-add)
     set lowest-need need-luxury 
   ]
   if food-safety-satisfaction-level < lowest-need-level [
@@ -178,8 +178,8 @@ to-report context-most-salient-need-free-time
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   report lowest-need
@@ -193,16 +193,16 @@ to-report context-most-salient-need-free-time-young
     set lowest-need-level belonging-satisfaction-level
     set lowest-need need-belonging 
   ]
-  if leisure-satisfaction-level < lowest-need-level [
-    set lowest-need-level leisure-satisfaction-level
+  if get-leisure-satisfaction-free-time < lowest-need-level [
+    set lowest-need-level get-leisure-satisfaction-free-time
     set lowest-need need-leisure 
   ]
   if conformity-satisfaction-level < lowest-need-level [
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   report lowest-need

@@ -18,8 +18,8 @@ filesPath <- ""
 
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
-dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
-
+#dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
+dataFileName <- c("covid-sim H 350 R 1.csv")
 filesNames   <- dataFileName
 
 one_plot <- TRUE

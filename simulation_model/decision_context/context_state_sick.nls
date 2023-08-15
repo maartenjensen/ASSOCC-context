@@ -9,12 +9,12 @@
 ;--------------                              NIGHT                               ------------------
 to-report context-state-sick-treatment
   ; The time can be anything
-  ;if who = #agent-id [ print "Custom deliberation: So sick need treatment?" ]
+  if who = #agent-id [ print "Custom deliberation: So sick need treatment?" ]
   
   ; This function is all about determining whether the agent needs treatment. Critical symptoms or very low health need (this would overwrite all other needs)
   if is-observing-critical-symptoms? and health-satisfaction-level < 0.0001 ; Health is depricated since probably everyone gets a very low health satisfaction when sick EDIT: too many people requesting for hospital so added health level as constraint
   [ report lput True (activity-descriptor my-hospital treatment-motive)  ]
-  ;if who = #agent-id [ print "No treatment needed, however sick" ]
+  if who = #agent-id [ print "No treatment needed, however sick" ]
   report []
 end
 
@@ -22,7 +22,7 @@ to-report context-state-sick-night
 
   ; most important need??
   let most-salient-need context-most-salient-need-sick-night
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -95,7 +95,7 @@ to-report context-state-sick-free-time
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-free-time
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -123,7 +123,7 @@ to-report context-state-sick-free-time-young
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-free-time-young
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -159,8 +159,8 @@ to-report context-sick-most-salient-need-free-time
     set lowest-need-level leisure-satisfaction-level
     set lowest-need need-leisure 
   ]
-  if luxury-satisfaction-level < lowest-need-level [
-    set lowest-need-level luxury-satisfaction-level
+  if (luxury-satisfaction-level + #luxury-add) < lowest-need-level [
+    set lowest-need-level (luxury-satisfaction-level + #luxury-add)
     set lowest-need need-luxury 
   ]
   if food-safety-satisfaction-level < lowest-need-level [
@@ -171,8 +171,8 @@ to-report context-sick-most-salient-need-free-time
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if compliance-satisfaction-level < lowest-need-level [
@@ -202,8 +202,8 @@ to-report context-sick-most-salient-need-free-time-young
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if compliance-satisfaction-level < lowest-need-level [
@@ -220,7 +220,7 @@ to-report context-state-sick-obligation-worker
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-worker
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -258,8 +258,8 @@ to-report context-sick-most-salient-need-obligation-worker
     set lowest-need-level leisure-satisfaction-level
     set lowest-need need-leisure 
   ]
-  if luxury-satisfaction-level < lowest-need-level [
-    set lowest-need-level luxury-satisfaction-level
+  if (luxury-satisfaction-level + #luxury-add) < lowest-need-level [
+    set lowest-need-level (luxury-satisfaction-level + #luxury-add)
     set lowest-need need-luxury 
   ]
   if food-safety-satisfaction-level < lowest-need-level [
@@ -270,8 +270,8 @@ to-report context-sick-most-salient-need-obligation-worker
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if compliance-satisfaction-level < lowest-need-level [
@@ -297,7 +297,7 @@ to-report context-state-sick-obligation-student
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-student
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -334,8 +334,8 @@ to-report context-sick-most-salient-need-obligation-student
     set lowest-need-level leisure-satisfaction-level
     set lowest-need need-leisure 
   ]
-  if luxury-satisfaction-level < lowest-need-level [
-    set lowest-need-level luxury-satisfaction-level
+  if (luxury-satisfaction-level + #luxury-add) < lowest-need-level [
+    set lowest-need-level (luxury-satisfaction-level + #luxury-add)
     set lowest-need need-luxury 
   ]
   if food-safety-satisfaction-level < lowest-need-level [
@@ -346,8 +346,8 @@ to-report context-sick-most-salient-need-obligation-student
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if compliance-satisfaction-level < lowest-need-level [
@@ -366,7 +366,7 @@ to-report context-state-sick-obligation-young
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-young
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -408,8 +408,8 @@ to-report context-sick-most-salient-need-obligation-young
     set lowest-need-level conformity-satisfaction-level
     set lowest-need need-conformity 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if compliance-satisfaction-level < lowest-need-level [

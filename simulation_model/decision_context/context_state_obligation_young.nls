@@ -19,9 +19,9 @@
 to-report context-state-obligation-young ; This should be ONLY young since there is a different action
   
   ; The time is (morning or afternoon) and on a working day
-  ;if who = #agent-id [ print "Custom deliberation: Obligation young state" ]
+  if who = #agent-id [ print "Custom deliberation: Obligation young state" ]
   let most-salient-need context-most-salient-need-obligation-young
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   if most-salient-need = need-compliance [ ; It seems that the agents get a boost of following compliance before morning, so in morning and afternoon their need for compliance is very high.
     ifelse context-normative-should-I-stay-home
@@ -42,7 +42,7 @@ to-report context-state-obligation-young ; This should be ONLY young since there
   if most-salient-need = need-conformity [
     let network-action context-conformity-get-network-action
     ifelse empty? network-action
-    [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
+    [ if who = #agent-id [ print (word "Get network action: No action found") ] 
       report []
     ]
     [
@@ -63,16 +63,16 @@ to-report context-state-obligation-young ; This should be ONLY young since there
 end
 
 to-report context-normative-should-I-stay-home
-  ;if who = #agent-id [ print (word "Normative check: Should I stay home " should-I-stay-home?) ]
+  if who = #agent-id [ print (word "Normative check: Should I stay home " should-I-stay-home?) ]
   report should-I-stay-home?
 end
 
 ; Make this dependent on the salient need VS the need for compliance
 to-report context-normative-should-I-stay-home-with-need-new [p-most-salient-need-level]
   ifelse p-most-salient-need-level < compliance-satisfaction-level ; This might have to be modified dependent on the need levels
-  [ ;if who = #agent-id [ print (word "Normative check: I break quarantine because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
+  [ if who = #agent-id [ print (word "Normative check: I break quarantine because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
     report False ]
-  [ ;if who = #agent-id [ print (word "Normative check: I should stay home because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
+  [ if who = #agent-id [ print (word "Normative check: I should stay home because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
     report True ]
 end
 
@@ -97,8 +97,8 @@ to-report context-most-salient-need-obligation-young
     set lowest-need-level autonomy-satisfaction-level
     set lowest-need need-autonomy 
   ]
-  if sleep-satisfaction-level < lowest-need-level [
-    set lowest-need-level sleep-satisfaction-level
+  if get-sleep-satisfaction-day < lowest-need-level [
+    set lowest-need-level get-sleep-satisfaction-day
     set lowest-need need-sleep 
   ]
   if conformity-satisfaction-level < lowest-need-level [
