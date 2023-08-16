@@ -40,6 +40,14 @@ to load-scenario-specifics
     set probability-infection-when-abroad 0
     set #households #households-for-context-scenario
     load-number-of-gathering-points-based-on-number-of-households #households
+    
+    if #enable-quarantine [
+      set ratio-self-quarantining-when-a-family-member-is-symptomatic 0.8
+      set is-infected-and-their-families-requested-to-stay-at-home? true
+      set food-delivered-to-isolators? true
+      set all-self-isolate-for-35-days-when-first-hitting-2%-infected? true
+      set ratio-self-quarantining-when-symptomatic 0.8
+    ]
     stop
   ]
   

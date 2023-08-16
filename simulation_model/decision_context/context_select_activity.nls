@@ -24,7 +24,7 @@ to context-select-activity
   if current-activity != away-gathering-point and current-motivation = travelling-motive [error "wrong place while travelling"]
   if log-violating-quarantine? [ process-quarantine-violation-event]
   
-  if who = #agent-id [ print (word "- Final action: " ([gathering-type] of current-activity) ", " current-motivation ", " is-i-apply-social-distancing?)  ]
+  ;if who = #agent-id [ print (word "- Final action: " ([gathering-type] of current-activity) ", " current-motivation ", " is-i-apply-social-distancing?)  ]
 end
 
 ; This function contains the statemachine used for context-sensitive deliberation
@@ -32,8 +32,8 @@ to-report context-deliberation-select-activity
   reset-delib-count
   ;profiler-speed-test-functions
   let chosen-action []
-  if who = #agent-id [ ifelse (slice-of-the-day = "morning") [ print "-- MORNING --" ][ print "" ] ]
-  if who = #agent-id [ print (word "== Delib start agent: " #agent-id ", time: " slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) " ==") ]
+  ;if who = #agent-id [ ifelse (slice-of-the-day = "morning") [ print "-- MORNING --" ][ print "" ] ]
+  ;if who = #agent-id [ print (word "== Delib start agent: " #agent-id ", time: " slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) " ==") ]
   ; Check whether not night (day time) and (retired or not a working day)
   ifelse (slice-of-the-day != "night")
   [
@@ -197,7 +197,7 @@ to-report context-deliberation-select-activity
   ]
   
   ; Do the full need based deliberation
-  if who = #agent-id [ print (word "Full ASSOCC need based deliberation") ]
+  ;if who = #agent-id [ print (word "Full ASSOCC need based deliberation") ]
   set delib-count-full-need 1
   update-delib-count
   report my-preferred-available-activity-descriptor
@@ -206,7 +206,7 @@ end
 ; Context functions
 
 to-report context-heuristic-random-action [p-list-of-actions]
-  if who = #agent-id [ print (word "Heuristic: Take random action of " p-list-of-actions ) ]
+  ;if who = #agent-id [ print (word "Heuristic: Take random action of " p-list-of-actions ) ]
   report one-of p-list-of-actions
 end
 
@@ -214,12 +214,12 @@ to-report context-normative-should-I-stay-home-with-need [p-most-salient-need-le
   ifelse should-I-stay-home?
   [ 
     ifelse p-most-salient-need-level < compliance-satisfaction-level ; This might have to be modified dependent on the need levels
-    [ if who = #agent-id [ print (word "Normative check: I break quarantine because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
+    [ ;if who = #agent-id [ print (word "Normative check: I break quarantine because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
       report False ]
-    [ if who = #agent-id [ print (word "Normative check: I should stay home because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
+    [ ;if who = #agent-id [ print (word "Normative check: I should stay home because salient need " p-most-salient-need-level " is more salient than compliance " compliance-satisfaction-level ) ]
       report True ]
   ]
-  [ if who = #agent-id [ print "Normative check: I don't have to stay home" ]
+  [ ;if who = #agent-id [ print "Normative check: I don't have to stay home" ]
     report False ]
 end
 

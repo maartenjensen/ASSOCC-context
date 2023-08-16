@@ -7,10 +7,10 @@
 
 to-report context-state-night
   ; The time is morning, afternoon or evening
-  if who = #agent-id [ print "Custom night deliberation" ]
+  ;if who = #agent-id [ print "Custom night deliberation" ]
   ; most important need??
   let most-salient-need context-most-salient-need-night
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 

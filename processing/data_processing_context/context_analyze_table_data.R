@@ -19,7 +19,8 @@ filesPath <- ""
 #=================== MANUAL INPUT: specify filenames ====================
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
 #dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
-dataFileName <- c("covid-sim R 1 H 350.csv")
+#dataFileName <- c("covid-sim R 1 H 350.csv")
+dataFileName <- c("covid-sim lockdown.csv")
 filesNames   <- dataFileName
 
 one_plot <- TRUE
@@ -151,7 +152,7 @@ df_people_at_locations <- df_final %>%
             treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
 colnames(df_people_at_locations)
 
-x_limits = c(0,239) #c(28,83)
+x_limits = c(0,479) #c(28,83)
 
 #----------- All the locations -------------
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
@@ -312,7 +313,7 @@ colnames(df_needs)
 
 seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
 
-x_limits = c(0,239) #c(28,83)
+x_limits = c(0,479) #c(28,83)
 
 limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
 
@@ -358,7 +359,7 @@ df_deliberation_type <- df_action_space %>%
 
 seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
 
-limits = coord_cartesian(xlim = c(0, 239), ylim = c(0, 1000))
+limits = coord_cartesian(xlim = c(0, 479), ylim = c(0, 1000))
 
 if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
@@ -381,7 +382,7 @@ plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
     labs(title=p_title,
          caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
          x="Days", y=p_y_lab) +
-    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 239)) 
+    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 479)) 
 }
 
 df_data <- df_final %>% 

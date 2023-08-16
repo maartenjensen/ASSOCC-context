@@ -20,9 +20,9 @@
 to-report context-state-obligation-student ; This should be ONLY young since there is a different action
   
   ; The time is (morning or afternoon) and on a working day
-  if who = #agent-id [ print "Custom deliberation: Obligation student state" ]
+  ;if who = #agent-id [ print "Custom deliberation: Obligation student state" ]
   let most-salient-need context-most-salient-need-obligation-student
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   if most-salient-need = need-compliance [ ; It seems that the agents get a boost of following compliance before morning, so in morning and afternoon their need for compliance is very high.
     ifelse context-normative-should-I-stay-home
@@ -43,7 +43,7 @@ to-report context-state-obligation-student ; This should be ONLY young since the
   if most-salient-need = need-conformity [
     let network-action context-conformity-get-network-action
     ifelse empty? network-action
-    [ if who = #agent-id [ print (word "Get network action: No action found") ] 
+    [ ;if who = #agent-id [ print (word "Get network action: No action found") ] 
       report []
     ]
     [

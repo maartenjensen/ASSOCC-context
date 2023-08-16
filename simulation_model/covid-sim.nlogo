@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-1
+0
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-1
+0
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-1
+0
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -4284,10 +4284,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot global-deliberation-time"
 
 BUTTON
-1061
-253
-1146
-286
+627
+363
+712
+396
 NIL
 go-profile
 NIL
@@ -4447,6 +4447,17 @@ INPUTBOX
 1
 0
 Number
+
+SWITCH
+1044
+252
+1210
+285
+#enable-quarantine
+#enable-quarantine
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5074,6 +5085,9 @@ setup</setup>
       <value value="false"/>
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="#enable-quarantine">
+      <value value="false"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
     </enumeratedValueSet>
@@ -5103,7 +5117,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="240"/>
+    <timeLimit steps="480"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
     <metric>#admissions-last-tick</metric>
@@ -5228,6 +5242,9 @@ setup</setup>
       <value value="false"/>
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="#enable-quarantine">
+      <value value="true"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
     </enumeratedValueSet>
@@ -5236,6 +5253,18 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
       <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
+      <value value="0.8"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#leisure-free-time-add">
+      <value value="-0.18"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#sleep-day-add">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#luxury-add">
+      <value value="0.1"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">

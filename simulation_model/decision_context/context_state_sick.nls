@@ -9,19 +9,19 @@
 ;--------------                              NIGHT                               ------------------
 to-report context-state-sick-treatment
   ; The time can be anything
-  if who = #agent-id [ print "Custom deliberation: So sick need treatment?" ]
+  ;if who = #agent-id [ print "Custom deliberation: So sick need treatment?" ]
   
   ; This function is all about determining whether the agent needs treatment. Critical symptoms or very low health need (this would overwrite all other needs)
   ; the health need is not included since its 0 for severely infected anyway Health is depricated since probably everyone gets a very low health satisfaction when sick EDIT: too many people requesting for hospital so added health level as constraint
   ; The risk-avoidance need is only initially affecting it a bit, so I is not included and risk-avoidance-satisfaction-level < #risk-avoid-treatment-threshold 
   if is-observing-critical-symptoms? 
   [ ifelse is-observing-very-critical-symptoms?
-    [ if who = #agent-id [ print (word "Treatment needed, very critical:" ([infection-status] of #agent-id)) ]
+    [ ;if who = #agent-id [ print (word "Treatment needed, very critical:" ([infection-status] of #agent-id)) ]
       report lput True (activity-descriptor my-hospital treatment-motive) ]
-    [ if who = #agent-id [ print (word "Treatment perhaps not needed:" ([infection-status] of #agent-id)) ]
+    [ ;if who = #agent-id [ print (word "Treatment perhaps not needed:" ([infection-status] of #agent-id)) ]
       report [] ]
   ]
-  if who = #agent-id [ print "No treatment needed, however sick" ]
+  ;if who = #agent-id [ print "No treatment needed, however sick" ]
   report []
 end
 
@@ -39,7 +39,7 @@ to-report context-state-sick-night
 
   ; most important need??
   let most-salient-need context-most-salient-need-sick-night
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -112,7 +112,7 @@ to-report context-state-sick-free-time
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-free-time
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -140,7 +140,7 @@ to-report context-state-sick-free-time-young
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-free-time-young
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -237,7 +237,7 @@ to-report context-state-sick-obligation-worker
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-worker
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -314,7 +314,7 @@ to-report context-state-sick-obligation-student
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-student
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
@@ -383,7 +383,7 @@ to-report context-state-sick-obligation-young
 
   ; most important need??
   let most-salient-need context-sick-most-salient-need-obligation-young
-  if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need
   if most-salient-need = need-sleep 
