@@ -37,8 +37,8 @@ dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 4 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 5 -A= 6].csv")
 
-dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6] lockdown.csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6] lockdown.csv")
+dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6] risk avoid.csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6] risk avoid.csv")
 
 filesNames   <- dataFileName
 

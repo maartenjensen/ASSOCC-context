@@ -5,11 +5,81 @@ to profiler-speed-test-init ; Called from ?
 end 
 
 to profiler-speed-test-functions ; Called from context_select_activity.nls
-  if who = #agent-id [ print ("Start speed test") ]
+  ;if who = #agent-id [ print ("Start speed test") ]
   
+  ;if who = #agent-id [ print ("Speed test 1 - Needs in string format or integer format") ]
   ; Compare 7 needs since it seems like a nice average
   let result profiler-speed-test-needs-1
   set result profiler-speed-test-needs-2
+  
+  ; PROFILER-SPEED-TEST-NEEDS-1       239654    968.117    826.757      0.003
+  ; PROFILER-SPEED-TEST-NEEDS-2       239654    804.557    642.520      0.003
+  ; I choose to still use method 1, using strings instead of integers to indicate the names of needs
+  ; Probably due to the added convenience
+  
+  ;if who = #agent-id [ print ("Speed test 2 - Needs lower than threshold or compare lowest") ]
+  set result profiler-speed-test-needs-threshold-1
+  set result profiler-speed-test-needs-threshold-2 0.2
+  
+  ; PROFILER-SPEED-TEST-NEEDS-THRESHOLD-1    239654    560.519    486.307      0.002
+  ; PROFILER-SPEED-TEST-NEEDS-THRESHOLD-2    239654    424.293    410.732      0.002
+  ; I choose method two because it conceptually better (and as benefit is is quicker as well).
+end
+
+to-report profiler-speed-test-needs-threshold-1
+  let lowest-need-level risk-avoidance-satisfaction-level
+  let lowest-need need-risk-avoidance
+  if compliance-satisfaction-level < lowest-need-level [
+    set lowest-need-level compliance-satisfaction-level
+    set lowest-need need-compliance 
+  ]
+  if belonging-satisfaction-level < lowest-need-level [
+    set lowest-need-level belonging-satisfaction-level
+    set lowest-need need-belonging 
+  ]
+  if leisure-satisfaction-level < lowest-need-level [
+    set lowest-need-level leisure-satisfaction-level
+    set lowest-need need-leisure 
+  ]
+  if autonomy-satisfaction-level < lowest-need-level [
+    set lowest-need-level autonomy-satisfaction-level
+    set lowest-need need-autonomy 
+  ]
+  if sleep-satisfaction-level < lowest-need-level [
+    set lowest-need-level sleep-satisfaction-level
+    set lowest-need need-sleep 
+  ]
+  if conformity-satisfaction-level < lowest-need-level [
+    set lowest-need-level conformity-satisfaction-level
+    set lowest-need need-conformity 
+  ]
+  report need-conformity
+end
+
+to-report profiler-speed-test-needs-threshold-2 [p-threshold]
+  let salient-needs []
+  if risk-avoidance-satisfaction-level < p-threshold [
+    set salient-needs lput need-risk-avoidance salient-needs
+  ]
+  if compliance-satisfaction-level < p-threshold [
+    set salient-needs lput need-compliance salient-needs
+  ]
+  if belonging-satisfaction-level < p-threshold [
+    set salient-needs lput need-belonging salient-needs
+  ]
+  if leisure-satisfaction-level < p-threshold [
+    set salient-needs lput need-leisure salient-needs
+  ]
+  if autonomy-satisfaction-level < p-threshold [
+    set salient-needs lput need-autonomy salient-needs
+  ]
+  if sleep-satisfaction-level < p-threshold [
+    set salient-needs lput need-sleep salient-needs
+  ]
+  if conformity-satisfaction-level < p-threshold [
+    set salient-needs lput need-conformity salient-needs
+  ]
+  report salient-needs
 end
 
 to-report profiler-speed-test-needs-1
