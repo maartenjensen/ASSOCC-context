@@ -4284,10 +4284,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot global-deliberation-time"
 
 BUTTON
-627
-363
-712
-396
+541
+320
+626
+353
 NIL
 go-profile
 NIL
@@ -4370,7 +4370,7 @@ INPUTBOX
 1176
 480
 #agent-id
-386.0
+166.0
 1
 0
 Number
@@ -4438,10 +4438,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-723
-317
-858
-377
+585
+382
+720
+442
 #risk-avoidance-private-leisure-preference
 0.8
 1
@@ -4456,6 +4456,39 @@ SWITCH
 #enable-quarantine
 #enable-quarantine
 1
+1
+-1000
+
+INPUTBOX
+863
+317
+1018
+377
+#need-salient-threshold
+0.5
+1
+0
+Number
+
+INPUTBOX
+703
+317
+858
+377
+#need-critical-threshold
+0.1
+1
+0
+Number
+
+SWITCH
+1022
+485
+1140
+518
+#log-agent
+#log-agent
+0
 1
 -1000
 
@@ -4959,7 +4992,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
+    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-Thresh=" #need-salient-threshold)</final>
     <timeLimit steps="240"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
@@ -5107,6 +5140,11 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#luxury-add">
       <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#need-salient-threshold">
+      <value value="0.2"/>
+      <value value="0.4"/>
+      <value value="0.6"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="ContextRealism" repetitions="1" runMetricsEveryStep="true">

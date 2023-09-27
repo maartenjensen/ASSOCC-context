@@ -7,58 +7,126 @@
 
 to-report context-state-night
   ; The time is morning, afternoon or evening
-  ;if who = #agent-id [ print "Custom night deliberation" ]
-  ; most important need??
-  let most-salient-need context-most-salient-need-night
-  ;if who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if #log-agent and who = #agent-id [ print "Custom night deliberation" ]
+  ; salient needs, need-level < #need-salient-threshold
+  ; -------------------------------------------
+  ; Determine whether there is a need salient
+  ; -------------------------------------------
+  let salient-needs-and-level context-get-salient-needs-night
+  let salient-needs first salient-needs-and-level
+  if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
+  ; -------------------------------------------
+  ; If no need salient default
+  ; -------------------------------------------
+  if length salient-needs = 0
+  [ report context-determine-social-distancing (list my-home "rest") ]
+  
+  ; -------------------------------------------
+  ; If salient needs is larger than 1, determine most salient
+  ; -------------------------------------------
+  let most-salient-need first salient-needs
+  if length salient-needs > 1
+  [
+    set most-salient-need (context-determine-most-salient-need salient-needs (last salient-needs-and-level))
+  ]
+  if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  
+  ; -------------------------------------------
+  ; Check for each need separately 
+  ; -------------------------------------------
   ; Sleep is first checked since its most probable that this is the lowest need
-  if most-salient-need = need-sleep 
+  ; The following needs support the default action: resting at home
+  if most-salient-need = need-sleep or most-salient-need = need-belonging or most-salient-need = need-autonomy 
   [ report context-determine-social-distancing (list my-home "rest")]
   if most-salient-need = need-risk-avoidance 
   [ report (list my-home "rest" True)]
-  if most-salient-need = need-belonging 
-  [ report context-determine-social-distancing (list my-home "rest")]
-  if most-salient-need = need-autonomy 
-  [ report context-determine-social-distancing (list my-home "rest")]
-  ; Need leisure and conformity require further implementation or Full ASSOCC deliberation
-  ; The conformity need can probably be implemented easily when the network stays home, the leisure need is probably best determined by full ASSOCC
-  ; Because this is actually dependent on the combination of needs, if leisure is lowest but sleep AND risk avoidance AND autonomy is also important 
-  ; then the agent should probably still stay at home and sleep (rest).
-
+  
+  ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
+  ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
+  if most-salient-need = need-leisure and leisure-satisfaction-level < #need-critical-threshold [
+    report context-state-night-leisure
+  ]
+  
+  if most-salient-need = need-conformity [
+    report context-state-night-conformity
+  ]
   report []
 end
+
+to-report context-state-night-leisure
+  ifelse context-normative-should-I-stay-home-with-need leisure-satisfaction-level ; complying to rules vs leisure
+  [ report context-determine-social-distancing (list my-home "rest")] 
+  [ 
+    ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+    [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  report []
+end  
+
+to-report context-state-night-conformity
+  let network-action context-conformity-get-network-action
+  ifelse empty? network-action
+  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+  [
+    let network-g-type (location-of network-action)
+    let network-motive motive-of network-action
+    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
+    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+    if network-g-type = home-gathering-type and network-motive = "rest"
+    [ report (list my-home "rest" network-sd) ]
+    if conformity-satisfaction-level < #need-critical-threshold
+    [
+      if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
+      [
+        ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
+        [ report (list my-home "rest" network-sd) ] 
+        [ report lput network-sd (activity-descriptor my-public-leisure "relaxing") ]
+      ]
+      if network-g-type = private-leisure-gathering-type and network-motive = "relaxing"
+      [ 
+        ifelse context-normative-should-I-stay-home-with-need conformity-satisfaction-level ; complying to rules vs conformity
+        [ report (list my-home "rest" network-sd) ] 
+        [ report lput network-sd (activity-descriptor my-private-leisure "relaxing") ]
+      ]
+    ]
+    ; The action taking treatment is not affected by conformity, i.e. if the agent's network is all in treatment this should not make this agent go into treatment
+    ; Working (at workplace or from home), school, university is not a possible action during the night.
+  ]
+  report []
+end
+
 
 ;important needs: 
 ;Sleep -> Home (most probable)
 ;Risk avoidance -> Home
 ;Belonging -> Home (home, private leisure and public leisure give belonging however the agent should by default be at home to sleep)
-;Leisure -> Full ASSOCC (since the agent can gain more leisure at a leisure place)
 ;Autonomy -> Home
 ;Conformity -> Depends on the network
+;Leisure -> Full ASSOCC (since the agent can gain more leisure at a leisure place)
+;Compliance EXCLUDED -> Only for normative considerations
 
-to-report context-most-salient-need-night
-  let lowest-need-level sleep-satisfaction-level
-  let lowest-need need-sleep
-  if risk-avoidance-satisfaction-level < lowest-need-level [
-    set lowest-need-level risk-avoidance-satisfaction-level
-    set lowest-need need-risk-avoidance
-  ]
-  if belonging-satisfaction-level < lowest-need-level [
-    set lowest-need-level belonging-satisfaction-level
-    set lowest-need need-belonging 
-  ]
-  if leisure-satisfaction-level < lowest-need-level [
-    set lowest-need-level leisure-satisfaction-level
-    set lowest-need need-leisure 
-  ]
-  if autonomy-satisfaction-level < lowest-need-level [
-    set lowest-need-level autonomy-satisfaction-level
-    set lowest-need need-autonomy 
-  ]
-  if conformity-satisfaction-level < lowest-need-level [
-    set lowest-need-level conformity-satisfaction-level
-    set lowest-need need-conformity 
-  ]
-  report lowest-need
+to-report context-get-salient-needs-night
+  let salient-needs []
+  let salient-needs-level []
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-sleep salient-needs 
+    set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-risk-avoidance salient-needs 
+    set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-belonging salient-needs 
+    set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-leisure salient-needs 
+    set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
+  if autonomy-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-autonomy salient-needs 
+    set salient-needs-level lput autonomy-satisfaction-level salient-needs-level ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-conformity salient-needs 
+    set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
+  report list salient-needs salient-needs-level
 end

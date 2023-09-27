@@ -184,14 +184,7 @@ people-own [
   ; variables for context-sensitive deliberation
   need-critical-threshold
   
-  ; Tables for quick search
-  table-typical-actions
-  table-need-actions
-  table-need-actions-working-hours
-  table-action-with-related-needs
-  table-actions-with-related-needs
-  
-  string-action-to-activity
+  table-profiler-salient-needs
 ]
 
 to update-people-epistemic-status

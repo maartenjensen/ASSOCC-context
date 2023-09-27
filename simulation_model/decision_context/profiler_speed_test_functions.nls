@@ -1,6 +1,6 @@
 ; Filename: profiler_speed_test_functions.nls
 
-to profiler-speed-test-init ; Called from ? 
+to profiler-speed-test-init ; Called from setup/setup.nls
   
 end 
 
@@ -24,6 +24,238 @@ to profiler-speed-test-functions ; Called from context_select_activity.nls
   ; PROFILER-SPEED-TEST-NEEDS-THRESHOLD-1    239654    560.519    486.307      0.002
   ; PROFILER-SPEED-TEST-NEEDS-THRESHOLD-2    239654    424.293    410.732      0.002
   ; I choose method two because it conceptually better (and as benefit is is quicker as well).
+  
+  set result profiler-speed-test-salient-needs-1 ; Save the needs as a list (check all needs)
+  ;if who = #agent-id [ print (word "Profiler test 1:" result) ]
+  set result profiler-speed-test-salient-needs-2 ; Save the needs as a list (check partial needs)
+  ;if who = #agent-id [ print (word "Profiler test 2:" result) ]
+  set result profiler-speed-test-salient-needs-3 ; Save the needs as a table (which also saves the level)
+  ;if who = #agent-id [ print (word "Profiler test 3:" result) ]
+  set result profiler-speed-test-salient-needs-4 ; Save the needs as a list and also saves the need levels in a seperate list
+  ;if who = #agent-id [ print (word "Profiler test 4:" result) ]
+  
+  ; Number 4 is the best one to use. The number of calls is difference since probably more people died.
+  ; I can start to implement number 4 now in the code.
+  
+  ; Result threshold 0.2
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-1    240153    864.587    555.846      0.002
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-2    240153    743.930    511.524      0.002
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-3    240153   1036.755   1024.538      0.004
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-4    240153    656.604    643.952      0.003
+  
+  ; Result threshold 0.4
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-1    240023    873.611    526.061      0.002
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-2    240023    736.547    473.119      0.002
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-3    240023    995.126    981.562      0.004
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-4    240023    609.825    596.308      0.002
+  
+  ; Result threshold 0.6
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-1    239654   2224.828    852.566      0.004
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-2    239654   1650.981    750.124      0.003
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-3    239654   1922.140   1878.360      0.008
+  ; PROFILER-SPEED-TEST-SALIENT-NEEDS-4    239654   1110.868   1064.338      0.004
+end
+
+to-report profiler-speed-test-salient-needs-1
+
+  let salient-needs []
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-risk-avoidance salient-needs ]
+  if compliance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-compliance salient-needs ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-belonging salient-needs ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-leisure salient-needs ]
+  if autonomy-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-autonomy salient-needs ]
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-sleep salient-needs ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-conformity salient-needs ]
+  
+  if length salient-needs = 0
+  [ report salient-needs ]
+  
+  if length salient-needs = 1
+  [ report first salient-needs ]
+  
+  let lowest-need first salient-needs
+  let lowest-need-level profiler-speed-test-need-level-1 lowest-need
+  foreach but-first salient-needs [ a-need ->
+    if profiler-speed-test-need-level-1 a-need < lowest-need-level
+    [
+      set lowest-need a-need
+      set lowest-need-level profiler-speed-test-need-level-1 a-need
+    ]
+  ]
+  report lowest-need
+end
+
+to-report profiler-speed-test-need-level-1 [p-need-name]
+  if p-need-name = need-risk-avoidance
+  [ report risk-avoidance-satisfaction-level ]
+  if p-need-name = need-compliance
+  [ report compliance-satisfaction-level ]
+  if p-need-name = need-financial-stability
+  [ report financial-stability-satisfaction-level ]
+  if p-need-name = need-belonging
+  [ report belonging-satisfaction-level ]
+  if p-need-name = need-leisure
+  [ report leisure-satisfaction-level ]
+  if p-need-name = need-luxury
+  [ report luxury-satisfaction-level ]
+  if p-need-name = need-autonomy
+  [ report autonomy-satisfaction-level ]
+  if p-need-name = need-food-safety
+  [ report food-safety-satisfaction-level ]
+  if p-need-name = need-financial-survival
+  [ report financial-survival-satisfaction-level ]
+  if p-need-name = need-health
+  [ report health-satisfaction-level ]
+  if p-need-name = need-sleep
+  [ report sleep-satisfaction-level ]
+  if p-need-name = need-conformity
+  [ report conformity-satisfaction-level ]
+  report "ERROR"
+end
+
+to-report profiler-speed-test-salient-needs-2
+
+  let salient-needs []
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-risk-avoidance salient-needs ]
+  if compliance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-compliance salient-needs ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-belonging salient-needs ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-leisure salient-needs ]
+  if autonomy-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-autonomy salient-needs ]
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-sleep salient-needs ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-conformity salient-needs ]
+  
+  if length salient-needs = 0
+  [ report salient-needs ]
+  
+  if length salient-needs = 1
+  [ report first salient-needs ]
+  
+  let lowest-need first salient-needs
+  let lowest-need-level profiler-speed-test-need-level-2 lowest-need
+  foreach but-first salient-needs [ a-need ->
+    if profiler-speed-test-need-level-2 a-need < lowest-need-level
+    [
+      set lowest-need a-need
+      set lowest-need-level profiler-speed-test-need-level-2 a-need
+    ]
+  ]
+  report lowest-need
+end
+
+to-report profiler-speed-test-need-level-2 [p-need-name]
+  if p-need-name = need-risk-avoidance
+  [ report risk-avoidance-satisfaction-level ]
+  if p-need-name = need-compliance
+  [ report compliance-satisfaction-level ]
+  if p-need-name = need-belonging
+  [ report belonging-satisfaction-level ]
+  if p-need-name = need-leisure
+  [ report leisure-satisfaction-level ]
+  if p-need-name = need-autonomy
+  [ report autonomy-satisfaction-level ]
+  if p-need-name = need-sleep
+  [ report sleep-satisfaction-level ]
+  if p-need-name = need-conformity
+  [ report conformity-satisfaction-level ]
+  report "ERROR"
+end
+
+to-report profiler-speed-test-salient-needs-3
+
+  table:clear table-profiler-salient-needs
+
+  let salient-needs []
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-risk-avoidance risk-avoidance-satisfaction-level ]
+  if compliance-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-compliance compliance-satisfaction-level ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-belonging belonging-satisfaction-level ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-leisure leisure-satisfaction-level ]
+  if autonomy-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-autonomy autonomy-satisfaction-level ]
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-sleep sleep-satisfaction-level ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ table:put table-profiler-salient-needs need-conformity conformity-satisfaction-level ]
+  
+  if table:length table-profiler-salient-needs = 0
+  [ report [] ]
+  
+  if table:length table-profiler-salient-needs = 1
+  [ report first table:keys table-profiler-salient-needs ]
+  
+  let lowest-need first table:keys table-profiler-salient-needs
+  let lowest-need-level table:get table-profiler-salient-needs lowest-need
+  foreach but-first table:keys table-profiler-salient-needs [ a-need ->
+    if table:get table-profiler-salient-needs a-need < lowest-need-level
+    [
+      set lowest-need a-need
+      set lowest-need-level table:get table-profiler-salient-needs a-need
+    ]
+  ]
+  report lowest-need
+end
+
+to-report profiler-speed-test-salient-needs-4
+
+  let salient-needs []
+  let salient-needs-level []
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-risk-avoidance salient-needs 
+    set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
+  if compliance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-compliance salient-needs 
+    set salient-needs-level lput compliance-satisfaction-level salient-needs-level ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-belonging salient-needs 
+    set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-leisure salient-needs 
+    set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
+  if autonomy-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-autonomy salient-needs 
+    set salient-needs-level lput autonomy-satisfaction-level salient-needs-level ]
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-sleep salient-needs 
+    set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-conformity salient-needs 
+    set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
+  
+  if length salient-needs = 0
+  [ report salient-needs ]
+  
+  if length salient-needs = 1
+  [ report first salient-needs ]
+  
+  let lowest-need first salient-needs
+  let lowest-need-level first salient-needs-level
+  let i 1
+  foreach but-first salient-needs [ a-need ->
+    if item i salient-needs-level < lowest-need-level
+    [
+      set lowest-need a-need
+      set lowest-need-level item i salient-needs-level
+    ]
+    set i (i + 1)
+  ]
+  report lowest-need
 end
 
 to-report profiler-speed-test-needs-threshold-1
