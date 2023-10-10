@@ -1,10 +1,10 @@
-; Filename: context_state_free_time.nls
+; Filename: context_state_sick_obligation.nls
 ; What we know from the context within these functions
 ; Location: Does not matter in implementation, as the agent just travels to the location where the agent can perform the action.
-; Time: NOT night, and for everyone except for retired its NOT a working day during morning or afternoon
-; Age: young, student, worker, or retired
+; Time: Its a working day during morning or afternoon
+; Age: young, student, or worker
 ; Sickness: The agent is not sick
 
-to-report context-state-free-time
+to-report context-state-sick-obligation ; csso
   report context-determine-social-distancing (list my-home "rest")
 end

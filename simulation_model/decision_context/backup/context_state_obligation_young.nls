@@ -138,6 +138,15 @@ to-report context-state-obligation-young-conformity
   report []
 end
 
+to-report context-network-action-perform [list-possible-g-type-and-motivations network-g-type network-motive network-sd]
+  foreach list-possible-g-type-and-motivations [ g-type-and-motivation ->
+    if network-g-type = (first g-type-and-motivation) and network-motive = (last g-type-and-motivation) [
+      report (list )
+    ]
+  ]
+  report []
+end
+
 ; This function compares without the luxury and food safety need, since young don't do shopping
 to-report context-get-salient-needs-obligation-young
   let salient-needs []

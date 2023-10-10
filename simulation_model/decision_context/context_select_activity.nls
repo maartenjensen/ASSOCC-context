@@ -1,8 +1,11 @@
 ; Filename: context_select_activity.nls
-__includes [ "decision_context/context_state_free_time.nls" "decision_context/context_state_night.nls"  
-  "decision_context/context_state_obligation_young.nls" "decision_context/context_state_obligation_student.nls" "decision_context/context_state_obligation_worker.nls" 
-  "decision_context/context_state_sick.nls" "decision_context/context_state_sick_night.nls" "decision_context/context_need_definition.nls"
-  "decision_context/profiler_speed_test_functions.nls" ]
+__includes [ "decision_context/profiler_speed_test_functions.nls"
+  "decision_context/context_state_sick_check_treatment.nls"
+  "decision_context/context_state_night.nls" "decision_context/context_state_sick_night.nls"
+  "decision_context/context_state_obligation.nls" "decision_context/context_state_sick_obligation.nls"
+  "decision_context/context_state_free_time.nls" "decision_context/context_state_sick_free_time.nls" ]
+
+; "decision_context/context_state_free_time.nls" "decision_context/context_state_obligation_base.nls" "decision_context/context_state_sick.nls" "decision_context/context_state_sick_night.nls"
 
 ; This function is the same as in select_activity.nls, with the exception
 ; of calling conextual-deliberation-select-activity instead of
@@ -38,142 +41,40 @@ to-report context-deliberation-select-activity
   ; Check whether not night (day time) and (retired or not a working day)
   ifelse (slice-of-the-day != "night")
   [
-    if age = worker-age
-    [
-      ifelse slice-of-the-day = "evening" or (not is-working-day-for-me?)
-      [; FREE TIME
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-free-time
-          if not empty? chosen-action
-          [ report context-most-salient-need-free-time-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH FREE TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-free-time
-            if not empty? chosen-action
-            [ report context-state-sick-free-time-succeeded chosen-action ]
-          ]
-        ]
-      ]
-      [ ; WORKING TIME
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-obligation-worker
-          if not empty? chosen-action
-          [ report context-most-salient-need-obligation-worker-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH WORKING TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-obligation-worker
-            if not empty? chosen-action
-            [ report context-state-sick-obligation-succeeded chosen-action ]
-          ]
-        ]
-      ]
-    ]
-    if age = young-age
-    [
-      ifelse slice-of-the-day = "evening" or (not is-working-day-for-me?)
-      [ ; FREETIME
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-free-time-young
-          if not empty? chosen-action
-          [ report context-most-salient-need-free-time-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH FREE TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-free-time-young
-            if not empty? chosen-action
-            [ report context-state-sick-free-time-succeeded chosen-action ]
-          ]
-        ]
-      ] 
-      [ ; The time is working time (afternoon or morning)
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-obligation-young
-          if not empty? chosen-action
-          [ report context-most-salient-need-obligation-young-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH WORKING TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-obligation-young
-            if not empty? chosen-action
-            [ report context-state-sick-obligation-succeeded chosen-action ]
-          ]
-        ]
-      ]
-    ]
-    if age = student-age
-    [
-      ifelse slice-of-the-day = "evening" or (not is-working-day-for-me?)
-      [ ; FREETIME
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-free-time
-          if not empty? chosen-action
-          [ report context-most-salient-need-free-time-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH FREE TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-free-time
-            if not empty? chosen-action
-            [ report context-state-sick-free-time-succeeded chosen-action ]
-          ]
-        ]
-      ]
-      [ ; STUDYING
-        ifelse not context-is-agent-sick
-        [
-          set chosen-action context-state-obligation-student
-          if not empty? chosen-action
-          [ report context-most-salient-need-obligation-student-succeeded chosen-action ]
-        ]
-        [ ; SICK WITH WORKING TIME
-          set chosen-action context-state-sick-treatment
-          ifelse not empty? chosen-action
-          [ report context-state-sick-treatment-succeeded chosen-action ]
-          [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-            set chosen-action context-state-sick-obligation-student
-            if not empty? chosen-action
-            [ report context-state-sick-obligation-succeeded chosen-action ]
-          ]
-        ]
-      ]
-    ]
-    if age = retired-age
-    [ ; Free time
+    ifelse slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age
+    [; FREE TIME
       ifelse not context-is-agent-sick
       [
         set chosen-action context-state-free-time
         if not empty? chosen-action
         [ report context-most-salient-need-free-time-succeeded chosen-action ]
       ]
-      [ ; Sick with free time
-        set chosen-action context-state-sick-treatment
+      [ ; SICK WITH FREE TIME
+        set chosen-action context-state-sick-check-treatment
         ifelse not empty? chosen-action
-        [ report context-state-sick-treatment-succeeded chosen-action ]
+        [ report context-state-sick-check-treatment-succeeded chosen-action ]
         [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
           set chosen-action context-state-sick-free-time
           if not empty? chosen-action
           [ report context-state-sick-free-time-succeeded chosen-action ]
+        ]
+      ]
+    ]
+    [ ; WORKING TIME
+      ifelse not context-is-agent-sick
+      [
+        set chosen-action context-state-obligation
+        if not empty? chosen-action
+        [ report context-most-salient-need-obligation-worker-succeeded chosen-action ]
+      ]
+      [ ; SICK WITH WORKING TIME
+        set chosen-action context-state-sick-check-treatment
+        ifelse not empty? chosen-action
+        [ report context-state-sick-check-treatment-succeeded chosen-action ]
+        [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
+          set chosen-action context-state-sick-obligation
+          if not empty? chosen-action
+          [ report context-state-sick-obligation-succeeded chosen-action ]
         ]
       ]
     ]
@@ -186,9 +87,9 @@ to-report context-deliberation-select-activity
       [ report context-most-salient-need-night-succeeded chosen-action ]
     ]
     [; When the agent is sick
-      set chosen-action context-state-sick-treatment
+      set chosen-action context-state-sick-check-treatment
       ifelse not empty? chosen-action
-      [ report context-state-sick-treatment-succeeded chosen-action ]
+      [ report context-state-sick-check-treatment-succeeded chosen-action ]
       [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
         set chosen-action context-state-sick-night
         if not empty? chosen-action
@@ -249,57 +150,7 @@ to-report context-is-agent-sick
   report has-internally-visible-symptoms? or is-believing-to-be-infected?
 end
 
-; =================================================
-;  Functions for profiler
-; =================================================
-
-
-
-to-report context-most-salient-need-free-time-succeeded [p-param]
-  report p-param
-end
-
-to-report context-most-salient-need-night-succeeded [p-param]
-  report p-param
-end
-
-to-report context-most-salient-need-obligation-young-succeeded [p-param]
-  report p-param
-end
-
-to-report context-most-salient-need-obligation-student-succeeded [p-param]
-  report p-param
-end
-
-to-report context-most-salient-need-obligation-worker-succeeded [p-param]
-  report p-param
-end
-
-to-report context-state-sick-treatment-succeeded [p-param]
-  report p-param
-end
-
-to-report context-state-sick-night-succeeded [p-param]
-  report p-param
-end
-
-to-report context-state-sick-free-time-succeeded [p-param]
-  report p-param
-end
-
-to-report context-state-sick-obligation-succeeded [p-param]
-  report p-param
-end
-
-to-report get-sleep-satisfaction-day
-  report sleep-satisfaction-level + #sleep-day-add
-end
-
-to-report get-leisure-satisfaction-free-time
-  report leisure-satisfaction-level + #leisure-free-time-add
-end
-
-; Make this dependent on location??
+; Make this dependent on location?? Nope, not for now, its not needed for the research question.
 to-report context-determine-social-distancing [gp-and-motive]
   if not with-infected?
   [ report lput False gp-and-motive ]
@@ -308,22 +159,31 @@ to-report context-determine-social-distancing [gp-and-motive]
   report lput False gp-and-motive
 end
 
-to update-delib-count
-  set delib-count-total-typical delib-count-typical
-  set delib-count-total-critical-need delib-count-critical-need
-  set delib-count-total-one-need delib-count-one-need
-  set delib-count-total-one-need-conformity delib-count-one-need-conformity
-  set delib-count-total-one-need-multi-actions delib-count-one-need-multi-actions
-  set delib-count-total-full-need delib-count-full-need
+to-report context-conformity-get-network-action
+  if not any? my-network [ report [] ]
+  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
+  if length relevant-memory >= 4 [
+    report (first relevant-memory)
+  ]
+  report []
 end
 
-to reset-delib-count
-  set delib-count-typical 0
-  set delib-count-critical-need 0
-  set delib-count-one-need 0
-  set delib-count-one-need-conformity 0
-  set delib-count-one-need-multi-actions 0
-  set delib-count-full-need 0  
+;==================================================
+; General Need Functions
+;==================================================
+; Used in context_state_obligation/sick_obligation/free_time/sick_free_time
+to-report need-sleep-level-day
+  report sleep-satisfaction-level + #sleep-day-add
+end
+
+; Used in context_state_free_time/sick_free_time
+to-report need-leisure-level-free-time
+  report leisure-satisfaction-level + #leisure-free-time-add
+end
+
+; Used in context_state_free_time/sick_free_time
+to-report need-luxury-level-free-time
+  report leisure-satisfaction-level + #leisure-free-time-add
 end
 
 ; The needs, order them according to alphabet
@@ -373,4 +233,61 @@ end
 
 to-report need-conformity
   report "conformity"
+end
+
+; =================================================
+;  Functions for profiler
+; =================================================
+to-report context-most-salient-need-free-time-succeeded [p-param]
+  report p-param
+end
+
+to-report context-most-salient-need-night-succeeded [p-param]
+  report p-param
+end
+
+to-report context-most-salient-need-obligation-young-succeeded [p-param]
+  report p-param
+end
+
+to-report context-most-salient-need-obligation-student-succeeded [p-param]
+  report p-param
+end
+
+to-report context-most-salient-need-obligation-worker-succeeded [p-param]
+  report p-param
+end
+
+to-report context-state-sick-check-treatment-succeeded [p-param]
+  report p-param
+end
+
+to-report context-state-sick-night-succeeded [p-param]
+  report p-param
+end
+
+to-report context-state-sick-free-time-succeeded [p-param]
+  report p-param
+end
+
+to-report context-state-sick-obligation-succeeded [p-param]
+  report p-param
+end
+
+to update-delib-count
+  set delib-count-total-typical delib-count-typical
+  set delib-count-total-critical-need delib-count-critical-need
+  set delib-count-total-one-need delib-count-one-need
+  set delib-count-total-one-need-conformity delib-count-one-need-conformity
+  set delib-count-total-one-need-multi-actions delib-count-one-need-multi-actions
+  set delib-count-total-full-need delib-count-full-need
+end
+
+to reset-delib-count
+  set delib-count-typical 0
+  set delib-count-critical-need 0
+  set delib-count-one-need 0
+  set delib-count-one-need-conformity 0
+  set delib-count-one-need-multi-actions 0
+  set delib-count-full-need 0  
 end
