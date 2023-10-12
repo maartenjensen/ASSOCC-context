@@ -7,6 +7,13 @@ __includes [ "decision_context/profiler_speed_test_functions.nls"
 
 ; "decision_context/context_state_free_time.nls" "decision_context/context_state_obligation_base.nls" "decision_context/context_state_sick.nls" "decision_context/context_state_sick_night.nls"
 
+to context-init-variables
+  cso-init-agent-variables
+  
+  set need-critical-threshold 0.4
+  set table-profiler-salient-needs table:make
+end
+
 ; This function is the same as in select_activity.nls, with the exception
 ; of calling conextual-deliberation-select-activity instead of
 ; my-preferred-available-activity-descriptor
@@ -144,6 +151,21 @@ to-report context-determine-most-salient-need [p-salient-needs p-salient-needs-l
     set i (i + 1)
   ]
   report lowest-need
+end
+
+to-report context-determine-most-salient-need-and-level [p-salient-needs p-salient-needs-level]
+  let lowest-need first p-salient-needs
+  let lowest-need-level first p-salient-needs-level
+  let i 1
+  foreach but-first p-salient-needs [ a-need ->
+    if item i p-salient-needs-level < lowest-need-level
+    [
+      set lowest-need a-need
+      set lowest-need-level item i p-salient-needs-level
+    ]
+    set i (i + 1)
+  ]
+  report (list lowest-need lowest-need-level)
 end
 
 to-report context-is-agent-sick

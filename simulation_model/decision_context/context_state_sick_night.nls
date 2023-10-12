@@ -5,11 +5,11 @@
 ; Age: All
 ; Sickness: The agent is sick
 
-to-report context-state-sick-night
+to-report context-state-sick-night ; cssn
   ; The time is morning, afternoon or evening
   if #log-agent and who = #agent-id [ print "Custom sick night deliberation" ]
   ; salient needs, need-level < #need-salient-threshold
-  let salient-needs-and-level context-get-salient-needs-night
+  let salient-needs-and-level cssn-salient-needs
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   if length salient-needs = 0
@@ -84,7 +84,7 @@ end
 ;Compliance INCLUDED -> since agent is sick, stay at home
 ;Health -> Home
 
-to-report context-get-salient-needs-sick-night
+to-report cssn-salient-needs
   let salient-needs []
   let salient-needs-level []
   if sleep-satisfaction-level < #need-salient-threshold

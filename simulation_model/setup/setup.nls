@@ -265,9 +265,7 @@ to setup-person [current-home l-age]
     set chosen-available-activity-descriptor (list away-gathering-point travelling-reason false)
     
     ; Variables for context-sensitive deliberation
-    set need-critical-threshold 0.4
-    
-    set table-profiler-salient-needs table:make
+    context-init-variables
   ]
 end
 
