@@ -20,7 +20,7 @@
 ; - Compliance
 
 ;Code check:
-; csft: NOT cst, cso, cstn, cson, csftn
+; csft: NOT csn, cso, cssn, csso, cssft
 
 to-report context-state-free-time ; csft
   

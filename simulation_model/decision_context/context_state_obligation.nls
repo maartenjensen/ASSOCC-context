@@ -38,7 +38,7 @@ end
 ; Financial survival
 
 ;Code check:
-; cso: NOT cst, csft, cstn, cson, csftn
+; cso: NOT  csn, csft, cssn, csso, cssft
 
 ;#need-critical-threshold for critical need
 
