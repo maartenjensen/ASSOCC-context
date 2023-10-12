@@ -6,5 +6,5 @@
 ; Sickness: The agent is not sick
 
 to-report context-state-sick-free-time ; cssft
-  report context-determine-social-distancing (list my-home "rest")
+  report [] ;context-determine-social-distancing (list my-home "rest")
 end

@@ -6,20 +6,19 @@
 ; Sickness: The agent is not sick
 ; Compliance is included in the salient need check
 
+; Global variables
+; #need-critical-threshold
+
 ; Variables for the agent
-; 
-; 
+; obligation-activity
 
 to cso-init-agent-variables
-  if age = young-age [
-    set obligation-activity-descriptor (activity-descriptor my-school "mandatory")
-  ]
-  if age = student-age [
-    set obligation-activity-descriptor (activity-descriptor my-university "learning")
-  ]
-  if age = worker-age [
-    set obligation-activity-descriptor (activity-descriptor my-work work-motive)
-  ]
+  if age = young-age
+  [ set obligation-activity-descriptor (activity-descriptor my-school "mandatory") ]
+  if age = student-age 
+  [ set obligation-activity-descriptor (activity-descriptor my-university "learning") ]
+  if age = worker-age 
+  [ set obligation-activity-descriptor (activity-descriptor my-work work-motive) ]
 end
 
 ; Important needs:
@@ -40,6 +39,8 @@ end
 
 ;Code check:
 ; cso: NOT cst, csft, cstn, cson, csftn
+
+;#need-critical-threshold for critical need
 
 to-report context-state-obligation ; cso
   
@@ -63,7 +64,7 @@ to-report context-state-obligation ; cso
   ; If salient needs is larger than 1, determine most salient
   ; -------------------------------------------
   let most-salient-need first salient-needs
-  let most-salient-need-level last salient-needs-and-level
+  let most-salient-need-level first (last salient-needs-and-level)
   if length salient-needs > 1
   [
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
@@ -81,20 +82,38 @@ to-report cso-salient-need-deliberation [most-salient-need most-salient-need-lev
   
   if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
-  ; Sleep is first checked since its most probable that this is the lowest need
-  ; The following needs support the default action: resting at home
+  ; Compliance is first checked, since the agents get a compliance boost at working hours OR at the beginning of the working day
   if most-salient-need = need-compliance or most-salient-need = need-belonging
   [ report cso-compliance-belonging ]
   
-  ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
-  ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
-  ;if most-salient-need = need-leisure and leisure-satisfaction-level < #need-critical-threshold [
-  ;  report cst-leisure
-  ;]
+  if most-salient-need = need-autonomy
+  [ report cso-autonomy-financial most-salient-need-level ]
   
-  ;if most-salient-need = need-conformity [
-  ;  report cst-conformity
-  ;]
+  if most-salient-need = need-risk-avoidance or most-salient-need = need-sleep
+  [ report cso-risk-avoidance-sleep most-salient-need-level ]
+  
+  ; TODO: 
+  ; Implement Leisure, Luxury, Food Safety, Comformity (they are all more difficult to implement and that's why for now the algorithm will turn to using full ASSOCC deliberation
+  if most-salient-need = need-leisure and most-salient-need-level < #need-critical-threshold
+  [ report cso-leisure-luxury-food-safety ]
+  
+  if most-salient-need = need-conformity
+  [ report cso-conformity most-salient-need-level ]
+  
+  if age = young-age
+  [ report [] ]
+  
+  ; == STUDENT & WORKER: Shopping ==
+  if (most-salient-need = need-luxury or most-salient-need = need-food-safety) and most-salient-need-level < #need-critical-threshold
+  [ report cso-leisure-luxury-food-safety ]
+  
+  if age = student-age
+  [ report [] ]
+
+  ; == WORKER: Work for money ==
+  if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
+  [ report cso-autonomy-financial most-salient-need-level ]
+  
   report []
 end
 
@@ -114,26 +133,28 @@ end
 to-report cso-autonomy-financial [ most-salient-need-level ]
   ifelse not context-normative-should-I-stay-home
     [ report context-determine-social-distancing obligation-activity-descriptor ]
-    [ if most-salient-need-level
+    [ if most-salient-need-level < #need-critical-threshold
       [ report context-determine-social-distancing obligation-activity-descriptor ]
     ]
   report []
 end
 
+to-report cso-leisure-luxury-food-safety ; TODO
+  report []
+end
 
-; Compliance: norm following
-; Belonging: norm following
-; Autonomy
-; Risk avoidance
-; Sleep
-; Leisure
-; Conformity 
-; [Exit if young]
-; Food safety
-; Luxury 
-; [Exit if student]
-; Financial stability
-; Financial survival
+to-report cso-conformity [ most-salient-need-level ] ; TODO
+  report []
+end
+
+to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
+  ifelse context-normative-should-I-stay-home
+    [ report context-determine-social-distancing (list my-home "rest") ]
+    [ if most-salient-need-level < #need-critical-threshold
+      [ report context-determine-social-distancing (list my-home "rest") ]
+    ]
+  report []
+end
 
 ;============== SALIENT NEEDS ==================
 to-report cso-salient-needs

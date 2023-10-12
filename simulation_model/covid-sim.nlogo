@@ -1528,9 +1528,9 @@ count workers
 11
 
 MONITOR
-920
+916
 481
-979
+975
 526
 #retired
 count retireds
@@ -4284,10 +4284,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot global-deliberation-time"
 
 BUTTON
-541
-320
-626
-353
+452
+474
+537
+507
 NIL
 go-profile
 NIL
@@ -4491,6 +4491,17 @@ SWITCH
 0
 1
 -1000
+
+INPUTBOX
+530
+316
+700
+376
+#risk-avoidance-home-preference
+0.5
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?

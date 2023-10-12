@@ -1,10 +1,155 @@
 ; Filename: context_state_free_time.nls
 ; What we know from the context within these functions
 ; Location: Does not matter in implementation, as the agent just travels to the location where the agent can perform the action.
-; Time: NOT night, and for everyone except for retired its NOT a working day during morning or afternoon
+; Time: NOT night, and for everyone except for young/student/worker its NOT a working day during morning or afternoon
 ; Age: young, student, worker, or retired
 ; Sickness: The agent is not sick
 
-to-report context-state-free-time
+; Important needs:
+; -----------------------------------
+; Belonging: rest or leisure
+; Risk avoidance: rest at home
+; Sleep: rest at home
+; Leisure: leisure
+; Conformity: network action
+; [Exit if young]
+; Food safety: essential shopping
+; Luxury: non-essential shopping
+
+; Normative Needs
+; - Compliance
+
+;Code check:
+; csft: NOT cst, cso, cstn, cson, csftn
+
+to-report context-state-free-time ; csft
+  
+  ; The time is morning or afternoon
+  if #log-agent and who = #agent-id [ print "Free time decision making" ]
+  ; salient needs, need-level < #need-salient-threshold
+  ; -------------------------------------------
+  ; Determine whether there is a need salient
+  ; -------------------------------------------
+  let salient-needs-and-level csft-salient-needs
+  let salient-needs first salient-needs-and-level
+  if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
+  
+  ; -------------------------------------------
+  ; If no need salient default
+  ; -------------------------------------------
+  if length salient-needs = 0
+  [ report csft-default ]
+  
+  ; -------------------------------------------
+  ; If salient needs is larger than 1, determine most salient
+  ; -------------------------------------------
+  let most-salient-need first salient-needs
+  let most-salient-need-level first (last salient-needs-and-level)
+  if length salient-needs > 1
+  [
+    let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
+    set most-salient-need first most-salient-need-and-need-level
+    set most-salient-need-level last most-salient-need-and-need-level
+  ]
+  
+  ; -------------------------------------------
+  ; Deliberate on most salient need
+  ; -------------------------------------------
+  report csft-salient-need-deliberation most-salient-need most-salient-need-level
+end
+
+to-report csft-salient-need-deliberation [most-salient-need most-salient-need-level ]
+  
+  if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  
+  if most-salient-need = need-sleep or most-salient-need = need-risk-avoidance
+  [ report csft-sleep-risk-avoidance ]
+  
+  if most-salient-need = need-belonging ; TODO
+  [ report csft-belonging most-salient-need-level ]
+  
+  if most-salient-need = need-leisure ; TODO
+  [ report csft-leisure ]
+  
+  if most-salient-need = need-conformity ; TODO
+  [ report csft-conformity ]
+  
+  if age = young-age
+  [ report [] ]
+  
+  if most-salient-need = need-food-safety ; TODO
+  [ report csft-food-safety ]
+  
+  if most-salient-need = need-luxury ; TODO
+  [ report csft-luxury ]
+  
+  report []
+end
+
+;============== NEED FUNCTIONS =================
+to-report csft-default
   report context-determine-social-distancing (list my-home "rest")
+end
+
+to-report csft-sleep-risk-avoidance
+  report context-determine-social-distancing (list my-home "rest")
+end
+
+to-report csft-belonging [ most-salient-need-level ]
+  ifelse context-normative-should-I-stay-home 
+  [ report context-determine-social-distancing (list my-home "rest") ]
+  [ if risk-avoidance-satisfaction-level < #risk-avoidance-home-preference
+    [ report context-determine-social-distancing (list my-home "rest") ] 
+  ]
+  ;report [] ] ; TODO, update this 
+  ;report context-determine-social-distancing (context-heuristic-random-action (list (list my-home "rest")
+  ;(activity-descriptor my-non-essential-shop "shopping") (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  report []
+end
+
+to-report csft-leisure
+  report []
+end
+
+to-report csft-food-safety
+  report []
+end
+
+to-report csft-luxury
+  report []
+end
+
+to-report csft-conformity
+  report [] ; Check the original file
+end
+
+;============== SALIENT NEEDS ==================
+to-report csft-salient-needs
+  let salient-needs []
+  let salient-needs-level []
+  if sleep-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-sleep salient-needs 
+    set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
+  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-risk-avoidance salient-needs 
+    set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
+  if belonging-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-belonging salient-needs 
+    set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
+  if leisure-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-leisure salient-needs 
+    set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
+  if conformity-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-conformity salient-needs 
+    set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
+  ; Exit if not student or worker
+  if age = young-age
+  [ report list salient-needs salient-needs-level ]
+  if food-safety-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-food-safety salient-needs 
+    set salient-needs-level lput food-safety-satisfaction-level salient-needs-level ]
+  if luxury-satisfaction-level < #need-salient-threshold
+  [ set salient-needs lput need-luxury salient-needs 
+    set salient-needs-level lput luxury-satisfaction-level salient-needs-level ]
+  report list salient-needs salient-needs-level
 end
