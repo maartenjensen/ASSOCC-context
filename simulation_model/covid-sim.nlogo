@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4455,7 +4455,7 @@ SWITCH
 285
 #enable-quarantine
 #enable-quarantine
-0
+1
 1
 -1000
 
@@ -4502,6 +4502,17 @@ INPUTBOX
 1
 0
 Number
+
+SWITCH
+820
+444
+1017
+477
+#enable-food-luxury-test
+#enable-food-luxury-test
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5165,7 +5176,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="40"/>
+    <timeLimit steps="240"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
     <metric>#admissions-last-tick</metric>
@@ -5291,7 +5302,7 @@ setup</setup>
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#enable-quarantine">
-      <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>

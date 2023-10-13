@@ -77,10 +77,10 @@ to-report csft-salient-need-deliberation [most-salient-need most-salient-need-le
   if age = young-age
   [ report [] ]
   
-  if most-salient-need = need-food-safety ; TODO
+  if most-salient-need = need-food-safety
   [ report csft-food-safety ]
   
-  if most-salient-need = need-luxury ; TODO
+  if most-salient-need = need-luxury
   [ report csft-luxury ]
   
   report []
@@ -112,10 +112,26 @@ to-report csft-leisure
 end
 
 to-report csft-food-safety
+  if #enable-food-luxury-test
+  [
+    if not context-normative-should-I-stay-home or (food-safety-satisfaction-level < #need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level)
+    [
+      if food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level
+      [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
+    ]
+  ]
   report []
 end
 
 to-report csft-luxury
+  if #enable-food-luxury-test
+  [
+    if not context-normative-should-I-stay-home or (luxury-satisfaction-level < #need-critical-threshold and luxury-satisfaction-level < compliance-satisfaction-level)
+    [
+      if luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level
+      [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
+    ]
+  ]
   report []
 end
 

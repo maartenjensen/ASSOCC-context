@@ -37,8 +37,8 @@ dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 4 -A= 6].csv",
                   "report-[C= true -H= 700 -R= 5 -A= 6].csv")
 
-dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6] risk avoid.csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6] risk avoid.csv")
+dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6].csv")
 
 filesNames   <- dataFileName
 
@@ -144,7 +144,11 @@ for (i in 1:length(p_files_names)) {
   for (i in 1:nrow(df_initial)) {
 
     if (str_contains(df_initial[i,1], "GO ") || str_contains(df_initial[i,1], "SELECT-ACTIVITY ") || 
-        str_contains(df_initial[i,1], "CONTEXT") || str_contains(df_initial[i,1], "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")) {
+        str_contains(df_initial[i,1], "CONTEXT") || str_contains(df_initial[i,1], "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR") ||
+        str_contains(df_initial[i,1], "CSN") || str_contains(df_initial[i,1], "CSSN") ||
+        str_contains(df_initial[i,1], "CSO") || str_contains(df_initial[i,1], "CSSO") ||
+        str_contains(df_initial[i,1], "CSFT") || str_contains(df_initial[i,1], "CSSFT")) {
+      
       result_v <- str_to_v_without_white_spaces(df_initial[i,1])
       settings_v <- setting_str_to_v(file_name)
       df_results <- rbind(df_results, c(settings_v[1], settings_v[2], settings_v[3], settings_v[4],
@@ -155,6 +159,56 @@ for (i in 1:length(p_files_names)) {
     }
   }
 }
+
+df_results_csn = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSN")) {
+    df_results_csn <- rbind(df_results_csn, df_results[i, ])
+  }
+}
+
+df_results_cssn = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSSN")) {
+    df_results_cssn <- rbind(df_results_cssn, df_results[i, ])
+  }
+}
+
+df_results_cso = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSO")) {
+    df_results_cso <- rbind(df_results_cso, df_results[i, ])
+  }
+}
+
+df_results_csso = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSSO")) {
+    df_results_csso <- rbind(df_results_csso, df_results[i, ])
+  }
+}
+
+df_results_csft = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSFT")) {
+    df_results_csft <- rbind(df_results_csft, df_results[i, ])
+  }
+}
+
+df_results_cssft = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+for (i in 1:nrow(df_results)) {
+  
+  if (str_contains(df_results$function_name[i], "CSSFT")) {
+    df_results_cssft <- rbind(df_results_cssft, df_results[i, ])
+  }
+}
+
+df_results_overview = df_results[c(5,4,17,63), ]
 
 #---------- MAKING THE DATAFRAME NICE ---------#
 colnames(df_results) <- c("context", "households", "random_seed", "action_space", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
@@ -221,3 +275,10 @@ plot_ggplot_execution_time(df_grouped_select_activity, "Execution time ms - Sele
 #dev.off()
 
 df_check <- df_results[df_results$random_seed==1 & df_results$households==350, ]
+
+print(df_results_csn)
+print(df_results_cssn)
+print(df_results_cso)
+print(df_results_csso)
+print(df_results_csft)
+print(df_results_cssft)
