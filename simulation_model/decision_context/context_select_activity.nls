@@ -8,7 +8,12 @@ __includes [ "decision_context/profiler_speed_test_functions.nls"
 ; "decision_context/context_state_free_time.nls" "decision_context/context_state_obligation_base.nls" "decision_context/context_state_sick.nls" "decision_context/context_state_sick_night.nls"
 
 to context-init-variables
-  cso-init-agent-variables
+  if age = young-age
+  [ set obligation-activity-descriptor (activity-descriptor my-school "mandatory") ]
+  if age = student-age 
+  [ set obligation-activity-descriptor (activity-descriptor my-university "learning") ]
+  if age = worker-age 
+  [ set obligation-activity-descriptor (activity-descriptor my-work work-motive) ]
   
   set need-critical-threshold 0.4
   set table-profiler-salient-needs table:make

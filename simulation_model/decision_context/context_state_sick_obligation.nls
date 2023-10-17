@@ -82,20 +82,22 @@ to-report csso-salient-need-deliberation [most-salient-need most-salient-need-le
   if most-salient-need = need-autonomy
   [ report csso-autonomy-financial most-salient-need-level ]
   
-  ; TODO: 
-  ; Implement Leisure, Luxury, Food Safety, Comformity (they are all more difficult to implement and that's why for now the algorithm will turn to using full ASSOCC deliberation
-  if most-salient-need = need-leisure and most-salient-need-level < #need-critical-threshold
-  [ report csso-leisure-luxury-food-safety ]
+  if most-salient-need = need-leisure
+  [ report csso-leisure ]
   
   if most-salient-need = need-conformity
-  [ report csso-conformity most-salient-need-level ]
+  [ report csso-conformity ]
+  report csso-conformity
   
   if age = young-age
-  [ report [] ]
+  [ report [] ] 
   
   ; == STUDENT & WORKER: Shopping ==
-  if (most-salient-need = need-luxury or most-salient-need = need-food-safety) and most-salient-need-level < #need-critical-threshold
-  [ report csso-leisure-luxury-food-safety ]
+  if most-salient-need = need-luxury
+  [ report csso-luxury ]
+  
+  if most-salient-need = need-food-safety
+  [ report csso-food-safety ]
   
   if age = student-age
   [ report [] ]
@@ -104,7 +106,7 @@ to-report csso-salient-need-deliberation [most-salient-need most-salient-need-le
   if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
   [ report csso-autonomy-financial most-salient-need-level ]
   
-  report []
+  report csso-error-f
 end
 
 ;============== NEED FUNCTIONS =================
@@ -119,14 +121,101 @@ end
 to-report csso-autonomy-financial [ most-salient-need-level ]
   if most-salient-need-level < #need-critical-threshold
   [ report context-determine-social-distancing obligation-activity-descriptor ]
+  report csso-autonomy-financial-f
+end
+
+to-report csso-leisure
+  if leisure-satisfaction-level < #need-critical-threshold
+  [
+    ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+    [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  report csso-leisure-f
+end
+
+to-report csso-luxury
+  if luxury-satisfaction-level < #need-critical-threshold
+  [
+    if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
+    [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
+  ]
+  report csso-luxury-f
+end
+
+to-report csso-food-safety
+  if food-safety-satisfaction-level < #need-critical-threshold
+  [
+    if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)
+    [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
+  ]
+  report csso-food-safety-f
+end
+
+to-report csso-conformity
+  
+  let network-action context-conformity-get-network-action
+  ifelse empty? network-action
+  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+  [
+    ; Retrieve network action
+    let network-g-type (location-of network-action)
+    let network-motive motive-of network-action
+    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
+    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+    
+    ; Deliberate on network action
+    ifelse conformity-satisfaction-level < #need-critical-threshold
+    [
+       report csso-conformity-choose-possible-network-action network-g-type network-motive network-sd
+    ]
+    [ if network-motive = "rest" [ report (list my-home "rest" network-sd) ] ]
+  ]
+  
+  report csso-conformity-f
+end
+
+to-report csso-conformity-choose-possible-network-action [network-g-type network-motive network-sd]
+  if network-motive = "rest"
+  [ report (list my-home "rest" network-sd) ]
+  if network-motive = motive-of obligation-activity-descriptor
+  [ report (lput network-sd obligation-activity-descriptor) ]
+  if network-motive = "private-leisure"
+  [ report (lput network-sd activity-descriptor my-private-leisure "relaxing") ]
+  if network-motive = "public-leisure"
+  [ report (lput network-sd activity-descriptor my-public-leisure "relaxing") ]
+  if age = worker-age or (age = student-age and conformity-satisfaction-level < financial-stability-satisfaction-level and conformity-satisfaction-level < financial-survival-satisfaction-level)
+  [
+    if network-motive = "essential-shop"
+    [ report (lput network-sd activity-descriptor one-of my-essential-shops "essential shopping") ]
+    if network-motive = "non-essential-shop"
+    [ report (lput network-sd activity-descriptor my-non-essential-shop "shopping") ]
+  ]
   report []
 end
 
-to-report csso-leisure-luxury-food-safety ; TODO
+;============== FULL DELIBERATION FUNCTIONS ==================
+to-report csso-autonomy-financial-f
   report []
 end
 
-to-report csso-conformity [ most-salient-need-level ] ; TODO
+to-report csso-leisure-f
+  report []
+end
+
+to-report csso-luxury-f
+  report []
+end
+
+to-report csso-food-safety-f
+  report []
+end
+
+to-report csso-conformity-f
+  report []
+end
+
+to-report csso-error-f
   report []
 end
 

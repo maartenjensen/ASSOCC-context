@@ -12,15 +12,6 @@
 ; Variables for the agent
 ; obligation-activity
 
-to cso-init-agent-variables
-  if age = young-age
-  [ set obligation-activity-descriptor (activity-descriptor my-school "mandatory") ]
-  if age = student-age 
-  [ set obligation-activity-descriptor (activity-descriptor my-university "learning") ]
-  if age = worker-age 
-  [ set obligation-activity-descriptor (activity-descriptor my-work work-motive) ]
-end
-
 ; Important needs:
 ; -----------------------------------
 ; Compliance: norm following
@@ -92,20 +83,21 @@ to-report cso-salient-need-deliberation [most-salient-need most-salient-need-lev
   if most-salient-need = need-risk-avoidance or most-salient-need = need-sleep
   [ report cso-risk-avoidance-sleep most-salient-need-level ]
   
-  ; TODO: 
-  ; Implement Leisure, Luxury, Food Safety, Comformity (they are all more difficult to implement and that's why for now the algorithm will turn to using full ASSOCC deliberation
-  if most-salient-need = need-leisure and most-salient-need-level < #need-critical-threshold
-  [ report cso-leisure-luxury-food-safety ]
+  if most-salient-need = need-leisure
+  [ report cso-leisure ]
   
   if most-salient-need = need-conformity
-  [ report cso-conformity most-salient-need-level ]
+  [ report cso-conformity ]
   
   if age = young-age
   [ report [] ]
   
   ; == STUDENT & WORKER: Shopping ==
-  if (most-salient-need = need-luxury or most-salient-need = need-food-safety) and most-salient-need-level < #need-critical-threshold
-  [ report cso-leisure-luxury-food-safety ]
+  if most-salient-need = need-luxury
+  [ report cso-luxury ]
+  
+  if most-salient-need = need-food-safety
+  [ report cso-food-safety ]
   
   if age = student-age
   [ report [] ]
@@ -136,15 +128,82 @@ to-report cso-autonomy-financial [ most-salient-need-level ]
     [ if most-salient-need-level < #need-critical-threshold
       [ report context-determine-social-distancing obligation-activity-descriptor ]
     ]
-  report []
+  report cso-autonomy-financial-f
 end
 
-to-report cso-leisure-luxury-food-safety ; TODO
-  report []
+to-report cso-leisure
+  if leisure-satisfaction-level < #need-critical-threshold
+  [
+    ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+    [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  report cso-leisure-f
 end
 
-to-report cso-conformity [ most-salient-need-level ] ; TODO
-  report []
+to-report cso-luxury
+  if luxury-satisfaction-level < #need-critical-threshold
+  [
+    if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
+    [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
+  ]
+  report cso-luxury-f
+end
+
+to-report cso-food-safety
+  if food-safety-satisfaction-level < #need-critical-threshold
+  [
+    if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)
+    [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
+  ]
+  report cso-food-safety-f
+end
+
+to-report cso-conformity
+  
+  let network-action context-conformity-get-network-action
+  ifelse empty? network-action
+  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+  [
+    ; Retrieve network action
+    let network-g-type (location-of network-action)
+    let network-motive motive-of network-action
+    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
+    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+    
+    ; Deliberate on network action
+    ifelse conformity-satisfaction-level < #need-critical-threshold
+    [
+       report cso-conformity-choose-possible-network-action network-g-type network-motive network-sd
+    ]
+    [
+      ifelse not context-normative-should-I-stay-home
+      [ if network-motive = motive-of obligation-activity-descriptor
+        [ report (lput network-sd obligation-activity-descriptor) ]
+      ]
+      [ if network-motive = "rest" [ report (list my-home "rest" network-sd) ] ]
+    ]
+  ]
+  
+  report cso-conformity-f
+end
+
+to-report cso-conformity-choose-possible-network-action [network-g-type network-motive network-sd]
+  if network-motive = "rest"
+  [ report (list my-home "rest" network-sd) ]
+  if network-motive = motive-of obligation-activity-descriptor
+  [ report (lput network-sd obligation-activity-descriptor) ]
+  if network-motive = "private-leisure"
+  [ report (lput network-sd activity-descriptor my-private-leisure "relaxing") ]
+  if network-motive = "public-leisure"
+  [ report (lput network-sd activity-descriptor my-public-leisure "relaxing") ]
+  if age = worker-age or (age = student-age and conformity-satisfaction-level < financial-stability-satisfaction-level and conformity-satisfaction-level < financial-survival-satisfaction-level)
+  [
+    if network-motive = "essential-shop"
+    [ report (lput network-sd activity-descriptor one-of my-essential-shops "essential shopping") ]
+    if network-motive = "non-essential-shop"
+    [ report (lput network-sd activity-descriptor my-non-essential-shop "shopping") ]
+  ]
 end
 
 to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
@@ -153,6 +212,31 @@ to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
     [ if most-salient-need-level < #need-critical-threshold
       [ report context-determine-social-distancing (list my-home "rest") ]
     ]
+  report cso-risk-avoidance-sleep-f
+end
+
+;============== FULL DELIBERATION FUNCTIONS ==================
+to-report cso-autonomy-financial-f
+  report []
+end
+
+to-report cso-leisure-f
+  report []
+end
+
+to-report cso-luxury-f
+  report []
+end
+
+to-report cso-food-safety-f
+  report []
+end
+
+to-report cso-conformity-f
+  report []
+end
+
+to-report cso-risk-avoidance-sleep-f
   report []
 end
 
