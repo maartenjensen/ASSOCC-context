@@ -90,7 +90,7 @@ to-report cso-salient-need-deliberation [most-salient-need most-salient-need-lev
   [ report cso-conformity ]
   
   if age = young-age
-  [ report [] ]
+  [ report cso-error-f ]
   
   ; == STUDENT & WORKER: Shopping ==
   if most-salient-need = need-luxury
@@ -100,13 +100,13 @@ to-report cso-salient-need-deliberation [most-salient-need most-salient-need-lev
   [ report cso-food-safety ]
   
   if age = student-age
-  [ report [] ]
+  [ report cso-error-f ]
 
   ; == WORKER: Work for money ==
   if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
   [ report cso-autonomy-financial most-salient-need-level ]
   
-  report []
+  report cso-error-f
 end
 
 ;============== NEED FUNCTIONS =================
@@ -129,6 +129,15 @@ to-report cso-autonomy-financial [ most-salient-need-level ]
       [ report context-determine-social-distancing obligation-activity-descriptor ]
     ]
   report cso-autonomy-financial-f
+end
+
+to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
+  ifelse context-normative-should-I-stay-home
+  [ report context-determine-social-distancing (list my-home "rest") ]
+  [ if most-salient-need-level < #need-critical-threshold
+    [ report context-determine-social-distancing (list my-home "rest") ]
+  ]
+  report cso-risk-avoidance-sleep-f
 end
 
 to-report cso-leisure
@@ -204,15 +213,7 @@ to-report cso-conformity-choose-possible-network-action [network-g-type network-
     if network-motive = "non-essential-shop"
     [ report (lput network-sd activity-descriptor my-non-essential-shop "shopping") ]
   ]
-end
-
-to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
-  ifelse context-normative-should-I-stay-home
-    [ report context-determine-social-distancing (list my-home "rest") ]
-    [ if most-salient-need-level < #need-critical-threshold
-      [ report context-determine-social-distancing (list my-home "rest") ]
-    ]
-  report cso-risk-avoidance-sleep-f
+  report cso-conformity-f
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
@@ -237,6 +238,10 @@ to-report cso-conformity-f
 end
 
 to-report cso-risk-avoidance-sleep-f
+  report []
+end
+
+to-report cso-error-f
   report []
 end
 

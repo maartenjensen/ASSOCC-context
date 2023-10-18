@@ -73,7 +73,7 @@ to-report cssn-salient-need-deliberation [most-salient-need]
   if most-salient-need = need-conformity [
     report cssn-conformity
   ]
-  report []
+  report cssn-error-f
 end
 
 ;============== NEED FUNCTIONS =================
@@ -88,7 +88,7 @@ end
 to-report cssn-leisure
   ifelse leisure-satisfaction-level < #need-critical-threshold 
   [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
-  [ report [] ]
+  [ report cssn-leisure-f ]
 end
 
 to-report cssn-conformity
@@ -113,6 +113,19 @@ to-report cssn-conformity
     ; The action taking treatment is not affected by conformity, i.e. if the agent's network is all in treatment this should not make this agent go into treatment
     ; Working (at workplace or from home), school, university, or shopping are not possible actions during the night.
   ]
+  report cssn-conformity-f
+end
+
+;============== FULL DELIBERATION FUNCTIONS ==================
+to-report cssn-leisure-f
+  report []
+end
+
+to-report cssn-conformity-f
+  report []
+end
+
+to-report cssn-error-f
   report []
 end
 

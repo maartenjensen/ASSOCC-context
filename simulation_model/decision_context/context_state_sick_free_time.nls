@@ -61,27 +61,27 @@ end
 to-report cssft-salient-need-deliberation [most-salient-need most-salient-need-level ]
   
   if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
-  
+   
   if most-salient-need = need-sleep or most-salient-need = need-health or most-salient-need = need-risk-avoidance or
      most-salient-need = need-belonging or most-salient-need = need-compliance
   [ report cssft-sleep-health-risk-avoidance-belonging-compliance ]
   
-  if most-salient-need = need-leisure ; TODO
+  if most-salient-need = need-leisure
   [ report cssft-leisure ]
   
-  if most-salient-need = need-conformity ; TODO
+  if most-salient-need = need-conformity
   [ report cssft-conformity ]
   
   if age = young-age
-  [ report [] ]
+  [ report cssft-error-f ]
   
-  if most-salient-need = need-food-safety ; TODO
+  if most-salient-need = need-food-safety
   [ report cssft-food-safety ]
   
-  if most-salient-need = need-luxury ; TODO
+  if most-salient-need = need-luxury
   [ report cssft-luxury ]
   
-  report []
+  report cssft-error-f
 end
 
 ;============== NEED FUNCTIONS =================
@@ -94,21 +94,101 @@ to-report cssft-sleep-health-risk-avoidance-belonging-compliance
 end
 
 to-report cssft-leisure
-  report []
+  if leisure-satisfaction-level < #need-critical-threshold
+  [
+    ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
+    [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
+    [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+  ]
+  report cssft-leisure-f
 end
 
 to-report cssft-food-safety
-  report []
+  if food-safety-satisfaction-level < #need-critical-threshold and food-safety-satisfaction-level < #need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level
+  [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
+  report cssft-food-safety-f
 end
 
 to-report cssft-luxury
-  report []
+  if luxury-satisfaction-level < #need-critical-threshold and luxury-satisfaction-level < #need-critical-threshold and luxury-satisfaction-level < compliance-satisfaction-level
+  [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
+  report cssft-luxury-f
 end
 
 to-report cssft-conformity
-  report [] ; Check the original file
+  
+  let network-action context-conformity-get-network-action
+  ifelse empty? network-action
+  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+  [
+    ; Retrieve network action
+    let network-g-type (location-of network-action)
+    let network-motive motive-of network-action
+    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
+    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+    
+    ; Deliberate on network action
+    ifelse network-motive = "rest"
+    [ report (list my-home "rest" network-sd) ]
+    [
+      if cssft-conformity-check-network-motive-available network-motive
+      [
+        if conformity-satisfaction-level < #need-critical-threshold
+        [ report (cssft-conformity-perform-network-action network-g-type network-motive network-sd) ]
+      ] ; ELSE: cssft-conformity-f
+    ]
+  ]
+  report cssft-conformity-f
 end
 
+to-report cssft-conformity-check-network-motive-available [ network-motive ]
+  let available-network-motives (list "rest" "relaxing")
+  if not (age = young-age)
+  [
+    set available-network-motives lput "essential shopping" available-network-motives
+    set available-network-motives lput "shopping" available-network-motives
+  ]
+  report member? network-motive available-network-motives
+end
+
+to-report cssft-conformity-perform-network-action [ network-g-type network-motive network-sd ]
+  if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
+  [ report lput network-sd (activity-descriptor my-public-leisure "relaxing") ]
+  if network-g-type = private-leisure-gathering-type and network-motive = "relaxing"
+  [ report lput network-sd (activity-descriptor my-private-leisure "relaxing") ]
+  
+  ; Financial check, or full assocc deliberation when young agent
+  if age = young-age or not (conformity-satisfaction-level < financial-stability-satisfaction-level) or not (conformity-satisfaction-level < financial-survival-satisfaction-level)
+  [ report cssft-conformity-f ]
+  
+  if network-g-type = non-essential-shop-gathering-type and network-motive = "shopping"
+  [ report lput network-sd (activity-descriptor my-non-essential-shop "shopping") ]
+  if network-g-type = essential-shop-gathering-type and network-motive = "essential shopping"
+  [ report lput network-sd (activity-descriptor one-of my-essential-shops "essential shopping") ] 
+  
+  report cssft-conformity-f
+end
+
+;============== FULL DELIBERATION FUNCTIONS ==================
+to-report cssft-leisure-f
+  report []
+end
+
+to-report cssft-luxury-f
+  report []
+end
+
+to-report cssft-food-safety-f
+  report []
+end
+
+to-report cssft-conformity-f
+  report []
+end
+
+to-report cssft-error-f
+  report []
+end
 
 ;============== SALIENT NEEDS ==================
 to-report cssft-salient-needs

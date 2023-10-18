@@ -72,7 +72,7 @@ to-report csn-salient-need-deliberation [most-salient-need]
   if most-salient-need = need-conformity [
     report csn-conformity
   ]
-  report []
+  report csn-error-f
 end
 
 ;============== NEED FUNCTIONS =================
@@ -92,7 +92,7 @@ to-report csn-leisure
     [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
-  report []
+  report csn-leisure-f
 end
 
 to-report csn-conformity
@@ -125,6 +125,19 @@ to-report csn-conformity
     ; The action taking treatment is not affected by conformity, i.e. if the agent's network is all in treatment this should not make this agent go into treatment
     ; Working (at workplace or from home), school, university is not a possible action during the night.
   ]
+  report csn-conformity-f
+end
+
+;============== FULL DELIBERATION FUNCTIONS ==================
+to-report csn-leisure-f
+  report []
+end
+
+to-report csn-conformity-f
+  report []
+end
+
+to-report csn-error-f
   report []
 end
 
