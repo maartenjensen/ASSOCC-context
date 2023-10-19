@@ -112,22 +112,22 @@ end
 ;============== NEED FUNCTIONS =================
 to-report cso-default
   ifelse context-normative-should-I-stay-home
-    [ report context-determine-social-distancing (list my-home "rest") ]
-    [ report context-determine-social-distancing obligation-activity-descriptor ]
+  [ report context-determine-social-distancing (list my-home "rest") ]
+  [ report context-determine-social-distancing obligation-activity-descriptor ]
 end
 
 to-report cso-compliance-belonging
   ifelse context-normative-should-I-stay-home
-    [ report context-determine-social-distancing (list my-home "rest") ]
-    [ report context-determine-social-distancing obligation-activity-descriptor ]
+  [ report context-determine-social-distancing (list my-home "rest") ]
+  [ report context-determine-social-distancing obligation-activity-descriptor ]
 end
 
 to-report cso-autonomy-financial [ most-salient-need-level ]
   ifelse not context-normative-should-I-stay-home
+  [ report context-determine-social-distancing obligation-activity-descriptor ]
+  [ if most-salient-need-level < #need-critical-threshold
     [ report context-determine-social-distancing obligation-activity-descriptor ]
-    [ if most-salient-need-level < #need-critical-threshold
-      [ report context-determine-social-distancing obligation-activity-descriptor ]
-    ]
+  ]
   report cso-autonomy-financial-f
 end
 
@@ -147,7 +147,7 @@ to-report cso-leisure
     [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
-  report cso-leisure-f
+  report cso-leisure-f 
 end
 
 to-report cso-luxury
@@ -155,6 +155,10 @@ to-report cso-luxury
   [
     if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
     [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
+  ]
+  if #enable-salient-food-luxury-forced-obligation
+  [ if not context-normative-should-I-stay-home
+    [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report cso-luxury-f
 end
@@ -164,6 +168,10 @@ to-report cso-food-safety
   [
     if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)
     [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
+  ]
+  if #enable-salient-food-luxury-forced-obligation
+  [ if not context-normative-should-I-stay-home
+    [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report cso-food-safety-f
 end

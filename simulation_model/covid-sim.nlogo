@@ -812,10 +812,10 @@ Simulation management
 1
 
 TEXTBOX
-556
-448
-764
-486
+545
+457
+753
+495
 Demographics Model
 16
 53.0
@@ -4504,13 +4504,24 @@ INPUTBOX
 Number
 
 SWITCH
-820
+844
 444
 1017
 477
 #enable-food-luxury-test
 #enable-food-luxury-test
 0
+1
+-1000
+
+SWITCH
+710
+144
+1019
+177
+#enable-salient-food-luxury-forced-obligation
+#enable-salient-food-luxury-forced-obligation
+1
 1
 -1000
 
@@ -5175,7 +5186,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
+    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-F=" #enable-salient-food-luxury-forced-obligation)</final>
     <timeLimit steps="240"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
@@ -5324,6 +5335,10 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#luxury-add">
       <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#enable-salient-food-luxury-forced-obligation">
+      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">

@@ -53,7 +53,7 @@ to-report context-state-sick-night
   ; -------------------------------------------
   ; Deliberate on most salient need
   ; -------------------------------------------
-  report csn-salient-need-deliberation most-salient-need
+  report cssn-salient-need-deliberation most-salient-need
 end
 
 to-report cssn-salient-need-deliberation [most-salient-need]
@@ -73,7 +73,7 @@ to-report cssn-salient-need-deliberation [most-salient-need]
   if most-salient-need = need-conformity [
     report cssn-conformity
   ]
-  report cssn-error-f
+  report cssn-error-f most-salient-need
 end
 
 ;============== NEED FUNCTIONS =================
@@ -125,7 +125,8 @@ to-report cssn-conformity-f
   report []
 end
 
-to-report cssn-error-f
+to-report cssn-error-f [most-salient-need]
+  if #log-agent [ print (word "Error: night" most-salient-need) ]
   report []
 end
 

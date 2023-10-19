@@ -160,6 +160,19 @@ for (i in 1:length(p_files_names)) {
   }
 }
 
+#---------- MAKING THE DATAFRAME NICE ---------#
+colnames(df_results) <- c("context", "households", "random_seed", "action_space", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
+df_results$households = as.integer(df_results$households)
+df_results$random_seed = as.integer(df_results$random_seed)
+df_results$action_space = as.integer(df_results$action_space)
+df_results$calls = as.double(df_results$calls)
+df_results$incl_t_ms = as.double(df_results$incl_t_ms)
+df_results$excl_t_ms = as.double(df_results$excl_t_ms)
+df_results$excl_calls = as.double(df_results$excl_calls)
+print(df_results)
+
+df_results <- df_results[order(df_results$context, df_results$function_name), ]
+
 df_results_csn = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
 for (i in 1:nrow(df_results)) {
   
@@ -209,19 +222,6 @@ for (i in 1:nrow(df_results)) {
 }
 
 df_results_overview = df_results[c(5,4,17,63), ]
-
-#---------- MAKING THE DATAFRAME NICE ---------#
-colnames(df_results) <- c("context", "households", "random_seed", "action_space", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
-df_results$households = as.integer(df_results$households)
-df_results$random_seed = as.integer(df_results$random_seed)
-df_results$action_space = as.integer(df_results$action_space)
-df_results$calls = as.double(df_results$calls)
-df_results$incl_t_ms = as.double(df_results$incl_t_ms)
-df_results$excl_t_ms = as.double(df_results$excl_t_ms)
-df_results$excl_calls = as.double(df_results$excl_calls)
-print(df_results)
-
-df_results <- df_results[order(df_results$context, df_results$function_name), ]
 
 #=============================================================
 #================== PLOTTING FUNCTIONS  ======================

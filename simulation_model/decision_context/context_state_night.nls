@@ -72,7 +72,7 @@ to-report csn-salient-need-deliberation [most-salient-need]
   if most-salient-need = need-conformity [
     report csn-conformity
   ]
-  report csn-error-f
+  report csn-error-f most-salient-need
 end
 
 ;============== NEED FUNCTIONS =================
@@ -137,7 +137,8 @@ to-report csn-conformity-f
   report []
 end
 
-to-report csn-error-f
+to-report csn-error-f [most-salient-need]
+  if #log-agent [ print (word "Error night, most salient need: " most-salient-need) ]
   report []
 end
 
