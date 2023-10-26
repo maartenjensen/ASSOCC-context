@@ -20,7 +20,8 @@ filesPath <- ""
 #dataFileName <- c("covid-sim realism H-350 R=1 A=6.csv")
 #dataFileName <- c("covid-sim original-vs-context H 350 R 2.csv")
 #dataFileName <- c("covid-sim R 1 H 350.csv")
-dataFileName <- c("covid-sim lockdown.csv")
+#dataFileName <- c("covid-sim lockdown.csv")
+dataFileName <- c("covid-sim ContextRealism - Forced obligation.csv")
 filesNames   <- dataFileName
 
 one_plot <- TRUE
@@ -135,6 +136,11 @@ gl_pdf_height = 5
 #=============================================================
 #========================= PLOT DATA =========================
 #=============================================================
+
+#df_final_backup <- df_final
+
+df_final <- df_final_backup
+df_final <- df_final[df_final$enable_salient_food_luxury_forced_obligation=="false", ]
 
 
 #------------------------- PLOT DATA -------------------------

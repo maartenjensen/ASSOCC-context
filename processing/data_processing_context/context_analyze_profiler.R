@@ -40,6 +40,11 @@ dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
 dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6].csv",
                   "report-[C= true -H= 350 -R= 1 -A= 6].csv")
 
+dataFileName <- c("report-[C= false -H= 350 -R= 1 -A= 6 -F= false].csv",
+                  "report-[C= false -H= 350 -R= 1 -A= 6 -F= true].csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6 -F= false].csv",
+                  "report-[C= true -H= 350 -R= 1 -A= 6 -F= true].csv")
+
 filesNames   <- dataFileName
 
 str_to_v_without_white_spaces <- function(p_str) {
@@ -282,3 +287,7 @@ print(df_results_cso)
 print(df_results_csso)
 print(df_results_csft)
 print(df_results_cssft)
+
+# Updates for later
+#- The column should also include the forced obligation 
+#- It should print the important results always at the end, i.e. GO, 'CONTEXT'-SELECT-ACTIVITY, MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR

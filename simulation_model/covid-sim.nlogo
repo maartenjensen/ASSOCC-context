@@ -3938,7 +3938,7 @@ SWITCH
 1226
 is-working-from-home-recommended?
 is-working-from-home-recommended?
-1
+0
 1
 -1000
 
@@ -4521,7 +4521,7 @@ SWITCH
 177
 #enable-salient-food-luxury-forced-obligation
 #enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 

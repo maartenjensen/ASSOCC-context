@@ -1,10 +1,11 @@
-; Filename: context_state_obligation.nls
+; Filename: context_state_obligation_work_home.nls
 ; What we know from the context within these functions
 ; Location: Does not matter in implementation, as the agent just travels to the location where the agent can perform the action.
 ; Time: Morning or afternoon during working time
-; Age: Young, Student or Worker
+; Age: Worker
 ; Sickness: The agent is not sick
 ; Compliance is included in the salient need check
+; Work from home is an option
 
 ; Global variables
 ; #need-critical-threshold
@@ -12,7 +13,7 @@
 ; Variables for the agent
 ; obligation-activity
 
-; Important needs (7 young, 9 student, 11 worker):
+; Important needs (11 worker):
 ; -----------------------------------
 ; Compliance: norm following
 ; Belonging: norm following
@@ -21,27 +22,25 @@
 ; Sleep
 ; Leisure
 ; Conformity 
-; [Exit if young]
 ; Food safety
 ; Luxury 
-; [Exit if student]
 ; Financial stability
 ; Financial survival
 
 ;Code check:
-; cso: NOT  csn, csft, cssn, csso, cssft
+; csowh: NOT  csn, csowh, csft, cssn, csso, cssowh, cssft
 
 ;#need-critical-threshold for critical need
 
-to-report context-state-obligation ; cso
+to-report context-state-obligation-work-home ; csowh
   
   ; The time is morning or afternoon
-  if #log-agent and who = #agent-id [ print "Obligation decision making" ]
+  if #log-agent and who = #agent-id [ print "Obligation Work Home - Decision Making" ]
   ; salient needs, need-level < #need-salient-threshold
   ; -------------------------------------------
   ; Determine whether there is a need salient
   ; -------------------------------------------
-  let salient-needs-and-level cso-salient-needs
+  let salient-needs-and-level csowh-salient-needs
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
@@ -49,7 +48,7 @@ to-report context-state-obligation ; cso
   ; If no need salient default
   ; -------------------------------------------
   if length salient-needs = 0
-  [ report cso-default ]
+  [ report csowh-default ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -66,91 +65,90 @@ to-report context-state-obligation ; cso
   ; -------------------------------------------
   ; Deliberate on most salient need
   ; -------------------------------------------
-  report cso-salient-need-deliberation most-salient-need most-salient-need-level
+  report csowh-salient-need-deliberation most-salient-need most-salient-need-level
 end
 
-to-report cso-salient-need-deliberation [most-salient-need most-salient-need-level ]
+to-report csowh-salient-need-deliberation [ most-salient-need most-salient-need-level ]
   
   if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Compliance is first checked, since the agents get a compliance boost at working hours OR at the beginning of the working day
-  if most-salient-need = need-compliance or most-salient-need = need-belonging
-  [ report cso-compliance-belonging ]
+  if most-salient-need = need-compliance or most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
+  [ report csowh-compliance-financial most-salient-need-level ]
   
-  if most-salient-need = need-autonomy
-  [ report cso-autonomy-financial most-salient-need-level ]
+  if most-salient-need = need-belonging ; TODO: 
+  [ report csowh-belonging ]
   
-  if most-salient-need = need-risk-avoidance or most-salient-need = need-sleep
-  [ report cso-risk-avoidance-sleep most-salient-need-level ]
+  if most-salient-need = need-autonomy ; TODO: 
+  [ report csowh-autonomy ]
+  
+  if most-salient-need = need-risk-avoidance or most-salient-need = need-sleep 
+  [ report csowh-risk-avoidance-sleep most-salient-need-level ] ; TODO: split these functions
   
   if most-salient-need = need-leisure
-  [ report cso-leisure ]
+  [ report csowh-leisure ]
   
-  if most-salient-need = need-conformity
-  [ report cso-conformity ]
+  if most-salient-need = need-conformity 
+  [ report csowh-conformity ] ; TODO
   
-  if age = young-age
-  [ report cso-error-f ]
-  
-  ; == STUDENT & WORKER: Shopping ==
   if most-salient-need = need-luxury
-  [ report cso-luxury ]
+  [ report csowh-luxury ]
   
   if most-salient-need = need-food-safety
-  [ report cso-food-safety ]
+  [ report csowh-food-safety ]
   
-  if age = student-age
-  [ report cso-error-f ]
-
-  ; == WORKER: Work for money ==
-  if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
-  [ report cso-autonomy-financial most-salient-need-level ]
-  
-  report cso-error-f
+  report csowh-error-f
 end
 
 ;============== NEED FUNCTIONS =================
-to-report cso-default
-  ifelse context-normative-should-I-stay-home
-  [ report context-determine-social-distancing (list my-home "rest") ]
+to-report csowh-default
+  ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
+  [ report context-determine-social-distancing (list my-home work-motive) ]
   [ report context-determine-social-distancing obligation-activity-descriptor ]
 end
 
-to-report cso-compliance-belonging
-  ifelse context-normative-should-I-stay-home
-  [ report context-determine-social-distancing (list my-home "rest") ]
+to-report csowh-compliance-financial [ most-salient-need-level ]
+  ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
+  [ report context-determine-social-distancing (list my-home work-motive) ]
   [ report context-determine-social-distancing obligation-activity-descriptor ]
 end
 
-to-report cso-autonomy-financial [ most-salient-need-level ]
-  ifelse not context-normative-should-I-stay-home
-  [ report context-determine-social-distancing obligation-activity-descriptor ]
-  [ if most-salient-need-level < #need-critical-threshold
-    [ report context-determine-social-distancing obligation-activity-descriptor ]
-  ]
-  report cso-autonomy-financial-f
+to-report csowh-belonging
+;  ifelse context-normative-should-I-stay-home
+;  [ report context-determine-social-distancing (list my-home "rest") ]
+;  [ report context-determine-social-distancing obligation-activity-descriptor ]
+  report csowh-belonging-f
 end
 
-to-report cso-risk-avoidance-sleep [ most-salient-need-level ]
-  ifelse context-normative-should-I-stay-home
-  [ report context-determine-social-distancing (list my-home "rest") ]
-  [ if most-salient-need-level < #need-critical-threshold
-    [ report context-determine-social-distancing (list my-home "rest") ]
-  ]
-  report cso-risk-avoidance-sleep-f
+to-report csowh-autonomy
+;  ifelse not context-normative-should-I-stay-home
+;  [ report context-determine-social-distancing obligation-activity-descriptor ]
+;  [ if most-salient-need-level < #need-critical-threshold
+;    [ report context-determine-social-distancing obligation-activity-descriptor ]
+;  ]
+  report csowh-autonomy-f
 end
 
-to-report cso-leisure
+to-report csowh-risk-avoidance-sleep [ most-salient-need-level ] ; TODO split this function
+;  ifelse context-normative-should-I-stay-home
+;  [ report context-determine-social-distancing (list my-home "rest") ]
+;  [ if most-salient-need-level < #need-critical-threshold
+;    [ report context-determine-social-distancing (list my-home "rest") ]
+;  ]
+  report csowh-risk-avoidance-sleep-f
+end
+
+to-report csowh-leisure
   if leisure-satisfaction-level < #need-critical-threshold
   [
     ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
     [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
     [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
-  report cso-leisure-f 
+  report csowh-leisure-f 
 end
 
-to-report cso-luxury
+to-report csowh-luxury
   if luxury-satisfaction-level < #need-critical-threshold
   [
     if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
@@ -160,10 +158,10 @@ to-report cso-luxury
   [ if not context-normative-should-I-stay-home
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
-  report cso-luxury-f
+  report csowh-luxury-f
 end
 
-to-report cso-food-safety
+to-report csowh-food-safety
   if food-safety-satisfaction-level < #need-critical-threshold
   [
     if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)
@@ -173,39 +171,39 @@ to-report cso-food-safety
   [ if not context-normative-should-I-stay-home
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
-  report cso-food-safety-f
+  report csowh-food-safety-f
 end
 
-to-report cso-conformity
+to-report csowh-conformity ; TODO
   
-  let network-action context-conformity-get-network-action
-  ifelse empty? network-action
-  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
-  [
-    ; Retrieve network action
-    let network-g-type (location-of network-action)
-    let network-motive motive-of network-action
-    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
-    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
-    
-    ; Deliberate on network action
-    ifelse conformity-satisfaction-level < #need-critical-threshold
-    [
-       report cso-conformity-choose-possible-network-action network-g-type network-motive network-sd
-    ]
-    [
-      ifelse not context-normative-should-I-stay-home
-      [ if network-motive = motive-of obligation-activity-descriptor
-        [ report (lput network-sd obligation-activity-descriptor) ]
-      ]
-      [ if network-motive = "rest" [ report (list my-home "rest" network-sd) ] ]
-    ]
-  ]
+;  let network-action context-conformity-get-network-action
+;  ifelse empty? network-action
+;  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+;  [
+;    ; Retrieve network action
+;    let network-g-type (location-of network-action)
+;    let network-motive motive-of network-action
+;    let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
+;    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+;    
+;    ; Deliberate on network action
+;    ifelse conformity-satisfaction-level < #need-critical-threshold
+;    [
+;       report csowh-conformity-choose-possible-network-action network-g-type network-motive network-sd
+;    ]
+;    [
+;      ifelse not context-normative-should-I-stay-home
+;      [ if network-motive = motive-of obligation-activity-descriptor
+;        [ report (lput network-sd obligation-activity-descriptor) ]
+;      ]
+;      [ if network-motive = "rest" [ report (list my-home "rest" network-sd) ] ]
+;    ]
+;  ]
   
-  report cso-conformity-f
+  report csowh-conformity-f
 end
 
-to-report cso-conformity-choose-possible-network-action [network-g-type network-motive network-sd]
+to-report csowh-conformity-choose-possible-network-action [network-g-type network-motive network-sd]
   if network-motive = "rest"
   [ report (list my-home "rest" network-sd) ]
   if network-motive = motive-of obligation-activity-descriptor
@@ -221,40 +219,44 @@ to-report cso-conformity-choose-possible-network-action [network-g-type network-
     if network-motive = "non-essential-shop"
     [ report (lput network-sd activity-descriptor my-non-essential-shop "shopping") ]
   ]
-  report cso-conformity-f
+  report csowh-conformity-f
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
-to-report cso-autonomy-financial-f
+to-report csowh-autonomy-f
   report []
 end
 
-to-report cso-leisure-f
+to-report csowh-belonging-f
   report []
 end
 
-to-report cso-luxury-f
+to-report csowh-leisure-f
   report []
 end
 
-to-report cso-food-safety-f
+to-report csowh-luxury-f
   report []
 end
 
-to-report cso-conformity-f
+to-report csowh-food-safety-f
   report []
 end
 
-to-report cso-risk-avoidance-sleep-f
+to-report csowh-conformity-f
   report []
 end
 
-to-report cso-error-f
+to-report csowh-risk-avoidance-sleep-f
+  report []
+end
+
+to-report csowh-error-f
   report []
 end
 
 ;============== SALIENT NEEDS ==================
-to-report cso-salient-needs
+to-report csowh-salient-needs
   let salient-needs []
   let salient-needs-level []
   if compliance-satisfaction-level < #need-salient-threshold
@@ -278,18 +280,12 @@ to-report cso-salient-needs
   if conformity-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs 
     set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
-  ; Exit if not student or worker
-  if age = young-age
-  [ report list salient-needs salient-needs-level ]
   if food-safety-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-food-safety salient-needs 
     set salient-needs-level lput food-safety-satisfaction-level salient-needs-level ]
   if luxury-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-luxury salient-needs 
     set salient-needs-level lput luxury-satisfaction-level salient-needs-level ]
-  ; Exit if not worker
-  if age = student-age
-  [ report list salient-needs salient-needs-level ]
   if financial-survival-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-financial-survival salient-needs 
     set salient-needs-level lput financial-survival-satisfaction-level salient-needs-level ]

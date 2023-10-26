@@ -3,9 +3,8 @@ __includes [ "decision_context/profiler_speed_test_functions.nls"
   "decision_context/context_state_sick_check_treatment.nls"
   "decision_context/context_state_night.nls" "decision_context/context_state_sick_night.nls"
   "decision_context/context_state_obligation.nls" "decision_context/context_state_sick_obligation.nls"
+  "decision_context/context_state_obligation_work_home.nls" "decision_context/context_state_sick_obligation_work_home.nls"
   "decision_context/context_state_free_time.nls" "decision_context/context_state_sick_free_time.nls" ]
-
-; "decision_context/context_state_free_time.nls" "decision_context/context_state_obligation_base.nls" "decision_context/context_state_sick.nls" "decision_context/context_state_sick_night.nls"
 
 to context-init-variables
   if age = young-age
@@ -75,7 +74,12 @@ to-report context-deliberation-select-activity
     [ ; WORKING TIME
       ifelse not context-is-agent-sick
       [
-        set chosen-action context-state-obligation
+        ifelse age = worker-age
+        [ ifelse is-technically-feasible-to-work-from-home?
+          [ set chosen-action context-state-obligation-work-home ]
+          [ set chosen-action context-state-obligation ]
+        ]
+        [ set chosen-action context-state-obligation ]
         if not empty? chosen-action
         [ report context-most-salient-need-obligation-worker-succeeded chosen-action ]
       ]
@@ -84,7 +88,14 @@ to-report context-deliberation-select-activity
         ifelse not empty? chosen-action
         [ report context-state-sick-check-treatment-succeeded chosen-action ]
         [ ; The agent does not need heavy treatment but still needs to determine whether to stay home when sick
-          set chosen-action context-state-sick-obligation
+          
+          ifelse age = worker-age
+          [ ifelse is-technically-feasible-to-work-from-home?
+            [ set chosen-action context-state-sick-obligation-work-home ]
+            [ set chosen-action context-state-sick-obligation ]
+          ]
+          [ set chosen-action context-state-sick-obligation ]
+          
           if not empty? chosen-action
           [ report context-state-sick-obligation-succeeded chosen-action ]
         ]
