@@ -1,33 +1,34 @@
 extensions [ table ]
 
-__includes [ "context_agent_information.nls" "context_general_information.nls" ]
-
-; Now what??
-; A model of context?
-
 breed [ people person ]
-breed [ locations location ]
 
+people-own [
+  action-set
+  action-set-blocked
 
-globals [ slice-of-the-day ]
+  used-information
+  used-rules
+
+  salient-needs
+]
+
+globals [
+  slice-of-the-day
+]
 
 to setup
   clear-all
   set slice-of-the-day "night"
   create-people 1 [
-    setxy random-xcor random-ycor
-    set color blue
-    set dc table:make
-    set pa []
-    ; set action (ifelse is-night? [create-action "rest at home"] [create-action "work at workplace"])
-  ]
-  create-locations 2 [
-    setxy random-xcor random-ycor
-    set color gray
-    set shape "house"
+    set action-set []
+    set action-set-blocked []
+
+    set used-information []
+    set used-rules []
+
+    set salient-needs []
   ]
   reset-ticks
-  output-print (word "===   " ticks ", " slice-of-the-day "   ===")
 end
 
 to clear
@@ -35,159 +36,286 @@ to clear
 end
 
 to go
-  let action-chosen []
   ask people
   [
-    output-print (word "-- Deliberating " who " --")
-    ifelse length pa = 1 ; I need to change this to include also the default
-    [
-      output-print (word "Perform action: " (item 0 pa))
-      dc-reset
-      increment-time
-    ]
-    [
-      ifelse empty? pa ; I need to change this to include also the default
-      [
-        output-print "No actions: expand it"
-        dc-expand-minimal-context
-      ]
-      [
-        output-print "More than one action: narrow it"
-      ]
-    ]
-    print-dc-and-meta-dc
-;    if is-night? and not has-lock? [
-;      set action (create-action "rest at home")
-;    ]
-;    if is-day? and not has-lock? [
-;      set action (create-action "work at workplace")
-;    ]
-;    ifelse contains-non-home-location? action [
-;      set-lock true
-;    ] [
-;      set-lock false
-;    ]
+    retrieve-info
+    print-all-info
+    let found-action deliberate
+    ifelse found-action = "None"
+    [ output-print "Action not found" ]
+    [ output-print word "- Perform action: " found-action ]
+    output-print ""
   ]
-  ;output-print ""
   tick
 end
 
-to print-dc-and-meta-dc
-  output-print "- Printing dc and meta-dc -"
-  output-print word "Dc: " dc
-  output-print word "Meta-dc: " pa
-end
+to-report deliberate
 
-; Decision Context Element
-to-report dc-element-type [dc-element]
-  report item 0 dc-element
-end
+  output-print "= Starting minimal deliberation ="
+  operation-minimal-context
+  if check-finished-deliberating [ report item 0 action-set ]
 
-to-report dc-element-value [dc-element]
-  report item 1 dc-element
-end
-
-to dc-reset
-  print "Reset Decision Context and action set"
-  table:clear dc
-  set pa []
-end
-
-; Actions for the meta decision context
-to-report get-dc-key-actions-default ; actions that are default
-  report "actions-d"
-end
-
-to add-preferred-action [an-action]
-  if not member? an-action pa
+  if length salient-needs > 1
   [
-    set pa lput an-action pa
+    output-print word "Conflict in needs: " salient-needs
+    operation-determine-most-salient-need
+    if check-finished-deliberating [ report item 0 action-set ]
   ]
-end
 
-to-report get-action-rest-at-home
-  report ["rest" "home"]
-end
-
-to-report get-action-leisure-at-public
-  report ["leisure" "public leisure"]
-end
-
-to-report get-action-leisure-at-private
-  report ["leisure" "public private"]
-end
-
-to-report get-dc-key-actions-preferred ; actions that are preferred, they overule default actions.
-  report "actions-p"
-end
-
-; Actions for the decision context
-to-report get-dc-key-time ; a string indicating the time of the day
-  report "time"
-end
-
-to-report get-dc-key-world-state ; a string indicating what state the world is in e.g. pandemic, normal
-  report "world state"
-end
-
-to-report get-dc-key-need ; Salient needs is a list of needs (strings) that are salient, i.e. level < 0.5
-  report "salient needs"
-end
-
-; Context OR action expansion rules
-to dc-expand-minimal-context
-  table:put dc get-dc-key-time slice-of-the-day
-
-  dc-expand-minimal-context-actions
-end
-
-to dc-expand-minimal-context-actions
-  let time table:get dc get-dc-key-time
-  if time = "night"
-  [ add-preferred-action get-action-rest-at-home
+  if member? "leisure" salient-needs
+  [
+    operation-leisure-need-vs-habit
+    if check-finished-deliberating [ report item 0 action-set ]
+    operation-leisure-normative
+    if check-finished-deliberating [ report item 0 action-set ]
+    operation-leisure-random
+    if check-finished-deliberating [ report item 0 action-set ]
   ]
+
+  report "None"
 end
 
+to retrieve-info
+  action-set-clear
 
+  set used-information []
+  set used-rules []
 
-;; Other actions
-;to create-action [description]
-;  let new-action nobody
-;  create-action-locations description new-action
-;  set description description of new-action
-;  report new-action
-;end
-;
-;to create-action-locations [description new-action]
-;  let parts word " " description
-;  let motive item 1 parts
-;  let location item 3 parts
-;  set action-locations (list motive location) of new-action
-;end
-;
-;to-report contains-non-home-location? [action]
-;  let location item 1 action-locations of action
-;  report not (location = "home")
-;end
-;
-;to set-lock [lock-status]
-;  if lock-status [
-;    set action (create-action "rest at home")
-;  ]
-;end
+  set salient-needs []
+  if #salient-need-1 != ""
+  [ set salient-needs lput #salient-need-1 salient-needs ]
+  if #salient-need-2 != ""
+  [ set salient-needs lput #salient-need-2 salient-needs ]
+  if #salient-need-3 != ""
+  [ set salient-needs lput #salient-need-3 salient-needs ]
+end
 
-to increment-time
-  if slice-of-the-day = "morning"
-  [ set slice-of-the-day "afternoon" stop ]
-
-  if slice-of-the-day = "afternoon"
-  [ set slice-of-the-day "evening" stop ]
-
-  if slice-of-the-day = "evening"
-  [ set slice-of-the-day "night" stop ]
+; ===== OPERATIONS =====
+to operation-minimal-context
+  output-print "- Operation minimal context (repetition) -"
 
   if slice-of-the-day = "night"
-  [ set slice-of-the-day "morning" stop ]
+  [ action-add action-rest-at-home
+    add-used-information word "time: " slice-of-the-day
+    add-used-rule "time: night -> Action preferred: Rest at home"
+  ]
+  if length salient-needs > 0 [
+    add-used-information word "salient-needs: " salient-needs
+  ]
+  if slice-of-the-day = "night" and member? "sleep" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: sleep -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "belonging" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: belonging -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "autonomy" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: autonomy -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "risk-avoidance" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: risk-avoidance -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "leisure" salient-needs [
+    action-add-blocked action-leisure-at-private-leisure
+    action-add-blocked action-leisure-at-public-leisure
+    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
+    add-used-information "world-state: pandemic"
+    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+  ]
+  if slice-of-the-day = "night" and member? "conformity" salient-needs [
+    action-add-blocked action-leisure-at-private-leisure
+    action-add-blocked action-leisure-at-public-leisure
+    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
+    add-used-information "world-state: pandemic"
+    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+  ]
+
+  print-action-set
+end
+
+to operation-determine-most-salient-need
+  output-print "- Operation determine most salient need (rational choice, repetition) -"
+
+  add-used-information word "need levels for " salient-needs
+  if #most-salient-need != ""
+  [
+    print "TESTT"
+    if #most-salient-need = #salient-need-1 and #salient-need-1 != ""
+    [ set salient-needs (list #salient-need-1) ]
+    if #most-salient-need = #salient-need-2 and #salient-need-2 != ""
+    [ set salient-needs (list #salient-need-2) ]
+    if #most-salient-need = #salient-need-3 and #salient-need-3 != ""
+    [ set salient-needs (list #salient-need-3) ]
+  ]
+  if length salient-needs > 1
+  [ set salient-needs (list #salient-need-1) ]
+
+  add-used-information word "most-salient-need: " salient-needs
+  action-set-clear
+
+  if slice-of-the-day = "night"
+  [ action-add action-rest-at-home
+  ]
+  if slice-of-the-day = "night" and member? "sleep" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: sleep -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "belonging" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: belonging -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "autonomy" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: autonomy -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "risk-avoidance" salient-needs [
+    action-add action-rest-at-home
+    add-used-rule "time: night & salient need: risk-avoidance -> Action preferred: Rest at home"
+  ]
+  if slice-of-the-day = "night" and member? "leisure" salient-needs [
+    action-add-blocked action-leisure-at-private-leisure
+    action-add-blocked action-leisure-at-public-leisure
+    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
+    add-used-information "world-state: pandemic"
+    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+  ]
+  if slice-of-the-day = "night" and member? "conformity" salient-needs [
+    action-add-blocked action-leisure-at-private-leisure
+    action-add-blocked action-leisure-at-public-leisure
+    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
+    add-used-information "world-state: pandemic"
+    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+  ]
+
+  print-action-set
+end
+
+to operation-leisure-need-vs-habit
+  output-print "- Operation solve conflict: is need strongly preferred over habit? (rational choice, repetition)"
+  add-used-information (word "most salient need level + critical level: " salient-needs " critical? " #most-salient-need-critical?)
+  add-used-rule "  if need critical -> remove habit action"
+  ifelse #most-salient-need-critical?
+  [ add-used-rule " remove [Rest at home] coming from time:Night"
+    action-set-clear
+    action-add-blocked action-leisure-at-private-leisure
+    action-add-blocked action-leisure-at-public-leisure
+  ]
+  [ output-print "  Need not critical, can't solve conflict, use ASSOCC"
+    output-print "- Operation use Need based ASSOCC deliberation (FULL normative, game theory, rational choice, repetition"
+    action-set-clear
+    action-add action-rest-at-home
+  ]
+  print-action-set
+end
+
+to operation-leisure-normative
+  output-print "- Operation check normative: should i stay home (normative, rational choice, repetition)"
+  add-used-information word "Should agent stay home? " #should-stay-home
+  add-used-rule "if agent should stay home -> remove leisure actions"
+  add-used-rule "if agent can go out -> unblock leisure actions"
+  ifelse #should-stay-home
+  [
+    action-set-clear
+    action-add action-rest-at-home
+  ]
+  [
+    action-remove-block
+  ]
+  print-action-set
+end
+
+to operation-leisure-random
+  output-print "- Operation both actions satisfy need (repetition)"
+  add-used-rule "if no conflict & actions unblocked & more than 1 action -> pick random action"
+  action-set-clear
+  ifelse random 2 = 0
+  [ action-add action-leisure-at-private-leisure ]
+  [ action-add action-leisure-at-public-leisure ]
+  print-action-set
+end
+
+to-report check-finished-deliberating
+  ifelse length action-set = 1 and length action-set-blocked = 0
+  [ report true ]
+  [ report false ]
+end
+
+to add-used-information [the-information]
+  if not member? the-information used-information
+  [ set used-information lput the-information used-information
+    output-print word "  Added information: " the-information
+  ]
+end
+
+to add-used-rule [the-rule]
+  if not member? the-rule used-rules
+  [ set used-rules lput the-rule used-rules
+    output-print word "  Added rule: " the-rule
+  ]
+end
+
+; ===== ACTION SET =====
+to action-add [an-action]
+  if not member? an-action action-set
+  [
+    set action-set lput an-action action-set
+  ]
+end
+
+to action-add-blocked [an-action]
+  if not member? an-action action-set
+  [
+    set action-set lput an-action action-set
+  ]
+  if not member? an-action action-set-blocked
+  [
+    set action-set-blocked lput an-action action-set-blocked
+  ]
+end
+
+to action-remove-block
+  set action-set-blocked []
+end
+
+to action-set-clear
+  set action-set []
+  set action-set-blocked []
+end
+
+to-report action-rest-at-home
+  report "Rest at home"
+end
+
+to-report action-leisure-at-private-leisure
+  report "Leisure at private leisure"
+end
+
+to-report action-leisure-at-public-leisure
+  report "Leisure at public leisure"
+end
+
+; ===== PRINTING FUNCTIONS =====
+to print-all-info
+  output-print (word "=== All info: " ticks ", " slice-of-the-day "   ===")
+  output-print (word "time: " slice-of-the-day)
+  output-print (word "salient-needs:" salient-needs)
+
+  output-print "Actions with ** require a normative check"
+  print-action-set
+  output-print ""
+end
+
+to print-action-set
+  let action-str "  Meta-action-set: "
+  foreach action-set [ action ->
+    ifelse member? action action-set-blocked
+    [ set action-str (word action-str "*" action "*, ") ]
+    [ set action-str (word action-str action ", ") ]
+  ]
+   output-print action-str
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -271,15 +399,15 @@ NIL
 OUTPUT
 225
 54
-834
+1248
 605
 11
 
 BUTTON
-1282
-14
-1345
-47
+147
+53
+210
+86
 NIL
 clear
 NIL
@@ -291,6 +419,83 @@ NIL
 NIL
 NIL
 1
+
+INPUTBOX
+53
+368
+205
+428
+#salient-need-1
+belonging
+1
+0
+String
+
+INPUTBOX
+53
+434
+205
+494
+#salient-need-2
+leisure
+1
+0
+String
+
+INPUTBOX
+52
+580
+210
+640
+#most-salient-need
+leisure
+1
+0
+String
+
+INPUTBOX
+53
+501
+205
+561
+#salient-need-3
+NIL
+1
+0
+String
+
+SWITCH
+52
+660
+261
+693
+#most-salient-need-critical?
+#most-salient-need-critical?
+0
+1
+-1000
+
+SWITCH
+52
+706
+216
+739
+#should-stay-home
+#should-stay-home
+0
+1
+-1000
+
+SWITCH
+52
+753
+237
+786
+#risk-avoidance-salient
+#risk-avoidance-salient
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -1,0 +1,53 @@
+; Filename: context_general_information.nls
+
+
+; The needs, order them according to alphabet
+to-report need-risk-avoidance
+  report "risk-avoidance"
+end
+
+to-report need-compliance
+  report "compliance"
+end
+
+to-report need-financial-stability
+  report "financial-stability"
+end
+
+to-report need-belonging
+  report "belonging"
+end
+
+to-report need-leisure
+  report "leisure"
+end
+
+to-report need-luxury
+  report "luxury"
+end
+
+to-report need-autonomy
+  report "autonomy"
+end
+
+to-report need-food-safety
+  report "food-safety"
+end
+
+to-report need-financial-survival
+  report "financial-survival"
+end
+
+to-report need-health
+  report "health"
+end
+
+to-report need-sleep
+  report "sleep"
+end
+
+to-report need-conformity
+  report "conformity"
+end
+
+; to get time: slice-of-the-day

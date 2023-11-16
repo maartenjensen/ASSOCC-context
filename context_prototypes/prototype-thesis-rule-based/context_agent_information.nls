@@ -1,0 +1,28 @@
+; Filename: context_agent_information.nls
+
+people-own [
+  dc ; decision-context (table:make)
+  ; the meta dc
+  da ; default-action-set
+  pa ; preferred-action-set (list : [ [motive, location] , [mot, loc] , .... ])
+  ba ; blocked-action-set
+  
+  sleep-satisfaction-level
+  risk-avoidance-satisfaction-level
+  belonging-satisfaction-level
+  leisure-satisfaction-level
+  autonomy-satisfaction-level
+  conformity-satisfaction-level
+  
+  compliance-satisfaction-level
+]
+
+to setup-agent
+  set sleep-satisfaction-level 1
+  set risk-avoidance-satisfaction-level 1
+  set belonging-satisfaction-level 1
+  set leisure-satisfaction-level 1
+  set autonomy-satisfaction-level 1
+  set conformity-satisfaction-level 1
+  set compliance-satisfaction-level 1
+end
