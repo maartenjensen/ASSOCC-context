@@ -117,10 +117,21 @@ to-report csft-leisure
     [ report csft-leisure-f ]
   ]
   ; Does not have to stay home or leisure < compliance, then the agent prefers leisure at private or public
+  ; Check private leisure preferred enabled
+  ifelse ce-private-leisure-by-risk
+  [ report csft-leisure-private-leisure-by-risk ]
+  [ report csft-leisure-random-choice ]
+  report csft-error-f
+end
+
+to-report csft-leisure-private-leisure-by-risk
   ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
   [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
-  [ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
-  report csft-error-f
+  [ report csft-leisure-random-choice ]
+end
+
+to-report csft-leisure-random-choice
+  report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" )))
 end
 
 to-report csft-food-safety

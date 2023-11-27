@@ -40,6 +40,7 @@ to go
   [
     retrieve-info
     print-all-info
+
     let found-action deliberate
     ifelse found-action = "None"
     [ output-print "Action not found" ]
@@ -72,7 +73,85 @@ to-report deliberate
     if check-finished-deliberating [ report item 0 action-set ]
   ]
 
+  if member? "conformity" salient-needs
+  [
+    operation-conformity-network-action
+    if check-finished-deliberating [ report item 0 action-set ]
+    operation-conformity-need-vs-habit
+    if check-finished-deliberating [ report item 0 action-set ]
+    operation-conformity-normative
+    if check-finished-deliberating [ report item 0 action-set ]
+  ]
+
   report "None"
+end
+
+to operation-conformity-network-action
+  output-print "- Operation network action: retrieve network action (game theory, rational choice, repetition)"
+  if #network-action = action-rest-at-home
+  [
+    action-set-clear
+    action-add action-rest-at-home
+    add-used-information "network-action = Rest at home"
+    add-used-rule "if network-action = known -> change ?The network action? into network-action"
+  ]
+  if #network-action = action-leisure-at-public-leisure or #network-action = action-leisure-at-private-leisure
+  [
+    action-set-clear
+    action-add action-rest-at-home
+    action-add-blocked #network-action
+    add-used-information word "network-action = " #network-action
+    add-used-rule "if network-action = known -> change ?The network action? into network-action"
+    add-used-information "world-state: pandemic"
+    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+  ]
+  if #network-action = "Other"
+  [
+    output-print "  Action not in available actions, can't solve conflict, use ASSOCC"
+    action-set-clear
+    action-add action-rest-at-home
+    action-add #network-action
+    print-action-set
+    output-print "- Operation use Need based ASSOCC deliberation (FULL normative, game theory, rational choice, repetition)"
+    action-set-clear
+    action-add action-rest-at-home
+  ]
+
+  print-action-set
+end
+
+to operation-conformity-need-vs-habit
+  output-print "- Operation solve conflict: is need strongly preferred over habit? (rational choice, repetition)"
+  add-used-information (word "most salient need level + critical level: " salient-needs " critical? " #most-salient-need-critical?)
+  add-used-rule "  if need critical -> remove habit action"
+  ifelse #most-salient-need-critical?
+  [ add-used-rule " remove [Rest at home] coming from time:Night"
+    action-set-clear
+    action-add-blocked #network-action
+  ]
+  [ output-print "  Need not critical, can't solve conflict, use ASSOCC"
+    output-print ""
+    output-print "- Operation use Need based ASSOCC deliberation (FULL normative, game theory, rational choice, repetition"
+    action-set-clear
+    action-add action-rest-at-home
+  ]
+  print-action-set
+end
+
+to operation-conformity-normative
+  output-print "- Operation check normative: should i stay home (normative, rational choice, repetition)"
+  add-used-information word "Should agent stay home? " #should-stay-home
+  add-used-rule "if agent should stay home -> remove leisure actions"
+  add-used-rule "if agent can go out -> unblock leisure actions"
+  ifelse #should-stay-home
+  [
+    action-set-clear
+    action-add action-rest-at-home
+  ]
+  [
+    action-remove-block
+  ]
+  print-action-set
 end
 
 to retrieve-info
@@ -126,11 +205,8 @@ to operation-minimal-context
     add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
   ]
   if slice-of-the-day = "night" and member? "conformity" salient-needs [
-    action-add-blocked action-leisure-at-private-leisure
-    action-add-blocked action-leisure-at-public-leisure
-    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
-    add-used-information "world-state: pandemic"
-    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+    action-add action-network-action
+    add-used-rule "conformity salient -> Action preferred: ?The network action?"
   ]
 
   print-action-set
@@ -142,7 +218,6 @@ to operation-determine-most-salient-need
   add-used-information word "need levels for " salient-needs
   if #most-salient-need != ""
   [
-    print "TESTT"
     if #most-salient-need = #salient-need-1 and #salient-need-1 != ""
     [ set salient-needs (list #salient-need-1) ]
     if #most-salient-need = #salient-need-2 and #salient-need-2 != ""
@@ -183,11 +258,8 @@ to operation-determine-most-salient-need
     add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
   ]
   if slice-of-the-day = "night" and member? "conformity" salient-needs [
-    action-add-blocked action-leisure-at-private-leisure
-    action-add-blocked action-leisure-at-public-leisure
-    add-used-rule "time: night & salient need: leisure -> Action preferred: Leisure at private leisure or Leisure at public leisure"
-    add-used-information "world-state: pandemic"
-    add-used-rule "if (world-state = pandemic & location of action != home) -> action = requires normative check"
+    action-add action-network-action
+    add-used-rule "conformity salient -> Action preferred: ?The network action?"
   ]
 
   print-action-set
@@ -204,6 +276,7 @@ to operation-leisure-need-vs-habit
     action-add-blocked action-leisure-at-public-leisure
   ]
   [ output-print "  Need not critical, can't solve conflict, use ASSOCC"
+    output-print ""
     output-print "- Operation use Need based ASSOCC deliberation (FULL normative, game theory, rational choice, repetition"
     action-set-clear
     action-add action-rest-at-home
@@ -297,15 +370,18 @@ to-report action-leisure-at-public-leisure
   report "Leisure at public leisure"
 end
 
+to-report action-network-action
+  report "?The network action?"
+end
+
 ; ===== PRINTING FUNCTIONS =====
 to print-all-info
   output-print (word "=== All info: " ticks ", " slice-of-the-day "   ===")
-  output-print (word "time: " slice-of-the-day)
-  output-print (word "salient-needs:" salient-needs)
+  ;output-print (word "time: " slice-of-the-day)
+  ;output-print (word "salient-needs:" salient-needs)
 
-  output-print "Actions with ** require a normative check"
+  ;output-print "Actions with ** require a normative check"
   print-action-set
-  output-print ""
 end
 
 to print-action-set
@@ -315,7 +391,8 @@ to print-action-set
     [ set action-str (word action-str "*" action "*, ") ]
     [ set action-str (word action-str action ", ") ]
   ]
-   output-print action-str
+  output-print action-str
+  output-print ""
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -426,7 +503,7 @@ INPUTBOX
 205
 428
 #salient-need-1
-belonging
+conformity
 1
 0
 String
@@ -437,7 +514,7 @@ INPUTBOX
 205
 494
 #salient-need-2
-leisure
+NIL
 1
 0
 String
@@ -448,7 +525,7 @@ INPUTBOX
 210
 640
 #most-salient-need
-leisure
+NIL
 1
 0
 String
@@ -471,7 +548,7 @@ SWITCH
 693
 #most-salient-need-critical?
 #most-salient-need-critical?
-0
+1
 1
 -1000
 
@@ -482,7 +559,7 @@ SWITCH
 739
 #should-stay-home
 #should-stay-home
-0
+1
 1
 -1000
 
@@ -496,6 +573,16 @@ SWITCH
 1
 1
 -1000
+
+CHOOSER
+325
+630
+510
+675
+#network-action
+#network-action
+"Rest at home" "Leisure at private leisure" "Leisure at public leisure" "Other"
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

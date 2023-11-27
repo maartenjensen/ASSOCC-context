@@ -628,7 +628,7 @@ NIL
 SWITCH
 552
 189
-655
+642
 222
 log?
 log?
@@ -712,10 +712,10 @@ terminal-to-death
 Number
 
 SLIDER
-2162
-434
-2407
-467
+3375
+399
+3620
+432
 probability-unavoidable-death
 probability-unavoidable-death
 0
@@ -727,10 +727,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2163
-270
-2428
-303
+3376
+235
+3641
+268
 probability-self-recovery-symptoms
 probability-self-recovery-symptoms
 0
@@ -742,10 +742,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2163
-369
-2432
-402
+3376
+334
+3645
+367
 probability-recorvery-if-treated
 probability-recorvery-if-treated
 0
@@ -757,10 +757,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2163
-303
-2516
-336
+3376
+268
+3729
+301
 probability-self-recovery-symptoms-old
 probability-self-recovery-symptoms-old
 0
@@ -772,10 +772,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2162
-401
-2435
-434
+3375
+366
+3648
+399
 probability-recorvery-if-treated-old
 probability-recorvery-if-treated-old
 0
@@ -787,10 +787,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2162
-466
-2425
-499
+3375
+431
+3638
+464
 probability-unavoidable-death-old
 probability-unavoidable-death-old
 0
@@ -1205,10 +1205,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2163
-336
-2517
-369
+3376
+301
+3730
+334
 factor-reduction-probability-transmission-young
 factor-reduction-probability-transmission-young
 0
@@ -3660,7 +3660,7 @@ Global quarantine
 SWITCH
 662
 190
-834
+812
 223
 log-contamination?
 log-contamination?
@@ -3669,10 +3669,10 @@ log-contamination?
 -1000
 
 SWITCH
-549
-233
-804
-266
+551
+229
+832
+262
 log-preferred-activity-decision?
 log-preferred-activity-decision?
 1
@@ -3690,10 +3690,10 @@ Transport Model
 1
 
 SWITCH
-550
-269
-663
-302
+551
+266
+674
+299
 log-setup?
 log-setup?
 0
@@ -3718,7 +3718,7 @@ HORIZONTAL
 SWITCH
 839
 229
-1002
+987
 262
 clear-log-on-setup?
 clear-log-on-setup?
@@ -3821,10 +3821,10 @@ ratio-quarantiners-currently-complying-to-quarantine
 11
 
 SWITCH
-839
-189
-1010
-222
+816
+190
+987
+223
 log-violating-quarantine?
 log-violating-quarantine?
 1
@@ -3922,10 +3922,10 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-2080
-296
-2162
-353
+3305
+235
+3373
+292
 ASSOCC\nincremental\nmodel\n(deprecated)
 11
 15.0
@@ -4091,10 +4091,10 @@ parent-individual-subsidy-per-child-per-tick
 Number
 
 SWITCH
-662
-268
-812
-301
+679
+266
+829
+299
 log-transactions?
 log-transactions?
 0
@@ -4226,29 +4226,11 @@ lockdown-duration
 0
 Number
 
-PLOT
-1323
-218
-1652
-381
-Deliberation cost (avg)
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"delib cost" 1.0 0 -16777216 true "" "plot mean [deliberation-cost] of people"
-
 SWITCH
-1044
-214
-1270
-247
+1007
+225
+1205
+258
 context-sensitive-deliberation?
 context-sensitive-deliberation?
 0
@@ -4256,20 +4238,20 @@ context-sensitive-deliberation?
 -1000
 
 TEXTBOX
-1042
-183
-1272
-223
+1006
+189
+1236
+229
 Context-sensitive deliberation
 16
 125.0
 1
 
 PLOT
-1182
-388
-1423
-538
+2181
+397
+2422
+547
 Global deliberation time
 NIL
 NIL
@@ -4301,10 +4283,10 @@ NIL
 1
 
 PLOT
-1429
-389
-1886
-538
+550
+307
+986
+447
 Delib-count
 NIL
 NIL
@@ -4324,10 +4306,10 @@ PENS
 "Critical need" 1.0 0 -10899396 true "" "plot count people with [delib-count-critical-need = 1]"
 
 INPUTBOX
-1023
-292
-1250
-352
+1220
+225
+1387
+285
 #households-for-context-scenario
 350.0
 1
@@ -4335,10 +4317,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-1023
-355
-1178
-415
+1220
+290
+1375
+350
 #action-space
 6.0
 1
@@ -4365,10 +4347,10 @@ PENS
 "pen-1" 1.0 0 -13840069 true "" "plot count people"
 
 INPUTBOX
-1022
-420
-1176
-480
+1007
+376
+1152
+436
 #agent-id
 166.0
 1
@@ -4405,10 +4387,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-940
-381
-1019
-441
+2051
+368
+2130
+428
 #luxury-add
 0.1
 1
@@ -4416,10 +4398,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-851
-381
-936
-441
+2050
+304
+2135
+364
 #sleep-day-add
 0.2
 1
@@ -4427,21 +4409,21 @@ INPUTBOX
 Number
 
 INPUTBOX
-724
-381
-847
-441
+2050
+239
+2173
+299
 #leisure-free-time-add
--0.18
+1.0
 1
 0
 Number
 
 INPUTBOX
-585
-382
-720
-442
+1600
+264
+1812
+324
 #risk-avoidance-private-leisure-preference
 0.8
 1
@@ -4449,10 +4431,10 @@ INPUTBOX
 Number
 
 SWITCH
-1044
-252
-1210
-285
+1007
+263
+1205
+296
 #enable-quarantine
 #enable-quarantine
 1
@@ -4460,10 +4442,10 @@ SWITCH
 -1000
 
 INPUTBOX
-863
-317
-1018
-377
+1888
+239
+2043
+299
 #need-salient-threshold
 0.5
 1
@@ -4471,10 +4453,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-703
-317
-858
-377
+1888
+304
+2043
+364
 #need-critical-threshold
 0.1
 1
@@ -4482,10 +4464,10 @@ INPUTBOX
 Number
 
 SWITCH
-1022
-485
-1140
-518
+1007
+340
+1125
+373
 #log-agent
 #log-agent
 0
@@ -4493,10 +4475,10 @@ SWITCH
 -1000
 
 INPUTBOX
-530
-316
-700
-376
+1600
+327
+1778
+387
 #risk-avoidance-home-preference
 0.5
 1
@@ -4504,10 +4486,10 @@ INPUTBOX
 Number
 
 SWITCH
-844
-444
-1017
-477
+1397
+226
+1570
+259
 #enable-food-luxury-test
 #enable-food-luxury-test
 0
@@ -4522,6 +4504,78 @@ SWITCH
 #enable-salient-food-luxury-forced-obligation
 #enable-salient-food-luxury-forced-obligation
 0
+1
+-1000
+
+TEXTBOX
+1401
+207
+1628
+237
+Experimental settings (deliberation)
+12
+125.0
+1
+
+TEXTBOX
+2052
+216
+2161
+234
+Needs balancing
+12
+125.0
+1
+
+TEXTBOX
+1890
+214
+2040
+232
+General context settings
+12
+125.0
+1
+
+TEXTBOX
+1223
+208
+1373
+226
+Experimental settings
+12
+125.0
+1
+
+SWITCH
+1397
+263
+1571
+296
+ce-private-leisure-by-risk
+ce-private-leisure-by-risk
+1
+1
+-1000
+
+TEXTBOX
+1008
+207
+1158
+225
+ce: context experiment
+11
+15.0
+1
+
+SWITCH
+1007
+301
+1205
+334
+enable-need-balancing
+enable-need-balancing
+1
 1
 -1000
 

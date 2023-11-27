@@ -209,20 +209,6 @@ end
 ;==================================================
 ; General Need Functions
 ;==================================================
-; Used in context_state_obligation/sick_obligation/free_time/sick_free_time
-to-report need-sleep-level-day
-  report sleep-satisfaction-level + #sleep-day-add
-end
-
-; Used in context_state_free_time/sick_free_time
-to-report need-leisure-level-free-time
-  report leisure-satisfaction-level + #leisure-free-time-add
-end
-
-; Used in context_state_free_time/sick_free_time
-to-report need-luxury-level-free-time
-  report leisure-satisfaction-level + #leisure-free-time-add
-end
 
 ; The needs, order them according to alphabet
 to-report need-risk-avoidance
