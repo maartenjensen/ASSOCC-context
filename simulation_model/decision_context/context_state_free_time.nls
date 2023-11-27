@@ -21,12 +21,17 @@
 
 ;Code check:
 ; csft: NOT csn, cso, cssn, csso, cssft
+; leisure-satisfaction-level should only occur in the function csft-balance-needs, other than that it should be leisure-satisfaction-balanced
+; Same goes for luxury-satisfaction-level and sleep-satisfaction-level
 
 to-report context-state-free-time ; csft
   
   ; The time is morning or afternoon
   if #log-agent and who = #agent-id [ print "Free time decision making" ]
-  ; salient needs, need-level < #need-salient-threshold
+  
+  ; Balance needs
+  csft-balance-needs
+  
   ; -------------------------------------------
   ; Determine whether there is a need salient
   ; -------------------------------------------
@@ -110,8 +115,8 @@ end
 to-report csft-leisure
   if context-normative-should-I-stay-home
   [
-    ifelse leisure-satisfaction-level < #need-critical-threshold
-    [ if leisure-satisfaction-level < compliance-satisfaction-level
+    ifelse leisure-satisfaction-balanced < #need-critical-threshold
+    [ if leisure-satisfaction-balanced < compliance-satisfaction-level
       [ report context-determine-social-distancing (list my-home "rest") ]
     ]
     [ report csft-leisure-f ]
@@ -149,9 +154,9 @@ end
 to-report csft-luxury
   if #enable-food-luxury-test
   [
-    if not context-normative-should-I-stay-home or (luxury-satisfaction-level < #need-critical-threshold and luxury-satisfaction-level < compliance-satisfaction-level)
+    if not context-normative-should-I-stay-home or (luxury-satisfaction-balanced < #need-critical-threshold and luxury-satisfaction-balanced < compliance-satisfaction-level)
     [
-      if luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level
+      if luxury-satisfaction-balanced < financial-stability-satisfaction-level and luxury-satisfaction-balanced < financial-survival-satisfaction-level
       [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
     ]
   ]
@@ -237,18 +242,18 @@ end
 to-report csft-salient-needs
   let salient-needs []
   let salient-needs-level []
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-balanced < #need-salient-threshold
   [ set salient-needs lput need-sleep salient-needs 
-    set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
+    set salient-needs-level lput sleep-satisfaction-balanced salient-needs-level ]
   if risk-avoidance-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-risk-avoidance salient-needs 
     set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
   if belonging-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-belonging salient-needs 
     set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-balanced < #need-salient-threshold
   [ set salient-needs lput need-leisure salient-needs 
-    set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
+    set salient-needs-level lput leisure-satisfaction-balanced salient-needs-level ]
   if conformity-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs 
     set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
@@ -258,8 +263,20 @@ to-report csft-salient-needs
   if food-safety-satisfaction-level < #need-salient-threshold
   [ set salient-needs lput need-food-safety salient-needs 
     set salient-needs-level lput food-safety-satisfaction-level salient-needs-level ]
-  if luxury-satisfaction-level < #need-salient-threshold
+  if luxury-satisfaction-balanced < #need-salient-threshold
   [ set salient-needs lput need-luxury salient-needs 
-    set salient-needs-level lput luxury-satisfaction-level salient-needs-level ]
+    set salient-needs-level lput luxury-satisfaction-balanced salient-needs-level ]
   report list salient-needs salient-needs-level
+end
+
+to csft-balance-needs
+  ifelse ce-enable-need-balancing
+  [ set leisure-satisfaction-balanced leisure-satisfaction-level + ce-free-time-add-to-leisure 
+    set luxury-satisfaction-balanced luxury-satisfaction-level + ce-add-to-luxury
+    set sleep-satisfaction-balanced sleep-satisfaction-level + ce-day-add-to-sleep
+  ]
+  [ set leisure-satisfaction-balanced leisure-satisfaction-level
+    set luxury-satisfaction-balanced luxury-satisfaction-level 
+    set sleep-satisfaction-balanced sleep-satisfaction-level 
+  ]
 end

@@ -188,6 +188,11 @@ people-own [
   obligation-activity-descriptor  
   
   table-profiler-salient-needs
+  
+  ; variables for balancing needs
+  leisure-satisfaction-balanced
+  luxury-satisfaction-balanced
+  sleep-satisfaction-balanced
 ]
 
 to update-people-epistemic-status

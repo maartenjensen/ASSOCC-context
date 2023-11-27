@@ -4227,9 +4227,9 @@ lockdown-duration
 Number
 
 SWITCH
-1007
+1000
 225
-1205
+1198
 258
 context-sensitive-deliberation?
 context-sensitive-deliberation?
@@ -4238,9 +4238,9 @@ context-sensitive-deliberation?
 -1000
 
 TEXTBOX
-1006
+999
 189
-1236
+1229
 229
 Context-sensitive deliberation
 16
@@ -4306,9 +4306,9 @@ PENS
 "Critical need" 1.0 0 -10899396 true "" "plot count people with [delib-count-critical-need = 1]"
 
 INPUTBOX
-1220
+1205
 225
-1387
+1372
 285
 #households-for-context-scenario
 350.0
@@ -4317,9 +4317,9 @@ INPUTBOX
 Number
 
 INPUTBOX
-1220
+1205
 290
-1375
+1360
 350
 #action-space
 6.0
@@ -4347,9 +4347,9 @@ PENS
 "pen-1" 1.0 0 -13840069 true "" "plot count people"
 
 INPUTBOX
-1007
+1000
 376
-1152
+1145
 436
 #agent-id
 166.0
@@ -4387,53 +4387,53 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-2051
-368
-2130
-428
-#luxury-add
+1601
+456
+1719
+516
+ce-add-to-luxury
 0.1
 1
 0
 Number
 
 INPUTBOX
-2050
-304
-2135
-364
-#sleep-day-add
+1600
+392
+1728
+452
+ce-day-add-to-sleep
 0.2
 1
 0
 Number
 
 INPUTBOX
-2050
-239
-2173
-299
-#leisure-free-time-add
-1.0
+1600
+327
+1749
+387
+ce-free-time-add-to-leisure
+-0.42
 1
 0
 Number
 
 INPUTBOX
-1600
-264
-1812
-324
+1240
+366
+1452
+426
 #risk-avoidance-private-leisure-preference
-0.8
+0.4
 1
 0
 Number
 
 SWITCH
-1007
+1000
 263
-1205
+1198
 296
 #enable-quarantine
 #enable-quarantine
@@ -4442,10 +4442,10 @@ SWITCH
 -1000
 
 INPUTBOX
-1888
-239
-2043
-299
+1456
+327
+1589
+387
 #need-salient-threshold
 0.5
 1
@@ -4453,10 +4453,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-1888
-304
-2043
-364
+1456
+392
+1589
+452
 #need-critical-threshold
 0.1
 1
@@ -4464,9 +4464,9 @@ INPUTBOX
 Number
 
 SWITCH
-1007
+1000
 340
-1125
+1118
 373
 #log-agent
 #log-agent
@@ -4475,10 +4475,10 @@ SWITCH
 -1000
 
 INPUTBOX
-1600
-327
-1778
-387
+1240
+429
+1418
+489
 #risk-avoidance-home-preference
 0.5
 1
@@ -4486,9 +4486,9 @@ INPUTBOX
 Number
 
 SWITCH
-1397
+1382
 226
-1570
+1555
 259
 #enable-food-luxury-test
 #enable-food-luxury-test
@@ -4508,9 +4508,9 @@ SWITCH
 -1000
 
 TEXTBOX
-1401
+1386
 207
-1628
+1613
 237
 Experimental settings (deliberation)
 12
@@ -4518,29 +4518,29 @@ Experimental settings (deliberation)
 1
 
 TEXTBOX
-2052
-216
-2161
-234
+1602
+307
+1711
+325
 Needs balancing
 12
 125.0
 1
 
 TEXTBOX
-1890
-214
-2040
-232
+1458
+307
+1608
+325
 General context settings
 12
 125.0
 1
 
 TEXTBOX
-1223
+1208
 208
-1373
+1358
 226
 Experimental settings
 12
@@ -4548,20 +4548,20 @@ Experimental settings
 1
 
 SWITCH
-1397
+1382
 263
-1571
+1556
 296
 ce-private-leisure-by-risk
 ce-private-leisure-by-risk
-1
+0
 1
 -1000
 
 TEXTBOX
-1008
+1001
 207
-1158
+1151
 225
 ce: context experiment
 11
@@ -4569,13 +4569,13 @@ ce: context experiment
 1
 
 SWITCH
-1007
+1000
 301
-1205
+1198
 334
-enable-need-balancing
-enable-need-balancing
-1
+ce-enable-need-balancing
+ce-enable-need-balancing
+0
 1
 -1000
 

@@ -7,6 +7,10 @@ __includes [ "decision_context/profiler_speed_test_functions.nls"
   "decision_context/context_state_free_time.nls" "decision_context/context_state_sick_free_time.nls" ]
 
 to context-init-variables
+  set leisure-satisfaction-balanced 0
+  set luxury-satisfaction-balanced 0
+  set sleep-satisfaction-balanced 0
+  
   if age = young-age
   [ set obligation-activity-descriptor (activity-descriptor my-school "mandatory") ]
   if age = student-age 
