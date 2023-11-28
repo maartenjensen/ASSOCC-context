@@ -394,10 +394,10 @@ PENS
 "kids@home" 1.0 0 -10899396 true "" "plot count children with [is-at-home?] / count children"
 
 MONITOR
-1189
-1008
-1307
-1053
+1264
+992
+1382
+1037
 NIL
 day-of-the-week
 17
@@ -405,10 +405,10 @@ day-of-the-week
 11
 
 MONITOR
-1189
-1063
-1305
-1108
+1264
+1047
+1380
+1092
 NIL
 slice-of-the-day
 17
@@ -932,9 +932,9 @@ NIL
 HORIZONTAL
 
 MONITOR
-556
+549
 1048
-620
+613
 1093
 #@home
 count people with [[gathering-type] of current-activity = \"home\"]
@@ -943,9 +943,9 @@ count people with [[gathering-type] of current-activity = \"home\"]
 11
 
 MONITOR
-616
+609
 1048
-685
+678
 1093
 #@school
 count people with [[gathering-type] of current-activity = \"school\"]
@@ -954,9 +954,9 @@ count people with [[gathering-type] of current-activity = \"school\"]
 11
 
 MONITOR
-680
+673
 1048
-769
+762
 1093
 #@workplace
 count people with [[gathering-type] of current-activity = \"workplace\"]
@@ -965,9 +965,9 @@ count people with [[gathering-type] of current-activity = \"workplace\"]
 11
 
 MONITOR
-766
+759
 1048
-854
+847
 1093
 #@university
 count people with [[gathering-type] of current-activity = \"university\"]
@@ -976,9 +976,9 @@ count people with [[gathering-type] of current-activity = \"university\"]
 11
 
 MONITOR
-850
+843
 1048
-927
+920
 1093
 #@hospital
 count people with [[gathering-type] of current-activity = \"hospital\"]
@@ -1016,20 +1016,20 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot mean [conformity-satisfaction-level] of people"
 
 MONITOR
-923
+916
 1048
-993
+994
 1093
-#@leisure
-count people with [member? \"leisure\" [gathering-type] of current-activity]
+#@pr-leisure
+count people with [[gathering-type] of current-activity = \"private-leisure\"]
 17
 1
 11
 
 MONITOR
-992
+1076
 1048
-1094
+1178
 1093
 #@essential-shop
 count people with [[gathering-type] of current-activity = \"essential-shop\"]
@@ -1038,9 +1038,9 @@ count people with [[gathering-type] of current-activity = \"essential-shop\"]
 11
 
 MONITOR
-1093
+1177
 1048
-1168
+1252
 1093
 #@NEshop
 count people with [[gathering-type] of current-activity = \"non-essential-shop\"]
@@ -1936,10 +1936,10 @@ PENS
 "school" 1.0 0 -8630108 true "" "plot #schools-out-of-capital"
 
 PLOT
-1162
-542
-1675
-825
+1167
+533
+1680
+816
 Activities
 NIL
 NIL
@@ -4387,10 +4387,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-1601
-456
-1719
-516
+1613
+455
+1731
+515
 ce-add-to-luxury
 0.1
 1
@@ -4398,10 +4398,10 @@ ce-add-to-luxury
 Number
 
 INPUTBOX
-1600
-392
-1728
-452
+1612
+391
+1740
+451
 ce-day-add-to-sleep
 0.2
 1
@@ -4409,10 +4409,10 @@ ce-day-add-to-sleep
 Number
 
 INPUTBOX
-1600
-327
-1749
-387
+1612
+326
+1761
+386
 ce-free-time-add-to-leisure
 -0.42
 1
@@ -4420,12 +4420,12 @@ ce-free-time-add-to-leisure
 Number
 
 INPUTBOX
-1240
-366
-1452
-426
+1382
+300
+1594
+360
 #risk-avoidance-private-leisure-preference
-0.4
+0.75
 1
 0
 Number
@@ -4442,10 +4442,10 @@ SWITCH
 -1000
 
 INPUTBOX
-1456
-327
-1589
-387
+1768
+325
+1901
+385
 #need-salient-threshold
 0.5
 1
@@ -4453,10 +4453,10 @@ INPUTBOX
 Number
 
 INPUTBOX
-1456
-392
-1589
-452
+1768
+390
+1901
+450
 #need-critical-threshold
 0.1
 1
@@ -4475,10 +4475,10 @@ SWITCH
 -1000
 
 INPUTBOX
-1240
-429
-1418
-489
+1382
+363
+1560
+423
 #risk-avoidance-home-preference
 0.5
 1
@@ -4518,20 +4518,20 @@ Experimental settings (deliberation)
 1
 
 TEXTBOX
-1602
-307
-1711
-325
+1614
+306
+1723
+324
 Needs balancing
 12
 125.0
 1
 
 TEXTBOX
-1458
-307
-1608
-325
+1770
+305
+1920
+323
 General context settings
 12
 125.0
@@ -4578,6 +4578,17 @@ ce-enable-need-balancing
 0
 1
 -1000
+
+MONITOR
+994
+1048
+1076
+1093
+#@pu-leisure
+count people with [[gathering-type] of current-activity = \"public-leisure\"]
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
