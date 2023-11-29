@@ -1,0 +1,19 @@
+["context-sensitive-deliberation?" true]
+["#enable-quarantine" false]
+["#random-seed" 1]
+["#households-for-context-scenario" 350]
+["#action-space" 6]
+["#need-salient-threshold" 0.5]
+["#need-critical-threshold" 0.1]
+["ce-enable-need-balancing" false true]
+["ce-free-time-add-to-leisure" -0.4]
+["ce-day-add-to-sleep" 0.2]
+["ce-add-to-luxury" 0.1]
+["#enable-food-luxury-test" true]
+["ce-private-leisure-by-risk" false true]
+["#risk-avoidance-private-leisure-preference" 0.65]
+
+
+Time limit 240
+
+behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-N=" ce-enable-need-balancing "-PR=" ce-private-leisure-by-risk)
