@@ -50,3 +50,15 @@ profilerPlotNeedBalance(df_profiler, "", one_plot)
 #--------------------------------------
 #--- REALISM - BEHAVIOUR/INFECTIONS ---
 #--------------------------------------
+
+
+#--------------------------------------
+#-  SUMMARY SCALABILITY AND REALISM   -
+#--------------------------------------
+
+
+#--------------------------------------
+#-       GOALS FOR THIS PROGRAM       -
+#--------------------------------------
+# It needs to be easy to adjust things like which data to get out, but I guess this can be done in plotting
+# I want to focus on the realism plots, but I should still look at the profiler data to see if I really got everything out of it.

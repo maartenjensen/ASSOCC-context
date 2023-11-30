@@ -64,7 +64,15 @@ profilerPlotNeedBalance <- function(df_profiler, output_dir, one_plot) {
   print("Profiler plotting function")
 }
 
+profilerSummarize <- function(df_profiler) {
+  
+  print("Profiler summary")
+  # It depends on what I want to know, what is going to be in this function.
+}
+
+#-----------------------
 #--- EXTRA FUNCTIONS ---
+#-----------------------
 profilerStrToVWithoutWhiteSpaces <- function(p_str) {
   t_vector <- c()
   t_str = ""
