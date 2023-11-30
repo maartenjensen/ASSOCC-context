@@ -1,11 +1,13 @@
-library(tidyverse)
-library(ggplot2)
+#install.packages("tidyverse")
+
+#library(tidyverse)
+#library(ggplot2)
 
 #first empty working memory 
 rm(list=ls()) 
 
 
-setwd("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context/2023-11-01-experiments-balancing-needs-private-risk")
+setwd("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context")
 getwd()
 
 

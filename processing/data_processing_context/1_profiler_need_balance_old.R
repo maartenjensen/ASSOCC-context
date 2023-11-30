@@ -1,28 +1,3 @@
-#install.packages("sjmisc")
-
-library(tidyverse)
-library(ggplot2)
-library(sjmisc)
-library(readr)
-
-#first empty working memory 
-rm(list=ls()) 
-
-setwd("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context/2023-11-01-experiments-balancing-needs-private-risk")
-getwd()
-
-### MANUAL INPUT: Optionally specify filepath (i.e. where the behaviorspace csv is situated) ###
-#NOTE: if csv files are placed in the workdirec, then leave filesPath unchanged
-filesPath <- "" 
-
-#=================== MANUAL INPUT: specify filenames ====================
-dataFileName <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= true].csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
-                  "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
-
-filesNames   <- dataFileName
-
 str_to_v_without_white_spaces <- function(p_str) {
   t_vector <- c()
   t_str = ""
