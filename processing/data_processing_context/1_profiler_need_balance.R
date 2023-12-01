@@ -1,6 +1,7 @@
 profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
-  df_results = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+  df_results = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, need_balancing=NA, private_leisure_risk=NA,
+                          function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
   
   print("- GO Function")
   print("----------------------------------")
@@ -19,10 +20,11 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
           str_contains(df_initial[i,1], "CSO") || str_contains(df_initial[i,1], "CSSO") ||
           str_contains(df_initial[i,1], "CSFT") || str_contains(df_initial[i,1], "CSSFT")) {
 
-        result_v <- profilerStrToVWithoutWhiteSpaces(df_initial[i,1])
-        settings_v <- profilerSettingStrToV(file_name)
-        df_results <- rbind(df_results, c(settings_v[1], settings_v[2], settings_v[3], settings_v[4],
-                                          result_v[1], as.double(result_v[2]), result_v[3], result_v[4], result_v[5]))
+        result_v = profilerStrToVWithoutWhiteSpaces(df_initial[i,1])
+        settings_v = profilerSettingStrToV(file_name)
+        df_new_line = c(settings_v[1], settings_v[2], settings_v[3], settings_v[4], settings_v[5], settings_v[6],
+                         result_v[1], as.double(result_v[2]), result_v[3], result_v[4], result_v[5])
+        df_results = rbind(df_results, df_new_line)
       }
       if (str_contains(df_initial[i,1], "Sorted by Inclusive Time")) {
         break
@@ -31,7 +33,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   }
   
   # Making the Dataframe nice
-  colnames(df_results) <- c("context", "households", "random_seed", "action_space", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
+  colnames(df_results) <- c("context", "households", "random_seed", "action_space", "need_balancing", "private_leisure_risk", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
   df_results$households = as.integer(df_results$households)
   df_results$random_seed = as.integer(df_results$random_seed)
   df_results$action_space = as.integer(df_results$action_space)
@@ -39,7 +41,6 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   df_results$incl_t_ms = as.double(df_results$incl_t_ms)
   df_results$excl_t_ms = as.double(df_results$excl_t_ms)
   df_results$excl_calls = as.double(df_results$excl_calls)
-  print(df_results)
   
   df_results <- df_results[order(df_results$context, df_results$function_name), ]
   
@@ -48,31 +49,57 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
 
 profilerLoadSpecificData <- function(p_df_profiler, p_string) {
   
-  df_profiler_specific = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
-  for (i in 1:nrow(p_df_profiler)) {
-    
-    if (str_contains(p_df_profiler$function_name[i], p_string)) {
-      df_profiler_specific <- rbind(df_profiler_specific, p_df_profiler[i, ])
+  df_profiler_specific = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, need_balancing=NA, private_leisure_risk=NA,
+                                    function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
+  
+  # Check if it is a single string
+  if (profilerIsSingleString(p_string))
+  {
+    for (i in 1:nrow(p_df_profiler)) {
+      
+      if (str_contains(p_df_profiler$function_name[i], p_string)) {
+        df_profiler_specific <- rbind(df_profiler_specific, p_df_profiler[i, ])
+      }
     }
+    return(df_profiler_specific)
   }
-  return(df_profiler_specific)
+  else
+  {
+    for (i in 1:nrow(p_df_profiler)) {
+      for (j in 1:length(p_string))
+      {
+        if (str_contains(p_df_profiler$function_name[i], p_string[j])) {
+          df_profiler_specific <- rbind(df_profiler_specific, p_df_profiler[i, ])
+        }
+      }
+    }
+    return(df_profiler_specific)
+  }
+  return("It didn't work")
 }
 
 profilerPlotNeedBalance <- function(df_profiler, output_dir, one_plot) {
   
-  print(df_profiler)
+  
   print("Profiler plotting function")
+  
+  
 }
 
-profilerSummarize <- function(df_profiler) {
+profilerSummarize <- function(df_profiler, df_profiler_overview) {
   
   print("Profiler summary")
+  print(df_profiler_overview)
   # It depends on what I want to know, what is going to be in this function.
 }
 
 #-----------------------
 #--- EXTRA FUNCTIONS ---
 #-----------------------
+profilerIsSingleString <- function(input) {
+  is.character(input) & length(input) == 1
+}
+
 profilerStrToVWithoutWhiteSpaces <- function(p_str) {
   t_vector <- c()
   t_str = ""
@@ -145,6 +172,22 @@ profilerSettingStrToV <- function(p_str) {
   while (length(t_settings_vector) == 3) {
     if (str_split[t_index] == "A") {
       t_index = t_index + 3
+      t_settings_vector <- c(t_settings_vector, str_split[t_index])
+    }
+    t_index = t_index + 1
+  }
+  # Check N= Need balancing
+  while (length(t_settings_vector) == 4) {
+    if (str_split[t_index] == "N") {
+      t_index = t_index + 3
+      t_settings_vector <- c(t_settings_vector, str_split[t_index])
+    }
+    t_index = t_index + 1
+  }
+  # Check PR= Private Leisure Risk
+  while (length(t_settings_vector) == 5) {
+    if (str_split[t_index] == "P") {
+      t_index = t_index + 4
       t_settings_vector <- c(t_settings_vector, str_split[t_index])
     }
     t_index = t_index + 1

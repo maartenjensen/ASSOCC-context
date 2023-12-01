@@ -1,7 +1,7 @@
 #install.packages("tidyverse")
 
-#library(tidyverse)
-#library(ggplot2)
+library(tidyverse)
+library(ggplot2)
 
 #first empty working memory 
 rm(list=ls()) 
@@ -135,16 +135,16 @@ gl_pdf_height = 5
 #========================= PLOT DATA =========================
 #=============================================================
 
-df_final_backup <- df_final
+#df_final_backup <- df_final
 
-df_final <- df_final_backup
-df_final <- df_final[df_final$enable_salient_food_luxury_forced_obligation=="false", ]
+#df_final <- df_final_backup
+#df_final <- df_final[df_final$enable_salient_food_luxury_forced_obligation=="false", ]
 
 
 #------------------------- PLOT DATA -------------------------
 
 df_people_at_locations <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
+  group_by(tick, ce_enable_need_balancing, ce_private_leisure_by_risk) %>% 
   summarise(essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
             homes = mean(count_people_with_is_at_home, na.rm = TRUE),
             non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
@@ -156,7 +156,11 @@ df_people_at_locations <- df_final %>%
             treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
 colnames(df_people_at_locations)
 
-x_limits = c(0,479) #c(28,83)
+#x_limits = c(0,479) #c(28,83)
+x_limits = c(0,239)
+
+one_plot = TRUE
+if (one_plot) { pdf("plot_context_assocc_infections.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 
 #----------- All the locations -------------
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
@@ -167,14 +171,75 @@ seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, mea
 #----------- Location type 1 -------------
 limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
 seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, ce_enable_need_balancing=="false", ce_private_leisure_by_risk=="false"), "Agents per location type 1 - No Need Balancing", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, ce_enable_need_balancing=="true", ce_private_leisure_by_risk=="false"), "Agents per location type 1 - Need Balancing, No Risk Pv", limits_1)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_1, ce_enable_need_balancing=="true", ce_private_leisure_by_risk=="true"), "Agents per location type 1 - Need Balancing, Risk Pv", limits_1)
 
 #----------- Location type 2 -------------
 limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 500))
 seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure, treatment))
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, ce_enable_need_balancing=="false", ce_private_leisure_by_risk=="false"), "Agents per location type 2 - No Need Balancing", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, ce_enable_need_balancing=="true", ce_private_leisure_by_risk=="false"), "Agents per location type 2 - Need Balancing, No Risk Pv", limits_2)
+plot_ggplot(filter(seg_acc_people_at_locations_limited_2, ce_enable_need_balancing=="true", ce_private_leisure_by_risk=="true"), "Agents per location type 2 - Need Balancing, Risk Pv", limits_2)
+
+
+if (one_plot) { dev.off() }
+
+
+#=============================================================
+#==================== PLOT INFECTIONS  =======================
+#=============================================================
+
+plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
+                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement)) +
+    geom_line(aes(col=as.factor(ce_enable_need_balancing))) +
+    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
+    scale_colour_viridis_d(name="Context") +
+    labs(title=p_title,
+         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
+         x="Days", y=p_y_lab) +
+    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 479)) 
+}
+
+df_data <- df_final %>% 
+  group_by(tick, ce_enable_need_balancing, ce_private_leisure_by_risk) %>% 
+  summarise(infected = mean(infected, na.rm = TRUE),
+            believe_infected = mean(believe_infected, na.rm = TRUE),
+            tests_performed = mean(tests_performed, na.rm = TRUE),
+            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
+            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
+
+plots_data_infected <- gather(df_data, variable, measurement, infected)
+
+if (!one_plot) { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected")
+if (!one_plot) { dev.off() }
+
+# Epistemic infected
+plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
+
+if (!one_plot) { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
+                 "Number of agents believing they are infected")
+if (!one_plot) { dev.off() }
+
+# Total deaths
+plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
+
+if (!one_plot) { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
+if (!one_plot) { dev.off() }
+
+
+
+
+
+
+
 
 if (one_plot) { pdf("plot_context_assocc_infections.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 
@@ -370,52 +435,3 @@ plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitiv
 if (!one_plot) { dev.off() }
 
 
-#=============================================================
-#==================== PLOT INFECTIONS  =======================
-#=============================================================
-
-plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
-                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement)) +
-    geom_line(aes(col=as.factor(context_sensitive_deliberation))) +
-    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
-    scale_colour_viridis_d(name="Context") +
-    labs(title=p_title,
-         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
-         x="Days", y=p_y_lab) +
-    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 479)) 
-}
-
-df_data <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(infected = mean(infected, na.rm = TRUE),
-            believe_infected = mean(believe_infected, na.rm = TRUE),
-            tests_performed = mean(tests_performed, na.rm = TRUE),
-            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
-            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
-
-plots_data_infected <- gather(df_data, variable, measurement, infected)
-
-if (!one_plot) { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected")
-if (!one_plot) { dev.off() }
-
-# Epistemic infected
-plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
-
-if (!one_plot) { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
-                       "Number of agents believing they are infected")
-if (!one_plot) { dev.off() }
-
-# Total deaths
-plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
-
-if (!one_plot) { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
-if (!one_plot) { dev.off() }
-
-if (one_plot) { dev.off() }
