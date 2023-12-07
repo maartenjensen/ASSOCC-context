@@ -164,7 +164,6 @@ end
 
 to select-activity
   let c-a my-preferred-available-activity-descriptor
-  set deliberation-cost 0
 
   ;;select if migration takes over and people move around
   if (migration? and random-float 1 < probability-going-abroad) [

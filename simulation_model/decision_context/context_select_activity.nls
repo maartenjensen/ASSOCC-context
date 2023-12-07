@@ -28,7 +28,6 @@ end
 to context-select-activity
   let c-a context-deliberation-select-activity
   ;let c-a my-preferred-available-activity-descriptor
-  set deliberation-cost 0
   
   ;;select if migration takes over and people move around
   if (migration? and random-float 1 < probability-going-abroad) [
@@ -53,6 +52,8 @@ to-report context-deliberation-select-activity
   let chosen-action []
   if #log-agent and who = #agent-id [ ifelse (slice-of-the-day = "morning") [ print "" print (word "== STEP " (ticks) ", DAY START AGENT: " #agent-id " ==") ][ print "" ] ]
   if #log-agent and who = #agent-id [ print (word ":" slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) ":") ]
+  
+  set delib-count-minimal-context 1
   ; Check whether not night (day time) and (retired or not a working day)
   ifelse (slice-of-the-day != "night")
   [
@@ -303,19 +304,19 @@ to-report context-state-sick-obligation-succeeded [p-param]
 end
 
 to update-delib-count
-  set delib-count-total-typical delib-count-typical
-  set delib-count-total-critical-need delib-count-critical-need
-  set delib-count-total-one-need delib-count-one-need
-  set delib-count-total-one-need-conformity delib-count-one-need-conformity
-  set delib-count-total-one-need-multi-actions delib-count-one-need-multi-actions
+  set delib-count-total-minimal-context delib-count-minimal-context
+  set delib-count-total-determine-most-salient-need delib-count-determine-most-salient-need
+  set delib-count-total-compare-need-levels delib-count-compare-need-levels
+  set delib-count-total-normative-consideration delib-count-normative-consideration
+  set delib-count-total-conformity-network-action delib-count-conformity-network-action
   set delib-count-total-full-need delib-count-full-need
 end
 
 to reset-delib-count
-  set delib-count-typical 0
-  set delib-count-critical-need 0
-  set delib-count-one-need 0
-  set delib-count-one-need-conformity 0
-  set delib-count-one-need-multi-actions 0
+  set delib-count-minimal-context 0
+  set delib-count-determine-most-salient-need 0
+  set delib-count-compare-need-levels 0
+  set delib-count-normative-consideration 0
+  set delib-count-conformity-network-action 0
   set delib-count-full-need 0  
 end

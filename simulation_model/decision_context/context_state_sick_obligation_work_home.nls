@@ -17,15 +17,15 @@
 ; Compliance: rest at home (norm following)
 ; Health: rest at home
 ; Belonging: rest at home
-; Autonomy: obligation study/work
 ; Risk avoidance: rest at home
 ; Sleep: rest at home
-; Leisure
-; Conformity 
-; Food safety
-; Luxury 
-; Financial stability
-; Financial survival
+; Autonomy: obligation study/work (conflict)
+; Leisure (conflict)
+; Conformity (conflict)
+; Food safety (conflict)
+; Luxury (conflict)
+; Financial stability (conflict)
+; Financial survival (conflict)
 
 ;Code check:
 ; cssowh: NOT csn, cso, csowh, csft, cssn, cssft, cssowh, csso
@@ -39,17 +39,26 @@ to-report context-state-sick-obligation-work-home ; cssowh
   if #log-agent and who = #agent-id [ print "Sick Obligation Work Home - decision making" ]
 
   ; -------------------------------------------
+  ; Determine whether there is conflict
+  ; -------------------------------------------
+  if not cssowh-is-need-salient-and-conflicting
+  [
+    if #log-agent and who = #agent-id [ print "No conflict: performing default sick obligation work home" ]
+    report cssowh-default
+  ]
+  
+  if ce-only-minimal-context
+  [ report cssowh-after-minimal-context-f ]
+  
+  ; -------------------------------------------
   ; Determine whether there is a need salient
   ; -------------------------------------------
   let salient-needs-and-level cssowh-salient-needs
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
-  ; -------------------------------------------
-  ; If no need salient default
-  ; -------------------------------------------
   if length salient-needs = 0
-  [ report cssowh-default ]
+  [ error "in context-state-free_time, salient-needs should be not 0" ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -61,6 +70,7 @@ to-report context-state-sick-obligation-work-home ; cssowh
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
+    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -186,6 +196,10 @@ to-report cssowh-conformity-choose-possible-network-action [network-g-type netwo
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
+to-report cssowh-after-minimal-context-f
+  report []
+end
+
 to-report cssowh-autonomy-financial-f
   report []
 end
@@ -211,6 +225,17 @@ to-report cssowh-error-f
 end
 
 ;============== SALIENT NEEDS ==================
+to-report cssowh-is-need-salient-and-conflicting
+  if leisure-satisfaction-level < #need-salient-threshold or conformity-satisfaction-level < #need-salient-threshold or autonomy-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  if food-safety-satisfaction-level < #need-salient-threshold or luxury-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  if financial-stability-satisfaction-level < #need-salient-threshold or financial-survival-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  report false
+end
+
+
 to-report cssowh-salient-needs
   let salient-needs []
   let salient-needs-level []

@@ -16,20 +16,20 @@
 ; Compliance: rest at home (norm following)
 ; Health: rest at home
 ; Belonging: rest at home
-; Autonomy: obligation study/work
 ; Risk avoidance: rest at home
 ; Sleep: rest at home
-; Leisure
-; Conformity 
+; Autonomy: obligation study/work (conflict)
+; Leisure (conflict)
+; Conformity (conflict)
 ; [Exit if young]
-; Food safety
-; Luxury 
+; Food safety (conflict)
+; Luxury (conflict)
 ; [Exit if student]
-; Financial stability
-; Financial survival
+; Financial stability (conflict)
+; Financial survival (conflict)
 
 ;Code check:
-; csso: NOT csn, cso, csft, cssn, cssft
+; csso: NOT csn, cso, csft, cssn, cssft, csowh, cssowh
 
 ;#need-critical-threshold for critical need
 
@@ -40,17 +40,26 @@ to-report context-state-sick-obligation ; csso
   if #log-agent and who = #agent-id [ print "Sick obligation decision making" ]
 
   ; -------------------------------------------
+  ; Determine whether there is conflict
+  ; -------------------------------------------
+  if not csso-is-need-salient-and-conflicting
+  [
+    if #log-agent and who = #agent-id [ print "No conflict: performing default sick obligation" ]
+    report csso-default
+  ]
+  
+  if ce-only-minimal-context
+  [ report csso-after-minimal-context-f ]
+  
+  ; -------------------------------------------
   ; Determine whether there is a need salient
   ; -------------------------------------------
-  let salient-needs-and-level cso-salient-needs
+  let salient-needs-and-level csso-salient-needs
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
-  ; -------------------------------------------
-  ; If no need salient default
-  ; -------------------------------------------
   if length salient-needs = 0
-  [ report csso-default ]
+  [ error "in context-state-free_time, salient-needs should be not 0" ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -62,6 +71,7 @@ to-report context-state-sick-obligation ; csso
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
+    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -196,6 +206,10 @@ to-report csso-conformity-choose-possible-network-action [network-g-type network
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
+to-report csso-after-minimal-context-f
+  report []
+end
+
 to-report csso-autonomy-financial-f
   report []
 end
@@ -221,6 +235,20 @@ to-report csso-error-f
 end
 
 ;============== SALIENT NEEDS ==================
+to-report csso-is-need-salient-and-conflicting
+  if leisure-satisfaction-level < #need-salient-threshold or conformity-satisfaction-level < #need-salient-threshold or autonomy-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  if age = young-age
+  [ report false ]
+  if food-safety-satisfaction-level < #need-salient-threshold or luxury-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  if age = student-age
+  [ report false ]
+  if financial-stability-satisfaction-level < #need-salient-threshold or financial-survival-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  report false
+end
+
 to-report csso-salient-needs
   let salient-needs []
   let salient-needs-level []

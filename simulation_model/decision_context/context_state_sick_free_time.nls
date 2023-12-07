@@ -11,22 +11,34 @@
 ; Belonging: rest at home
 ; Risk avoidance: rest at home
 ; Sleep: rest at home
-; Leisure: leisure
-; Conformity: network action
 ; Compliance: rest at home
 ; Health: rest at home
+; Leisure (conflict): leisure
+; Conformity (conflict): network action
 ; [Exit if young]
-; Food safety: essential shopping
-; Luxury: non-essential shopping
+; Food safety (conflict): essential shopping
+; Luxury (conflict): non-essential shopping
 
 ;Code check:
-; cssft: NOT csn, cso, csft, cssn, csso
+; cssft: NOT csn, cso, csft, cssn, csso, csowh, cssowh
 
 to-report context-state-sick-free-time ; cssft
   
   ; The time is morning or afternoon
   if #log-agent and who = #agent-id [ print "Free time decision making" ]
-  ; salient needs, need-level < #need-salient-threshold
+  
+  ; -------------------------------------------
+  ; Determine whether there is conflict
+  ; -------------------------------------------
+  if not cssft-is-need-salient-and-conflicting
+  [
+    if #log-agent and who = #agent-id [ print "No conflict: performing default sick free time" ]
+    report cssft-default
+  ]
+  
+  if ce-only-minimal-context
+  [ report cssft-after-minimal-context-f ]
+  
   ; -------------------------------------------
   ; Determine whether there is a need salient
   ; -------------------------------------------
@@ -34,11 +46,8 @@ to-report context-state-sick-free-time ; cssft
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
-  ; -------------------------------------------
-  ; If no need salient default
-  ; -------------------------------------------
   if length salient-needs = 0
-  [ report cssft-default ]
+  [ error "in context_state_sick_free_time, salient-needs should be not 0" ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -50,6 +59,7 @@ to-report context-state-sick-free-time ; cssft
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
+    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -171,6 +181,10 @@ to-report cssft-conformity-perform-network-action [ network-g-type network-motiv
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
+to-report cssft-after-minimal-context-f
+  report []
+end
+
 to-report cssft-leisure-f
   report []
 end
@@ -192,6 +206,16 @@ to-report cssft-error-f
 end
 
 ;============== SALIENT NEEDS ==================
+to-report cssft-is-need-salient-and-conflicting
+  if leisure-satisfaction-level < #need-salient-threshold or conformity-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  if age = young-age
+  [ report false ]
+  if food-safety-satisfaction-level < #need-salient-threshold or luxury-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  report false
+end
+
 to-report cssft-salient-needs
   let salient-needs []
   let salient-needs-level []

@@ -4287,7 +4287,7 @@ PLOT
 307
 986
 447
-Delib-count
+Deliberation information count
 NIL
 NIL
 0.0
@@ -4298,12 +4298,12 @@ true
 true
 "" ""
 PENS
-"Typical" 1.0 0 -16777216 true "" "plot count people with [delib-count-typical = 1]"
-"One need" 1.0 0 -7500403 true "" "plot count people with [delib-count-one-need = 1]"
-"One need Conformity" 1.0 0 -4079321 true "" "plot count people with [delib-count-one-need-conformity = 1]"
-"One need Multi act" 1.0 0 -955883 true "" "plot count people with [delib-count-one-need-multi-actions = 1]"
-"All needs" 1.0 0 -8053223 true "" "plot count people with [delib-count-full-need = 1]"
-"Critical need" 1.0 0 -10899396 true "" "plot count people with [delib-count-critical-need = 1]"
+"Minimal context" 1.0 0 -13791810 true "" "plot count people with [delib-count-minimal-context = 1]"
+"Most salient need" 1.0 0 -12895429 true "" "plot count people with [delib-count-determine-most-salient-need = 1]"
+"Compare needs" 1.0 0 -7500403 true "" "plot count people with [delib-count-compare-need-levels = 1]"
+"Normative" 1.0 0 -817084 true "" "plot count people with [delib-count-normative-consideration = 1]"
+"Conformity" 1.0 0 -6917194 true "" "plot count people with [delib-count-conformity-network-action = 1]"
+"All needs" 1.0 0 -5298144 true "" "plot count people with [delib-count-full-need = 1]"
 
 INPUTBOX
 1205
@@ -4589,6 +4589,17 @@ count people with [[gathering-type] of current-activity = \"public-leisure\"]
 17
 1
 11
+
+SWITCH
+1382
+426
+1569
+459
+ce-only-minimal-context
+ce-only-minimal-context
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5377,6 +5388,9 @@ setup</setup>
       <value value="false"/>
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-only-minimal-context">
+      <value value="true"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="#enable-quarantine">
       <value value="false"/>
     </enumeratedValueSet>
@@ -5389,21 +5403,32 @@ setup</setup>
     <enumeratedValueSet variable="#action-space">
       <value value="6"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
-      <value value="0.8"/>
+    <enumeratedValueSet variable="#need-salient-threshold">
+      <value value="0.5"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#leisure-free-time-add">
-      <value value="-0.18"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#sleep-day-add">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#luxury-add">
+    <enumeratedValueSet variable="#need-critical-threshold">
       <value value="0.1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-salient-food-luxury-forced-obligation">
+    <enumeratedValueSet variable="ce-enable-need-balancing">
       <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-free-time-add-to-leisure">
+      <value value="-0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-day-add-to-sleep">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-add-to-luxury">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#enable-food-luxury-test">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
+      <value value="0.65"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">

@@ -7,12 +7,12 @@
 ; Actions available: rest at home, leisure at private/public leisure
 
 ;Important needs (6 needs): 
-;Sleep -> Home (most probable)
-;Risk avoidance -> Home
-;Belonging -> Home (home, private leisure and public leisure give belonging however the agent should by default be at home to sleep)
-;Autonomy -> Home
-;Conformity -> Depends on the network
-;Leisure -> Full ASSOCC (since the agent can gain more leisure at a leisure place)
+;Sleep -> Rest at home
+;Risk avoidance -> Rest at home
+;Belonging -> Rest at home (Rest at home, private leisure and public leisure give belonging however the agent should by default be at home to sleep)
+;Autonomy -> Rest at home
+;Conformity (Conflict) -> Depends on the network
+;Leisure (Conflict) -> Leisure action preference
 
 ;Normative needs:
 ;Compliance -> Only for normative considerations
@@ -25,20 +25,29 @@
 
 to-report context-state-night
   ; The time is morning, afternoon or evening
-  if #log-agent and who = #agent-id [ print "Custom night deliberation" ]
-  ; salient needs, need-level < #need-salient-threshold
+  if #log-agent and who = #agent-id [ print "Context night deliberation" ]
+  
   ; -------------------------------------------
-  ; Determine whether there is a need salient
+  ; Determine whether there is conflict
+  ; -------------------------------------------
+  if not csn-is-need-salient-and-conflicting
+  [
+    if #log-agent and who = #agent-id [ print "No conflict: performing default" ]
+    report csn-default
+  ]
+  
+  if ce-only-minimal-context
+  [ report csn-after-minimal-context-f ]
+  
+  ; -------------------------------------------
+  ; Determine whether there is a need salient (salient needs, need-level < #need-salient-threshold)
   ; -------------------------------------------
   let salient-needs-and-level csn-salient-needs
   let salient-needs first salient-needs-and-level
   if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
   
-  ; -------------------------------------------
-  ; If no need salient default
-  ; -------------------------------------------
   if length salient-needs = 0
-  [ report csn-default ]
+  [ error "in context-state-night, salient-needs should be not 0" ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -47,6 +56,7 @@ to-report context-state-night
   if length salient-needs > 1
   [
     set most-salient-need (context-determine-most-salient-need salient-needs (last salient-needs-and-level))
+    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -129,6 +139,10 @@ to-report csn-conformity
 end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
+to-report csn-after-minimal-context-f
+  report []
+end
+
 to-report csn-leisure-f
   report []
 end
@@ -143,6 +157,12 @@ to-report csn-error-f [most-salient-need]
 end
 
 ;============== SALIENT NEEDS =================
+to-report csn-is-need-salient-and-conflicting
+  if leisure-satisfaction-level < #need-salient-threshold or conformity-satisfaction-level < #need-salient-threshold
+  [ report true ]
+  report false
+end
+
 to-report csn-salient-needs
   let salient-needs []
   let salient-needs-level []

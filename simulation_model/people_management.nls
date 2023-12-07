@@ -162,20 +162,18 @@ people-own [
   
   ; -------- Added by Maarten: Context-Sensitive Deliberation --------
   ; Variables for counting
-  deliberation-cost  
-  delib-count-typical
-  delib-count-critical-need
-  delib-count-one-need
-  delib-count-one-need-conformity
-  delib-count-one-need-multi-actions
+  delib-count-minimal-context
+  delib-count-determine-most-salient-need
+  delib-count-compare-need-levels
+  delib-count-normative-consideration
+  delib-count-conformity-network-action
   delib-count-full-need
-  
-  delib-count-total-typical
-  delib-count-total-critical-need
-  delib-count-total-one-need
-  delib-count-total-one-need-conformity
-  delib-count-total-one-need-multi-actions
-  delib-count-total-conformity
+    
+  delib-count-total-minimal-context
+  delib-count-total-determine-most-salient-need
+  delib-count-total-compare-need-levels
+  delib-count-total-normative-consideration
+  delib-count-total-conformity-network-action
   delib-count-total-full-need
  
   ; Variables for inspection

@@ -3,10 +3,14 @@
 #install.packages()
 
 # Open the libraries
-library(tidyverse)
-library(ggplot2)
-library(sjmisc)
-library(readr)
+if (!exists("libraries_loaded"))
+{
+  library(tidyverse)
+  library(ggplot2)
+  library(sjmisc)
+  library(readr)
+  libraries_loaded = TRUE
+}
 
 #-------------------------------
 #---     INITIALIZATION      ---
@@ -14,6 +18,7 @@ library(readr)
 
 #--- WORKSPACE AND DIRECTORY ---
 rm(list=ls()) 
+libraries_loaded = TRUE
 
 #-   GENERAL PARAMETERS   -
 filepath_workspace <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
@@ -41,8 +46,8 @@ df_profiler_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERR
 
 df_profiler_csn = profilerLoadSpecificData(df_profiler, "CSN")
 df_profiler_cssn = profilerLoadSpecificData(df_profiler, "CSSN")
-df_profiler_cso = profilerLoadSpecificData(df_profiler, "CSO")
-df_profiler_csso = profilerLoadSpecificData(df_profiler, "CSSO")
+df_profiler_cso = profilerLoadSpecificData(df_profiler, "CSO-")
+df_profiler_csso = profilerLoadSpecificData(df_profiler, "CSSO-")
 df_profiler_csowh = profilerLoadSpecificData(df_profiler, "CSSOWH")
 df_profiler_csft = profilerLoadSpecificData(df_profiler, "CSFT")
 df_profiler_cssft = profilerLoadSpecificData(df_profiler, "CSSFT")

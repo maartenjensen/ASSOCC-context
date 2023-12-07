@@ -250,19 +250,23 @@ to setup-person [current-home l-age]
     set events-to-process (list)
 
     ; -------- Added by Maarten: Context-Sensitive Deliberation --------
-    ; Agent setup for Context-Sensitive Deliberation
-    
-    set deliberation-cost 1
-    set delib-count-typical 0
-    set delib-count-critical-need 0
-    set delib-count-one-need 0
-    set delib-count-full-need 0
-    set delib-count-total-typical 0
-    set delib-count-total-critical-need 0
-    set delib-count-total-one-need 0
-    set delib-count-total-full-need 0
     
     set chosen-available-activity-descriptor (list away-gathering-point travelling-reason false)
+
+    ; Variables for tracking context-sensitive deliberation
+    set delib-count-minimal-context 0
+    set delib-count-determine-most-salient-need 0
+    set delib-count-compare-need-levels 0
+    set delib-count-normative-consideration 0
+    set delib-count-conformity-network-action 0
+    set delib-count-full-need 0
+    
+    set delib-count-total-minimal-context 0
+    set delib-count-total-determine-most-salient-need 0
+    set delib-count-total-compare-need-levels 0
+    set delib-count-total-normative-consideration 0
+    set delib-count-total-conformity-network-action 0
+    set delib-count-total-full-need 0
     
     ; Variables for context-sensitive deliberation
     context-init-variables
