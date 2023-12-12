@@ -21,7 +21,7 @@
 ;None
 
 ;Code check:
-; csn: NOT cso, csft, cssn, csso, cssft
+; csn: NOT cso, csft, cssn, csso, cssft, csowh, cssowh
 
 to-report context-state-night
   ; The time is morning, afternoon or evening
@@ -36,7 +36,7 @@ to-report context-state-night
     report csn-default
   ]
   
-  if ce-only-minimal-context
+  if ce-context-depth <= 1
   [ report csn-after-minimal-context-f ]
   
   ; -------------------------------------------
@@ -52,11 +52,14 @@ to-report context-state-night
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
   ; -------------------------------------------
+  
+  if ce-context-depth < 2
+  [ report csn-exit-before-multi-needs-f ]
+  
   let most-salient-need first salient-needs
   if length salient-needs > 1
-  [
+  [ 
     set most-salient-need (context-determine-most-salient-need salient-needs (last salient-needs-and-level))
-    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -73,11 +76,19 @@ to-report csn-salient-need-deliberation [most-salient-need]
   if most-salient-need = need-sleep or most-salient-need = need-belonging or most-salient-need = need-autonomy or most-salient-need = need-risk-avoidance
   [ report csn-sleep-belonging-autonomy-risk-avoidance ]
   
+  ;------ NORMATIVE ------
+  if ce-context-depth < 3
+  [ report csn-exit-before-normative-f ]
+  
   ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
   if most-salient-need = need-leisure and leisure-satisfaction-level < #need-critical-threshold [
     report csn-leisure
   ]
+  
+  ;------ CONFORMITY ------
+  if ce-context-depth < 4
+  [ report csn-exit-before-conformity-f ]
   
   if most-salient-need = need-conformity [
     report csn-conformity
@@ -140,6 +151,18 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report csn-after-minimal-context-f
+  report []
+end
+
+to-report csn-exit-before-multi-needs-f
+  report []
+end
+
+to-report csn-exit-before-normative-f
+  report []
+end
+
+to-report csn-exit-before-conformity-f
   report []
 end
 

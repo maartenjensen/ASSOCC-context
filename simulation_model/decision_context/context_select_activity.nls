@@ -142,11 +142,13 @@ to-report context-heuristic-random-action [p-list-of-actions]
 end
 
 to-report context-normative-should-I-stay-home
+  set delib-count-normative-consideration 1
   if #log-agent and who = #agent-id [ print (word "Normative check: should-I-stay-home? = " should-I-stay-home?) ]
   report should-I-stay-home?
 end
 
 to-report context-normative-should-I-stay-home-with-need [p-most-salient-need-level]
+  set delib-count-normative-consideration 1
   ifelse should-I-stay-home?
   [ 
     ifelse p-most-salient-need-level < compliance-satisfaction-level ; This might have to be modified dependent on the need levels
@@ -160,6 +162,7 @@ to-report context-normative-should-I-stay-home-with-need [p-most-salient-need-le
 end
 
 to-report context-determine-most-salient-need [p-salient-needs p-salient-needs-level]
+  set delib-count-determine-most-salient-need 1
   let lowest-need first p-salient-needs
   let lowest-need-level first p-salient-needs-level
   let i 1
@@ -175,6 +178,7 @@ to-report context-determine-most-salient-need [p-salient-needs p-salient-needs-l
 end
 
 to-report context-determine-most-salient-need-and-level [p-salient-needs p-salient-needs-level]
+  set delib-count-determine-most-salient-need 1
   let lowest-need first p-salient-needs
   let lowest-need-level first p-salient-needs-level
   let i 1
@@ -203,6 +207,7 @@ to-report context-determine-social-distancing [gp-and-motive]
 end
 
 to-report context-conformity-get-network-action
+  set delib-count-conformity-network-action 1
   if not any? my-network [ report [] ]
   let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
   if length relevant-memory >= 4 [

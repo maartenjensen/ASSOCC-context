@@ -4348,9 +4348,9 @@ PENS
 
 INPUTBOX
 1000
-376
+423
 1145
-436
+483
 #agent-id
 166.0
 1
@@ -4432,9 +4432,9 @@ Number
 
 SWITCH
 1000
-263
+310
 1198
-296
+343
 #enable-quarantine
 #enable-quarantine
 1
@@ -4465,9 +4465,9 @@ Number
 
 SWITCH
 1000
-340
+387
 1118
-373
+420
 #log-agent
 #log-agent
 1
@@ -4570,9 +4570,9 @@ ce: context experiment
 
 SWITCH
 1000
-301
+348
 1198
-334
+381
 ce-enable-need-balancing
 ce-enable-need-balancing
 0
@@ -4600,6 +4600,16 @@ ce-only-minimal-context
 1
 1
 -1000
+
+CHOOSER
+1000
+261
+1198
+306
+ce-context-depth
+ce-context-depth
+0 1 2 3 4
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
