@@ -163,6 +163,8 @@ to-report my-available-activity-descriptors-action-space
 end
 
 to select-activity
+  set delib-count-full-need 1
+  update-delib-count
   let c-a my-preferred-available-activity-descriptor
 
   ;;select if migration takes over and people move around

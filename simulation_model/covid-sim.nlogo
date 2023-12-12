@@ -3938,7 +3938,7 @@ SWITCH
 1226
 is-working-from-home-recommended?
 is-working-from-home-recommended?
-0
+1
 1
 -1000
 
@@ -4299,11 +4299,11 @@ true
 "" ""
 PENS
 "Minimal context" 1.0 0 -13791810 true "" "plot count people with [delib-count-minimal-context = 1]"
-"Most salient need" 1.0 0 -12895429 true "" "plot count people with [delib-count-determine-most-salient-need = 1]"
-"Compare needs" 1.0 0 -7500403 true "" "plot count people with [delib-count-compare-need-levels = 1]"
+"Most salient need" 1.0 0 -12087248 true "" "plot count people with [delib-count-determine-most-salient-need = 1]"
+"Compare needs" 1.0 0 -5987164 true "" "plot count people with [delib-count-compare-need-levels = 1]"
 "Normative" 1.0 0 -817084 true "" "plot count people with [delib-count-normative-consideration = 1]"
 "Conformity" 1.0 0 -6917194 true "" "plot count people with [delib-count-conformity-network-action = 1]"
-"All needs" 1.0 0 -5298144 true "" "plot count people with [delib-count-full-need = 1]"
+"All needs" 1.0 0 -10873583 true "" "plot count people with [delib-count-full-need = 1]"
 
 INPUTBOX
 1205
@@ -4554,7 +4554,7 @@ SWITCH
 296
 ce-private-leisure-by-risk
 ce-private-leisure-by-risk
-0
+1
 1
 -1000
 
@@ -4575,7 +4575,7 @@ SWITCH
 381
 ce-enable-need-balancing
 ce-enable-need-balancing
-0
+1
 1
 -1000
 
@@ -4590,17 +4590,6 @@ count people with [[gathering-type] of current-activity = \"public-leisure\"]
 1
 11
 
-SWITCH
-1382
-426
-1569
-459
-ce-only-minimal-context
-ce-only-minimal-context
-1
-1
--1000
-
 CHOOSER
 1000
 261
@@ -4609,7 +4598,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4
-1
+4
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5272,7 +5261,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-F=" #enable-salient-food-luxury-forced-obligation)</final>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-F=" #enable-salient-food-luxury-forced-obligation)</final>
     <timeLimit steps="240"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
@@ -5389,17 +5378,21 @@ setup</setup>
     <metric>mean [leisure-satisfaction-level] of people</metric>
     <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
     <metric>mean [conformity-satisfaction-level] of people</metric>
-    <metric>count people with [delib-count-typical = 1]</metric>
-    <metric>count people with [delib-count-one-need = 1]</metric>
-    <metric>count people with [delib-count-one-need-conformity = 1]</metric>
-    <metric>count people with [delib-count-one-need-multi-actions = 1]</metric>
+    <metric>count people with [delib-count-minimal-context = 1]</metric>
+    <metric>count people with [delib-count-determine-most-salient-need = 1]</metric>
+    <metric>count people with [delib-count-compare-need-levels = 1]</metric>
+    <metric>count people with [delib-count-normative-consideration = 1]</metric>
+    <metric>count people with [delib-count-conformity-network-action = 1]</metric>
     <metric>count people with [delib-count-full-need = 1]</metric>
     <enumeratedValueSet variable="context-sensitive-deliberation?">
-      <value value="false"/>
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="ce-only-minimal-context">
-      <value value="true"/>
+    <enumeratedValueSet variable="ce-context-depth">
+      <value value="0"/>
+      <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#enable-quarantine">
       <value value="false"/>

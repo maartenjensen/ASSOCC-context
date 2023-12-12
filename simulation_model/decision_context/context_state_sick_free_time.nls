@@ -36,8 +36,7 @@ to-report context-state-sick-free-time ; cssft
     report cssft-default
   ]
   
-  if ce-only-minimal-context
-  [ report cssft-after-minimal-context-f ]
+  if ce-context-depth <= 1  [ report cssft-after-minimal-context-f ] ; ===============  BREAKOUT: After minimal
   
   ; -------------------------------------------
   ; Determine whether there is a need salient
@@ -59,7 +58,6 @@ to-report context-state-sick-free-time ; cssft
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
-    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -80,7 +78,8 @@ to-report cssft-salient-need-deliberation [most-salient-need most-salient-need-l
   [ report cssft-leisure ]
   
   if most-salient-need = need-conformity
-  [ report cssft-conformity ]
+  [ if ce-context-depth < 4 [ report cssft-exit-before-conformity-f ] ; ===============  BREAKOUT: Conformity
+    report cssft-conformity ]
   
   if age = young-age
   [ report cssft-error-f ]
@@ -107,9 +106,6 @@ to-report cssft-leisure
   if leisure-satisfaction-level < #need-critical-threshold
   [
     report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ; Always private leisure because the agent is sick so wants to avoid public leisure
-    ;ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
-    ;[ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
-    ;[ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
   ]
   report cssft-leisure-f
 end
@@ -182,6 +178,10 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report cssft-after-minimal-context-f
+  report []
+end
+
+to-report cssft-exit-before-conformity-f
   report []
 end
 

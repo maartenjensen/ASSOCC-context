@@ -37,8 +37,7 @@ to-report context-state-obligation-work-home ; csowh
   ; The time is morning or afternoon
   if #log-agent and who = #agent-id [ print "Obligation Work Home - Decision Making" ]
 
-  if ce-only-minimal-context
-  [ report csowh-after-minimal-context-f ]
+  if ce-context-depth < 1 [ report csowh-after-minimal-context-f ]  ; ===============  BREAKOUT: if not 2 or higher
   
   ; -------------------------------------------
   ; Determine whether there is a need salient
@@ -51,7 +50,8 @@ to-report context-state-obligation-work-home ; csowh
   ; If no need salient default
   ; -------------------------------------------
   if length salient-needs = 0
-  [ report csowh-default ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-default ]
   
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
@@ -63,7 +63,6 @@ to-report context-state-obligation-work-home ; csowh
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
-    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -78,28 +77,35 @@ to-report csowh-salient-need-deliberation [ most-salient-need most-salient-need-
   
   ; Compliance is first checked, since the agents get a compliance boost at working hours OR at the beginning of the working day
   if most-salient-need = need-compliance or most-salient-need = need-financial-stability or most-salient-need = need-financial-survival
-  [ report csowh-compliance-financial most-salient-need-level ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-compliance-financial most-salient-need-level ]
   
   if most-salient-need = need-belonging ; TODO: 
-  [ report csowh-belonging ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-belonging ]
   
   if most-salient-need = need-autonomy ; TODO: 
-  [ report csowh-autonomy ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-autonomy ]
   
   if most-salient-need = need-risk-avoidance or most-salient-need = need-sleep 
-  [ report csowh-risk-avoidance-sleep most-salient-need-level ] ; TODO: split these functions
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-risk-avoidance-sleep most-salient-need-level ] ; TODO: split these functions
   
-  if most-salient-need = need-leisure
+  if most-salient-need = need-leisure ; ce-context-depth is already at 2
   [ report csowh-leisure ]
   
   if most-salient-need = need-conformity 
-  [ report csowh-conformity ] ; TODO
+  [ if ce-context-depth < 4 [ report csowh-exit-before-conformity-f ]  ; ===============  BREAKOUT: Conformity
+    report csowh-conformity ] ; TODO
   
   if most-salient-need = need-luxury
-  [ report csowh-luxury ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-luxury ]
   
   if most-salient-need = need-food-safety
-  [ report csowh-food-safety ]
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
+    report csowh-food-safety ]
   
   report csowh-error-f
 end
@@ -228,6 +234,14 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report csowh-after-minimal-context-f
+  report []
+end
+
+to-report csowh-exit-before-normative-f
+  report []
+end
+
+to-report csowh-exit-before-conformity-f
   report []
 end
 

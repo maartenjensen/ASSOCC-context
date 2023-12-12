@@ -37,7 +37,7 @@ to-report context-state-sick-night
     report cssn-default
   ]
   
-  if ce-only-minimal-context
+  if ce-context-depth <= 1
   [ report cssn-after-minimal-context-f ]
   
   ; -------------------------------------------
@@ -56,8 +56,8 @@ to-report context-state-sick-night
   let most-salient-need first salient-needs
   if length salient-needs > 1
   [
+    if ce-context-depth < 2  [ report cssn-exit-before-multi-needs-f ] ; ===============  BREAKOUT: Strategic
     set most-salient-need (context-determine-most-salient-need salient-needs (last salient-needs-and-level))
-    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -77,10 +77,12 @@ to-report cssn-salient-need-deliberation [most-salient-need]
   ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
   if most-salient-need = need-leisure [
+    if ce-context-depth < 2  [ report cssn-exit-before-strategic-f ] ; ===============  BREAKOUT: Strategic
     report cssn-leisure
   ]
   
   if most-salient-need = need-conformity [
+    if ce-context-depth < 4  [ report cssn-exit-before-conformity-f ] ; ===============  BREAKOUT: Conformity
     report cssn-conformity
   ]
   report cssn-error-f most-salient-need
@@ -128,6 +130,18 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report cssn-after-minimal-context-f
+  report []
+end
+
+to-report cssn-exit-before-multi-needs-f
+  report []
+end
+
+to-report cssn-exit-before-strategic-f
+  report []
+end
+
+to-report cssn-exit-before-conformity-f
   report []
 end
 

@@ -48,8 +48,7 @@ to-report context-state-sick-obligation ; csso
     report csso-default
   ]
   
-  if ce-only-minimal-context
-  [ report csso-after-minimal-context-f ]
+  if ce-context-depth <= 1 [ report csso-after-minimal-context-f ] ; ===============  BREAKOUT: After minimal
   
   ; -------------------------------------------
   ; Determine whether there is a need salient
@@ -71,7 +70,6 @@ to-report context-state-sick-obligation ; csso
     let most-salient-need-and-need-level (context-determine-most-salient-need-and-level salient-needs (last salient-needs-and-level))
     set most-salient-need first most-salient-need-and-need-level
     set most-salient-need-level last most-salient-need-and-need-level
-    set delib-count-determine-most-salient-need 1
   ]
   
   ; -------------------------------------------
@@ -96,8 +94,9 @@ to-report csso-salient-need-deliberation [most-salient-need most-salient-need-le
   [ report csso-leisure ]
   
   if most-salient-need = need-conformity
-  [ report csso-conformity ]
-  report csso-conformity
+  [ if ce-context-depth < 4 [ report csso-exit-before-conformity-f ]  ; ===============  BREAKOUT: Conformity
+    report csso-conformity ]
+  ; report csso-conformity Why was this here?
   
   if age = young-age
   [ report [] ] 
@@ -137,10 +136,7 @@ end
 to-report csso-leisure
   if leisure-satisfaction-level < #need-critical-threshold
   [
-    report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ; Always private leisure because the agent is sick so wants to avoid public leisure
-    ;ifelse risk-avoidance-satisfaction-level < #risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
-    ;[ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
-    ;[ report context-determine-social-distancing (context-heuristic-random-action (list (activity-descriptor my-private-leisure "relaxing") (activity-descriptor my-public-leisure "relaxing" ))) ]
+    report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") 
   ]
   report csso-leisure-f
 end
@@ -207,6 +203,10 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report csso-after-minimal-context-f
+  report []
+end
+
+to-report csso-exit-before-conformity-f
   report []
 end
 

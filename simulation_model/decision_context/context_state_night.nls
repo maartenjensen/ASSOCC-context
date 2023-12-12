@@ -36,8 +36,7 @@ to-report context-state-night
     report csn-default
   ]
   
-  if ce-context-depth <= 1
-  [ report csn-after-minimal-context-f ]
+  if ce-context-depth <= 1 [ report csn-after-minimal-context-f ] ; ===============  BREAKOUT: After minimal
   
   ; -------------------------------------------
   ; Determine whether there is a need salient (salient needs, need-level < #need-salient-threshold)
@@ -52,9 +51,6 @@ to-report context-state-night
   ; -------------------------------------------
   ; If salient needs is larger than 1, determine most salient
   ; -------------------------------------------
-  
-  if ce-context-depth < 2
-  [ report csn-exit-before-multi-needs-f ]
   
   let most-salient-need first salient-needs
   if length salient-needs > 1
@@ -77,8 +73,7 @@ to-report csn-salient-need-deliberation [most-salient-need]
   [ report csn-sleep-belonging-autonomy-risk-avoidance ]
   
   ;------ NORMATIVE ------
-  if ce-context-depth < 3
-  [ report csn-exit-before-normative-f ]
+  if ce-context-depth < 3 [ report csn-exit-before-normative-f ] ; ===============  BREAKOUT: Normative
   
   ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
@@ -87,8 +82,7 @@ to-report csn-salient-need-deliberation [most-salient-need]
   ]
   
   ;------ CONFORMITY ------
-  if ce-context-depth < 4
-  [ report csn-exit-before-conformity-f ]
+  if ce-context-depth < 4 [ report csn-exit-before-conformity-f ] ; ===============  BREAKOUT: Conformity
   
   if most-salient-need = need-conformity [
     report csn-conformity
@@ -151,10 +145,6 @@ end
 
 ;============== FULL DELIBERATION FUNCTIONS ==================
 to-report csn-after-minimal-context-f
-  report []
-end
-
-to-report csn-exit-before-multi-needs-f
   report []
 end
 
