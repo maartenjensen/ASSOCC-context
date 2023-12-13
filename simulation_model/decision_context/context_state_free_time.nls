@@ -152,25 +152,19 @@ to-report csft-leisure-random-choice
 end
 
 to-report csft-food-safety
-  if #enable-food-luxury-test
+  if not context-normative-should-I-stay-home or (food-safety-satisfaction-level < #need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level)
   [
-    if not context-normative-should-I-stay-home or (food-safety-satisfaction-level < #need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level)
-    [
-      if food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level
-      [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
-    ]
+    if food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level
+    [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   ]
   report csft-food-safety-f
 end
 
 to-report csft-luxury
-  if #enable-food-luxury-test
+  if not context-normative-should-I-stay-home or (luxury-satisfaction-balanced < #need-critical-threshold and luxury-satisfaction-balanced < compliance-satisfaction-level)
   [
-    if not context-normative-should-I-stay-home or (luxury-satisfaction-balanced < #need-critical-threshold and luxury-satisfaction-balanced < compliance-satisfaction-level)
-    [
-      if luxury-satisfaction-balanced < financial-stability-satisfaction-level and luxury-satisfaction-balanced < financial-survival-satisfaction-level
-      [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
-    ]
+    if luxury-satisfaction-balanced < financial-stability-satisfaction-level and luxury-satisfaction-balanced < financial-survival-satisfaction-level
+    [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
   ]
   report csft-luxury-f
 end

@@ -4488,19 +4488,8 @@ Number
 SWITCH
 1382
 226
-1555
+1691
 259
-#enable-food-luxury-test
-#enable-food-luxury-test
-0
-1
--1000
-
-SWITCH
-710
-144
-1019
-177
 #enable-salient-food-luxury-forced-obligation
 #enable-salient-food-luxury-forced-obligation
 0
@@ -5424,14 +5413,15 @@ setup</setup>
     <enumeratedValueSet variable="ce-add-to-luxury">
       <value value="0.1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-food-luxury-test">
-      <value value="true"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="ce-private-leisure-by-risk">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
       <value value="0.65"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#enable-salient-food-luxury-forced-obligation">
+      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
@@ -11939,9 +11929,6 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-add-to-luxury">
       <value value="0.1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-food-luxury-test">
-      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-private-leisure-by-risk">
       <value value="false"/>
