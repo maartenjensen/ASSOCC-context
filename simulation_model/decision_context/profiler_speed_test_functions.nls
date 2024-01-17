@@ -60,19 +60,19 @@ end
 to-report profiler-speed-test-salient-needs-1
 
   let salient-needs []
-  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  if risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-risk-avoidance salient-needs ]
-  if compliance-satisfaction-level < #need-salient-threshold
+  if compliance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-compliance salient-needs ]
-  if belonging-satisfaction-level < #need-salient-threshold
+  if belonging-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-belonging salient-needs ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-leisure salient-needs ]
-  if autonomy-satisfaction-level < #need-salient-threshold
+  if autonomy-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-autonomy salient-needs ]
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-sleep salient-needs ]
-  if conformity-satisfaction-level < #need-salient-threshold
+  if conformity-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs ]
   
   if length salient-needs = 0
@@ -124,19 +124,19 @@ end
 to-report profiler-speed-test-salient-needs-2
 
   let salient-needs []
-  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  if risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-risk-avoidance salient-needs ]
-  if compliance-satisfaction-level < #need-salient-threshold
+  if compliance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-compliance salient-needs ]
-  if belonging-satisfaction-level < #need-salient-threshold
+  if belonging-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-belonging salient-needs ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-leisure salient-needs ]
-  if autonomy-satisfaction-level < #need-salient-threshold
+  if autonomy-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-autonomy salient-needs ]
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-sleep salient-needs ]
-  if conformity-satisfaction-level < #need-salient-threshold
+  if conformity-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs ]
   
   if length salient-needs = 0
@@ -180,19 +180,19 @@ to-report profiler-speed-test-salient-needs-3
   table:clear table-profiler-salient-needs
 
   let salient-needs []
-  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  if risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-risk-avoidance risk-avoidance-satisfaction-level ]
-  if compliance-satisfaction-level < #need-salient-threshold
+  if compliance-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-compliance compliance-satisfaction-level ]
-  if belonging-satisfaction-level < #need-salient-threshold
+  if belonging-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-belonging belonging-satisfaction-level ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-leisure leisure-satisfaction-level ]
-  if autonomy-satisfaction-level < #need-salient-threshold
+  if autonomy-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-autonomy autonomy-satisfaction-level ]
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-sleep sleep-satisfaction-level ]
-  if conformity-satisfaction-level < #need-salient-threshold
+  if conformity-satisfaction-level < ce-need-salient-threshold
   [ table:put table-profiler-salient-needs need-conformity conformity-satisfaction-level ]
   
   if table:length table-profiler-salient-needs = 0
@@ -217,25 +217,25 @@ to-report profiler-speed-test-salient-needs-4
 
   let salient-needs []
   let salient-needs-level []
-  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  if risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-risk-avoidance salient-needs 
     set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
-  if compliance-satisfaction-level < #need-salient-threshold
+  if compliance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-compliance salient-needs 
     set salient-needs-level lput compliance-satisfaction-level salient-needs-level ]
-  if belonging-satisfaction-level < #need-salient-threshold
+  if belonging-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-belonging salient-needs 
     set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-leisure salient-needs 
     set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
-  if autonomy-satisfaction-level < #need-salient-threshold
+  if autonomy-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-autonomy salient-needs 
     set salient-needs-level lput autonomy-satisfaction-level salient-needs-level ]
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-sleep salient-needs 
     set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
-  if conformity-satisfaction-level < #need-salient-threshold
+  if conformity-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs 
     set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
   

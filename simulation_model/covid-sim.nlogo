@@ -4308,9 +4308,9 @@ PENS
 INPUTBOX
 1205
 225
-1372
+1380
 285
-#households-for-context-scenario
+ce-households-for-context-scenario
 350.0
 1
 0
@@ -4321,7 +4321,7 @@ INPUTBOX
 290
 1360
 350
-#action-space
+ce-action-space
 6.0
 1
 0
@@ -4351,7 +4351,7 @@ INPUTBOX
 423
 1145
 483
-#agent-id
+ce-log-agent-id
 166.0
 1
 0
@@ -4424,7 +4424,7 @@ INPUTBOX
 300
 1594
 360
-#risk-avoidance-private-leisure-preference
+ce-risk-avoidance-private-leisure-preference
 0.65
 1
 0
@@ -4435,8 +4435,8 @@ SWITCH
 310
 1198
 343
-#enable-quarantine
-#enable-quarantine
+ce-enable-quarantine
+ce-enable-quarantine
 1
 1
 -1000
@@ -4444,9 +4444,9 @@ SWITCH
 INPUTBOX
 1768
 325
-1901
+1910
 385
-#need-salient-threshold
+ce-need-salient-threshold
 0.5
 1
 0
@@ -4457,7 +4457,7 @@ INPUTBOX
 390
 1901
 450
-#need-critical-threshold
+ce-need-critical-threshold
 0.1
 1
 0
@@ -4466,11 +4466,11 @@ Number
 SWITCH
 1000
 387
-1118
+1126
 420
-#log-agent
-#log-agent
-1
+ce-log-agent
+ce-log-agent
+0
 1
 -1000
 
@@ -4479,7 +4479,7 @@ INPUTBOX
 363
 1560
 423
-#risk-avoidance-home-preference
+ce-risk-avoidance-home-preference
 0.5
 1
 0
@@ -4488,10 +4488,10 @@ Number
 SWITCH
 1382
 226
-1691
+1699
 259
-#enable-salient-food-luxury-forced-obligation
-#enable-salient-food-luxury-forced-obligation
+ce-enable-salient-food-luxury-forced-obligation
+ce-enable-salient-food-luxury-forced-obligation
 0
 1
 -1000
@@ -4587,7 +4587,28 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4
-4
+1
+
+SWITCH
+1182
+389
+1368
+422
+ce-disable-conflict-checking
+ce-disable-conflict-checking
+0
+1
+-1000
+
+TEXTBOX
+1207
+371
+1357
+389
+In depth experiments
+11
+125.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

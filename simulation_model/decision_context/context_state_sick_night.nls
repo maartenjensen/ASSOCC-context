@@ -26,14 +26,14 @@
 
 to-report context-state-sick-night
   ; The time is morning, afternoon or evening
-  if #log-agent and who = #agent-id [ print "Sick night deliberation" ]
+  if ce-log-agent and who = ce-log-agent-id [ print "Sick night deliberation" ]
 
   ; -------------------------------------------
   ; Determine whether there is conflict
   ; -------------------------------------------
-  if not cssn-is-need-salient-and-conflicting
+  if not cssn-is-need-salient-and-conflicting or ce-disable-conflict-checking
   [
-    if #log-agent and who = #agent-id [ print "No conflict: performing default sick night" ]
+    if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing default sick night" ]
     report cssn-default
   ]
   
@@ -45,7 +45,7 @@ to-report context-state-sick-night
   ; -------------------------------------------
   let salient-needs-and-level cssn-salient-needs
   let salient-needs first salient-needs-and-level
-  if #log-agent and who = #agent-id [ print (word "Salient needs:" salient-needs) ]
+  if ce-log-agent and who = ce-log-agent-id [ print (word "Salient needs:" salient-needs) ]
   
   if length salient-needs = 0
   [ error "in context-state-sick-night, salient-needs should be not 0" ]
@@ -67,14 +67,14 @@ to-report context-state-sick-night
 end
 
 to-report cssn-salient-need-deliberation [most-salient-need]
-  if #log-agent and who = #agent-id [ print (word "Most salient need:" most-salient-need) ]
+  if ce-log-agent and who = ce-log-agent-id [ print (word "Most salient need:" most-salient-need) ]
   
   ; Sleep is first checked since its most probable that this is the lowest need, then health since the agent is sick
   ; The following needs support the default action: resting at home
   if most-salient-need = need-sleep or most-salient-need = need-health or most-salient-need = need-belonging or most-salient-need = need-autonomy or most-salient-need = need-risk-avoidance or most-salient-need = need-compliance
   [ report cssn-sleep-health-belonging-autonomy-risk-avoidance-compliance ]
   
-  ; The following needs support a non-default action and therefore the #need-critical-threshold needs to be checked. 
+  ; The following needs support a non-default action and therefore the ce-need-critical-threshold needs to be checked. 
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
   if most-salient-need = need-leisure [
     if ce-context-depth < 2  [ report cssn-exit-before-strategic-f ] ; ===============  BREAKOUT: Strategic
@@ -98,7 +98,7 @@ to-report cssn-sleep-health-belonging-autonomy-risk-avoidance-compliance
 end
 
 to-report cssn-leisure
-  ifelse leisure-satisfaction-level < #need-critical-threshold 
+  ifelse leisure-satisfaction-level < ce-need-critical-threshold 
   [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
   [ report cssn-leisure-f ]
 end
@@ -106,16 +106,16 @@ end
 to-report cssn-conformity
   let network-action context-conformity-get-network-action
   ifelse empty? network-action
-  [ if #log-agent and who = #agent-id [ print (word "Get network action: No action found") ] ]
+  [ if ce-log-agent and who = ce-log-agent-id [ print (word "Get network action: No action found") ] ]
   [
     let network-g-type (location-of network-action)
     let network-motive motive-of network-action
     let network-sd did-my-network-socially-distance? ; Since conformity is lower than risk-avoidance the agent will follow what the network does rather than social distancing based on the risk-avoidance value
-    if #log-agent and who = #agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
+    if ce-log-agent and who = ce-log-agent-id [ print (word "Get network action: " network-g-type ", " network-motive ", " network-sd) ]
     if network-g-type = home-gathering-type and network-motive = "rest"
     [ report (list my-home "rest" network-sd) ]
     
-    if conformity-satisfaction-level < #need-critical-threshold ; Conformity is lower than compliance, so an agent can just do leisure
+    if conformity-satisfaction-level < ce-need-critical-threshold ; Conformity is lower than compliance, so an agent can just do leisure
     [
       if network-g-type = public-leisure-gathering-type and network-motive = "relaxing"
       [ report lput network-sd (activity-descriptor my-public-leisure "relaxing") ]
@@ -154,13 +154,13 @@ to-report cssn-conformity-f
 end
 
 to-report cssn-error-f [most-salient-need]
-  if #log-agent [ print (word "Error: night" most-salient-need) ]
+  print (word "Error: sick night" most-salient-need)
   report []
 end
 
 ;============== SALIENT NEEDS =================
 to-report cssn-is-need-salient-and-conflicting
-  if leisure-satisfaction-level < #need-salient-threshold or conformity-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold or conformity-satisfaction-level < ce-need-salient-threshold
   [ report true ]
   report false
 end
@@ -168,28 +168,28 @@ end
 to-report cssn-salient-needs
   let salient-needs []
   let salient-needs-level []
-  if sleep-satisfaction-level < #need-salient-threshold
+  if sleep-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-sleep salient-needs 
     set salient-needs-level lput sleep-satisfaction-level salient-needs-level ]
-  if risk-avoidance-satisfaction-level < #need-salient-threshold
+  if risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-risk-avoidance salient-needs 
     set salient-needs-level lput risk-avoidance-satisfaction-level salient-needs-level ]
-  if belonging-satisfaction-level < #need-salient-threshold
+  if belonging-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-belonging salient-needs 
     set salient-needs-level lput belonging-satisfaction-level salient-needs-level ]
-  if leisure-satisfaction-level < #need-salient-threshold
+  if leisure-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-leisure salient-needs 
     set salient-needs-level lput leisure-satisfaction-level salient-needs-level ]
-  if autonomy-satisfaction-level < #need-salient-threshold
+  if autonomy-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-autonomy salient-needs 
     set salient-needs-level lput autonomy-satisfaction-level salient-needs-level ]
-  if conformity-satisfaction-level < #need-salient-threshold
+  if conformity-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs 
     set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
-  if compliance-satisfaction-level < #need-salient-threshold
+  if compliance-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-compliance salient-needs 
     set salient-needs-level lput compliance-satisfaction-level salient-needs-level ]
-  if health-satisfaction-level < #need-salient-threshold
+  if health-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-health salient-needs 
     set salient-needs-level lput health-satisfaction-level salient-needs-level ]
   report list salient-needs salient-needs-level

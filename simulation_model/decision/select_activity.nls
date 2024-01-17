@@ -80,7 +80,7 @@ to-report my-available-activity-descriptors
   report ret
 end
 
-; This piece of code uses the #action-space variable to determine how many variables are available
+; This piece of code uses the ce-action-space variable to determine how many variables are available
 ; 1: home, 2 + school/university/work, 3 + essential shop, 4 + private leisure, 5 + non-essential shop, 6 + public leisure
 to-report my-available-activity-descriptors-action-space
   if migration? and is-away?
@@ -95,7 +95,7 @@ to-report my-available-activity-descriptors-action-space
   if has-internally-visible-symptoms? or is-believing-to-be-infected?
   [ set activities lput activity-descriptor my-hospital treatment-motive activities ]
 
-  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me? and #action-space >= 2
+  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me? and ce-action-space >= 2
   [
       if is-child? [set activities (lput (activity-descriptor my-school  "mandatory") activities)]
       if is-student?
@@ -120,15 +120,15 @@ to-report my-available-activity-descriptors-action-space
   
   if slice-of-the-day = "evening" or not is-working-day-for-me? or age = "retired"
   [
-    if age != "young" and slice-of-the-day != "night" and is-shops-open-today? and #action-space >= 3 [
+    if age != "young" and slice-of-the-day != "night" and is-shops-open-today? and ce-action-space >= 3 [
       set activities lput (activity-descriptor one-of my-essential-shops "essential shopping") activities
     ]
     
-    if #action-space >= 4
+    if ce-action-space >= 4
     [ set activities lput (activity-descriptor my-private-leisure "relaxing") activities ]
-    if #action-space >= 6
+    if ce-action-space >= 6
     [ set activities lput (activity-descriptor my-public-leisure "relaxing" ) activities ]
-    if age != "young" and slice-of-the-day != "night" and is-shops-open-today? and #action-space >= 5 [
+    if age != "young" and slice-of-the-day != "night" and is-shops-open-today? and ce-action-space >= 5 [
       set activities lput (activity-descriptor my-non-essential-shop "shopping") activities
     ]
   ]
