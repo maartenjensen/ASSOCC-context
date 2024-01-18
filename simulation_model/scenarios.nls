@@ -41,7 +41,7 @@ to load-scenario-specifics
     set #households ce-households-for-context-scenario
     load-number-of-gathering-points-based-on-number-of-households #households
     
-    if ce-enable-quarantine [
+    if ce-enable-global-lockdown [
       set ratio-self-quarantining-when-a-family-member-is-symptomatic 0.8
       set is-infected-and-their-families-requested-to-stay-at-home? true
       set food-delivered-to-isolators? true

@@ -102,10 +102,10 @@ ticks
 30.0
 
 BUTTON
-12
-88
-101
-123
+11
+67
+100
+102
 setup
 setup
 NIL
@@ -119,10 +119,10 @@ NIL
 1
 
 BUTTON
-13
-129
-105
-165
+12
+108
+104
+144
 go
 go\nif not any? people with [is-contagious?]\n[stop]
 T
@@ -609,10 +609,10 @@ NIL
 11
 
 BUTTON
-10
-206
-105
-241
+9
+200
+104
+235
 1 Week Run
 go\nwhile [day-of-the-week != \"monday\" or slice-of-the-day != \"morning\"] [go]
 NIL
@@ -2473,10 +2473,10 @@ NIL
 
 BUTTON
 10
-248
+257
 102
-283
-1 Month Run
+292
+4 Weeks Run
 let starting-day current-day\nlet end-day starting-day + 28\nwhile [current-day <= end-day] [ go ]
 NIL
 1
@@ -2738,9 +2738,9 @@ NIL
 
 BUTTON
 10
-288
+411
 103
-323
+446
 go once
 go
 NIL
@@ -2755,9 +2755,9 @@ NIL
 
 BUTTON
 10
-328
+451
 105
-363
+486
 inspect person
 inspect one-of people
 NIL
@@ -3366,10 +3366,10 @@ prioritize-testing-health-care?
 -1000
 
 BUTTON
-12
-168
-104
-201
+11
+147
+103
+180
 1 Day run
 if slice-of-the-day = \"morning\" [go]\nwhile [slice-of-the-day != \"morning\"] [go]
 NIL
@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-1
+0
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-1
+0
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-1
+0
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -4387,10 +4387,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-1613
-455
-1731
-515
+1707
+513
+1825
+573
 ce-add-to-luxury
 0.1
 1
@@ -4398,10 +4398,10 @@ ce-add-to-luxury
 Number
 
 INPUTBOX
-1612
-391
-1740
-451
+1706
+449
+1834
+509
 ce-day-add-to-sleep
 0.2
 1
@@ -4409,10 +4409,10 @@ ce-day-add-to-sleep
 Number
 
 INPUTBOX
-1612
-326
-1761
-386
+1706
+384
+1855
+444
 ce-free-time-add-to-leisure
 -0.4
 1
@@ -4433,19 +4433,19 @@ Number
 SWITCH
 1000
 310
-1198
+1202
 343
-ce-enable-quarantine
-ce-enable-quarantine
-1
+ce-enable-global-lockdown
+ce-enable-global-lockdown
+0
 1
 -1000
 
 INPUTBOX
-1768
-325
-1910
-385
+1707
+226
+1849
+286
 ce-need-salient-threshold
 0.5
 1
@@ -4453,10 +4453,10 @@ ce-need-salient-threshold
 Number
 
 INPUTBOX
-1768
-390
-1901
-450
+1707
+291
+1840
+351
 ce-need-critical-threshold
 0.1
 1
@@ -4470,7 +4470,7 @@ SWITCH
 420
 ce-log-agent
 ce-log-agent
-0
+1
 1
 -1000
 
@@ -4507,20 +4507,20 @@ Experimental settings (deliberation)
 1
 
 TEXTBOX
-1614
-306
-1723
-324
+1708
+364
+1817
+382
 Needs balancing
 12
 125.0
 1
 
 TEXTBOX
-1770
-305
-1920
-323
+1709
+206
+1859
+224
 General context settings
 12
 125.0
@@ -4587,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4
-1
+3
 
 SWITCH
 1182
@@ -4596,7 +4596,7 @@ SWITCH
 422
 ce-disable-conflict-checking
 ce-disable-conflict-checking
-0
+1
 1
 -1000
 
@@ -4608,6 +4608,77 @@ TEXTBOX
 In depth experiments
 11
 125.0
+1
+
+TEXTBOX
+4
+184
+154
+202
+Run until Mon Morning
+11
+125.0
+1
+
+TEXTBOX
+15
+240
+165
+258
+1 Week = 28 Days
+11
+125.0
+1
+
+BUTTON
+10
+295
+102
+328
+8 Weeks Run
+let starting-day current-day\nlet end-day starting-day + 56\nwhile [current-day <= end-day] [ go ]
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+11
+332
+102
+365
+12 Weeks Run
+let starting-day current-day\nlet end-day starting-day + 84\nwhile [current-day <= end-day] [ go ]
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+11
+369
+103
+402
+16 Weeks Run
+let starting-day current-day\nlet end-day starting-day + 112\nwhile [current-day <= end-day] [ go ]
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
 1
 
 @#$#@#$#@
