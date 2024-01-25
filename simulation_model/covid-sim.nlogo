@@ -119,10 +119,10 @@ NIL
 1
 
 BUTTON
-12
-108
-104
-144
+10
+148
+102
+184
 go
 go\nif not any? people with [is-contagious?]\n[stop]
 T
@@ -152,9 +152,9 @@ HORIZONTAL
 
 PLOT
 10
-515
+534
 518
-678
+697
 population status
 time
 NIL
@@ -176,10 +176,10 @@ PENS
 "Healthy" 1.0 0 -12087248 true "" "plot count people with [infection-status = \"healthy\" or infection-status = \"immune\"]"
 
 TEXTBOX
-554
-750
-832
-796
+553
+758
+831
+804
 Proxemics model
 16
 125.0
@@ -251,10 +251,10 @@ INPUTBOX
 Number
 
 TEXTBOX
-652
-579
-802
+656
 597
+806
+615
 Age model
 11
 53.0
@@ -372,9 +372,9 @@ global-confinement-measures
 
 PLOT
 10
-681
+700
 518
-831
+850
 measures
 NIL
 NIL
@@ -494,10 +494,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-906
-598
-1156
-631
+910
+616
+1160
+649
 probability-hospital-personel
 probability-hospital-personel
 0
@@ -509,10 +509,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-906
-635
-1155
-668
+910
+653
+1159
+686
 probability-school-personel
 probability-school-personel
 0
@@ -524,10 +524,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-906
-671
-1154
-704
+910
+689
+1158
+722
 probability-university-personel
 probability-university-personel
 0
@@ -539,10 +539,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-908
-708
-1153
-741
+912
+726
+1157
+759
 probability-shopkeeper
 probability-shopkeeper
 0
@@ -609,10 +609,10 @@ NIL
 11
 
 BUTTON
-9
-200
-104
-235
+7
+240
+102
+275
 1 Week Run
 go\nwhile [day-of-the-week != \"monday\" or slice-of-the-day != \"morning\"] [go]
 NIL
@@ -812,20 +812,20 @@ Simulation management
 1
 
 TEXTBOX
-545
-457
-753
-495
+549
+475
+757
+513
 Demographics Model
 16
 53.0
 1
 
 MONITOR
-728
-530
-855
-575
+732
+548
+859
+593
 Adults rooming together
 count houses-hosting-adults2
 17
@@ -833,10 +833,10 @@ count houses-hosting-adults2
 11
 
 MONITOR
-913
-530
-1003
-575
+917
+548
+1007
+593
 Retired couples
 count houses-hosting-retired-couple
 17
@@ -844,10 +844,10 @@ count houses-hosting-retired-couple
 11
 
 MONITOR
-859
-530
-909
-575
+863
+548
+913
+593
 Family
 count houses-hosting-family
 17
@@ -855,10 +855,10 @@ count houses-hosting-family
 11
 
 MONITOR
-1008
-530
-1093
-575
+1012
+548
+1097
+593
 Multi-gen living
 count houses-hosting-multiple-generations
 17
@@ -1082,10 +1082,10 @@ is-closing-school-when-any-reported-case-measure?
 -1000
 
 SLIDER
-646
-633
-894
-666
+650
+651
+898
+684
 ratio-family-homes
 ratio-family-homes
 0
@@ -1160,10 +1160,10 @@ closed-non-essential?
 11
 
 SLIDER
-646
-598
-898
-631
+650
+616
+902
+649
 ratio-adults-homes
 ratio-adults-homes
 0
@@ -1175,10 +1175,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-646
-668
-894
-701
+650
+686
+898
+719
 ratio-retired-couple-homes
 ratio-retired-couple-homes
 0
@@ -1190,10 +1190,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-645
-705
-897
-738
+649
+723
+901
+756
 ratio-multi-generational-homes
 ratio-multi-generational-homes
 0
@@ -1352,10 +1352,10 @@ Taxes charged by the government
 1
 
 CHOOSER
-550
-481
-710
-526
+554
+499
+714
+544
 household-profiles
 household-profiles
 "custom" "Belgium" "Canada" "Germany" "Great Britain" "France" "Italy" "Korea South" "Netherlands" "Norway" "Spain" "Singapore" "Sweden" "U.S.A."
@@ -1495,10 +1495,10 @@ preset-scenario
 1
 
 MONITOR
-727
-482
-783
-527
+731
+500
+787
+545
 #children
 count children
 17
@@ -1506,10 +1506,10 @@ count children
 11
 
 MONITOR
-788
-482
-850
-527
+792
+500
+854
+545
 #students
 count students
 17
@@ -1517,10 +1517,10 @@ count students
 11
 
 MONITOR
-855
-481
-914
-526
+859
+499
+918
+544
 #workers
 count workers
 17
@@ -1528,10 +1528,10 @@ count workers
 11
 
 MONITOR
-916
-481
-975
-526
+920
+499
+979
+544
 #retired
 count retireds
 17
@@ -1569,20 +1569,20 @@ Closing universities
 1
 
 TEXTBOX
-911
-578
-1231
-627
+915
+596
+1235
+645
 Worker distribution (relevant for economic model)
 11
 53.0
 1
 
 TEXTBOX
-560
-822
-720
-897
+554
+827
+714
+902
 Density factors:\nRelative proximity between individuals within an activity type (impacts contamination risks).
 10
 125.0
@@ -1641,7 +1641,7 @@ Economic Model
 BUTTON
 803
 98
-1061
+1026
 133
 load scenario-specific parameter settings
 load-scenario-specific-parameter-settings
@@ -1992,10 +1992,10 @@ NIL
 HORIZONTAL
 
 INPUTBOX
-552
-598
-632
-661
+556
+616
+636
+679
 #households
 350.0
 1
@@ -2003,10 +2003,10 @@ INPUTBOX
 Number
 
 MONITOR
-552
-541
-627
-586
+556
+559
+631
+604
 #people
 count people
 17
@@ -2472,10 +2472,10 @@ NIL
 11
 
 BUTTON
-10
-257
-102
-292
+8
+297
+100
+332
 4 Weeks Run
 let starting-day current-day\nlet end-day starting-day + 28\nwhile [current-day <= end-day] [ go ]
 NIL
@@ -2737,10 +2737,10 @@ NIL
 11
 
 BUTTON
-10
-411
-103
-446
+8
+451
+101
+486
 go once
 go
 NIL
@@ -2754,10 +2754,10 @@ NIL
 1
 
 BUTTON
-10
-451
-105
-486
+8
+491
+103
+526
 inspect person
 inspect one-of people
 NIL
@@ -2952,10 +2952,10 @@ count people with [is-user-of-tracking-app?]
 11
 
 BUTTON
-648
-539
-711
-572
+652
+557
+715
+590
 set
 load-population-profile-based-on-current-preset-profile
 NIL
@@ -3366,10 +3366,10 @@ prioritize-testing-health-care?
 -1000
 
 BUTTON
-11
-147
-103
-180
+9
+187
+101
+220
 1 Day run
 if slice-of-the-day = \"morning\" [go]\nwhile [slice-of-the-day != \"morning\"] [go]
 NIL
@@ -3859,9 +3859,9 @@ HORIZONTAL
 
 TEXTBOX
 554
-776
-1120
-816
+781
+1091
+821
 Proxemics is represented as \"meeting spaces\" people can move into and be infected or spread infection.\nAs simplifications: each person relates to a fix set of spaces over time (same school, bus, bar) and gets in contact with everyone sharing this space; no contamination due to left germs.
 10
 125.0
@@ -4283,10 +4283,10 @@ NIL
 1
 
 PLOT
-550
+549
 307
-986
-447
+990
+474
 Deliberation information count
 NIL
 NIL
@@ -4347,10 +4347,10 @@ PENS
 "pen-1" 1.0 0 -13840069 true "" "plot count people"
 
 INPUTBOX
-1000
-423
-1145
-483
+1042
+74
+1187
+134
 ce-log-agent-id
 166.0
 1
@@ -4420,10 +4420,10 @@ ce-free-time-add-to-leisure
 Number
 
 INPUTBOX
-1382
-300
-1594
-360
+1390
+262
+1602
+322
 ce-risk-avoidance-private-leisure-preference
 0.65
 1
@@ -4432,9 +4432,9 @@ Number
 
 SWITCH
 1000
-310
+396
 1202
-343
+429
 ce-enable-global-lockdown
 ce-enable-global-lockdown
 0
@@ -4464,21 +4464,21 @@ ce-need-critical-threshold
 Number
 
 SWITCH
-1000
-387
-1126
-420
+1042
+38
+1168
+71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
 INPUTBOX
-1382
-363
-1560
-423
+1390
+325
+1568
+385
 ce-risk-avoidance-home-preference
 0.5
 1
@@ -4486,21 +4486,21 @@ ce-risk-avoidance-home-preference
 Number
 
 SWITCH
-1382
-226
-1699
-259
+1000
+331
+1198
+364
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
 TEXTBOX
-1386
-207
-1613
-237
+1390
+206
+1617
+236
 Experimental settings (deliberation)
 12
 125.0
@@ -4531,16 +4531,16 @@ TEXTBOX
 208
 1358
 226
-Experimental settings
+SSC Settings
 12
 125.0
 1
 
 SWITCH
-1382
-263
-1556
-296
+1390
+225
+1564
+258
 ce-private-leisure-by-risk
 ce-private-leisure-by-risk
 1
@@ -4558,10 +4558,10 @@ ce: context experiment
 1
 
 SWITCH
-1000
-348
-1198
-381
+1211
+433
+1409
+466
 ce-enable-need-balancing
 ce-enable-need-balancing
 1
@@ -4586,14 +4586,14 @@ CHOOSER
 306
 ce-context-depth
 ce-context-depth
-0 1 2 3 4
-3
+0 1 2 3 4 5
+1
 
 SWITCH
-1182
-389
-1368
-422
+1212
+397
+1398
+430
 ce-disable-conflict-checking
 ce-disable-conflict-checking
 1
@@ -4601,40 +4601,40 @@ ce-disable-conflict-checking
 -1000
 
 TEXTBOX
-1207
-371
-1357
-389
-In depth experiments
+1003
+376
+1153
+394
+Policy settings
 11
 125.0
 1
 
 TEXTBOX
-4
-184
-154
-202
+6
+224
+114
+242
 Run until Mon Morning
 11
 125.0
 1
 
 TEXTBOX
-15
-240
-165
-258
+13
+280
+163
+298
 1 Week = 28 Days
 11
 125.0
 1
 
 BUTTON
-10
-295
-102
-328
+8
+335
+100
+368
 8 Weeks Run
 let starting-day current-day\nlet end-day starting-day + 56\nwhile [current-day <= end-day] [ go ]
 NIL
@@ -4648,10 +4648,10 @@ NIL
 1
 
 BUTTON
-11
-332
-102
-365
+9
+372
+100
+405
 12 Weeks Run
 let starting-day current-day\nlet end-day starting-day + 84\nwhile [current-day <= end-day] [ go ]
 NIL
@@ -4665,12 +4665,69 @@ NIL
 1
 
 BUTTON
-11
-369
-103
-402
+9
+409
+101
+442
 16 Weeks Run
 let starting-day current-day\nlet end-day starting-day + 112\nwhile [current-day <= end-day] [ go ]
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+TEXTBOX
+1047
+20
+1197
+38
+Context log
+11
+125.0
+1
+
+TEXTBOX
+1215
+378
+1365
+396
+Other deliberation settings
+11
+125.0
+1
+
+TEXTBOX
+1003
+315
+1192
+333
+AUTO: If ce-context-depth = 5 [ True
+11
+14.0
+1
+
+TEXTBOX
+811
+136
+1011
+164
+Always press this button after changing parameters, or press load & setup
+11
+14.0
+1
+
+BUTTON
+11
+106
+100
+139
+load & setup
+load-and-setup
 NIL
 1
 T

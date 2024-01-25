@@ -6,6 +6,9 @@ __includes [ "decision_context/profiler_speed_test_functions.nls"
   "decision_context/context_state_obligation_work_home.nls" "decision_context/context_state_sick_obligation_work_home.nls"
   "decision_context/context_state_free_time.nls" "decision_context/context_state_sick_free_time.nls" ]
 
+; =================================================
+;  Extra variables for initialization
+; =================================================
 to context-init-variables
   set leisure-satisfaction-balanced 0
   set luxury-satisfaction-balanced 0
@@ -22,6 +25,9 @@ to context-init-variables
   set table-profiler-salient-needs table:make
 end
 
+; =================================================
+;  The function that replaces the original 'select-activity' function
+; =================================================
 ; This function is the same as in select_activity.nls, with the exception
 ; of calling conextual-deliberation-select-activity instead of
 ; my-preferred-available-activity-descriptor
@@ -45,7 +51,9 @@ to context-select-activity
   if ce-log-agent and who = ce-log-agent-id [ print (word "- Final action: " ([gathering-type] of current-activity) ", " current-motivation ", " is-i-apply-social-distancing?)  ]
 end
 
-; This function contains the statemachine used for context-sensitive deliberation
+; =================================================
+;  The decision tree 
+; =================================================
 to-report context-deliberation-select-activity
   reset-delib-count
   profiler-speed-test-functions

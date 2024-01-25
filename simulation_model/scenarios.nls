@@ -48,6 +48,10 @@ to load-scenario-specifics
       set all-self-isolate-for-35-days-when-first-hitting-2%-infected? true
       set ratio-self-quarantining-when-symptomatic 0.8
     ]
+    
+    ifelse ce-context-depth = 5
+    [ set ce-enable-salient-food-luxury-forced-obligation true ]
+    [ set ce-enable-salient-food-luxury-forced-obligation false ] 
     stop
   ]
   

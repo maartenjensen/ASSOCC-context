@@ -12,6 +12,12 @@ globals[#min-workers-in-adults-homes
   #min-retirees-in-multi-generational-homes
   distribution-control-variable
 ]
+
+to load-and-setup
+  load-scenario-specific-parameter-settings
+  setup
+end
+
 to setup
   clear-all
   reset-ticks
