@@ -1,6 +1,6 @@
 profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
-  df_results = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, need_balancing=NA, private_leisure_risk=NA,
+  df_results = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, global_lockdown=NA,
                           function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
   
   print("- GO Function")
@@ -22,7 +22,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
 
         result_v = profilerStrToVWithoutWhiteSpaces(df_initial[i,1])
         settings_v = profilerSettingStrToV(file_name)
-        df_new_line = c(settings_v[1], settings_v[2], settings_v[3], settings_v[4], settings_v[5], settings_v[6],
+        df_new_line = c(settings_v[1], settings_v[2], settings_v[3], settings_v[4], settings_v[5],
                          result_v[1], as.double(result_v[2]), result_v[3], result_v[4], result_v[5])
         df_results = rbind(df_results, df_new_line)
       }
@@ -33,7 +33,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   }
   
   # Making the Dataframe nice
-  colnames(df_results) <- c("context", "households", "random_seed", "action_space", "need_balancing", "private_leisure_risk", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
+  colnames(df_results) <- c("context", "households", "random_seed", "action_space", "global_lockdown", "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
   df_results$households = as.integer(df_results$households)
   df_results$random_seed = as.integer(df_results$random_seed)
   df_results$action_space = as.integer(df_results$action_space)
@@ -49,7 +49,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
 
 profilerLoadSpecificData <- function(p_df_profiler, p_string) {
   
-  df_profiler_specific = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, need_balancing=NA, private_leisure_risk=NA,
+  df_profiler_specific = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, global_lockdown=NA,
                                     function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
   
   # Check if it is a single string
@@ -128,9 +128,7 @@ profilerSettingStrToV <- function(p_str) {
   while (length(t_settings_vector) == 0) {
     if (str_split[t_index] == "C") {
       t_index = t_index + 3
-      if (str_split[t_index] == "f") { t_settings_vector <- c(t_settings_vector, FALSE); t_index = t_index + 1 }
-      else if (str_split[t_index] == "t") { t_settings_vector <- c(t_settings_vector, TRUE) }
-      else { stop(paste(p_str, " is not a valid string", sep = "")) }
+      t_settings_vector <- c(t_settings_vector, str_split[t_index])
     }
     t_index = t_index + 1
   }
@@ -176,22 +174,32 @@ profilerSettingStrToV <- function(p_str) {
     }
     t_index = t_index + 1
   }
-  # Check N= Need balancing
+  # Check L= Global Lockdown
   while (length(t_settings_vector) == 4) {
-    if (str_split[t_index] == "N") {
+    if (str_split[t_index] == "L") {
       t_index = t_index + 3
+      if (str_split[t_index] == "f") { t_settings_vector <- c(t_settings_vector, FALSE); t_index = t_index + 1 }
+      else if (str_split[t_index] == "t") { t_settings_vector <- c(t_settings_vector, TRUE) }
       t_settings_vector <- c(t_settings_vector, str_split[t_index])
     }
     t_index = t_index + 1
   }
+  # Check N= Need balancing
+  #while (length(t_settings_vector) == 4) {
+  #  if (str_split[t_index] == "N") {
+  #    t_index = t_index + 3
+  #    t_settings_vector <- c(t_settings_vector, str_split[t_index])
+  #  }
+  #  t_index = t_index + 1
+  #}
   # Check PR= Private Leisure Risk
-  while (length(t_settings_vector) == 5) {
-    if (str_split[t_index] == "P") {
-      t_index = t_index + 4
-      t_settings_vector <- c(t_settings_vector, str_split[t_index])
-    }
-    t_index = t_index + 1
-  }
+  #while (length(t_settings_vector) == 5) {
+  #  if (str_split[t_index] == "P") {
+  #    t_index = t_index + 4
+  #    t_settings_vector <- c(t_settings_vector, str_split[t_index])
+  #  }
+  #  t_index = t_index + 1
+  #}
   
   return(t_settings_vector)
 }

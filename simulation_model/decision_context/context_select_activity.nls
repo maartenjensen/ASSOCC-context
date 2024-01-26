@@ -62,6 +62,17 @@ to-report context-deliberation-select-activity
   if ce-log-agent and who = ce-log-agent-id [ print (word ":" slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) ":") ]
   
   set delib-count-minimal-context 1
+  
+  ; Check whether the agent should rigidly follow quarantine and then let the agent stay home if the agent needs to
+  if ce-check-should-rigidly-follow-quarantine and ce-context-depth >= 3
+  [
+    set chosen-action context-check-should-rigidly-follow-quarantine
+    if not empty? chosen-action
+    [
+      report chosen-action
+    ]
+  ]
+  
   ; Check whether not night (day time) and (retired or not a working day)
   ifelse (slice-of-the-day != "night")
   [
@@ -141,6 +152,33 @@ to-report context-deliberation-select-activity
   report my-preferred-available-activity-descriptor
 end
 
+; =================================================
+;  Additional functions 
+; =================================================
+to-report context-check-should-rigidly-follow-quarantine
+  ifelse not context-is-agent-sick
+  [  ; If the agent is not sick just check the normative
+    if context-normative-should-I-stay-home
+    [ report context-state-quarantine-rigidly-normative-home-succeeded (context-determine-social-distancing (list my-home "rest")) ]
+  ]
+  [  ; if the agent is sick check whether the agent needs and can get treatment
+    let chosen-action context-state-sick-check-treatment
+    ifelse not empty? chosen-action
+    [ report context-state-sick-check-treatment-succeeded chosen-action ]
+    [ ; The agent should stay home when sick
+      report context-state-sick-rigidly-normative-home-succeeded (context-determine-social-distancing (list my-home "rest"))
+    ]
+  ]
+  report []
+end
+
+to-report context-state-sick-rigidly-normative-home-succeeded [p-param]
+  report p-param 
+end
+
+to-report context-state-quarantine-rigidly-normative-home-succeeded [p-param]
+  report p-param
+end
 ; =================================================
 ;  Deliberation and context exploration functions
 ; =================================================

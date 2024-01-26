@@ -23,12 +23,17 @@ libraries_loaded = TRUE
 #-   GENERAL PARAMETERS   -
 filepath_workspace <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
-filenames_profiler <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
-                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
-                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
+# filenames_profiler <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
+#                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
+#                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
 # #"report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= true].csv" is omitted.
 
-filenames_realism  <- c("covid-sim ContextNeedBalancing-first-test.csv")
+filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false].csv",
+                        "report-[C= 0 -H= 350 -R= 1 -A= 6 -L= true].csv",
+                        "report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
+                        "report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
+
+filenames_realism  <- c("covid-sim original vs habits short.csv") # covid-sim ContextNeedBalancing-first-test.csv")
 
 one_plot = TRUE
 
@@ -48,7 +53,8 @@ df_profiler_csn = profilerLoadSpecificData(df_profiler, "CSN")
 df_profiler_cssn = profilerLoadSpecificData(df_profiler, "CSSN")
 df_profiler_cso = profilerLoadSpecificData(df_profiler, "CSO-")
 df_profiler_csso = profilerLoadSpecificData(df_profiler, "CSSO-")
-df_profiler_csowh = profilerLoadSpecificData(df_profiler, "CSSOWH")
+df_profiler_csowh = profilerLoadSpecificData(df_profiler, "CSOWH")
+df_profiler_cssowh = profilerLoadSpecificData(df_profiler, "CSSOWH")
 df_profiler_csft = profilerLoadSpecificData(df_profiler, "CSFT")
 df_profiler_cssft = profilerLoadSpecificData(df_profiler, "CSSFT")
 

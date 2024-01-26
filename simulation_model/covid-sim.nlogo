@@ -1183,7 +1183,7 @@ ratio-retired-couple-homes
 ratio-retired-couple-homes
 0
 1
-0.312
+0.26
 0.01
 1
 NIL
@@ -4387,10 +4387,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-1707
-513
-1825
-573
+1706
+549
+1824
+609
 ce-add-to-luxury
 0.1
 1
@@ -4398,10 +4398,10 @@ ce-add-to-luxury
 Number
 
 INPUTBOX
-1706
-449
-1834
-509
+1705
+485
+1833
+545
 ce-day-add-to-sleep
 0.2
 1
@@ -4409,10 +4409,10 @@ ce-day-add-to-sleep
 Number
 
 INPUTBOX
-1706
-384
-1855
-444
+1705
+420
+1854
+480
 ce-free-time-add-to-leisure
 -0.4
 1
@@ -4558,10 +4558,10 @@ ce: context experiment
 1
 
 SWITCH
-1211
-433
-1409
-466
+1705
+384
+1903
+417
 ce-enable-need-balancing
 ce-enable-need-balancing
 1
@@ -4587,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-1
+3
 
 SWITCH
 1212
@@ -4737,6 +4737,17 @@ NIL
 NIL
 NIL
 1
+
+SWITCH
+1212
+435
+1466
+468
+ce-check-should-rigidly-follow-quarantine
+ce-check-should-rigidly-follow-quarantine
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5399,8 +5410,9 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-F=" #enable-salient-food-luxury-forced-obligation)</final>
-    <timeLimit steps="240"/>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown)</final>
+    <timeLimit steps="320"/>
+    <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
     <metric>#admissions-last-tick</metric>
@@ -5528,27 +5540,37 @@ setup</setup>
     <enumeratedValueSet variable="ce-context-depth">
       <value value="0"/>
       <value value="1"/>
-      <value value="2"/>
-      <value value="3"/>
-      <value value="4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-quarantine">
+    <enumeratedValueSet variable="ce-enable-global-lockdown">
+      <value value="false"/>
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-disable-conflict-checking">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#households-for-context-scenario">
+    <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#action-space">
+    <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#need-salient-threshold">
+    <enumeratedValueSet variable="ce-need-salient-threshold">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#need-critical-threshold">
+    <enumeratedValueSet variable="ce-need-critical-threshold">
       <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-private-leisure-preference">
+      <value value="0.65"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-home-preference">
+      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-enable-need-balancing">
       <value value="false"/>
@@ -5562,15 +5584,8 @@ setup</setup>
     <enumeratedValueSet variable="ce-add-to-luxury">
       <value value="0.1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+    <enumeratedValueSet variable="ce-log-agent">
       <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
-      <value value="0.65"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-salient-food-luxury-forced-obligation">
-      <value value="false"/>
-      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
