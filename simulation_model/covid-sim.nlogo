@@ -1183,7 +1183,7 @@ ratio-retired-couple-homes
 ratio-retired-couple-homes
 0
 1
-0.26
+0.312
 0.01
 1
 NIL
@@ -2838,7 +2838,7 @@ INPUTBOX
 914
 87
 #random-seed
-1.0
+3.0
 1
 0
 Number
@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4437,7 +4437,7 @@ SWITCH
 429
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4470,7 +4470,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-0
+1
 1
 -1000
 
@@ -4492,7 +4492,7 @@ SWITCH
 364
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4587,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-3
+5
 
 SWITCH
 1212
@@ -4743,9 +4743,9 @@ SWITCH
 435
 1466
 468
-ce-check-should-rigidly-follow-quarantine
-ce-check-should-rigidly-follow-quarantine
-0
+ce-should-rigidly-follow-quarantine
+ce-should-rigidly-follow-quarantine
+1
 1
 -1000
 
@@ -5410,8 +5410,8 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown)</final>
-    <timeLimit steps="320"/>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine)</final>
+    <timeLimit steps="10"/>
     <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
@@ -5540,16 +5540,24 @@ setup</setup>
     <enumeratedValueSet variable="ce-context-depth">
       <value value="0"/>
       <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-enable-global-lockdown">
       <value value="false"/>
-      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-disable-conflict-checking">
       <value value="false"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-should-rigidly-follow-quarantine">
+      <value value="false"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>

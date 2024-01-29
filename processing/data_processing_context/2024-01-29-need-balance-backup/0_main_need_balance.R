@@ -28,12 +28,12 @@ filepath_workspace <- "D:/SimulationToolkits/ASSOCC-context/processing/data_proc
 #                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
 # #"report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= true].csv" is omitted.
 
-filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false].csv",
-                        "report-[C= 0 -H= 350 -R= 1 -A= 6 -L= true].csv",
-                        "report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
-                        "report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
+filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv")#,
+                        #"report-[C= 0 -H= 350 -R= 1 -A= 6 -L= true].csv",
+                        #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
+                        #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
 
-filenames_realism  <- c("covid-sim original vs habits short.csv") # covid-sim ContextNeedBalancing-first-test.csv")
+filenames_realism  <- c("covid-sim-small-full-test-scalability.csv") # covid-sim ContextNeedBalancing-first-test.csv")
 
 one_plot = TRUE
 

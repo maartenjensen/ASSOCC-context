@@ -64,7 +64,7 @@ to-report context-deliberation-select-activity
   set delib-count-minimal-context 1
   
   ; Check whether the agent should rigidly follow quarantine and then let the agent stay home if the agent needs to
-  if ce-check-should-rigidly-follow-quarantine and ce-context-depth >= 3
+  if ce-should-rigidly-follow-quarantine and ce-context-depth >= 3
   [
     set chosen-action context-check-should-rigidly-follow-quarantine
     if not empty? chosen-action
