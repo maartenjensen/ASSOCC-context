@@ -90,6 +90,9 @@ profilerSummarize <- function(df_profiler, df_profiler_overview) {
   print("Profiler summary")
   print("----------------------------")
   print(df_profiler_overview)
+  # I need a way to combine the data, but I don't know how.
+  # I just forgot so much about R, pff do I want to spend the whole day on R?? I don't know
+  # I think I'm soo tired I really need to go home. 
   # It depends on what I want to know, what is going to be in this function.
 }
 
