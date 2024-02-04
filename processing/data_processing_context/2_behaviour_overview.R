@@ -39,8 +39,6 @@ filesPath <- ""
 dataFileNames <- c("covid-sim-behaviour-space-3-runs-full-context.csv")
 filesNames   <- dataFileNames
 
-one_plot <- TRUE
-
 #=============================================================
 #========================= LOAD DATA =========================
 #=============================================================
@@ -124,135 +122,67 @@ random_seed = 1
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
 #=============================================================
-#================ PLOT DELIBERATION TYPE =====================
+#============= PLOT FOR LOOP FOR EVERYTHING ==================
 #=============================================================
+
+# One of: "none", "one", "all"
+plot_type <- "none"
+#plot_type <- "one" 
+plot_type <- "all"
+
+gl_pdf_width = 9
+gl_pdf_height = 6
+
+if (plot_type == "all") { pdf("plot_context_assocc_complete.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 
 # Now I want to plot the different types of deliberation
 # I want to plot the following columns: Minimal context, Most salient need, Compare need levels, Normative deliberation, Conformity deliberation, Full need
+# Potentially remove Compare need levels
+# For deliberation types:
+# Should the agent numbers be a percentage?? Well to be honest I think so, but I can do this in Netlogo! That's way easier!
 
 depth_value = 5
-subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
-
-
-# Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
-subset_df <- select(subset_df, tick, ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
-seg_acc_deliberation_type <- gather(subset_df, DelibType, measurement, `Minimal context`:`Full need`)
-
-p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
-
-# col  = for the outline
-# fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
-p <- ggplot(seg_acc_deliberation_type, aes(x = tick, y = measurement, col=DelibType)) + geom_line()
-p <- p + scale_colour_manual(
-  labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
-           'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
-           'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
-  values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
-  breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
-p <- p + theme_bw()
-show(p)
-
-p <- ggplot(seg_acc_deliberation_type, aes(x = tick, y = measurement,group = DelibType, fill = DelibType), fill=NA) + geom_line(aes(col=DelibType))
-
-seg_acc_deliberation_type %>%
-  ggplot(aes(x = tick, 
-             y = measurement,
-             group = DelibType,
-             fill = DelibType), fill=NA) +
-  geom_line(aes(col=DelibType)) +
-  xlab("Ticks") +
-  ylab("Used by n agents") +
-  labs(title="Deliberation types") +
-  #guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-  theme_bw() + scale_color_manual(values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'))
-
-
-+ scale_fill_manual(
-  labels=c('Low'='Lowest','Med'='Medium','High'='Highest'),
-  values=c('red','blue','green'),
-  breaks=c('Low','Med','High'))
-
-
-seg_acc_deliberation_type %>%
-  ggplot(aes(x = tick, 
-             y = value,
-             group = need_type,
-             fill = need_type), fill=NA) +
-  geom_line(aes(col=need_type)) +
-  xlab("Ticks") +
-  ylab("Used by n agents") +
-  labs(title="Deliberation types") +
-  guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-  theme_bw() + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
-
-
-
-plot_data %>%
-  ggplot(aes(x = tick, 
-             y = value,
-             group = DelibType,
-             fill = DelibType), fill=NA) +
-  geom_line(aes(col=DelibType)) +
-  xlab("Ticks") +
-  ylab("Used by n agents") +
-  labs(title="Deliberation types") +
-  guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-  gl_plot_theme + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
-
-
-
-gl_plot_theme <- theme_bw()
-#gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
-#                                      axis.text = element_text(size = rel(1.3 * multiplier)),
-#                                      axis.title = element_text(size = rel(1.3 * multiplier)),
-#                                      legend.text = element_text(size = rel(1 * multiplier)),
-#                                      legend.title = element_text(size = rel(1 * multiplier)),
-#                                      title = element_text(size = rel(1.3 * multiplier)) )
-
-# Filter the dataframe for ce_context_depth values from 0 to 5
-for (depth in 0:5) {
-  # Create a subset dataframe for the current ce_context_depth
-  subset_df <- df_final[df_final$ce_context_depth == depth, ]
+for (depth_value in 0:5)
+{
+  subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
   
-  # Gather the columns for plotting
-  plot_data <- subset_df %>%
-    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`) %>%
-    gather(key = "need_type", value = "value", -ce_context_depth)
+  # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
+  subset_df <- select(subset_df, tick, ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
+  seg_acc_deliberation_type <- gather(subset_df, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
   
-  plot_data %>%
-    ggplot(aes(x = tick, 
-               y = value,
-               group = DelibType,
-               fill = DelibType), fill=NA) +
-    geom_line(aes(col=DelibType)) +
-    xlab("Ticks") +
-    ylab("Used by n agents") +
-    labs(title="Deliberation types") +
-    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-    gl_plot_theme + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+  p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
+  
+  # col  = for the outline
+  # fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
+  p <- ggplot(seg_acc_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
+             'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
+             'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
+    values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
+    breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
+  p <- p + xlab("Ticks") + ylab("Used by n agents")
+  p <- p + theme_bw()
+
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
+  show(p)
+  if (plot_type == "one") { dev.off() }
 }
 
+if (plot_type == "all") { dev.off() }
 
 
-# Create a subset dataframe for the current ce_context_depth
-subset_df <- df_final[df_final$ce_context_depth == depth, ]
-
-# Gather the columns for plotting
-plot_data <- subset_df %>%
-  select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`) %>%
-  gather(key = "need_type", value = "value", -ce_context_depth)
-
-plot_data %>%
-  ggplot(aes(x = tick, 
-             y = value,
-             group = DelibType,
-             fill = DelibType), fill=NA) +
-  geom_line(aes(col=DelibType)) +
-  xlab("Ticks") +
-  ylab("Used by n agents") +
-  labs(title="Deliberation types") +
-  guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-  gl_plot_theme + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
 
 
 
@@ -290,8 +220,6 @@ if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl
 plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 if (!one_plot) { dev.off() }
 
-
-gather
 
 
 # Function to create line plots for each need type
