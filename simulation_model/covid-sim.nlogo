@@ -5538,6 +5538,12 @@ setup</setup>
     <metric>count people with [delib-count-normative-consideration = 1]</metric>
     <metric>count people with [delib-count-conformity-network-action = 1]</metric>
     <metric>count people with [delib-count-full-need = 1]</metric>
+    <metric>(count people with [delib-count-minimal-context = 1]) / count people</metric>
+    <metric>(count people with [delib-count-determine-most-salient-need = 1]) / count people</metric>
+    <metric>(count people with [delib-count-compare-need-levels = 1]) / count people</metric>
+    <metric>(count people with [delib-count-normative-consideration = 1]) / count people</metric>
+    <metric>(count people with [delib-count-conformity-network-action = 1]) / count people</metric>
+    <metric>(count people with [delib-count-full-need = 1]) / count people</metric>
     <metric>mean [delib-count-total-minimal-context] of people</metric>
     <metric>mean [delib-count-total-determine-most-salient-need] of people</metric>
     <metric>mean [delib-count-total-compare-need-levels] of people</metric>
