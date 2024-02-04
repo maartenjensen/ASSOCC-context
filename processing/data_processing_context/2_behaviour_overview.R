@@ -36,7 +36,7 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileNames <- c("covid-sim-behaviour-space-3-runs-full-context.csv")
+dataFileNames <- c("2024-02-04-no-lockdown-full.csv")#c("covid-sim-behaviour-space-3-runs-full-context.csv")
 filesNames   <- dataFileNames
 
 #=============================================================
@@ -184,8 +184,67 @@ if (plot_type == "all") { dev.off() }
 
 
 
+#=============================================================
+#==================== PLOT INFECTIONS  =======================
+#=============================================================
+
+gl_plot_theme  <- theme_bw()
+gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
+
+plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
+                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0, p_limits = coord_cartesian(xlim = c(0, 240))) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement)) +
+    geom_line(aes(col=as.factor(context_sensitive_deliberation))) +
+    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
+    scale_colour_viridis_d(name="Context") +
+    labs(title=p_title,
+         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
+         x="Days", y=p_y_lab) +
+    gl_plot_guides + gl_plot_theme + p_limits
+}
+
+df_data <- df_final %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(infected = mean(infected, na.rm = TRUE),
+            believe_infected = mean(believe_infected, na.rm = TRUE),
+            tests_performed = mean(tests_performed, na.rm = TRUE),
+            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
+            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
+
+plots_data_infected <- gather(df_data, variable, measurement, infected)
+
+if (plot_type == "one") { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected", p_limits=coord_cartesian(xlim = c(0, 240)))
+if (plot_type == "one") { dev.off() }
+
+# Epistemic infected
+plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
+
+if (plot_type == "one") { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
+                 "Number of agents believing they are infected")
+if (plot_type == "one") { dev.off() }
+
+# Total deaths
+plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
+
+if (plot_type == "one") { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
+if (plot_type == "one") { dev.off() }
 
 
+
+
+
+
+
+
+#=============================================================
+#========================== OLD STUFF ========================
+#=============================================================
 
 df_action_space = df_final[df_final$action_space==6, ]
 
