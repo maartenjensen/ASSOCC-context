@@ -5415,6 +5415,10 @@ setup</setup>
     <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
+    <metric>count people with [infection-status = "healthy"]</metric>
+    <metric>count people with [infection-status = "immune"]</metric>
+    <metric>count people with [is-believing-to-be-immune?]</metric>
+    <metric>count people with [infection-status = "healthy" or infection-status = "immune"]</metric>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>

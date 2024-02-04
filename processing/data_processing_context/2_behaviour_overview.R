@@ -265,63 +265,6 @@ for (depth in 0:5) {
 #------------------------ END OF DATAFRAME PREPARATIONS ---------------
 #------------------------ START OF PLOTTING  -------------
 
-Based on the graphs I need
-- MOST IMPORTANT, deliberation type graph: counter variables
-- Infection graph: healthy, infected, epistemic infected.
-- Activity graph: the locations agents are at
-- Needs graphs: the average needs for agents
-
-DELIBERATION TYPE GRAPH
-set delib-count-minimal-context 0
-set delib-count-determine-most-salient-need 0
-set delib-count-compare-need-levels 0
-set delib-count-normative-consideration 0
-set delib-count-conformity-network-action 0
-set delib-count-full-need 0
-
-set delib-count-total-minimal-context 0
-set delib-count-total-determine-most-salient-need 0
-set delib-count-total-compare-need-levels 0
-set delib-count-total-normative-consideration 0
-set delib-count-total-conformity-network-action 0
-set delib-count-total-full-need 0
-
-INFECTION GRAPH 
-Add healthy???
-
-[22] "infected"                                                                                                                          
-[23] "believe_infected"                                                                                                                  
-[24] "admissions_last_tick"                                                                                                              
-[25] "taken_hospital_beds"                                                                                                               
-[26] "denied_requests_for_hospital_beds"                                                                                                 
-[27] "dead_people" 
-
-ACTIVITY GRAPH
-[80] "count_people_with_is_at_work"                                                                                                      
-[81] "count_people_with_is_at_public_leisure_place"                                                                                      
-[82] "count_people_with_is_at_private_leisure_place"                                                                                     
-[83] "count_people_with_is_at_home"                                                                                                      
-[84] "count_people_with_is_at_school"                                                                                                    
-[85] "count_people_with_is_at_university"                                                                                                
-[86] "count_people_with_current_motivation_treatment_motive"                                                                             
-[87] "count_people_at_essential_shops"                                                                                                   
-[88] "count_people_at_non_essential_shops"  
-
-Is this the right thing to check? There are even counts for children, students, workers, and retired.  
-
-NEED GRAPH
-[125] "belonging"                                                                                                                         
-[126] "risk_avoidance"                                                                                                                    
-[127] "autonomy"                                                                                                                          
-[128] "luxury"                                                                                                                            
-[129] "health"                                                                                                                            
-[130] "sleep"                                                                                                                             
-[131] "compliance"                                                                                                                        
-[132] "financial_stability"                                                                                                               
-[133] "food_safety"                                                                                                                       
-[134] "leisure"                                                                                                                           
-[135] "financial_survival"                                                                                                                
-[136] "conformity"                                                                                                                         
 
 
 #======================================================================
