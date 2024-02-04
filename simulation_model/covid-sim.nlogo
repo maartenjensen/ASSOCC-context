@@ -4470,7 +4470,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
@@ -4492,7 +4492,7 @@ SWITCH
 364
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4587,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-5
+4
 
 SWITCH
 1212
@@ -5411,7 +5411,7 @@ load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine)</final>
-    <timeLimit steps="100"/>
+    <timeLimit steps="240"/>
     <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
@@ -5534,6 +5534,12 @@ setup</setup>
     <metric>count people with [delib-count-normative-consideration = 1]</metric>
     <metric>count people with [delib-count-conformity-network-action = 1]</metric>
     <metric>count people with [delib-count-full-need = 1]</metric>
+    <metric>mean [delib-count-total-minimal-context] of people</metric>
+    <metric>mean [delib-count-total-determine-most-salient-need] of people</metric>
+    <metric>mean [delib-count-total-compare-need-levels] of people</metric>
+    <metric>mean [delib-count-total-normative-consideration] of people</metric>
+    <metric>mean [delib-count-total-conformity-network-action] of people</metric>
+    <metric>mean [delib-count-total-full-need] of people</metric>
     <enumeratedValueSet variable="context-sensitive-deliberation?">
       <value value="true"/>
     </enumeratedValueSet>

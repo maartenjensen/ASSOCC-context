@@ -96,6 +96,8 @@ profilerSummarize <- function(df_profiler, df_profiler_overview) {
   # It depends on what I want to know, what is going to be in this function.
 }
 
+
+
 #-----------------------
 #--- EXTRA FUNCTIONS ---
 #-----------------------

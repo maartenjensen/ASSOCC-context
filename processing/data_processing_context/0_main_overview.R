@@ -9,16 +9,19 @@ if (!exists("libraries_loaded"))
   library(ggplot2)
   library(sjmisc)
   library(readr)
+  
+  #first empty working memory 
+  rm(list=ls())
+  libraries_loaded = TRUE
+} else {
+  #first empty working memory 
+  rm(list=ls()) 
   libraries_loaded = TRUE
 }
 
 #-------------------------------
 #---     INITIALIZATION      ---
 #-------------------------------
-
-#--- WORKSPACE AND DIRECTORY ---
-rm(list=ls()) 
-libraries_loaded = TRUE
 
 #-   GENERAL PARAMETERS   -
 filepath_workspace <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
@@ -54,6 +57,7 @@ filenames_realism  <- c("covid-sim-small-full-test-scalability.csv") # covid-sim
 
 one_plot = TRUE
 
+#--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
 setwd(filepath_workspace)
 getwd()
@@ -83,7 +87,7 @@ profilerSummarize(df_profiler, df_profiler_overview)
 # calls of functions, such as the leisure functions.
 profilerPlotOverview(df_profiler, "", one_plot)
 
-options(scipen=100)
+options(scipen=100) # This is for the profiler results
 
 one_plot = FALSE
 gl_pdf_width  = 10
@@ -219,8 +223,8 @@ if (one_plot) { dev.off() }
 #--------------------------------------
 #--- REALISM - BEHAVIOUR/INFECTIONS ---
 #--------------------------------------
+# See file 2_behaviour_overview.R
 
-# I'll do this one later.
 
 #--------------------------------------
 #-  SUMMARY SCALABILITY AND REALISM   -

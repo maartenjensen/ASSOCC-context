@@ -1,12 +1,29 @@
-#install.packages("tidyverse")
+#--- LIBRARIES ---
+# Install the libraries
+#install.packages()
 
-#library(tidyverse)
-#library(ggplot2)
+# Open the libraries
+if (!exists("libraries_loaded"))
+{
+  library(tidyverse)
+  library(ggplot2)
+  library(sjmisc)
+  library(readr)
+  
+  #first empty working memory 
+  rm(list=ls())
+  libraries_loaded = TRUE
+} else {
+  #first empty working memory 
+  rm(list=ls()) 
+  libraries_loaded = TRUE
+}
 
-#first empty working memory 
-rm(list=ls()) 
+#-------------------------------
+#---     INITIALIZATION      ---
+#-------------------------------
 
-
+#--- WORKSPACE AND DIRECTORY ---
 setwd("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context")
 getwd()
 
@@ -19,8 +36,8 @@ getwd()
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileName <- c("covid-sim ContextNeedBalancing-first-test.csv")
-filesNames   <- dataFileName
+dataFileNames <- c("covid-sim-behaviour-space-3-runs-full-context.csv")
+filesNames   <- dataFileNames
 
 one_plot <- TRUE
 
@@ -85,11 +102,12 @@ colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames
 colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
 colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
 
-colnames(df_renamed)[match("count_people_with_delib_count_typical_1", colnames(df_renamed))] = "Typical";
-colnames(df_renamed)[match("count_people_with_delib_count_one_need_1", colnames(df_renamed))] = "One_need";
-colnames(df_renamed)[match("count_people_with_delib_count_one_need_conformity_1", colnames(df_renamed))] = "ON_Conformity";
-colnames(df_renamed)[match("count_people_with_delib_count_one_need_multi_actions_1", colnames(df_renamed))] = "ON_Multi_act";
-colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "All_needs";
+colnames(df_renamed)[match("count_people_with_delib_count_minimal_context_1", colnames(df_renamed))] = "Minimal context";
+colnames(df_renamed)[match("count_people_with_delib_count_determine_most_salient_need_1", colnames(df_renamed))] = "Most salient need";
+colnames(df_renamed)[match("count_people_with_delib_count_compare_need_levels_1", colnames(df_renamed))] = "Compare need levels";
+colnames(df_renamed)[match("count_people_with_delib_count_normative_consideration_1", colnames(df_renamed))] = "Normative deliberation";
+colnames(df_renamed)[match("count_people_with_delib_count_conformity_network_action_1", colnames(df_renamed))] = "Conformity deliberation";
+colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "Full need";
 
 colnames(df_renamed)[match("count_people_with_epistemic_infection_status_infected", colnames(df_renamed))] = "believe_infected";
 
@@ -97,6 +115,214 @@ df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_n
 print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
 
 df_final = df_renamed
+
+
+#=============================================================
+#================ PLOT DELIBERATION TYPE =====================
+#=============================================================
+
+gl_plot_theme <- theme_bw()
+#gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
+#                                      axis.text = element_text(size = rel(1.3 * multiplier)),
+#                                      axis.title = element_text(size = rel(1.3 * multiplier)),
+#                                      legend.text = element_text(size = rel(1 * multiplier)),
+#                                      legend.title = element_text(size = rel(1 * multiplier)),
+#                                      title = element_text(size = rel(1.3 * multiplier)) )
+
+# Filter the dataframe for ce_context_depth values from 0 to 5
+for (depth in 0:5) {
+  # Create a subset dataframe for the current ce_context_depth
+  subset_df <- df_final[df_final$ce_context_depth == depth, ]
+  
+  # Gather the columns for plotting
+  plot_data <- subset_df %>%
+    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`) %>%
+    gather(key = "need_type", value = "value", -ce_context_depth)
+  
+  plot_data %>%
+    ggplot(aes(x = tick, 
+               y = value,
+               group = DelibType,
+               fill = DelibType), fill=NA) +
+    geom_line(aes(col=DelibType)) +
+    xlab("Ticks") +
+    ylab("Used by n agents") +
+    labs(title="Deliberation types") +
+    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
+    gl_plot_theme + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+}
+
+
+
+# Create a subset dataframe for the current ce_context_depth
+subset_df <- df_final[df_final$ce_context_depth == depth, ]
+
+# Gather the columns for plotting
+plot_data <- subset_df %>%
+  select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`) %>%
+  gather(key = "need_type", value = "value", -ce_context_depth)
+
+plot_data %>%
+  ggplot(aes(x = tick, 
+             y = value,
+             group = DelibType,
+             fill = DelibType), fill=NA) +
+  geom_line(aes(col=DelibType)) +
+  xlab("Ticks") +
+  ylab("Used by n agents") +
+  labs(title="Deliberation types") +
+  guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
+  gl_plot_theme + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+
+
+
+
+df_action_space = df_final[df_final$action_space==6, ]
+
+plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = DelibType,
+               fill = DelibType), fill=NA) +
+    geom_line(aes(col=DelibType)) +
+    xlab("Ticks") +
+    ylab("Used by n agents") +
+    labs(title=p_title) +
+    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
+    gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
+}
+
+df_deliberation_type <- df_action_space %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(Typical = mean(Typical, na.rm = TRUE),
+            Most_salient = mean(One_need, na.rm = TRUE),
+            MS_Conf = mean(ON_Conformity, na.rm = TRUE),
+            MS_Multi = mean(ON_Multi_act, na.rm = TRUE),
+            All_needs = mean(All_needs, na.rm = TRUE))
+
+seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
+
+limits = coord_cartesian(xlim = c(0, 479), ylim = c(0, 1000))
+
+if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
+if (!one_plot) { dev.off() }
+
+
+gather
+
+
+# Function to create line plots for each need type
+create_line_plots <- function(data, depth) {
+  plot_data <- data %>%
+    filter(ce_context_depth == depth) %>%
+    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, Normative, Conformity, `Full need`) %>%
+    gather(key = "need_type", value = "value", -ce_context_depth)
+  
+  ggplot(plot_data, aes(x = factor(ce_context_depth), y = value, color = need_type, group = need_type)) +
+    geom_line() +
+    labs(title = paste("Line Plot for ce_context_depth =", depth),
+         x = "ce_context_depth",
+         y = "Value",
+         color = "Need Type") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+# Create line plots for each ce_context_depth
+for (depth in 0:5) {
+  plot <- create_line_plots(df_final, depth)
+  print(plot)
+}
+
+
+
+# Filter the dataframe for ce_context_depth values from 0 to 5
+for (depth in 0:5) {
+  # Create a subset dataframe for the current ce_context_depth
+  subset_df <- df_final[df_final$ce_context_depth == depth, ]
+  
+  # Gather the columns for plotting
+  plot_data <- subset_df %>%
+    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, Normative, Conformity, `Full need`) %>%
+    gather(key = "need_type", value = "value", -ce_context_depth)
+  
+  # Plotting
+  ggplot(plot_data, aes(x = factor(ce_context_depth), y = value, fill = need_type)) +
+    geom_boxplot() +
+    labs(title = paste("Plot for ce_context_depth =", depth),
+         x = "ce_context_depth",
+         y = "Value",
+         fill = "Need Type") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+
+#======================================================================
+#------------------------ END OF DATAFRAME PREPARATIONS ---------------
+#------------------------ START OF PLOTTING  -------------
+
+Based on the graphs I need
+- MOST IMPORTANT, deliberation type graph: counter variables
+- Infection graph: healthy, infected, epistemic infected.
+- Activity graph: the locations agents are at
+- Needs graphs: the average needs for agents
+
+DELIBERATION TYPE GRAPH
+set delib-count-minimal-context 0
+set delib-count-determine-most-salient-need 0
+set delib-count-compare-need-levels 0
+set delib-count-normative-consideration 0
+set delib-count-conformity-network-action 0
+set delib-count-full-need 0
+
+set delib-count-total-minimal-context 0
+set delib-count-total-determine-most-salient-need 0
+set delib-count-total-compare-need-levels 0
+set delib-count-total-normative-consideration 0
+set delib-count-total-conformity-network-action 0
+set delib-count-total-full-need 0
+
+INFECTION GRAPH 
+Add healthy???
+
+[22] "infected"                                                                                                                          
+[23] "believe_infected"                                                                                                                  
+[24] "admissions_last_tick"                                                                                                              
+[25] "taken_hospital_beds"                                                                                                               
+[26] "denied_requests_for_hospital_beds"                                                                                                 
+[27] "dead_people" 
+
+ACTIVITY GRAPH
+[80] "count_people_with_is_at_work"                                                                                                      
+[81] "count_people_with_is_at_public_leisure_place"                                                                                      
+[82] "count_people_with_is_at_private_leisure_place"                                                                                     
+[83] "count_people_with_is_at_home"                                                                                                      
+[84] "count_people_with_is_at_school"                                                                                                    
+[85] "count_people_with_is_at_university"                                                                                                
+[86] "count_people_with_current_motivation_treatment_motive"                                                                             
+[87] "count_people_at_essential_shops"                                                                                                   
+[88] "count_people_at_non_essential_shops"  
+
+Is this the right thing to check? There are even counts for children, students, workers, and retired.  
+
+NEED GRAPH
+[125] "belonging"                                                                                                                         
+[126] "risk_avoidance"                                                                                                                    
+[127] "autonomy"                                                                                                                          
+[128] "luxury"                                                                                                                            
+[129] "health"                                                                                                                            
+[130] "sleep"                                                                                                                             
+[131] "compliance"                                                                                                                        
+[132] "financial_stability"                                                                                                               
+[133] "food_safety"                                                                                                                       
+[134] "leisure"                                                                                                                           
+[135] "financial_survival"                                                                                                                
+[136] "conformity"                                                                                                                         
+
 
 #======================================================================
 #------------------------- PLOTTING FUNCTIONS -------------------------
@@ -157,6 +383,12 @@ df_people_at_locations <- df_final %>%
 colnames(df_people_at_locations)
 
 x_limits = c(0,479) #c(28,83)
+
+
+#---------- A SPLIT -----------
+
+
+
 
 #----------- All the locations -------------
 limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
@@ -330,43 +562,6 @@ if (!one_plot) { dev.off() }
 
 if (!one_plot) {pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-#=============================================================
-#================ PLOT DELIBERATION TYPE =====================
-#=============================================================
-
-df_action_space = df_final[df_final$action_space==6, ]
-
-plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = DelibType,
-               fill = DelibType), fill=NA) +
-    geom_line(aes(col=DelibType)) +
-    xlab("Ticks") +
-    ylab("Used by n agents") +
-    labs(title=p_title) +
-    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-    gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
-}
-
-df_deliberation_type <- df_action_space %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(Typical = mean(Typical, na.rm = TRUE),
-            Most_salient = mean(One_need, na.rm = TRUE),
-            MS_Conf = mean(ON_Conformity, na.rm = TRUE),
-            MS_Multi = mean(ON_Multi_act, na.rm = TRUE),
-            All_needs = mean(All_needs, na.rm = TRUE))
-
-seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
-
-limits = coord_cartesian(xlim = c(0, 479), ylim = c(0, 1000))
-
-if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
 if (!one_plot) { dev.off() }
 
 
