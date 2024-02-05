@@ -87,6 +87,11 @@ df_renamed = df_initial
 old_variable_names <- names(t_df)
 # Custom column names
 colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
+colnames(df_renamed)[match("count_people_with_infection_status_healthy", colnames(df_renamed))] = "uninfected";
+colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
+colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
+colnames(df_renamed)[match("count_people_with_infection_status_healthy_or_infection_status_immune", colnames(df_renamed))] = "healthy";
+
 colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
 colnames(df_renamed)[match("mean_risk_avoidance_satisfaction_level_of_people", colnames(df_renamed))] = "risk_avoidance";
 colnames(df_renamed)[match("mean_autonomy_satisfaction_level_of_people", colnames(df_renamed))] = "autonomy";
@@ -128,7 +133,7 @@ df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 # One of: "none", "one", "all"
 plot_type <- "none"
 #plot_type <- "one" 
-plot_type <- "all"
+#plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
@@ -146,15 +151,19 @@ for (depth_value in 0:5)
 {
   subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
   
-  # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
-  subset_df <- select(subset_df, tick, ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
-  seg_acc_deliberation_type <- gather(subset_df, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
+  #=============================================================
+  #================= PLOT DELIBERATION TYPE  ===================
+  #=============================================================
   
-  p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
+  # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
+  df_deliberation_type <- select(subset_df, tick, ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
+  df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
+  
+  # Can remove: p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
   
   # col  = for the outline
   # fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
-  p <- ggplot(seg_acc_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line()
+  p <- ggplot(df_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line()
   p <- p + scale_colour_manual(
     labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
              'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
@@ -178,18 +187,46 @@ for (depth_value in 0:5)
   p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
+  
+  
+  #=============================================================
+  #==================== PLOT INFECTIONS  =======================
+  #=============================================================
+  
+  gl_plot_theme  <- theme_bw()
+  gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
+
+  df_population_status <- select(subset_df, tick, ce_context_depth, uninfected, infected, believe_infected, dead_people, immune, believe_immune, healthy)
+  df_population_status <- gather(df_population_status, `Population Status`, measurement, uninfected:healthy)
+  
+  p <- ggplot(df_population_status, aes(x = tick, y = measurement, col=`Population Status`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('uninfected'='Uninfected', 'infected'='Infected',
+             'believe_infected' ='Believe Infected', 'dead_people' ='Dead People', 
+             'immune' ='Immune', 'believe_immune' ='Believe Immune', 
+             'healthy' ='Healthy'),
+    values=c('#afd16f', '#ff1100', '#ff7c73', '#000000', '#00bfff', '#85e0ff', '#3c9e34'),
+    breaks=c('uninfected', 'infected','believe_infected','dead_people','immune','believe_immune','healthy'))
+  p <- p + xlab("Ticks") + ylab("Status of n agents")
+  p <- p + theme_bw()
+  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
 }
 
 if (plot_type == "all") { dev.off() }
-
 
 
 #=============================================================
 #==================== PLOT INFECTIONS  =======================
 #=============================================================
 
-gl_plot_theme  <- theme_bw()
-gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
+
+
+
+
 
 plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
                              p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0, p_limits = coord_cartesian(xlim = c(0, 240))) {
