@@ -105,6 +105,16 @@ colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames
 colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
 colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
 
+colnames(df_renamed)[match("count_people_at_essential_shops", colnames(df_renamed))] = "at_essential_shops";
+colnames(df_renamed)[match("count_people_with_is_at_home", colnames(df_renamed))] = "at_homes";
+colnames(df_renamed)[match("count_people_at_non_essential_shops", colnames(df_renamed))] = "at_non_essential_shops";
+colnames(df_renamed)[match("count_people_with_is_at_private_leisure_place", colnames(df_renamed))] = "at_private_leisure";
+colnames(df_renamed)[match("count_people_with_is_at_public_leisure_place", colnames(df_renamed))] = "at_public_leisure";
+colnames(df_renamed)[match("count_people_with_is_at_school", colnames(df_renamed))] = "at_schools";
+colnames(df_renamed)[match("count_people_with_is_at_university", colnames(df_renamed))] = "at_universities";
+colnames(df_renamed)[match("count_people_with_is_at_work", colnames(df_renamed))] = "at_workplaces";
+colnames(df_renamed)[match("count_people_with_current_motivation_treatment_motive", colnames(df_renamed))] = "at_treatment";
+
 colnames(df_renamed)[match("count_people_with_delib_count_minimal_context_1", colnames(df_renamed))] = "Minimal context";
 colnames(df_renamed)[match("count_people_with_delib_count_determine_most_salient_need_1", colnames(df_renamed))] = "Most salient need";
 colnames(df_renamed)[match("count_people_with_delib_count_compare_need_levels_1", colnames(df_renamed))] = "Compare need levels";
@@ -133,7 +143,7 @@ df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 # One of: "none", "one", "all"
 plot_type <- "none"
 #plot_type <- "one" 
-#plot_type <- "all"
+plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
@@ -214,16 +224,144 @@ for (depth_value in 0:5)
   show(p)
   if (plot_type == "one") { dev.off() }
   
+  
+  #=============================================================
+  #======================= PLOT NEEDS  =========================
+  #=============================================================
+  
+  df_needs <- select(subset_df, tick, ce_context_depth, autonomy, belonging, compliance, conformity, financial_stability,
+                     financial_survival, food_safety, health, leisure, luxury, risk_avoidance, sleep)
+  df_needs <- gather(df_needs, `Need Type`, measurement, autonomy:sleep)
+  
+  p <- ggplot(df_needs, aes(x = tick, y = measurement, col=`Need Type`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('autonomy'='AUT', 'belonging'='BEL', 'compliance'='COM', 'conformity'='CON',
+             'financial_stability'='FST', 'financial_survival'='FSU', 'food_safety'='FOO',
+             'health'='HEA', 'leisure'='LEI', 'luxury'='LUX', 'risk_avoidance'='RIS', 'sleep'='SLE'),
+    values=c('#f16a15','#000000','#9d6e48','#43a0a0',
+             '#E69F00','#881556','#1A4B09',
+             '#d73229','#f2ccd5','#80e389','#345da9','#8d8d8d'),
+    breaks=c('autonomy', 'belonging', 'compliance', 'conformity',
+             'financial_stability', 'financial_survival', 'food_safety',
+             'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
+  p <- p + xlab("Ticks") + ylab("Need Level")
+  p <- p + theme_bw()
+  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  
+  #=============================================================
+  #==================== LOCATION TYPES  ========================
+  #=============================================================
+  # Perhaps actions at is a better one, or complete action with location. E.g. Shop at ES, Shop at NES, Rest at home, etc....
+  
+  df_location_types <- select(subset_df, tick, ce_context_depth, at_essential_shops, at_homes, at_non_essential_shops,
+                              at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment)
+  df_location_types <- gather(df_location_types, `Location Type`, measurement, at_essential_shops:at_treatment)
+  
+  p <- ggplot(df_location_types, aes(x = tick, y = measurement, col=`Location Type`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('at_essential_shops'='Essential Shops', 'at_homes'='Homes', 'at_non_essential_shops'='Non-essential Shops',
+             'at_private_leisure'='Private Leisure', 'at_public_leisure'='Public Leisure', 'at_schools'='Schools',
+             'at_universities'='Universities', 'at_workplaces'='Workplaces', 'at_treatment'='Treatment'),
+    values=c('#881556','#80e389','#f2ccd5',
+             '#f16a15','#d73229','#9d6e48', 
+             '#E69F00','#345da9','#8d8d8d'),
+    breaks=c('at_essential_shops', 'at_homes', 'at_non_essential_shops',
+             'at_private_leisure', 'at_public_leisure', 'at_schools',
+             'at_universities', 'at_workplaces', 'at_treatment'))
+  p <- p + xlab("Ticks") + ylab("Agents at Location Type")
+  p <- p + theme_bw()
+  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
+  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
 }
 
 if (plot_type == "all") { dev.off() }
-
+# '#1A4B09', '#43a0a0', '#000000'
 
 #=============================================================
-#==================== PLOT INFECTIONS  =======================
+#========================== TEST =============================
 #=============================================================
 
 
+essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
+homes = mean(count_people_with_is_at_home, na.rm = TRUE),
+non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
+private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
+public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
+schools = mean(count_people_with_is_at_school, na.rm = TRUE),
+universities = mean(count_people_with_is_at_university, na.rm = TRUE),
+workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
+treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
+
+
+
+
+scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted",
+                               "twodash", "dotted", "twodash",
+                               "dotted", "twodash", "dotted", "twodash", "dotted"),
+                      breaks=c('autonomy', 'belonging', 'compliance', 'conformity',
+                               'financial_stability', 'financial_survival', 'food_safety',
+                               'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
+
+plot_ggplot_needs <- function(data_to_plot, p_title, p_limits) {
+  
+  data_to_plot %>%
+    ggplot(aes(x = tick, 
+               y = measurement,
+               group = Level,
+               fill = Level), fill=NA) +
+    geom_line(aes(col=Level)) +
+    xlab("Ticks") +
+    ylab("Need level") +
+    labs(title=p_title) +
+    guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=8, alpha=1))) +
+    gl_plot_theme + p_limits +
+    scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted")) +
+    scale_color_manual(values=c('#f16a15','#000000','#9d6e48','#43a0a0','#E69F00','#881556','#1A4B09','#d73229','#f2ccd5','#80e389','#345da9','#8d8d8d'))
+}
+
+#scale_linetype_manual(values=c("twodash", "dotted"))+
+#scale_color_manual(values=c('#999999','#E69F00'))+
+
+df_needs <- df_final %>% 
+  group_by(tick, context_sensitive_deliberation) %>% 
+  summarise(AUT = mean(autonomy, na.rm = TRUE),
+            BEL = mean(belonging, na.rm = TRUE),
+            COM = mean(compliance, na.rm = TRUE),
+            CON = mean(conformity, na.rm = TRUE),
+            FST = mean(financial_stability, na.rm = TRUE),
+            FSU = mean(financial_survival, na.rm = TRUE),
+            FOO = mean(food_safety, na.rm = TRUE),
+            HEA = mean(health, na.rm = TRUE),
+            LEI = mean(leisure, na.rm = TRUE),
+            LUX = mean(luxury, na.rm = TRUE),
+            RIS = mean(risk_avoidance, na.rm = TRUE),
+            SLE = mean(sleep, na.rm = TRUE))
+
+colnames(df_needs)
+
+
+seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
+
+x_limits = c(0,479) #c(28,83)
+
+limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
+
+#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
+#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
+
+if (!one_plot) {pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
+if (!one_plot) { dev.off() }
+
+if (!one_plot) {pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
+if (!one_plot) { dev.off() }
 
 
 
@@ -271,10 +409,6 @@ plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
 if (plot_type == "one") { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
 plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
 if (plot_type == "one") { dev.off() }
-
-
-
-
 
 
 
