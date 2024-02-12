@@ -23,20 +23,29 @@ if (!exists("libraries_loaded"))
 #---     INITIALIZATION      ---
 #-------------------------------
 
+#---   Settings   ---
+directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
+
+directory_files <- "2024-02-04 Lockdown Full"
+#directory_files <- "2024-02-04 No Lockdown Full"
+#directory_files <- "2024-02-12 No Conflict Habits"
+
+dataFileNames <- c("2024-02-04-lockdown-full.csv")
+#dataFileNames <- c("2024-02-04-no-lockdown-full.csv")
+#dataFileNames <- c("2024-02-12-habits-no-conflict.csv")
+
+gl_limits_x_max <- 480 #240
+
 #--- WORKSPACE AND DIRECTORY ---
-setwd("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context")
+setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
-
-#Make sure the R script with functions is placed in the working directory!
-#source("S6_1_dataframe_functions.r")
 
 ### MANUAL INPUT: Optionally specify filepath (i.e. where the behaviorspace csv is situated) ###
 #NOTE: if csv files are placed in the workdirec, then leave filesPath unchanged
 filesPath <- "" 
 
 #=================== MANUAL INPUT: specify filenames ====================
-dataFileNames <- c("2024-02-04-no-lockdown-full.csv")#c("covid-sim-behaviour-space-3-runs-full-context.csv")
 filesNames   <- dataFileNames
 
 #=============================================================
@@ -142,8 +151,8 @@ df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-#plot_type <- "one" 
-plot_type <- "all"
+plot_type <- "one" 
+#plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
@@ -156,8 +165,8 @@ if (plot_type == "all") { pdf("plot_context_assocc_complete.pdf", width=gl_pdf_w
 # For deliberation types:
 # Should the agent numbers be a percentage?? Well to be honest I think so, but I can do this in Netlogo! That's way easier!
 
-depth_value = 5
-for (depth_value in 0:5)
+depth_value = unique(df_final$ce_context_depth)[0]   # Check the depth values and make dependent on the dataframe's depth levels
+for (depth_value in unique(df_final$ce_context_depth))
 {
   subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
   
@@ -184,7 +193,7 @@ for (depth_value in 0:5)
   p <- p + theme_bw()
 
   if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -219,7 +228,7 @@ for (depth_value in 0:5)
     breaks=c('uninfected', 'infected','believe_infected','dead_people','immune','believe_immune','healthy'))
   p <- p + xlab("Ticks") + ylab("Status of n agents")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
   if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -246,7 +255,7 @@ for (depth_value in 0:5)
              'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
   p <- p + xlab("Ticks") + ylab("Need Level")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
   if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_needs_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -274,524 +283,11 @@ for (depth_value in 0:5)
              'at_universities', 'at_workplaces', 'at_treatment'))
   p <- p + xlab("Ticks") + ylab("Agents at Location Type")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
   if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }
 
 if (plot_type == "all") { dev.off() }
-# '#1A4B09', '#43a0a0', '#000000'
 
-#=============================================================
-#========================== TEST =============================
-#=============================================================
-
-
-essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
-homes = mean(count_people_with_is_at_home, na.rm = TRUE),
-non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
-private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
-public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
-schools = mean(count_people_with_is_at_school, na.rm = TRUE),
-universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
-treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-
-
-
-scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted",
-                               "twodash", "dotted", "twodash",
-                               "dotted", "twodash", "dotted", "twodash", "dotted"),
-                      breaks=c('autonomy', 'belonging', 'compliance', 'conformity',
-                               'financial_stability', 'financial_survival', 'food_safety',
-                               'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
-
-plot_ggplot_needs <- function(data_to_plot, p_title, p_limits) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = Level,
-               fill = Level), fill=NA) +
-    geom_line(aes(col=Level)) +
-    xlab("Ticks") +
-    ylab("Need level") +
-    labs(title=p_title) +
-    guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=8, alpha=1))) +
-    gl_plot_theme + p_limits +
-    scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted")) +
-    scale_color_manual(values=c('#f16a15','#000000','#9d6e48','#43a0a0','#E69F00','#881556','#1A4B09','#d73229','#f2ccd5','#80e389','#345da9','#8d8d8d'))
-}
-
-#scale_linetype_manual(values=c("twodash", "dotted"))+
-#scale_color_manual(values=c('#999999','#E69F00'))+
-
-df_needs <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(AUT = mean(autonomy, na.rm = TRUE),
-            BEL = mean(belonging, na.rm = TRUE),
-            COM = mean(compliance, na.rm = TRUE),
-            CON = mean(conformity, na.rm = TRUE),
-            FST = mean(financial_stability, na.rm = TRUE),
-            FSU = mean(financial_survival, na.rm = TRUE),
-            FOO = mean(food_safety, na.rm = TRUE),
-            HEA = mean(health, na.rm = TRUE),
-            LEI = mean(leisure, na.rm = TRUE),
-            LUX = mean(luxury, na.rm = TRUE),
-            RIS = mean(risk_avoidance, na.rm = TRUE),
-            SLE = mean(sleep, na.rm = TRUE))
-
-colnames(df_needs)
-
-
-seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
-
-x_limits = c(0,479) #c(28,83)
-
-limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
-
-#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-
-if (!one_plot) {pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-if (!one_plot) {pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-
-
-
-plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
-                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0, p_limits = coord_cartesian(xlim = c(0, 240))) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement)) +
-    geom_line(aes(col=as.factor(context_sensitive_deliberation))) +
-    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
-    scale_colour_viridis_d(name="Context") +
-    labs(title=p_title,
-         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
-         x="Days", y=p_y_lab) +
-    gl_plot_guides + gl_plot_theme + p_limits
-}
-
-df_data <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(infected = mean(infected, na.rm = TRUE),
-            believe_infected = mean(believe_infected, na.rm = TRUE),
-            tests_performed = mean(tests_performed, na.rm = TRUE),
-            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
-            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
-
-plots_data_infected <- gather(df_data, variable, measurement, infected)
-
-if (plot_type == "one") { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected", p_limits=coord_cartesian(xlim = c(0, 240)))
-if (plot_type == "one") { dev.off() }
-
-# Epistemic infected
-plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
-
-if (plot_type == "one") { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
-                 "Number of agents believing they are infected")
-if (plot_type == "one") { dev.off() }
-
-# Total deaths
-plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
-
-if (plot_type == "one") { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
-if (plot_type == "one") { dev.off() }
-
-
-
-
-#=============================================================
-#========================== OLD STUFF ========================
-#=============================================================
-
-df_action_space = df_final[df_final$action_space==6, ]
-
-plot_ggplot_deliberation_type <- function(data_to_plot, p_title, p_limits) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = DelibType,
-               fill = DelibType), fill=NA) +
-    geom_line(aes(col=DelibType)) +
-    xlab("Ticks") +
-    ylab("Used by n agents") +
-    labs(title=p_title) +
-    guides(colour = guide_legend(nrow=1, byrow=TRUE, override.aes = list(size=5, alpha=1))) +
-    gl_plot_theme + p_limits + scale_color_manual(values=c('#000000', '#E69F00', '#f16a15', '#8d8d8d', '#345da9'))
-}
-
-df_deliberation_type <- df_action_space %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(Typical = mean(Typical, na.rm = TRUE),
-            Most_salient = mean(One_need, na.rm = TRUE),
-            MS_Conf = mean(ON_Conformity, na.rm = TRUE),
-            MS_Multi = mean(ON_Multi_act, na.rm = TRUE),
-            All_needs = mean(All_needs, na.rm = TRUE))
-
-seg_acc_deliberation_type <- gather(df_deliberation_type, DelibType, measurement, Typical:All_needs)
-
-limits = coord_cartesian(xlim = c(0, 479), ylim = c(0, 1000))
-
-if (!one_plot) { pdf("plot_deliberation_type.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_deliberation_type(filter(seg_acc_deliberation_type, context_sensitive_deliberation=="true"), "Deliberation Type for Context ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-
-
-# Function to create line plots for each need type
-create_line_plots <- function(data, depth) {
-  plot_data <- data %>%
-    filter(ce_context_depth == depth) %>%
-    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, Normative, Conformity, `Full need`) %>%
-    gather(key = "need_type", value = "value", -ce_context_depth)
-  
-  ggplot(plot_data, aes(x = factor(ce_context_depth), y = value, color = need_type, group = need_type)) +
-    geom_line() +
-    labs(title = paste("Line Plot for ce_context_depth =", depth),
-         x = "ce_context_depth",
-         y = "Value",
-         color = "Need Type") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-}
-
-# Create line plots for each ce_context_depth
-for (depth in 0:5) {
-  plot <- create_line_plots(df_final, depth)
-  print(plot)
-}
-
-
-
-# Filter the dataframe for ce_context_depth values from 0 to 5
-for (depth in 0:5) {
-  # Create a subset dataframe for the current ce_context_depth
-  subset_df <- df_final[df_final$ce_context_depth == depth, ]
-  
-  # Gather the columns for plotting
-  plot_data <- subset_df %>%
-    select(ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, Normative, Conformity, `Full need`) %>%
-    gather(key = "need_type", value = "value", -ce_context_depth)
-  
-  # Plotting
-  ggplot(plot_data, aes(x = factor(ce_context_depth), y = value, fill = need_type)) +
-    geom_boxplot() +
-    labs(title = paste("Plot for ce_context_depth =", depth),
-         x = "ce_context_depth",
-         y = "Value",
-         fill = "Need Type") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-}
-
-
-#======================================================================
-#------------------------ END OF DATAFRAME PREPARATIONS ---------------
-#------------------------ START OF PLOTTING  -------------
-
-
-
-#======================================================================
-#------------------------- PLOTTING FUNCTIONS -------------------------
-
-multiplier = 1
-gl_plot_theme  <-  theme_bw() + theme(legend.position="bottom",
-                                      axis.text = element_text(size = rel(1.3 * multiplier)),
-                                      axis.title = element_text(size = rel(1.3 * multiplier)),
-                                      legend.text = element_text(size = rel(1 * multiplier)),
-                                      legend.title = element_text(size = rel(1 * multiplier)),
-                                      title = element_text(size = rel(1.3 * multiplier)) )
-
-gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
-
-plot_ggplot <- function(data_to_plot, p_title, p_limits) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = Location_type,
-               fill = Location_type), fill=NA) +
-    geom_line(aes(col=Location_type)) +
-    guides(colour = guide_legend(override.aes = list(size=5, alpha=1))) +
-    xlab("Ticks") +
-    ylab("Agents per tick") +
-    labs(title=p_title) +
-    gl_plot_guides + gl_plot_theme + p_limits +
-    scale_color_manual(values=c('#000000', '#E69F00', '#d73229', '#1A4B09', '#1133FF'))
-}
-
-# Printing as PDF's
-gl_pdf_width = 7
-gl_pdf_height = 5
-
-#=============================================================
-#========================= PLOT DATA =========================
-#=============================================================
-
-df_final_backup <- df_final
-
-df_final <- df_final_backup
-df_final <- df_final[df_final$enable_salient_food_luxury_forced_obligation=="false", ]
-
-
-#------------------------- PLOT DATA -------------------------
-
-df_people_at_locations <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
-            homes = mean(count_people_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
-            private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_people_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
-colnames(df_people_at_locations)
-
-x_limits = c(0,479) #c(28,83)
-
-
-#---------- A SPLIT -----------
-
-
-
-
-#----------- All the locations -------------
-limits = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-seg_acc_people_at_locations <- gather(df_people_at_locations, Location_type, measurement, essential_shops:workplaces)
-#plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="false"), "Agents per location type - Original ASSOCC", limits)
-#plot_ggplot(filter(seg_acc_people_at_locations, context_sensitive_deliberation=="true"), "Agents per location type - Context ASSOCC", limits)
-
-#----------- Location type 1 -------------
-limits_1 = coord_cartesian(xlim = x_limits, ylim = c(0, 1000))
-seg_acc_people_at_locations_limited_1 <- gather(df_people_at_locations, Location_type, measurement, c(homes, schools, universities, workplaces))
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
-
-#----------- Location type 2 -------------
-limits_2 = coord_cartesian(xlim = x_limits, ylim = c(0, 500))
-seg_acc_people_at_locations_limited_2 <- gather(df_people_at_locations, Location_type, measurement, c(essential_shops, non_essential_shops, private_leisure, public_leisure, treatment))
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
-
-if (one_plot) { pdf("plot_context_assocc_infections.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-
-if (!one_plot) { pdf("plot_agents_per_location_original_1.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="false"), "Agents per location type 1 - Original ASSOCC", limits_1)
-if (!one_plot) { dev.off() }
-if (!one_plot) { pdf("plot_agents_per_location_context_1.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot(filter(seg_acc_people_at_locations_limited_1, context_sensitive_deliberation=="true"), "Agents per location type 1 - Context ASSOCC", limits_1)
-if (!one_plot) { dev.off() }
-if (!one_plot) { pdf("plot_agents_per_location_original_2.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="false"), "Agents per location type 2 - Original ASSOCC", limits_2)
-if (!one_plot) { dev.off() }
-if (!one_plot) { pdf("plot_agents_per_location_context_2.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot(filter(seg_acc_people_at_locations_limited_2, context_sensitive_deliberation=="true"), "Agents per location type 2 - Context ASSOCC", limits_2)
-if (!one_plot) { dev.off() }
-
-agent_n = df_final$youngs_at_start[1] + df_final$students_at_start[1] + df_final$workers_at_start[1] + df_final$retireds_at_start[1]
-
-df_people_at_locations_mean <- df_final %>% 
-  group_by(context_sensitive_deliberation) %>% 
-  summarise(agents = agent_n,
-            essential_shops = mean(count_people_at_essential_shops, na.rm = TRUE),
-            homes = mean(count_people_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_people_at_non_essential_shops, na.rm = TRUE),
-            private_leisure = mean(count_people_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_people_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_people_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_people_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_people_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_people_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-df_children_at_locations_mean <- df_final %>% 
-  group_by(context_sensitive_deliberation) %>% 
-  summarise(agents = mean(youngs_at_start, na.rm = TRUE),
-            essential_shops = mean(count_children_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = mean(count_children_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_children_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = mean(count_children_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_children_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_children_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_children_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_children_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_children_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-df_students_at_locations_mean <- df_final %>% 
-  group_by(context_sensitive_deliberation) %>% 
-  summarise(agents = mean(students_at_start, na.rm = TRUE),
-            essential_shops = mean(count_students_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = mean(count_students_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_students_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = mean(count_students_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_students_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_students_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_students_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_students_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_students_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-df_workers_at_locations_mean <- df_final %>% 
-  group_by(context_sensitive_deliberation) %>% 
-  summarise(agents = mean(workers_at_start, na.rm = TRUE),
-            essential_shops = mean(count_workers_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = mean(count_workers_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_workers_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = mean(count_workers_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_workers_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_workers_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_workers_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_workers_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_workers_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-df_retireds_at_locations_mean <- df_final %>% 
-  group_by(context_sensitive_deliberation) %>% 
-  summarise(agents = mean(retireds_at_start, na.rm = TRUE),
-            essential_shops = mean(count_retireds_with_is_non_essential_shop_of_current_activity, na.rm = TRUE),
-            homes = mean(count_retireds_with_is_at_home, na.rm = TRUE),
-            non_essential_shops = mean(count_retireds_with_is_essential_shop_of_current_activity, na.rm = TRUE),
-            private_leisure = mean(count_retireds_with_is_at_private_leisure_place, na.rm = TRUE),
-            public_leisure = mean(count_retireds_with_is_at_public_leisure_place, na.rm = TRUE),
-            schools = mean(count_retireds_with_is_at_school, na.rm = TRUE),
-            universities = mean(count_retireds_with_is_at_university, na.rm = TRUE),
-            workplaces = mean(count_retireds_with_is_at_work, na.rm = TRUE),
-            treatment = mean(count_retireds_with_current_motivation_treatment_motive, na.rm = TRUE))
-
-
-print(df_people_at_locations_mean)
-print(df_children_at_locations_mean)
-print(df_students_at_locations_mean)
-print(df_workers_at_locations_mean)
-print(df_retireds_at_locations_mean)
-
-df_total = df_people_at_locations_mean
-df_total = rbind(df_total, df_children_at_locations_mean)
-df_total = rbind(df_total, df_students_at_locations_mean)
-df_total = rbind(df_total, df_workers_at_locations_mean)
-df_total = rbind(df_total, df_retireds_at_locations_mean)
-
-print(df_total)
-
-#=============================================================
-#======================== PLOT NEEDS =========================
-#=============================================================
-
-plot_ggplot_needs <- function(data_to_plot, p_title, p_limits) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement,
-               group = Level,
-               fill = Level), fill=NA) +
-    geom_line(aes(col=Level)) +
-    xlab("Ticks") +
-    ylab("Need level") +
-    labs(title=p_title) +
-    guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=8, alpha=1))) +
-    gl_plot_theme + p_limits +
-    scale_linetype_manual(values=c("solid", "dashed", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted", "twodash", "dotted")) +
-    scale_color_manual(values=c('#f16a15','#000000','#9d6e48','#43a0a0','#E69F00','#881556','#1A4B09','#d73229','#f2ccd5','#80e389','#345da9','#8d8d8d'))
-}
-
-#scale_linetype_manual(values=c("twodash", "dotted"))+
-#scale_color_manual(values=c('#999999','#E69F00'))+
-
-df_needs <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(AUT = mean(autonomy, na.rm = TRUE),
-            BEL = mean(belonging, na.rm = TRUE),
-            COM = mean(compliance, na.rm = TRUE),
-            CON = mean(conformity, na.rm = TRUE),
-            FST = mean(financial_stability, na.rm = TRUE),
-            FSU = mean(financial_survival, na.rm = TRUE),
-            FOO = mean(food_safety, na.rm = TRUE),
-            HEA = mean(health, na.rm = TRUE),
-            LEI = mean(leisure, na.rm = TRUE),
-            LUX = mean(luxury, na.rm = TRUE),
-            RIS = mean(risk_avoidance, na.rm = TRUE),
-            SLE = mean(sleep, na.rm = TRUE))
-            
-colnames(df_needs)
-
-
-seg_acc_need_level <- gather(df_needs, Level, measurement, AUT:SLE)
-
-x_limits = c(0,479) #c(28,83)
-
-limits = coord_cartesian(xlim = x_limits, ylim = c(0.2, 1))
-
-#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-#plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-
-if (!one_plot) {pdf("plot_needs_original.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="false"), "Need level - Original ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-if (!one_plot) {pdf("plot_needs_assocc.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_needs(filter(seg_acc_need_level, context_sensitive_deliberation=="true"), "Need level - Context ASSOCC", limits)
-if (!one_plot) { dev.off() }
-
-
-#=============================================================
-#==================== PLOT INFECTIONS  =======================
-#=============================================================
-
-plot_ggplot_tick <- function(data_to_plot, p_title = "None", p_y_lab = "None",
-                             p_mean_start_quaran_tick = 0, p_mean_end_quaran_tick = 0) {
-  
-  data_to_plot %>%
-    ggplot(aes(x = tick, 
-               y = measurement)) +
-    geom_line(aes(col=as.factor(context_sensitive_deliberation))) +
-    #scale_colour_brewer(palette = "viridis", name=gl_plot_variable_name) +
-    scale_colour_viridis_d(name="Context") +
-    labs(title=p_title,
-         caption="Agent-based Social Simulation of Corona Crisis (ASSOCC)",
-         x="Days", y=p_y_lab) +
-    gl_plot_guides + gl_plot_theme + coord_cartesian(xlim = c(0, 479)) 
-}
-
-df_data <- df_final %>% 
-  group_by(tick, context_sensitive_deliberation) %>% 
-  summarise(infected = mean(infected, na.rm = TRUE),
-            believe_infected = mean(believe_infected, na.rm = TRUE),
-            tests_performed = mean(tests_performed, na.rm = TRUE),
-            ratio_quarantiners_complying = mean(ratio_quarantiners_currently_complying_to_quarantine, na.rm = TRUE),
-            dead_people = mean(dead_people)) #infected_this_tick = mean(infected_this_tick),
-
-plots_data_infected <- gather(df_data, variable, measurement, infected)
-
-if (!one_plot) { pdf("plot_agents_infected.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_infected, "Agents infected", "Number of infected")
-if (!one_plot) { dev.off() }
-
-# Epistemic infected
-plots_data_epistemic_infected <- gather(df_data, variable, measurement, believe_infected)
-
-if (!one_plot) { pdf("plot_agents_infected_believe.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_epistemic_infected, "Agents believing to be infected",
-                       "Number of agents believing they are infected")
-if (!one_plot) { dev.off() }
-
-# Total deaths
-plots_data_deaths <- gather(df_data, variable, measurement, dead_people)
-
-if (!one_plot) { pdf("plot_agents_died.pdf", width=gl_pdf_width, height=gl_pdf_height) }
-plot_ggplot_tick(plots_data_deaths, "Agents that died", "Cummulative number of deaths")
-if (!one_plot) { dev.off() }
-
-if (one_plot) { dev.off() }
