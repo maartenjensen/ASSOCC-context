@@ -24,7 +24,9 @@ if (!exists("libraries_loaded"))
 #-------------------------------
 
 #-   GENERAL PARAMETERS   -
-filepath_workspace <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
+directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
+
+directory_files <- "2024-02-04 No Lockdown Full"
 
 # filenames_profiler <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
 #                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
@@ -65,20 +67,20 @@ filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false 
                         #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
                         #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
 
-filenames_realism  <- c("covid-sim-small-full-test-scalability.csv") # covid-sim ContextNeedBalancing-first-test.csv")
+#filenames_realism  <- c("covid-sim-small-full-test-scalability.csv") # covid-sim ContextNeedBalancing-first-test.csv")
 
 one_plot = TRUE
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
-setwd(filepath_workspace)
+setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
 #--------------------------------------
 #---    PROFILER - SCALABILITY      ---
 #--------------------------------------
 source("1_profiler_overview.R")
-df_profiler = profilerLoadData(filepath_workspace, filenames_profiler)
+df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 
 df_profiler_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
 
@@ -146,7 +148,7 @@ plot_calls <- function(dataframe) {
     geom_bar(stat = "identity", position = "dodge") +
     labs(title = "Calls for Each Context and Function Name Combination",
          x = "Function Name",
-         y = "Calls",
+         y = "Incl time",
          fill = "Context") +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -233,22 +235,30 @@ ggplot(df_profiler_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
 if (one_plot) { dev.off() }
 
 #--------------------------------------
-#--- REALISM - BEHAVIOUR/INFECTIONS ---
-#--------------------------------------
-# See file 2_behaviour_overview.R
-
-
-#--------------------------------------
-#-  SUMMARY SCALABILITY AND REALISM   -
+#--- Profiler function calls and time? ---
 #--------------------------------------
 
-profilerSummarize(df_profiler, df_profiler_overview)
-{
-  
+# I think I want to automize this, that it finds the right factor for the right row, probably a for loop
+# going through every row and reading the line if CSN, then add CSN, etc.
+
+selected_strings <- c("CONTEXT-STATE-NIGHT", "CSN-AFTER-MINIMAL-CONTEXT-F", "CSN-DEFAULT",
+                      "CONTEXT-STATE-FREE-TIME", "CSFT-AFTER-MINIMAL-CONTEXT-F", "CSFT-DEFAULT")
+
+df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
+df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == 1, ]
+
+df_profiler_mean_times_filtered$factors <- c("Function", "Function", "Unsolved", "Habitual", "Unsolved", "Habitual")
+df_profiler_mean_times_filtered$state <- c("Freetime", "Night", "Freetime", "Freetime", "Night", "Night")
+
+plot_calls <- function(dataframe) {
+  ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(title = "Calls for Each Context and Function Name Combination",
+         x = "Function Name",
+         y = "Calls",
+         fill = "Context") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
-#--------------------------------------
-#-       GOALS FOR THIS PROGRAM       -
-#--------------------------------------
-# It needs to be easy to adjust things like which data to get out, but I guess this can be done in plotting
-# I want to focus on the realism plots, but I should still look at the profiler data to see if I really got everything out of it.
+plot_calls(df_profiler_mean_times_filtered)
