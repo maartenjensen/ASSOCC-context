@@ -24,7 +24,7 @@
 
 ; QUESTION?? Should the agent always social distance when sick??
 
-to-report context-state-sick-night
+to-report cssn-function ; cssn
   ; The time is morning, afternoon or evening
   if ce-log-agent and who = ce-log-agent-id [ print "Sick night deliberation" ]
 

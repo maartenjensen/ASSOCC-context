@@ -23,7 +23,7 @@
 ;Code check:
 ; csn: NOT cso, csft, cssn, csso, cssft, csowh, cssowh
 
-to-report context-state-night
+to-report csn-function
   ; The time is morning, afternoon or evening
   if ce-log-agent and who = ce-log-agent-id [ print "Context night deliberation" ]
   

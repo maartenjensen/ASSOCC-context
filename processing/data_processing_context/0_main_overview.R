@@ -241,14 +241,60 @@ if (one_plot) { dev.off() }
 # I think I want to automize this, that it finds the right factor for the right row, probably a for loop
 # going through every row and reading the line if CSN, then add CSN, etc.
 
+# Or should I make all those function names unique?? I don't know
+
 selected_strings <- c("CONTEXT-STATE-NIGHT", "CSN-AFTER-MINIMAL-CONTEXT-F", "CSN-DEFAULT",
-                      "CONTEXT-STATE-FREE-TIME", "CSFT-AFTER-MINIMAL-CONTEXT-F", "CSFT-DEFAULT")
+                      "CONTEXT-STATE-FREE-TIME", "CSFT-AFTER-MINIMAL-CONTEXT-F", "CSFT-DEFAULT",
+                      "CONTEXT-STATE-OBLIGATION", "CSO-AFTER-MINIMAL-CONTEXT-F", "CSO-DEFAULT",
+                      "CSOWH-DEFAULT", "CSOWH-AFTER-MINIMAL-CONTEXT-F") #"CONTEXT-STATE-OBLIGATION-WORK-HOME" is implied
 
 df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
 df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == 1, ]
 
-df_profiler_mean_times_filtered$factors <- c("Function", "Function", "Unsolved", "Habitual", "Unsolved", "Habitual")
-df_profiler_mean_times_filtered$state <- c("Freetime", "Night", "Freetime", "Freetime", "Night", "Night")
+for (i in 1:length(selected_strings))
+{
+  if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name)
+  {
+    df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = "1",
+                                             function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
+  }
+}
+
+factors = c()
+state = c()
+
+# If it is not in there it should be added with a zero number?? I think so...
+
+for (i in 1:length(df_profiler_mean_times_filtered))
+{
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CONTEXT-STATE-"))
+  { factors <- c(factors, "0. Function") }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-AFTER-MINIMAL-CONTEXT"))
+  { factors <- c(factors, "6. Full ASSOCC") }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-DEFAULT"))
+  { factors <- c(factors, "1. Habitual") }
+  
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "NIGHT") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-"))
+  {
+    state <- c(state, "Night")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "FREE-TIME") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-"))
+  {
+    state <- c(state, "Freetime")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-WORK-HOME") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-"))
+  {
+    state <- c(state, "Obligation WH")
+  }
+  else if (str_contains(df_profiler_mean_times_filtered$function_name[i], "OBLIGATION") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-"))
+  {
+    state <- c(state, "Obligation")
+  }
+  
+}
+
+df_profiler_mean_times_filtered$factors <- factors
+df_profiler_mean_times_filtered$state <- state
 
 plot_calls <- function(dataframe) {
   ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +

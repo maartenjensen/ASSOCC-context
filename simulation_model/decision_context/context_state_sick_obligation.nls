@@ -34,7 +34,7 @@
 ;ce-need-critical-threshold for critical need
 
 
-to-report context-state-sick-obligation ; csso
+to-report csso-function ; csso
 
   ; The time is morning or afternoon
   if ce-log-agent and who = ce-log-agent-id [ print "Sick obligation decision making" ]

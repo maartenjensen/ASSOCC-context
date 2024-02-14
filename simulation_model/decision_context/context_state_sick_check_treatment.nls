@@ -7,7 +7,7 @@
 
 ;--------------------------------------------------------------------------------------------------
 ;--------------                              NIGHT                               ------------------
-to-report context-state-sick-check-treatment ; cssct
+to-report cssct-function ; cssct
   ; The time can be anything
   if ce-log-agent and who = ce-log-agent-id [ print "Custom deliberation: So sick need treatment?" ]
   
@@ -17,7 +17,7 @@ to-report context-state-sick-check-treatment ; cssct
   if cssct-is-observing-very-critical-symptoms?
   [ 
     if ce-log-agent and who = ce-log-agent-id [ print (word "Treatment, very critical:" ([infection-status] of turtle ce-log-agent-id)) ]
-    report lput True (activity-descriptor my-hospital treatment-motive)
+    report cssct-get-treatment
   ]
   ;if is-observing-critical-symptoms? Perhaps add this back again later
   ;[ ifelse cssct-is-observing-very-critical-symptoms?
@@ -38,4 +38,8 @@ to-report cssct-is-observing-very-critical-symptoms?
   [ report true]
   
   report false
+end
+
+to-report cssct-get-treatment
+  report lput True (activity-descriptor my-hospital treatment-motive)
 end

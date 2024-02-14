@@ -22,7 +22,7 @@
 ;Code check:
 ; cssft: NOT csn, cso, csft, cssn, csso, csowh, cssowh
 
-to-report context-state-sick-free-time ; cssft
+to-report cssft-function ; cssft
   
   ; The time is morning or afternoon
   if ce-log-agent and who = ce-log-agent-id [ print "Free time decision making" ]
