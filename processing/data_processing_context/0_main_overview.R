@@ -24,9 +24,14 @@ if (!exists("libraries_loaded"))
 #-------------------------------
 
 #-   GENERAL PARAMETERS   -
+# One of: "none", "one", "all"
+plot_type <- "none"
+plot_type <- "one" 
+#plot_type <- "all"
+
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
-directory_files <- "2024-02-04 No Lockdown Full"
+directory_files <- "2024-02-14-no-lockdown"
 
 # filenames_profiler <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
 #                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
@@ -67,9 +72,6 @@ filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false 
                         #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
                         #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
 
-#filenames_realism  <- c("covid-sim-small-full-test-scalability.csv") # covid-sim ContextNeedBalancing-first-test.csv")
-
-one_plot = TRUE
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -79,7 +81,7 @@ getwd()
 #--------------------------------------
 #---    PROFILER - SCALABILITY      ---
 #--------------------------------------
-source("1_profiler_overview.R")
+source("../1_profiler_overview.R")
 df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 
 df_profiler_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
@@ -96,17 +98,14 @@ df_profiler_cssft = profilerLoadSpecificData(df_profiler, "CSSFT")
 # The profiler function that summarizes all the important results
 profilerSummarize(df_profiler, df_profiler_overview)
 
-# A plotting function to plot the comparison in speed. I can always just plot this, 
-# but for this case its not so relevant. What I can actually do is plot the specific
-# calls of functions, such as the leisure functions.
-profilerPlotOverview(df_profiler, "", one_plot)
-
+#-----------------------------------------
+#--- The options                       ---
+#-----------------------------------------
 options(scipen=100) # This is for the profiler results
 
-one_plot = FALSE
 gl_pdf_width  = 10
 gl_pdf_height = 7
-if (one_plot) { pdf("plot_profiler_results_each_context_no_lockdown.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "all") { pdf("plot_profiler_results_each_context_no_lockdown.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 full_assocc_deliberation = "FULL ASSOCC DELIBERATION"
 
@@ -143,10 +142,14 @@ for (i in 1:nrow(df_profiler_mean_times_summarized)) {
 
 df_profiler_mean_times_summarized <- df_profiler_mean_times_summarized[order(df_profiler_mean_times_summarized$context, df_profiler_mean_times_summarized$function_name), ]
 
+#-----------------------------------------
+#--- Plot the data                     ---
+#-----------------------------------------
+
 plot_calls <- function(dataframe) {
   ggplot(dataframe, aes(x = function_name, y = incl_t_ms, fill = as.factor(context))) +
     geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Calls for Each Context and Function Name Combination",
+    labs(title = "Execution time for different context-depths",
          x = "Function Name",
          y = "Incl time",
          fill = "Context") +
@@ -154,7 +157,13 @@ plot_calls <- function(dataframe) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
+if (plot_type == "one") { pdf("plot_execution_context_depths.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 plot_calls(df_profiler_mean_times_summarized)
+if (plot_type == "one") { dev.off() }
+
+#-----------------------------------------
+#--- Prepare the data                  ---
+#-----------------------------------------
 
 # Taking out the interesting function names
 selected_strings <- c("GO", "SELECT-ACTIVITY", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
@@ -178,7 +187,13 @@ for (i in 1:nrow(df_profiler_filtered)) {
 selected_strings <- c("CONTEXT-SELECT-ACTIVITY", full_assocc_deliberation)
 df_profiler_context_and_full_assocc <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
 
-pdf("plot_profiler_results_deliberation.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12)
+
+#-----------------------------------------
+#--- Plot the results                  ---
+#-----------------------------------------
+
+if (plot_type == "one") { pdf("plot_profiler_results_deliberation.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+
 # Combined
 ggplot(df_profiler_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fill = function_name)) +
   geom_boxplot() +
@@ -188,13 +203,15 @@ ggplot(df_profiler_context_and_full_assocc, aes(x = factor(context), y = incl_t_
        fill = "Function Name") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dev.off()
 
-pdf("plot_profiler_results_go.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12)
+if (plot_type == "one") { dev.off() }
+
+
 # Select only GO
 selected_strings <- c("GO")
 df_profiler_go <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
 
+if (plot_type == "one") { pdf("plot_profiler_results_go.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_profiler_go, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
@@ -203,12 +220,15 @@ ggplot(df_profiler_go, aes(x = factor(context), y = incl_t_ms)) +
        y = "incl_t_ms") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-dev.off()
+
+if (plot_type == "one") { dev.off() }
+
 
 # Select only Context
 selected_strings <- c("CONTEXT-SELECT-ACTIVITY")
 df_profiler_context <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
 
+if (plot_type == "one") { pdf("plot_profiler_results_select_activity.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_profiler_context, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
@@ -218,11 +238,14 @@ ggplot(df_profiler_context, aes(x = factor(context), y = incl_t_ms)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+if (plot_type == "one") { dev.off() }
+
 
 # Select only Full ASSOCC
 selected_strings <- c(full_assocc_deliberation)
 df_profiler_full_ASSOCC <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
 
+if (plot_type == "one") { pdf("plot_profiler_results_full_ASSOCC.pdf", width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_profiler_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
@@ -232,30 +255,44 @@ ggplot(df_profiler_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-if (one_plot) { dev.off() }
+if (plot_type == "one") { dev.off() }
 
-#--------------------------------------
+if (plot_type == "all") { dev.off() }
+
+
+#-----------------------------------------
 #--- Profiler function calls and time? ---
-#--------------------------------------
+#-----------------------------------------
 
 # I think I want to automize this, that it finds the right factor for the right row, probably a for loop
 # going through every row and reading the line if CSN, then add CSN, etc.
 
 # Or should I make all those function names unique?? I don't know
 
-selected_strings <- c("CONTEXT-STATE-NIGHT", "CSN-AFTER-MINIMAL-CONTEXT-F", "CSN-DEFAULT",
-                      "CONTEXT-STATE-FREE-TIME", "CSFT-AFTER-MINIMAL-CONTEXT-F", "CSFT-DEFAULT",
-                      "CONTEXT-STATE-OBLIGATION", "CSO-AFTER-MINIMAL-CONTEXT-F", "CSO-DEFAULT",
-                      "CSOWH-DEFAULT", "CSOWH-AFTER-MINIMAL-CONTEXT-F") #"CONTEXT-STATE-OBLIGATION-WORK-HOME" is implied
+depth_value = 1
+depth_value_str = "1"
+
+selected_strings <- c("CSN-FUNCTION",    "CSN-DEFAULT",   "CSN-AFTER-MINIMAL-CONTEXT-F",
+                      "CSFT-FUNCTION",   "CSFT-DEFAULT",  "CSFT-AFTER-MINIMAL-CONTEXT-F",
+                      "CSO-FUNCTION",    "CSO-DEFAULT",   "CSO-AFTER-MINIMAL-CONTEXT-F",
+                      "CSOWH-FUNCTION",  "CSOWH-DEFAULT", "CSOWH-AFTER-MINIMAL-CONTEXT-F",
+                      "CSSN-FUNCTION",   "CSSN-DEFAULT",  "CSSN-AFTER-MINIMAL-CONTEXT-F",
+                      "CSSFT-FUNCTION",  "CSSFT-DEFAULT", "CSSFT-AFTER-MINIMAL-CONTEXT-F",
+                      "CSSO-FUNCTION",   "CSSO-DEFAULT",  "CSSO-AFTER-MINIMAL-CONTEXT-F",
+                      "CSSOWH-FUNCTION", "CSSOWH-DEFAULT","CSSOWH-AFTER-MINIMAL-CONTEXT-F") #"CONTEXT-STATE-OBLIGATION-WORK-HOME" is implied
 
 df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
-df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == 1, ]
+df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == depth_value, ]
+
+# Remove a specific string
+string_to_remove <- "SUCCEEDED"
+df_profiler_mean_times_filtered <- subset(df_profiler_mean_times_filtered, !grepl(string_to_remove, function_name))
 
 for (i in 1:length(selected_strings))
 {
   if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name)
   {
-    df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = "1",
+    df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = depth_value_str,
                                              function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
   }
 }
@@ -265,32 +302,49 @@ state = c()
 
 # If it is not in there it should be added with a zero number?? I think so...
 
-for (i in 1:length(df_profiler_mean_times_filtered))
+for (i in 1:nrow(df_profiler_mean_times_filtered))
 {
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CONTEXT-STATE-"))
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-FUNCTION"))
   { factors <- c(factors, "0. Function") }
   if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-AFTER-MINIMAL-CONTEXT"))
   { factors <- c(factors, "6. Full ASSOCC") }
   if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-DEFAULT"))
   { factors <- c(factors, "1. Habitual") }
   
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "NIGHT") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-"))
+  
+  print(df_profiler_mean_times_filtered$function_name[i])
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-"))
   {
     state <- c(state, "Night")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "FREE-TIME") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-"))
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-"))
   {
     state <- c(state, "Freetime")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-WORK-HOME") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-"))
-  {
-    state <- c(state, "Obligation WH")
-  }
-  else if (str_contains(df_profiler_mean_times_filtered$function_name[i], "OBLIGATION") || str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-"))
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-"))
   {
     state <- c(state, "Obligation")
   }
-  
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-"))
+  {
+    state <- c(state, "Obligation WH")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSN-"))
+  {
+    state <- c(state, "Night Sick")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSFT-"))
+  {
+    state <- c(state, "Freetime Sick")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSO-"))
+  {
+    state <- c(state, "Obligation Sick")
+  }
+  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSOWH-"))
+  {
+    state <- c(state, "Obligation WH Sick")
+  }
 }
 
 df_profiler_mean_times_filtered$factors <- factors
@@ -299,7 +353,7 @@ df_profiler_mean_times_filtered$state <- state
 plot_calls <- function(dataframe) {
   ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
     geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Calls for Each Context and Function Name Combination",
+    labs(title = "Context State Success per Deliberation Type",
          x = "Function Name",
          y = "Calls",
          fill = "Context") +
@@ -307,4 +361,6 @@ plot_calls <- function(dataframe) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
+if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_context_state_success.pdf", sep=""), width=9, height=5) }
 plot_calls(df_profiler_mean_times_filtered)
+if (plot_type == "one") { dev.off() }

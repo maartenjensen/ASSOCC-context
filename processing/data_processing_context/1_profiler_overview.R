@@ -79,11 +79,6 @@ profilerLoadSpecificData <- function(p_df_profiler, p_string) {
   return("It didn't work")
 }
 
-profilerPlotOverview <- function(df_profiler, output_dir, one_plot) {
-  
-  print("Profiler plotting function")
-}
-
 profilerSummarize <- function(df_profiler, df_profiler_overview) {
   
   print("----------------------------")
