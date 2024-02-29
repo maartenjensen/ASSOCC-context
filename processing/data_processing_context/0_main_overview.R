@@ -271,7 +271,7 @@ if (plot_type == "all") { dev.off() }
 
 depth_value = 1
 
-for (depth_value in 1:5)
+for (depth_value in 2)#1:5)
 {
 depth_value_str = toString(depth_value)
 
@@ -366,6 +366,13 @@ show(plot_calls(df_profiler_mean_times_filtered, depth_value))
 if (plot_type == "one") { dev.off() }
 
 }
+
+
+
+
+
+
+
 
 
 

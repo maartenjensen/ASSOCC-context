@@ -29,12 +29,14 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 directory_files <- "2024-02-04 Lockdown Full"
 #directory_files <- "2024-02-04 No Lockdown Full"
 #directory_files <- "2024-02-12 No Conflict Habits"
+directory_files <- "2024-02-14-no-lockdown"
 
 dataFileNames <- c("2024-02-04-lockdown-full.csv")
 #dataFileNames <- c("2024-02-04-no-lockdown-full.csv")
 #dataFileNames <- c("2024-02-12-habits-no-conflict.csv")
+dataFileNames <- c("2024-02-14-no-lockdown.csv")
 
-gl_limits_x_max <- 480 #240
+gl_limits_x_max <- 240
 
 #--- WORKSPACE AND DIRECTORY ---
 setwd(paste(directory_r, directory_files, sep="/"))
@@ -157,7 +159,7 @@ plot_type <- "one"
 gl_pdf_width = 9
 gl_pdf_height = 6
 
-if (plot_type == "all") { pdf("plot_context_assocc_complete.pdf", width=gl_pdf_width, height=gl_pdf_height) }
+if (plot_type == "all") { pdf(paste("plot_", directory_files, "_context_assocc_complete.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) }
 
 # Now I want to plot the different types of deliberation
 # I want to plot the following columns: Minimal context, Most salient need, Compare need levels, Normative deliberation, Conformity deliberation, Full need
@@ -192,17 +194,17 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + xlab("Ticks") + ylab("Used by n agents")
   p <- p + theme_bw()
 
-  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -229,7 +231,7 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + xlab("Ticks") + ylab("Status of n agents")
   p <- p + theme_bw()
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -284,7 +286,7 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + xlab("Ticks") + ylab("Agents at Location Type")
   p <- p + theme_bw()
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
-  if (plot_type == "one") { pdf(paste("plot_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }
