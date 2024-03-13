@@ -162,7 +162,7 @@ plot_calls <- function(dataframe) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 plot_calls(df_profiler_mean_times_summarized)
 if (plot_type == "one") { dev.off() }
 
@@ -271,7 +271,7 @@ if (plot_type == "all") { dev.off() }
 
 depth_value = 1
 
-for (depth_value in 2)#1:5)
+for (depth_value in 1:5)
 {
 depth_value_str = toString(depth_value)
 
@@ -367,16 +367,161 @@ if (plot_type == "one") { dev.off() }
 
 }
 
+#-----------------------------------------
+#---          Combined plots           ---
+#-----------------------------------------
+depth_values <- 1:5
+
+selected_strings <- c("CSN-FUNCTION", "CSN-FUNCTION-SUCCEEDED",
+                      "CSFT-FUNCTION", "CSFT-FUNCTION-SUCCEEDED",
+                      "CSO-FUNCTION", "CSO-FUNCTION-SUCCEEDED",
+                      "CSOWH-FUNCTION", "CSOWH-FUNCTION-SUCCEEDED",
+                      "CSSN-FUNCTION", "CSSN-FUNCTION-SUCCEEDED",
+                      "CSSFT-FUNCTION", "CSSFT-FUNCTION-SUCCEEDED",
+                      "CSSO-FUNCTION", "CSSO-FUNCTION-SUCCEEDED",
+                      "CSSOWH-FUNCTION", "CSSOWH-FUNCTION-SUCCEEDED")
+
+combined_df <- data.frame()
+
+for (depth_value in depth_values) {
+  depth_value_str <- toString(depth_value)
+  
+  df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse = "|"), df_profiler_mean_times$function_name), ]
+  df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == depth_value, ]
+  
+  for (i in 1:length(selected_strings)) {
+    if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name) {
+      df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = depth_value_str,
+                                                                                           function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
+    }
+  }
+  
+  factors <- c()
+  state <- c()
+  
+  for (i in 1:nrow(df_profiler_mean_times_filtered)) {
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-FUNCTION-SUCCEEDED")) {
+      factors <- c(factors, "Succeeded")
+    } else {
+      factors <- c(factors, "Calls")
+    }
+    
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-")) {
+      state <- c(state, "Night")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-")) {
+      state <- c(state, "Freetime")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-")) {
+      state <- c(state, "Obligation")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-")) {
+      state <- c(state, "Obligation WH")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSN-")) {
+      state <- c(state, "Night Sick")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSFT-")) {
+      state <- c(state, "Freetime Sick")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSO-")) {
+      state <- c(state, "Obligation Sick")
+    }
+    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSOWH-")) {
+      state <- c(state, "Obligation WH Sick")
+    }
+  }
+  
+  df_profiler_mean_times_filtered$factors <- factors
+  df_profiler_mean_times_filtered$state <- state
+  
+  combined_df <- rbind(combined_df, df_profiler_mean_times_filtered)
+}
+
+plot_calls <- function(dataframe) {
+  ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(title = "Context State Success",
+         x = "Function Name",
+         y = "Calls",
+         fill = "Context") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    coord_cartesian(ylim = c(0, 85000)) +
+    facet_wrap(~ context, nrow = 3) # Combining plots into subplots
+}
+
+plot_calls(combined_df)
+
+#TODO: change the color of these plots, light normal state, dark succesful state. Green (freetime), night (gray), obligation (blue?)
+
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_cd_all_context_state_success.pdf", sep=""), width = 9, height = 12) } # Setting up PDF for multiple plots
+plot_calls(combined_df)
+if (plot_type == "one") { dev.off() }
+
+
+#-----------------------------------------
+#--- Exporting the data for the tables ---
+#-----------------------------------------
+
+print("The following table is for the execution time of different functions.")
+df_profiler_mean_times_summarized
+
+# Step one, change the data frame to represent the right data
+normalise_max  <- max(df_profiler_mean_times_summarized$calls)
+normalise_with <- c()
+
+for (ce in 0:5) {
+  
+  multiplication_value <- normalise_max / df_profiler_mean_times_summarized[df_profiler_mean_times_summarized$context == ce & 
+                                            df_profiler_mean_times_summarized$function_name == "CONTEXT-SELECT-ACTIVITY", ]$calls
+  print(multiplication_value)
+  normalise_with <- c(normalise_with, multiplication_value, multiplication_value, multiplication_value)
+}
+
+df_profiler_mean_times_summarized$normalise_with <- normalise_with
+
+
+# I want to multiply the column df_profiler_mean_times_summarized$calls with df_profiler_mean_times_summarized$normalise_with
+# and then add the result to a new column df_profiler_mean_times_summarized$normalised_calls
+
+df_profiler_mean_times_summarized$normalised_calls <- df_profiler_mean_times_summarized$calls * df_profiler_mean_times_summarized$normalise_with
+df_profiler_mean_times_summarized$normalised_incl_t_ms <- df_profiler_mean_times_summarized$incl_t_ms * df_profiler_mean_times_summarized$normalise_with
+
+# Step two, output the data to a nice table
+
+for (i in 1:5) {
+  
+  df_profiler_function_times
+  print(i)
+  
+}
+
+
+0                 & 180000                   & -   & 174000               & -   & ...         &     \\
+1                 & 80000                    & -   & 74000                & -   &             &     \\
+2                 & 45000                    & -   & 39000                & -   &             &     \\
+3                 & 23000                    & -   & 17000                & -   &             &     \\
+4                 & 20000                    & -   & 14000                & -   &             &     \\
+5                 & 12000                    & -   & 6000                 & -   &             & 
 
 
 
 
+  
+  
+  
 
 
+  
 
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
 
-
-# OLD CODE
 #-----------------------------------------
 #--- Profiler function calls and time? ---
 #-----------------------------------------
