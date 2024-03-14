@@ -65,3 +65,19 @@ end
 to-report is-night?
   report slice-of-the-day = "night"
 end
+
+to-report slice-of-the-day-of-current-plots-and-data
+  if slice-of-the-day = "afternoon"
+  [ report "morning" ]
+
+  if slice-of-the-day = "evening"
+  [ report "afternoon" ]
+
+  if slice-of-the-day = "night"
+  [ report "evening" ]
+
+  if slice-of-the-day = "morning" 
+  [ report "night" ]
+  
+  report "ERROR"
+end

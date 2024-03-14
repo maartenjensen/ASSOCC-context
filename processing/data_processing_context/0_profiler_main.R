@@ -1,4 +1,7 @@
-#--- LIBRARIES ---
+#-------------------------------
+#---  INITIALISE LIBRARIES   ---
+#-------------------------------
+
 # Install the libraries
 #install.packages()
 
@@ -24,6 +27,11 @@ if (!exists("libraries_loaded"))
 #-------------------------------
 
 #-   GENERAL PARAMETERS   -
+options(scipen=100) # This is for the profiler results
+
+gl_pdf_width  = 10
+gl_pdf_height = 7
+
 # One of: "none", "one", "all"
 plot_type <- "none"
 plot_type <- "one" 
@@ -38,6 +46,18 @@ directory_files <- "2024-02-14-no-lockdown"
 #                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
 #                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
 # #"report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= true].csv" is omitted.
+
+# C = context depth
+# H = households
+# R = random see
+# A = action space
+# L = lockdown
+# DCC = disable conflict checking
+# SRFQ = should rigidly follow quarantine
+
+# behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario 
+#   "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking
+#   "-SRFQ=" ce-should-rigidly-follow-quarantine)
 
 filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
                         "report-[C= 0 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
@@ -79,73 +99,87 @@ filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false 
 setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
+
 #--------------------------------------
-#---    PROFILER - SCALABILITY      ---
+#---    LOAD ALL PROFILER DATA      ---
 #--------------------------------------
-source("../1_profiler_overview.R")
+source("../0_profiler_support.R")
 df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 
-df_profiler_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
+df_p_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
 
-df_profiler_csn = profilerLoadSpecificData(df_profiler, "CSN")
-df_profiler_cssn = profilerLoadSpecificData(df_profiler, "CSSN")
-df_profiler_cso = profilerLoadSpecificData(df_profiler, "CSO-")
-df_profiler_csso = profilerLoadSpecificData(df_profiler, "CSSO-")
-df_profiler_csowh = profilerLoadSpecificData(df_profiler, "CSOWH")
-df_profiler_cssowh = profilerLoadSpecificData(df_profiler, "CSSOWH")
-df_profiler_csft = profilerLoadSpecificData(df_profiler, "CSFT")
-df_profiler_cssft = profilerLoadSpecificData(df_profiler, "CSSFT")
+df_p_csn = profilerLoadSpecificData(df_profiler, "CSN")
+df_p_cssn = profilerLoadSpecificData(df_profiler, "CSSN")
+df_p_cso = profilerLoadSpecificData(df_profiler, "CSO-")
+df_p_csso = profilerLoadSpecificData(df_profiler, "CSSO-")
+df_p_csowh = profilerLoadSpecificData(df_profiler, "CSOWH")
+df_p_cssowh = profilerLoadSpecificData(df_profiler, "CSSOWH")
+df_p_csft = profilerLoadSpecificData(df_profiler, "CSFT")
+df_p_cssft = profilerLoadSpecificData(df_profiler, "CSSFT")
 
 # The profiler function that summarizes all the important results
-profilerSummarize(df_profiler, df_profiler_overview)
+profilerSummarize(df_profiler, df_p_overview)
 
-#-----------------------------------------
-#--- The options                       ---
-#-----------------------------------------
-options(scipen=100) # This is for the profiler results
 
-gl_pdf_width  = 10
-gl_pdf_height = 7
 
 #---------------------------------------
-#--- PROFILER - PLOT EXECUTION TIMES ---
+#---    PREPARE AND COMBINE DATA     ---
 #---------------------------------------
 if (plot_type == "all") { pdf(paste("plot_", directory_files, "_profiler_results_each_context_no_lockdown.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 full_assocc_deliberation = "FULL ASSOCC DELIBERATION"
 
 # Converting the data frame to an aggregate
-df_profiler_mean_times <- df_profiler %>% 
+df_p_mean <- df_profiler %>% 
   group_by(context, function_name) %>% 
   summarise(calls = mean(calls, na.rm = TRUE),
             incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
             excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
             excl_calls = mean(excl_calls, na.rm = TRUE))
 
-df_profiler_mean_times$calls <- round(df_profiler_mean_times$calls, digits=2)
-df_profiler_mean_times$incl_t_ms <- round(df_profiler_mean_times$incl_t_ms, digits=4)
-df_profiler_mean_times$excl_t_ms <- round(df_profiler_mean_times$excl_t_ms, digits=4)
-df_profiler_mean_times$excl_calls <- round(df_profiler_mean_times$excl_calls, digits=6)
+df_p_mean_std <- df_profiler %>% 
+  group_by(context, function_name) %>% 
+  summarise(calls = sd(calls, na.rm = TRUE),
+            incl_t_ms = sd(incl_t_ms, na.rm = TRUE),
+            excl_t_ms = sd(excl_t_ms, na.rm = TRUE),
+            excl_calls = sd(excl_calls, na.rm = TRUE))
 
-# Taking out the interesting function names
+df_p_mean$calls <- round(df_p_mean$calls, digits=2)
+df_p_mean$incl_t_ms <- round(df_p_mean$incl_t_ms, digits=4)
+df_p_mean$excl_t_ms <- round(df_p_mean$excl_t_ms, digits=4)
+df_p_mean$excl_calls <- round(df_p_mean$excl_calls, digits=6)
+
+df_p_mean$calls_sd <- df_p_mean_std$calls
+df_p_mean$incl_t_ms_sd <- df_p_mean_std$incl_t_ms
+df_p_mean$excl_t_ms_sd <- df_p_mean_std$excl_t_ms
+df_p_mean$excl_calls_sd <- df_p_mean_std$excl_calls
+
+# I want to have the standard deviations of df_p_mean$calls
+
+
+
+# Determining the most interesting names
 selected_strings <- c("GO", "SELECT-ACTIVITY", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
 
 # Filter the dataframe
-df_profiler_mean_times_summarized <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
+df_p_mean_summarized <- df_p_mean[grep(paste(selected_strings, collapse="|"), df_p_mean$function_name), ]
 
 # Remove a specific string
 string_to_remove <- "CONTEXT-DELIBERATION-SELECT-ACTIVITY"
-df_profiler_mean_times_summarized <- subset(df_profiler_mean_times_summarized, !grepl(string_to_remove, function_name))
+df_p_mean_summarized <- subset(df_p_mean_summarized, !grepl(string_to_remove, function_name))
 
 # Replace specific in the 'function_name' column
-for (i in 1:nrow(df_profiler_mean_times_summarized)) {
-  if (df_profiler_mean_times_summarized$function_name[i] == "SELECT-ACTIVITY")
-  { df_profiler_mean_times_summarized$function_name[i] <- "CONTEXT-SELECT-ACTIVITY" }
-  if (df_profiler_mean_times_summarized$function_name[i] == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
-  { df_profiler_mean_times_summarized$function_name[i] <- full_assocc_deliberation }
+for (i in 1:nrow(df_p_mean_summarized)) {
+  if (df_p_mean_summarized$function_name[i] == "SELECT-ACTIVITY")
+  { df_p_mean_summarized$function_name[i] <- "CONTEXT-SELECT-ACTIVITY" }
+  if (df_p_mean_summarized$function_name[i] == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
+  { df_p_mean_summarized$function_name[i] <- full_assocc_deliberation }
 }
 
-df_profiler_mean_times_summarized <- df_profiler_mean_times_summarized[order(df_profiler_mean_times_summarized$context, df_profiler_mean_times_summarized$function_name), ]
+df_p_mean_summarized <- df_p_mean_summarized[order(df_p_mean_summarized$context, df_p_mean_summarized$function_name), ]
+
+
+
 
 #-----------------------------------------
 #--- Plot the data                     ---
@@ -163,7 +197,7 @@ plot_calls <- function(dataframe) {
 }
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
-plot_calls(df_profiler_mean_times_summarized)
+plot_calls(df_p_mean_summarized)
 if (plot_type == "one") { dev.off() }
 
 #-----------------------------------------
@@ -174,23 +208,23 @@ if (plot_type == "one") { dev.off() }
 selected_strings <- c("GO", "SELECT-ACTIVITY", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
 
 # Filter the dataframe
-df_profiler_filtered <- df_profiler[grep(paste(selected_strings, collapse="|"), df_profiler$function_name), ]
+df_p_filtered <- df_profiler[grep(paste(selected_strings, collapse="|"), df_profiler$function_name), ]
 
 # Remove a specific string
 string_to_remove <- "CONTEXT-DELIBERATION-SELECT-ACTIVITY"
-df_profiler_filtered <- subset(df_profiler_filtered, !grepl(string_to_remove, function_name))
+df_p_filtered <- subset(df_p_filtered, !grepl(string_to_remove, function_name))
 
 # Replace occurrences in the 'function_name' column
-for (i in 1:nrow(df_profiler_filtered)) {
-  if (df_profiler_filtered$function_name[i] == "SELECT-ACTIVITY")
-  { df_profiler_filtered$function_name[i] <- "CONTEXT-SELECT-ACTIVITY" }
-  if (df_profiler_filtered$function_name[i] == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
-  { df_profiler_filtered$function_name[i] <- full_assocc_deliberation }
+for (i in 1:nrow(df_p_filtered)) {
+  if (df_p_filtered$function_name[i] == "SELECT-ACTIVITY")
+  { df_p_filtered$function_name[i] <- "CONTEXT-SELECT-ACTIVITY" }
+  if (df_p_filtered$function_name[i] == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
+  { df_p_filtered$function_name[i] <- full_assocc_deliberation }
 }
 
 # Select only CONTEXT and Full ASSOCC
 selected_strings <- c("CONTEXT-SELECT-ACTIVITY", full_assocc_deliberation)
-df_profiler_context_and_full_assocc <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
+df_p_context_and_full_assocc <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
 
 #-----------------------------------------
@@ -200,7 +234,7 @@ df_profiler_context_and_full_assocc <- df_profiler_filtered[grep(paste(selected_
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_deliberation.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 # Combined
-ggplot(df_profiler_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fill = function_name)) +
+ggplot(df_p_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fill = function_name)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for Deliberation",
        x = "Context",
@@ -214,11 +248,11 @@ if (plot_type == "one") { dev.off() }
 
 # Select only GO
 selected_strings <- c("GO")
-df_profiler_go <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
+df_p_go <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_profiler_go, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_go, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for GO",
        x = "Context-depth",
@@ -231,11 +265,11 @@ if (plot_type == "one") { dev.off() }
 
 # Select only Context
 selected_strings <- c("CONTEXT-SELECT-ACTIVITY")
-df_profiler_context <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
+df_p_context <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_select_activity.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_profiler_context, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_context, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for CONTEXT-SELECT-ACTIVITY",
        x = "Context-depth",
@@ -248,11 +282,11 @@ if (plot_type == "one") { dev.off() }
 
 # Select only Full ASSOCC
 selected_strings <- c(full_assocc_deliberation)
-df_profiler_full_ASSOCC <- df_profiler_filtered[grep(paste(selected_strings, collapse="|"), df_profiler_filtered$function_name), ]
+df_p_full_ASSOCC <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_full_ASSOCC.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_profiler_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for Full ASSOCC",
        x = "Context-depth",
@@ -284,14 +318,14 @@ selected_strings <- c("CSN-FUNCTION", "CSN-FUNCTION-SUCCEEDED",
                       "CSSO-FUNCTION", "CSSO-FUNCTION-SUCCEEDED",
                       "CSSOWH-FUNCTION", "CSSOWH-FUNCTION-SUCCEEDED")
 
-df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
-df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == depth_value, ]
+df_p_mean_filtered <- df_p_mean[grep(paste(selected_strings, collapse="|"), df_p_mean$function_name), ]
+df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$context == depth_value, ]
 
 for (i in 1:length(selected_strings))
 {
-  if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name)
+  if (!selected_strings[i] %in% df_p_mean_filtered$function_name)
   {
-    df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = depth_value_str,
+    df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
                                                                                          function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
   }
 }
@@ -301,50 +335,50 @@ state = c()
 
 # If it is not in there it should be added with a zero number?? I think so...
 
-for (i in 1:nrow(df_profiler_mean_times_filtered))
+for (i in 1:nrow(df_p_mean_filtered))
 {
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-FUNCTION-SUCCEEDED"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "-FUNCTION-SUCCEEDED"))
   { factors <- c(factors, "Succeeded") }
   else
   { factors <- c(factors, "Calls") }
 
-  print(df_profiler_mean_times_filtered$function_name[i])
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-"))
+  print(df_p_mean_filtered$function_name[i])
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSN-"))
   {
     state <- c(state, "Night")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSFT-"))
   {
     state <- c(state, "Freetime")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSO-"))
   {
     state <- c(state, "Obligation")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSOWH-"))
   {
     state <- c(state, "Obligation WH")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSN-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSN-"))
   {
     state <- c(state, "Night Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSFT-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSFT-"))
   {
     state <- c(state, "Freetime Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSO-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSO-"))
   {
     state <- c(state, "Obligation Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSOWH-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSOWH-"))
   {
     state <- c(state, "Obligation WH Sick")
   }
 }
 
-df_profiler_mean_times_filtered$factors <- factors
-df_profiler_mean_times_filtered$state <- state
+df_p_mean_filtered$factors <- factors
+df_p_mean_filtered$state <- state
 
 plot_calls <- function(dataframe, context_depth) {
   ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
@@ -359,10 +393,10 @@ plot_calls <- function(dataframe, context_depth) {
     #scale_colour_manual(labels=c('Calls'='Calls', 'Succeeded'='Succeeded'), breaks=c('Calls','Succeeded'), values=c('#33ddff', '#48bf3f'))
 }
 
-show(plot_calls(df_profiler_mean_times_filtered, depth_value))
+show(plot_calls(df_p_mean_filtered, depth_value))
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_cd_", depth_value, "_context_state_success.pdf", sep=""), width=9, height=5) }
-show(plot_calls(df_profiler_mean_times_filtered, depth_value))
+show(plot_calls(df_p_mean_filtered, depth_value))
 if (plot_type == "one") { dev.off() }
 
 }
@@ -386,12 +420,12 @@ combined_df <- data.frame()
 for (depth_value in depth_values) {
   depth_value_str <- toString(depth_value)
   
-  df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse = "|"), df_profiler_mean_times$function_name), ]
-  df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == depth_value, ]
+  df_p_mean_filtered <- df_p_mean[grep(paste(selected_strings, collapse = "|"), df_p_mean$function_name), ]
+  df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$context == depth_value, ]
   
   for (i in 1:length(selected_strings)) {
-    if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name) {
-      df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = depth_value_str,
+    if (!selected_strings[i] %in% df_p_mean_filtered$function_name) {
+      df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
                                                                                            function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
     }
   }
@@ -399,43 +433,43 @@ for (depth_value in depth_values) {
   factors <- c()
   state <- c()
   
-  for (i in 1:nrow(df_profiler_mean_times_filtered)) {
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-FUNCTION-SUCCEEDED")) {
+  for (i in 1:nrow(df_p_mean_filtered)) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "-FUNCTION-SUCCEEDED")) {
       factors <- c(factors, "Succeeded")
     } else {
       factors <- c(factors, "Calls")
     }
     
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSN-")) {
       state <- c(state, "Night")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSFT-")) {
       state <- c(state, "Freetime")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSO-")) {
       state <- c(state, "Obligation")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSOWH-")) {
       state <- c(state, "Obligation WH")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSN-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSSN-")) {
       state <- c(state, "Night Sick")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSFT-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSSFT-")) {
       state <- c(state, "Freetime Sick")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSO-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSSO-")) {
       state <- c(state, "Obligation Sick")
     }
-    if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSOWH-")) {
+    if (str_contains(df_p_mean_filtered$function_name[i], "CSSOWH-")) {
       state <- c(state, "Obligation WH Sick")
     }
   }
   
-  df_profiler_mean_times_filtered$factors <- factors
-  df_profiler_mean_times_filtered$state <- state
+  df_p_mean_filtered$factors <- factors
+  df_p_mean_filtered$state <- state
   
-  combined_df <- rbind(combined_df, df_profiler_mean_times_filtered)
+  combined_df <- rbind(combined_df, df_p_mean_filtered)
 }
 
 plot_calls <- function(dataframe) {
@@ -464,47 +498,33 @@ if (plot_type == "one") { dev.off() }
 #--- Exporting the data for the tables ---
 #-----------------------------------------
 
-print("The following table is for the execution time of different functions.")
-df_profiler_mean_times_summarized
-
-# Step one, change the data frame to represent the right data
-normalise_max  <- max(df_profiler_mean_times_summarized$calls)
-normalise_with <- c()
-
-for (ce in 0:5) {
-  
-  multiplication_value <- normalise_max / df_profiler_mean_times_summarized[df_profiler_mean_times_summarized$context == ce & 
-                                            df_profiler_mean_times_summarized$function_name == "CONTEXT-SELECT-ACTIVITY", ]$calls
-  print(multiplication_value)
-  normalise_with <- c(normalise_with, multiplication_value, multiplication_value, multiplication_value)
-}
-
-df_profiler_mean_times_summarized$normalise_with <- normalise_with
+# Write in the thesis
+# There is a different number of agents function calls because there are some agents that passed away due to Covid.
+# I don't have to normalize the execution time data, if I normalize it will probably only change the results by 0.1%.
+# Since we are only interested in the trend, then it is not important to be so precise and therefore we chose to
+# not normalize all the data and rather leave it as it is.
 
 
-# I want to multiply the column df_profiler_mean_times_summarized$calls with df_profiler_mean_times_summarized$normalise_with
-# and then add the result to a new column df_profiler_mean_times_summarized$normalised_calls
+# I want to multiply the column df_p_mean_summarized$calls with df_p_mean_summarized$normalise_with
+# and then add the result to a new column df_p_mean_summarized$normalised_calls
 
-df_profiler_mean_times_summarized$normalised_calls <- df_profiler_mean_times_summarized$calls * df_profiler_mean_times_summarized$normalise_with
-df_profiler_mean_times_summarized$normalised_incl_t_ms <- df_profiler_mean_times_summarized$incl_t_ms * df_profiler_mean_times_summarized$normalise_with
+df_p_mean_summarized
 
 # Step two, output the data to a nice table
 
-for (i in 1:5) {
+for (ce in 0:5) {
   
-  df_profiler_function_times
-  print(i)
+  df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$context==ce, ]
+  str = paste(ce, "&", sep = " ")
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\" )
+  print(str)
   
 }
-
-
-0                 & 180000                   & -   & 174000               & -   & ...         &     \\
-1                 & 80000                    & -   & 74000                & -   &             &     \\
-2                 & 45000                    & -   & 39000                & -   &             &     \\
-3                 & 23000                    & -   & 17000                & -   &             &     \\
-4                 & 20000                    & -   & 14000                & -   &             &     \\
-5                 & 12000                    & -   & 6000                 & -   &             & 
-
 
 
 
@@ -543,18 +563,18 @@ selected_strings <- c("CSN-FUNCTION",    "CSN-DEFAULT",   "CSN-AFTER-MINIMAL-CON
                       "CSSO-FUNCTION",   "CSSO-DEFAULT",  "CSSO-AFTER-MINIMAL-CONTEXT-F",
                       "CSSOWH-FUNCTION", "CSSOWH-DEFAULT","CSSOWH-AFTER-MINIMAL-CONTEXT-F")
 
-df_profiler_mean_times_filtered <- df_profiler_mean_times[grep(paste(selected_strings, collapse="|"), df_profiler_mean_times$function_name), ]
-df_profiler_mean_times_filtered <- df_profiler_mean_times_filtered[df_profiler_mean_times_filtered$context == depth_value, ]
+df_p_mean_filtered <- df_p_mean[grep(paste(selected_strings, collapse="|"), df_p_mean$function_name), ]
+df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$context == depth_value, ]
 
 # Remove a specific string
 string_to_remove <- "SUCCEEDED"
-df_profiler_mean_times_filtered <- subset(df_profiler_mean_times_filtered, !grepl(string_to_remove, function_name))
+df_p_mean_filtered <- subset(df_p_mean_filtered, !grepl(string_to_remove, function_name))
 
 for (i in 1:length(selected_strings))
 {
-  if (!selected_strings[i] %in% df_profiler_mean_times_filtered$function_name)
+  if (!selected_strings[i] %in% df_p_mean_filtered$function_name)
   {
-    df_profiler_mean_times_filtered <- rbind(df_profiler_mean_times_filtered, data.frame(context = depth_value_str,
+    df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
                                              function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
   }
 }
@@ -564,53 +584,53 @@ state = c()
 
 # If it is not in there it should be added with a zero number?? I think so...
 
-for (i in 1:nrow(df_profiler_mean_times_filtered))
+for (i in 1:nrow(df_p_mean_filtered))
 {
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-FUNCTION"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "-FUNCTION"))
   { factors <- c(factors, "0. Function") }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-AFTER-MINIMAL-CONTEXT"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "-AFTER-MINIMAL-CONTEXT"))
   { factors <- c(factors, "6. Full ASSOCC") }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "-DEFAULT"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "-DEFAULT"))
   { factors <- c(factors, "1. Habitual") }
   
   
-  print(df_profiler_mean_times_filtered$function_name[i])
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSN-"))
+  print(df_p_mean_filtered$function_name[i])
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSN-"))
   {
     state <- c(state, "Night")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSFT-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSFT-"))
   {
     state <- c(state, "Freetime")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSO-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSO-"))
   {
     state <- c(state, "Obligation")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSOWH-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSOWH-"))
   {
     state <- c(state, "Obligation WH")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSN-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSN-"))
   {
     state <- c(state, "Night Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSFT-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSFT-"))
   {
     state <- c(state, "Freetime Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSO-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSO-"))
   {
     state <- c(state, "Obligation Sick")
   }
-  if (str_contains(df_profiler_mean_times_filtered$function_name[i], "CSSOWH-"))
+  if (str_contains(df_p_mean_filtered$function_name[i], "CSSOWH-"))
   {
     state <- c(state, "Obligation WH Sick")
   }
 }
 
-df_profiler_mean_times_filtered$factors <- factors
-df_profiler_mean_times_filtered$state <- state
+df_p_mean_filtered$factors <- factors
+df_p_mean_filtered$state <- state
 
 plot_calls <- function(dataframe) {
   ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
@@ -624,5 +644,5 @@ plot_calls <- function(dataframe) {
 }
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_cd_", depth_value, "_context_state_success.pdf", sep=""), width=9, height=5) }
-plot_calls(df_profiler_mean_times_filtered)
+plot_calls(df_p_mean_filtered)
 if (plot_type == "one") { dev.off() }

@@ -405,10 +405,10 @@ day-of-the-week
 11
 
 MONITOR
-1264
-1047
-1380
-1092
+1368
+1090
+1484
+1135
 NIL
 slice-of-the-day
 17
@@ -496,7 +496,7 @@ HORIZONTAL
 SLIDER
 910
 616
-1160
+1108
 649
 probability-hospital-personel
 probability-hospital-personel
@@ -511,7 +511,7 @@ HORIZONTAL
 SLIDER
 910
 653
-1159
+1108
 686
 probability-school-personel
 probability-school-personel
@@ -526,7 +526,7 @@ HORIZONTAL
 SLIDER
 910
 689
-1158
+1109
 722
 probability-university-personel
 probability-university-personel
@@ -541,7 +541,7 @@ HORIZONTAL
 SLIDER
 912
 726
-1157
+1109
 759
 probability-shopkeeper
 probability-shopkeeper
@@ -1569,10 +1569,10 @@ Closing universities
 1
 
 TEXTBOX
-915
-596
-1235
-645
+868
+597
+1107
+615
 Worker distribution (relevant for economic model)
 11
 53.0
@@ -1936,10 +1936,10 @@ PENS
 "school" 1.0 0 -8630108 true "" "plot #schools-out-of-capital"
 
 PLOT
-1167
-533
-1698
-835
+1122
+494
+1671
+815
 Activities
 NIL
 NIL
@@ -4227,13 +4227,13 @@ lockdown-duration
 Number
 
 SWITCH
-1000
-225
-1198
-258
+212
+483
+410
+516
 context-sensitive-deliberation?
 context-sensitive-deliberation?
-0
+1
 1
 -1000
 
@@ -4352,7 +4352,7 @@ INPUTBOX
 1187
 134
 ce-log-agent-id
-166.0
+636.0
 1
 0
 Number
@@ -4431,10 +4431,10 @@ ce-risk-avoidance-private-leisure-preference
 Number
 
 SWITCH
-1000
-396
-1202
-429
+998
+349
+1200
+382
 ce-enable-global-lockdown
 ce-enable-global-lockdown
 1
@@ -4470,7 +4470,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
@@ -4486,13 +4486,13 @@ ce-risk-avoidance-home-preference
 Number
 
 SWITCH
-1000
-331
-1198
-364
+998
+295
+1196
+328
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4580,20 +4580,20 @@ count people with [[gathering-type] of current-activity = \"public-leisure\"]
 11
 
 CHOOSER
-1000
-261
-1198
-306
+998
+225
+1196
+270
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-4
+5
 
 SWITCH
-1212
-397
-1398
-430
+999
+402
+1185
+435
 ce-disable-conflict-checking
 ce-disable-conflict-checking
 1
@@ -4601,10 +4601,10 @@ ce-disable-conflict-checking
 -1000
 
 TEXTBOX
-1003
-376
-1153
-394
+1001
+333
+1151
+351
 Policy settings
 11
 125.0
@@ -4692,20 +4692,20 @@ Context log
 1
 
 TEXTBOX
-1215
-378
-1365
-396
+1002
+387
+1152
+405
 Other deliberation settings
 11
 125.0
 1
 
 TEXTBOX
-1003
-315
-1192
-333
+1001
+279
+1190
+297
 AUTO: If ce-context-depth = 5 [ True
 11
 14.0
@@ -4739,15 +4739,26 @@ NIL
 1
 
 SWITCH
-1212
-435
-1466
-468
+999
+437
+1253
+470
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
 1
 1
 -1000
+
+MONITOR
+1264
+1040
+1484
+1085
+NIL
+slice-of-the-day-of-current-plots-and-data
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

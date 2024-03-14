@@ -9,7 +9,7 @@
 ;--------------                              NIGHT                               ------------------
 to-report cssct-function ; cssct
   ; The time can be anything
-  if ce-log-agent and who = ce-log-agent-id [ print "Custom deliberation: So sick need treatment?" ]
+  if ce-log-agent and who = ce-log-agent-id [ print (word "Custom deliberation: So sick need treatment? Status: " infection-status) ]
   
   ; This function is all about determining whether the agent needs treatment. Critical symptoms or very low health need (this would overwrite all other needs)
   ; the health need is not included since its 0 for severely infected anyway Health is depricated since probably everyone gets a very low health satisfaction when sick EDIT: too many people requesting for hospital so added health level as constraint
@@ -17,6 +17,7 @@ to-report cssct-function ; cssct
   if cssct-is-observing-very-critical-symptoms?
   [ 
     if ce-log-agent and who = ce-log-agent-id [ print (word "Treatment, very critical:" ([infection-status] of turtle ce-log-agent-id)) ]
+    print (word "Treatment, very critical for agent: " who)
     report cssct-get-treatment
   ]
   ;if is-observing-critical-symptoms? Perhaps add this back again later
@@ -31,10 +32,9 @@ to-report cssct-function ; cssct
 end
 
 to-report cssct-is-observing-very-critical-symptoms?
-  if infection-status = "infected-terminal" 
-  or infection-status = "severe-to-hospital-infection-status"
-  or infection-status = "hospital-to-death-infection-status"
-  or infection-status = "hospital-to-rec-infection-status"
+  ;if infection-status = severe-to-hospital-infection-status, This one is not included since the agent is in a severe state, but will be hospitalized in the next state
+  if infection-status = hospital-to-death-infection-status
+  or infection-status = hospital-to-rec-infection-status
   [ report true]
   
   report false
