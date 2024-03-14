@@ -17,16 +17,9 @@ to-report cssct-function ; cssct
   if cssct-is-observing-very-critical-symptoms?
   [ 
     if ce-log-agent and who = ce-log-agent-id [ print (word "Treatment, very critical:" ([infection-status] of turtle ce-log-agent-id)) ]
-    print (word "Treatment, very critical for agent: " who)
     report cssct-get-treatment
   ]
-  ;if is-observing-critical-symptoms? Perhaps add this back again later
-  ;[ ifelse cssct-is-observing-very-critical-symptoms?
-  ;  [ if ce-log-agent and who = ce-log-agent-id [ print (word "Treatment needed, very critical:" ([infection-status] of turtle ce-log-agent-id)) ]
-  ;    report lput True (activity-descriptor my-hospital treatment-motive) ]
-  ;  [ if ce-log-agent and who = ce-log-agent-id [ print (word "Treatment perhaps not needed:" ([infection-status] of turtle ce-log-agent-id)) ]
-  ;    report [] ]
-  ;]
+
   if ce-log-agent and who = ce-log-agent-id [ print "No treatment needed, however sick" ]
   report []
 end

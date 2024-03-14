@@ -77,8 +77,10 @@ to-report csn-salient-need-deliberation [most-salient-need]
   
   ; The following needs support a non-default action and therefore the ce-need-critical-threshold needs to be checked. 
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
-  if most-salient-need = need-leisure and leisure-satisfaction-level < ce-need-critical-threshold [
-    report csn-leisure
+  if most-salient-need = need-leisure [
+    ifelse leisure-satisfaction-level < ce-need-critical-threshold
+    [ report csn-leisure ]
+    [ report csn-leisure-f ]
   ]
   
   ;------ CONFORMITY ------

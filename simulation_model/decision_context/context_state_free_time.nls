@@ -197,7 +197,7 @@ end
 
 to-report csft-conformity-check-network-motive-available [ network-motive ]
   let available-network-motives (list "rest" "relaxing")
-  if not (age = young-age)
+  if not (age = young-age) and is-shops-open-today?
   [
     set available-network-motives lput "essential shopping" available-network-motives
     set available-network-motives lput "shopping" available-network-motives
@@ -211,8 +211,8 @@ to-report csft-conformity-perform-network-action [ network-g-type network-motive
   if network-g-type = private-leisure-gathering-type and network-motive = "relaxing"
   [ report lput network-sd (activity-descriptor my-private-leisure "relaxing") ]
   
-  ; Financial check, or full assocc deliberation when young agent
-  if age = young-age or not (conformity-satisfaction-level < financial-stability-satisfaction-level) or not (conformity-satisfaction-level < financial-survival-satisfaction-level)
+  ; Financial check failed, or when shops are closed, or when young agent: Full assocc deliberation is used
+  if age = young-age or not is-shops-open-today? or not (conformity-satisfaction-level < financial-stability-satisfaction-level) or not (conformity-satisfaction-level < financial-survival-satisfaction-level)
   [ report csft-conformity-f ]
   
   if network-g-type = non-essential-shop-gathering-type and network-motive = "shopping"
@@ -261,7 +261,8 @@ end
 to-report csft-is-need-salient-and-conflicting
   if leisure-satisfaction-balanced < ce-need-salient-threshold or conformity-satisfaction-level < ce-need-salient-threshold or belonging-satisfaction-level < ce-need-salient-threshold
   [ report true ]
-  if age = young-age
+  ; Exit if young or if shops are closed today
+  if age = young-age or not is-shops-open-today?
   [ report false ]
   if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
   [ report true ]
@@ -286,8 +287,8 @@ to-report csft-salient-needs
   if conformity-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-conformity salient-needs 
     set salient-needs-level lput conformity-satisfaction-level salient-needs-level ]
-  ; Exit if not student or worker
-  if age = young-age
+  ; Exit if not student, worker or retired OR when the shops are closed which is on Sunday
+  if age = young-age or not is-shops-open-today?
   [ report list salient-needs salient-needs-level ]
   if food-safety-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-food-safety salient-needs 

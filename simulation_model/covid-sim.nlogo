@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-1
+0
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-1
+0
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-1
+0
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -4437,7 +4437,7 @@ SWITCH
 382
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-1
+0
 1
 -1000
 
@@ -4492,7 +4492,7 @@ SWITCH
 328
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4587,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-5
+3
 
 SWITCH
 999
