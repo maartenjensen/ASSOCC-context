@@ -173,17 +173,23 @@ if (plot_type == "all") { pdf(paste("plot_", directory_files, "_behaviour_all_pl
 # For deliberation types:
 # Should the agent numbers be a percentage?? Well to be honest I think so, but I can do this in Netlogo! That's way easier!
 
-depth_value = unique(df_final$ce_context_depth)[1]   # Check the depth values and make dependent on the dataframe's depth levels
-for (depth_value in unique(df_final$ce_context_depth))
+conflict_checking = unique(df_final$ce_disable_conflict_checking)[1]   # Check the depth values and make dependent on the dataframe's depth levels
+for (conflict_checking in unique(df_final$ce_disable_conflict_checking))
 {
-  subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
+  if (conflict_checking)
+  { title_name = "no_conflicts" }
+  else
+  { title_name = "conflicts" }
+
+  depth_value = 1 # Since its about checking the conflict
+  subset_df <- df_final_filtered[df_final_filtered$ce_disable_conflict_checking == conflict_checking, ]
   
   #=============================================================
   #================= PLOT DELIBERATION TYPE  ===================
   #=============================================================
   
   # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
-  df_deliberation_type <- select(subset_df, tick, ce_context_depth, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
+  df_deliberation_type <- select(subset_df, tick, ce_disable_conflict_checking, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
   df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
   
   # Can remove: p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
@@ -200,18 +206,18 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + xlab("Ticks") + ylab("Used by n agents")
   p <- p + theme_bw()
 
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value, " ", title_name, ") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value, " ", title_name, ") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1020)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value, " ", title_name, ") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -223,7 +229,7 @@ for (depth_value in unique(df_final$ce_context_depth))
   gl_plot_theme  <- theme_bw()
   gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
 
-  df_population_status <- select(subset_df, tick, ce_context_depth, uninfected, infected, believe_infected, dead_people, healthy) #, immune, believe_immune, 
+  df_population_status <- select(subset_df, tick, ce_disable_conflict_checking, uninfected, infected, believe_infected, dead_people, healthy) #, immune, believe_immune, 
   df_population_status <- gather(df_population_status, `Population Status`, measurement, uninfected:healthy)
   
   p <- ggplot(df_population_status, aes(x = tick, y = measurement, col=`Population Status`)) + geom_line()
@@ -235,8 +241,8 @@ for (depth_value in unique(df_final$ce_context_depth))
     breaks=c('uninfected', 'infected','believe_infected','dead_people','healthy'))
   p <- p + xlab("Ticks") + ylab("Status of n agents")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value, " ", title_name, ") - Overall", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -245,7 +251,7 @@ for (depth_value in unique(df_final$ce_context_depth))
   #======================= PLOT NEEDS  =========================
   #=============================================================
   
-  df_needs <- select(subset_df, tick, ce_context_depth, autonomy, belonging, compliance, conformity, financial_stability,
+  df_needs <- select(subset_df, tick, ce_disable_conflict_checking, autonomy, belonging, compliance, conformity, financial_stability,
                      financial_survival, food_safety, health, leisure, luxury, risk_avoidance, sleep)
   df_needs <- gather(df_needs, `Need Type`, measurement, autonomy:sleep)
   
@@ -262,15 +268,15 @@ for (depth_value in unique(df_final$ce_context_depth))
              'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
   p <- p + xlab("Ticks") + ylab("Need Level")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value, " ", title_name, ") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_needs_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -279,7 +285,7 @@ for (depth_value in unique(df_final$ce_context_depth))
   #=============================================================
   # Perhaps actions at is a better one, or complete action with location. E.g. Shop at ES, Shop at NES, Rest at home, etc....
   
-  df_location_types <- select(subset_df, tick, ce_context_depth, at_essential_shops, at_homes, at_non_essential_shops,
+  df_location_types <- select(subset_df, tick, ce_disable_conflict_checking, at_essential_shops, at_homes, at_non_essential_shops,
                               at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment)
   df_location_types <- gather(df_location_types, `Location Type`, measurement, at_essential_shops:at_treatment)
   
@@ -296,15 +302,15 @@ for (depth_value in unique(df_final$ce_context_depth))
              'at_universities', 'at_workplaces', 'at_treatment'))
   p <- p + xlab("Ticks") + ylab("Agents at Location Type")
   p <- p + theme_bw()
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value, " ", title_name, ") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_location_types.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_", title_name, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
 }

@@ -91,7 +91,35 @@ profilerSummarize <- function(df_profiler, df_profiler_overview) {
   # It depends on what I want to know, what is going to be in this function.
 }
 
-
+retrieve_filenames_profiler <- function(p_ce = c("0"), p_households = c("350"), p_random_seed = c("1"), p_action_space = c("6"),
+                                        p_lockdown = c("false"), p_disable_conflict_checking = c("false"), p_should_rigidly_follow_quarantine = c("false")) {
+  
+  p_filenames_profiler <- c()
+  for (ce in p_ce)
+  {
+    for (households in p_households)
+    {
+      for (random_seed in p_random_seed)
+      {
+        for (action_space in p_action_space)
+        {
+          for (lockdown in p_lockdown)
+          {
+            for (disable_conflict_checking in p_disable_conflict_checking)
+            {
+              for (should_rigidly_follow_quarantine in p_should_rigidly_follow_quarantine)
+              {
+                p_filenames_profiler <- c(p_filenames_profiler, paste("report-[C= ", ce, " -H= ", households, " -R= ", random_seed, " -A= ", action_space,
+                                                                      " -L= ", lockdown, " -DCC= ", disable_conflict_checking, " -SRFQ= ", should_rigidly_follow_quarantine, "].csv", sep=""))
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return(p_filenames_profiler)
+}
 
 #-----------------------
 #--- EXTRA FUNCTIONS ---

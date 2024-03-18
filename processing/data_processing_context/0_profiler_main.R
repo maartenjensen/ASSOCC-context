@@ -40,12 +40,18 @@ plot_type <- "one"
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
 # This is just a string with the directory name
-directory_files <- "2024-02-14-no-lockdown"
+directory_files <- "2024_03_13_full_no_lockdown"
+directory_files <- "2024_03_13_full_yes_lockdown"
+directory_files <- "2024_03_13_no_conflict"
+directory_files <- "2024_03_13_rigid_norms"
 
-# filenames_profiler <- c("report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= false].csv",
-#                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= false].csv",
-#                        "report-[C= true -H= 350 -R= 1 -A= 6 -N= true -PR= true].csv")
-# #"report-[C= true -H= 350 -R= 1 -A= 6 -N= false -PR= true].csv" is omitted.
+
+#--- WORKSPACE AND DIRECTORY ---
+#-   CHANGE DIRECTORY   -
+setwd(paste(directory_r, directory_files, sep="/"))
+getwd()
+
+source("../0_profiler_support.R")
 
 # C = context depth
 # H = households
@@ -59,51 +65,41 @@ directory_files <- "2024-02-14-no-lockdown"
 #   "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking
 #   "-SRFQ=" ce-should-rigidly-follow-quarantine)
 
-filenames_profiler <- c("report-[C= 0 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 0 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 0 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 0 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 0 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 1 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 1 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 1 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 1 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 2 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 2 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 2 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 2 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 2 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 3 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 3 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 3 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 3 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 3 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 4 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 4 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 4 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 4 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 4 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 5 -H= 350 -R= 1 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 5 -H= 350 -R= 2 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 5 -H= 350 -R= 3 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 5 -H= 350 -R= 4 -A= 6 -L= false -DCC= false -SRFQ= false].csv",
-                        "report-[C= 5 -H= 350 -R= 5 -A= 6 -L= false -DCC= false -SRFQ= false].csv")
-                        #"report-[C= 0 -H= 350 -R= 1 -A= 6 -L= true].csv",
-                        #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= false].csv",
-                        #"report-[C= 1 -H= 350 -R= 1 -A= 6 -L= true].csv")
 
+if (directory_files == "2024_03_13_full_no_lockdown")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0", "1", "2", "3", "4", "5"),
+                                                    c("350"),
+                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+                                                    c("6"), c("false"), c("false"), c("false"))
+}
+if (directory_files == "2024_03_13_full_yes_lockdown")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0", "1", "2", "3", "4", "5"),
+                                                    c("350"),
+                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+                                                    c("6"), c("true"), c("false"), c("false"))
+}
+if (directory_files == "2024_03_13_no_conflict")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("1"),
+                                                    c("350"),
+                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+                                                    c("6"), c("false"), c("false", "true"), c("false"))
+}
+if (directory_files == "2024_03_13_rigid_norms")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("3"),
+                                                    c("350"),
+                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+                                                    c("6"), c("false"),  c("false"), c("false", "true"))
+}
 
-#--- WORKSPACE AND DIRECTORY ---
-#-   CHANGE DIRECTORY   -
-setwd(paste(directory_r, directory_files, sep="/"))
-getwd()
 
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
 #--------------------------------------
-source("../0_profiler_support.R")
 df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 
 df_p_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
@@ -125,7 +121,7 @@ profilerSummarize(df_profiler, df_p_overview)
 #---------------------------------------
 #---    PREPARE AND COMBINE DATA     ---
 #---------------------------------------
-if (plot_type == "all") { pdf(paste("plot_", directory_files, "_profiler_results_each_context_no_lockdown.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "all") { pdf(paste("plot_", directory_files, "_profiler_all_plots.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 full_assocc_deliberation = "FULL ASSOCC DELIBERATION"
 
@@ -231,7 +227,7 @@ df_p_context_and_full_assocc <- df_p_filtered[grep(paste(selected_strings, colla
 #--- Plot the results                  ---
 #-----------------------------------------
 
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_deliberation.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_deliberation.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 # Combined
 ggplot(df_p_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fill = function_name)) +
@@ -250,7 +246,7 @@ if (plot_type == "one") { dev.off() }
 selected_strings <- c("GO")
 df_p_go <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_results_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_p_go, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
@@ -267,7 +263,7 @@ if (plot_type == "one") { dev.off() }
 selected_strings <- c("CONTEXT-SELECT-ACTIVITY")
 df_p_context <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_select_activity.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_select_activity.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_p_context, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
@@ -284,7 +280,7 @@ if (plot_type == "one") { dev.off() }
 selected_strings <- c(full_assocc_deliberation)
 df_p_full_ASSOCC <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filtered$function_name), ]
 
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_results_full_ASSOCC.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_full_ASSOCC.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
 ggplot(df_p_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
   geom_boxplot() +
