@@ -41,9 +41,9 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This is just a string with the directory name
 directory_files <- "2024_03_13_full_no_lockdown"
-directory_files <- "2024_03_13_full_yes_lockdown"
-directory_files <- "2024_03_13_no_conflict"
-directory_files <- "2024_03_13_rigid_norms"
+#directory_files <- "2024_03_13_full_yes_lockdown"
+#directory_files <- "2024_03_13_no_conflict"
+#directory_files <- "2024_03_13_rigid_norms"
 
 
 #--- WORKSPACE AND DIRECTORY ---
@@ -506,139 +506,22 @@ if (plot_type == "one") { dev.off() }
 
 df_p_mean_summarized
 
+df_p_mean_summarized$incl_t_ms <- round(df_p_mean_summarized$incl_t_ms, digits=2)
+df_p_mean_summarized$incl_t_ms_sd <- round(df_p_mean_summarized$incl_t_ms_sd, digits=2)
+
 # Step two, output the data to a nice table
+str = ""
 
 for (ce in 0:5) {
   
   df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$context==ce, ]
-  str = paste(ce, "&", sep = " ")
+  str = paste(str, ce, "&", sep = " ")
   str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
   str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
   str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
   str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
   str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\" )
-  print(str)
-  
+  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\\\ \n" )
 }
 
-
-
-  
-  
-  
-
-
-  
-
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!  OLD CODE !!!!!!!!!!!!!!!!
-
-#-----------------------------------------
-#--- Profiler function calls and time? ---
-#-----------------------------------------
-
-# I think I want to automize this, that it finds the right factor for the right row, probably a for loop
-# going through every row and reading the line if CSN, then add CSN, etc.
-
-# Or should I make all those function names unique?? I don't know
-
-depth_value = 1
-depth_value_str = toString(depth_value)
-
-selected_strings <- c("CSN-FUNCTION",    "CSN-DEFAULT",   "CSN-AFTER-MINIMAL-CONTEXT-F",
-                      "CSFT-FUNCTION",   "CSFT-DEFAULT",  "CSFT-AFTER-MINIMAL-CONTEXT-F",
-                      "CSO-FUNCTION",    "CSO-DEFAULT",   "CSO-AFTER-MINIMAL-CONTEXT-F",
-                      "CSOWH-FUNCTION",  "CSOWH-DEFAULT", "CSOWH-AFTER-MINIMAL-CONTEXT-F",
-                      "CSSN-FUNCTION",   "CSSN-DEFAULT",  "CSSN-AFTER-MINIMAL-CONTEXT-F",
-                      "CSSFT-FUNCTION",  "CSSFT-DEFAULT", "CSSFT-AFTER-MINIMAL-CONTEXT-F",
-                      "CSSO-FUNCTION",   "CSSO-DEFAULT",  "CSSO-AFTER-MINIMAL-CONTEXT-F",
-                      "CSSOWH-FUNCTION", "CSSOWH-DEFAULT","CSSOWH-AFTER-MINIMAL-CONTEXT-F")
-
-df_p_mean_filtered <- df_p_mean[grep(paste(selected_strings, collapse="|"), df_p_mean$function_name), ]
-df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$context == depth_value, ]
-
-# Remove a specific string
-string_to_remove <- "SUCCEEDED"
-df_p_mean_filtered <- subset(df_p_mean_filtered, !grepl(string_to_remove, function_name))
-
-for (i in 1:length(selected_strings))
-{
-  if (!selected_strings[i] %in% df_p_mean_filtered$function_name)
-  {
-    df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
-                                             function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
-  }
-}
-
-factors = c()
-state = c()
-
-# If it is not in there it should be added with a zero number?? I think so...
-
-for (i in 1:nrow(df_p_mean_filtered))
-{
-  if (str_contains(df_p_mean_filtered$function_name[i], "-FUNCTION"))
-  { factors <- c(factors, "0. Function") }
-  if (str_contains(df_p_mean_filtered$function_name[i], "-AFTER-MINIMAL-CONTEXT"))
-  { factors <- c(factors, "6. Full ASSOCC") }
-  if (str_contains(df_p_mean_filtered$function_name[i], "-DEFAULT"))
-  { factors <- c(factors, "1. Habitual") }
-  
-  
-  print(df_p_mean_filtered$function_name[i])
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSN-"))
-  {
-    state <- c(state, "Night")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSFT-"))
-  {
-    state <- c(state, "Freetime")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSO-"))
-  {
-    state <- c(state, "Obligation")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSOWH-"))
-  {
-    state <- c(state, "Obligation WH")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSSN-"))
-  {
-    state <- c(state, "Night Sick")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSSFT-"))
-  {
-    state <- c(state, "Freetime Sick")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSSO-"))
-  {
-    state <- c(state, "Obligation Sick")
-  }
-  if (str_contains(df_p_mean_filtered$function_name[i], "CSSOWH-"))
-  {
-    state <- c(state, "Obligation WH Sick")
-  }
-}
-
-df_p_mean_filtered$factors <- factors
-df_p_mean_filtered$state <- state
-
-plot_calls <- function(dataframe) {
-  ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Context State Success per Deliberation Type",
-         x = "Function Name",
-         y = "Calls",
-         fill = "Context") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-}
-
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_cd_", depth_value, "_context_state_success.pdf", sep=""), width=9, height=5) }
-plot_calls(df_p_mean_filtered)
-if (plot_type == "one") { dev.off() }
+writeLines(str)
