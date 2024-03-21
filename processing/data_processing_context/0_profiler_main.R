@@ -510,18 +510,81 @@ df_p_mean_summarized$incl_t_ms <- round(df_p_mean_summarized$incl_t_ms, digits=2
 df_p_mean_summarized$incl_t_ms_sd <- round(df_p_mean_summarized$incl_t_ms_sd, digits=2)
 
 # Step two, output the data to a nice table
-str = ""
+str_table_1 = ""
 
 for (ce in 0:5) {
   
   df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$context==ce, ]
-  str = paste(str, ce, "&", sep = " ")
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
-  str = paste(str, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\\\ \n" )
+  str_table_1 = paste(str_table_1, ce, "&", sep = " ")
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\\\ \n" )
 }
 
-writeLines(str)
+#--- Exporting the data for the tables ---
+df_profiler_ce_4 <- df_profiler[df_profiler$context=="4", ]
+
+# Take the mean of the number of calls
+df_profiler_ce_4_mean <- df_profiler_ce_4 %>% 
+  group_by(function_name) %>% 
+  summarise(calls = mean(calls, na.rm = TRUE),
+            incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
+            excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
+            excl_calls = mean(excl_calls, na.rm = TRUE))
+
+# Extract all the rows with function names ending with -F
+df_profiler_ce_4_mean <- df_profiler_ce_4_mean[grep("F$", df_profiler_ce_4_mean$function_name), ]
+
+df_profiler_ce_4_mean$totals <- sum(df_profiler_ce_4_mean$calls)
+df_profiler_ce_4_mean$percentage <- df_profiler_ce_4_mean$calls / df_profiler_ce_4_mean$totals * 100
+
+
+# Order it based on the number of calls (descending)
+df_profiler_ce_4_mean <- df_profiler_ce_4_mean[order(-df_profiler_ce_4_mean$calls), ]
+
+# Export as file for latex, just as in line 513 to 525
+str_table_2 = ""
+
+for (i in 1:nrow(df_profiler_ce_4_mean)) {
+  str_table_2 = paste(str_table_2, df_profiler_ce_4_mean$function_name[i], "&", sep = " ")
+  str_table_2 = paste(str_table_2, round(df_profiler_ce_4_mean$calls[i], digits=2),  "& ", sep = " ")
+  str_table_2 = paste(str_table_2, round(df_profiler_ce_4_mean$percentage[i], digits=3),  "\\% \\\\ \n", sep = "" )
+}
+
+
+#--- Exporting the data for the tables ---
+df_profiler_ce_5 <- df_profiler[df_profiler$context=="5", ]
+
+# Take the mean of the number of calls
+df_profiler_ce_5_mean <- df_profiler_ce_5 %>% 
+  group_by(function_name) %>% 
+  summarise(calls = mean(calls, na.rm = TRUE),
+            incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
+            excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
+            excl_calls = mean(excl_calls, na.rm = TRUE))
+
+# Extract all the rows with function names ending with -F
+df_profiler_ce_5_mean <- df_profiler_ce_5_mean[grep("F$", df_profiler_ce_5_mean$function_name), ]
+
+df_profiler_ce_5_mean$totals <- sum(df_profiler_ce_5_mean$calls)
+df_profiler_ce_5_mean$percentage <- df_profiler_ce_5_mean$calls / df_profiler_ce_5_mean$totals * 100
+
+# Order it based on the number of calls (descending)
+df_profiler_ce_5_mean <- df_profiler_ce_5_mean[order(-df_profiler_ce_5_mean$calls), ]
+
+# Export as file for latex, just as in line 513 to 525
+str_table_3 = ""
+
+for (i in 1:nrow(df_profiler_ce_5_mean)) {
+  str_table_3 = paste(str_table_3, df_profiler_ce_5_mean$function_name[i], "&", sep = " ")
+  str_table_3 = paste(str_table_3, round(df_profiler_ce_5_mean$calls[i], digits=2),  "& ", sep = " ")
+  str_table_3 = paste(str_table_3, round(df_profiler_ce_5_mean$percentage[i], digits=5),  "\\% \\\\ \n", sep = "" )
+}
+
+
+writeLines(str_table_1)
+writeLines(str_table_2)
+writeLines(str_table_3)

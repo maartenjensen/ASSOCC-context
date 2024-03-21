@@ -166,7 +166,8 @@ to-report cso-luxury
     [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
   ]
   if ce-enable-salient-food-luxury-forced-obligation
-  [ if not context-normative-should-I-stay-home
+  [ if ce-context-depth < 3 [ report cso-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
+    if not context-normative-should-I-stay-home
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report cso-luxury-f
@@ -179,7 +180,8 @@ to-report cso-food-safety
     [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   ]
   if ce-enable-salient-food-luxury-forced-obligation
-  [ if not context-normative-should-I-stay-home
+  [ if ce-context-depth < 3 [ report cso-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
+    if not context-normative-should-I-stay-home
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report cso-food-safety-f

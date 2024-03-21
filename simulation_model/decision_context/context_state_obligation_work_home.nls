@@ -99,13 +99,11 @@ to-report csowh-salient-need-deliberation [ most-salient-need most-salient-need-
   [ if ce-context-depth < 4 [ report csowh-exit-before-conformity-f ]  ; ===============  BREAKOUT: Conformity
     report csowh-conformity ] ; TODO
   
-  if most-salient-need = need-luxury
-  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
-    report csowh-luxury ]
+  if most-salient-need = need-luxury ; ce-context-depth is already at 2
+  [ report csowh-luxury ]
   
-  if most-salient-need = need-food-safety
-  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ]  ; ===============  BREAKOUT: Normative
-    report csowh-food-safety ]
+  if most-salient-need = need-food-safety ; ce-context-depth is already at 2
+  [ report csowh-food-safety ]
   
   report csowh-error-f
 end
@@ -165,7 +163,9 @@ to-report csowh-luxury
     [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
   ]
   if ce-enable-salient-food-luxury-forced-obligation
-  [ if not context-normative-should-I-stay-home
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
+    ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
+    [ report context-determine-social-distancing (list my-home work-motive) ]
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report csowh-luxury-f
@@ -178,7 +178,9 @@ to-report csowh-food-safety
     [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   ]
   if ce-enable-salient-food-luxury-forced-obligation
-  [ if not context-normative-should-I-stay-home
+  [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
+    ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
+    [ report context-determine-social-distancing (list my-home work-motive) ]
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
   report csowh-food-safety-f
