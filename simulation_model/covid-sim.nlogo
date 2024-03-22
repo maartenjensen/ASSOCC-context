@@ -4226,17 +4226,6 @@ lockdown-duration
 0
 Number
 
-SWITCH
-212
-483
-410
-516
-context-sensitive-deliberation?
-context-sensitive-deliberation?
-1
-1
--1000
-
 TEXTBOX
 999
 189
@@ -5113,10 +5102,15 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space)</final>
-    <timeLimit steps="120"/>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine)</final>
+    <timeLimit steps="240"/>
+    <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
+    <metric>count people with [infection-status = "healthy"]</metric>
+    <metric>count people with [infection-status = "immune"]</metric>
+    <metric>count people with [is-believing-to-be-immune?]</metric>
+    <metric>count people with [infection-status = "healthy" or infection-status = "immune"]</metric>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
@@ -5230,19 +5224,50 @@ setup</setup>
     <metric>mean [leisure-satisfaction-level] of people</metric>
     <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
     <metric>mean [conformity-satisfaction-level] of people</metric>
-    <metric>count people with [delib-count-typical = 1]</metric>
-    <metric>count people with [delib-count-one-need = 1]</metric>
-    <metric>count people with [delib-count-one-need-conformity = 1]</metric>
-    <metric>count people with [delib-count-one-need-multi-actions = 1]</metric>
+    <metric>count people with [delib-count-minimal-context = 1]</metric>
+    <metric>count people with [delib-count-determine-most-salient-need = 1]</metric>
+    <metric>count people with [delib-count-compare-need-levels = 1]</metric>
+    <metric>count people with [delib-count-normative-consideration = 1]</metric>
+    <metric>count people with [delib-count-conformity-network-action = 1]</metric>
     <metric>count people with [delib-count-full-need = 1]</metric>
-    <enumeratedValueSet variable="context-sensitive-deliberation?">
+    <metric>(count people with [delib-count-minimal-context = 1]) / count people</metric>
+    <metric>(count people with [delib-count-determine-most-salient-need = 1]) / count people</metric>
+    <metric>(count people with [delib-count-compare-need-levels = 1]) / count people</metric>
+    <metric>(count people with [delib-count-normative-consideration = 1]) / count people</metric>
+    <metric>(count people with [delib-count-conformity-network-action = 1]) / count people</metric>
+    <metric>(count people with [delib-count-full-need = 1]) / count people</metric>
+    <metric>mean [delib-count-total-minimal-context] of people</metric>
+    <metric>mean [delib-count-total-determine-most-salient-need] of people</metric>
+    <metric>mean [delib-count-total-compare-need-levels] of people</metric>
+    <metric>mean [delib-count-total-normative-consideration] of people</metric>
+    <metric>mean [delib-count-total-conformity-network-action] of people</metric>
+    <metric>mean [delib-count-total-full-need] of people</metric>
+    <enumeratedValueSet variable="ce-context-depth">
+      <value value="0"/>
+      <value value="5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-enable-global-lockdown">
       <value value="false"/>
-      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-disable-conflict-checking">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-should-rigidly-follow-quarantine">
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
+      <value value="7"/>
+      <value value="8"/>
+      <value value="9"/>
+      <value value="10"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#households-for-context-scenario">
+    <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#action-space">
@@ -5253,6 +5278,36 @@ setup</setup>
       <value value="5"/>
       <value value="6"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-need-salient-threshold">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-need-critical-threshold">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-private-leisure-preference">
+      <value value="0.65"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-home-preference">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-enable-need-balancing">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-free-time-add-to-leisure">
+      <value value="-0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-day-add-to-sleep">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-add-to-luxury">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-log-agent">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="ContextAgentNumbers" repetitions="1" runMetricsEveryStep="true">
     <setup>setup
@@ -5260,10 +5315,15 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" context-sensitive-deliberation? "-H=" #households-for-context-scenario "-R=" #random-seed "-A=" #action-space "-Thresh=" #need-salient-threshold)</final>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine)</final>
     <timeLimit steps="240"/>
+    <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
+    <metric>count people with [infection-status = "healthy"]</metric>
+    <metric>count people with [infection-status = "immune"]</metric>
+    <metric>count people with [is-believing-to-be-immune?]</metric>
+    <metric>count people with [infection-status = "healthy" or infection-status = "immune"]</metric>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
@@ -5377,42 +5437,89 @@ setup</setup>
     <metric>mean [leisure-satisfaction-level] of people</metric>
     <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
     <metric>mean [conformity-satisfaction-level] of people</metric>
-    <metric>count people with [delib-count-typical = 1]</metric>
-    <metric>count people with [delib-count-one-need = 1]</metric>
-    <metric>count people with [delib-count-one-need-conformity = 1]</metric>
-    <metric>count people with [delib-count-one-need-multi-actions = 1]</metric>
+    <metric>count people with [delib-count-minimal-context = 1]</metric>
+    <metric>count people with [delib-count-determine-most-salient-need = 1]</metric>
+    <metric>count people with [delib-count-compare-need-levels = 1]</metric>
+    <metric>count people with [delib-count-normative-consideration = 1]</metric>
+    <metric>count people with [delib-count-conformity-network-action = 1]</metric>
     <metric>count people with [delib-count-full-need = 1]</metric>
-    <enumeratedValueSet variable="context-sensitive-deliberation?">
-      <value value="true"/>
+    <metric>(count people with [delib-count-minimal-context = 1]) / count people</metric>
+    <metric>(count people with [delib-count-determine-most-salient-need = 1]) / count people</metric>
+    <metric>(count people with [delib-count-compare-need-levels = 1]) / count people</metric>
+    <metric>(count people with [delib-count-normative-consideration = 1]) / count people</metric>
+    <metric>(count people with [delib-count-conformity-network-action = 1]) / count people</metric>
+    <metric>(count people with [delib-count-full-need = 1]) / count people</metric>
+    <metric>mean [delib-count-total-minimal-context] of people</metric>
+    <metric>mean [delib-count-total-determine-most-salient-need] of people</metric>
+    <metric>mean [delib-count-total-compare-need-levels] of people</metric>
+    <metric>mean [delib-count-total-normative-consideration] of people</metric>
+    <metric>mean [delib-count-total-conformity-network-action] of people</metric>
+    <metric>mean [delib-count-total-full-need] of people</metric>
+    <enumeratedValueSet variable="ce-context-depth">
+      <value value="0"/>
+      <value value="5"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#enable-quarantine">
+    <enumeratedValueSet variable="ce-enable-global-lockdown">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-disable-conflict-checking">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-should-rigidly-follow-quarantine">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
+      <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
+      <value value="7"/>
+      <value value="8"/>
+      <value value="9"/>
+      <value value="10"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#households-for-context-scenario">
+    <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
+      <value value="700"/>
+      <value value="1400"/>
+      <value value="2100"/>
+      <value value="2800"/>
+      <value value="3500"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#action-space">
+    <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#risk-avoidance-private-leisure-preference">
-      <value value="0.8"/>
+    <enumeratedValueSet variable="ce-need-salient-threshold">
+      <value value="0.5"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#leisure-free-time-add">
-      <value value="-0.18"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#sleep-day-add">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="#luxury-add">
+    <enumeratedValueSet variable="ce-need-critical-threshold">
       <value value="0.1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="#need-salient-threshold">
+    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-private-leisure-preference">
+      <value value="0.65"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-home-preference">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-enable-need-balancing">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-free-time-add-to-leisure">
+      <value value="-0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-day-add-to-sleep">
       <value value="0.2"/>
-      <value value="0.4"/>
-      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-add-to-luxury">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-log-agent">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="ContextRealism" repetitions="1" runMetricsEveryStep="true">
@@ -5561,9 +5668,6 @@ setup</setup>
     <metric>mean [delib-count-total-normative-consideration] of people</metric>
     <metric>mean [delib-count-total-conformity-network-action] of people</metric>
     <metric>mean [delib-count-total-full-need] of people</metric>
-    <enumeratedValueSet variable="context-sensitive-deliberation?">
-      <value value="true"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="ce-context-depth">
       <value value="0"/>
       <value value="1"/>
@@ -5585,6 +5689,13 @@ setup</setup>
       <value value="1"/>
       <value value="2"/>
       <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
+      <value value="7"/>
+      <value value="8"/>
+      <value value="9"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
