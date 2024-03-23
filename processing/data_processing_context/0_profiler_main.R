@@ -44,7 +44,7 @@ directory_files <- "2024_03_13_full_no_lockdown"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 #directory_files <- "2024_03_13_no_conflict"
 #directory_files <- "2024_03_13_rigid_norms"
-
+directory_files <- "2024_03_21_n_agents"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -94,7 +94,13 @@ if (directory_files == "2024_03_13_rigid_norms")
                                                     c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
                                                     c("6"), c("false"),  c("false"), c("false", "true"))
 }
-
+if (directory_files == "2024_03_21_n_agents")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0", "5"),
+                                                    c("350", "700", "1400", "2100", "2800", "3500"),  
+                                                    c("1"),
+                                                    c("6"), c("false"),  c("false"), c("false"))
+}
 
 
 #--------------------------------------
@@ -588,3 +594,97 @@ for (i in 1:nrow(df_profiler_ce_5_mean)) {
 writeLines(str_table_1)
 writeLines(str_table_2)
 writeLines(str_table_3)
+
+
+# -------------------------------------------------
+# Experiments specific to "2024_03_21_n_agents"
+# -------------------------------------------------
+
+# Next experiments is with the additional runs and taking the mean
+
+if (directory_files == "2024_03_21_n_agents")
+{
+  
+# Converting the data frame to an aggregate
+df_p_mean_households <- df_profiler %>% 
+  group_by(context, function_name, households) %>% 
+  summarise(calls = mean(calls, na.rm = TRUE),
+            incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
+            excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
+            excl_calls = mean(excl_calls, na.rm = TRUE))
+
+
+selected_strings <- c("GO", "SELECT-ACTIVITY", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
+
+# Filter the dataframe
+df_p_mean_households_summarized <- df_p_mean_households[grep(paste(selected_strings, collapse="|"), df_p_mean_households$function_name), ]
+
+# Remove a specific string
+string_to_remove <- "CONTEXT-DELIBERATION-SELECT-ACTIVITY"
+df_p_mean_households_summarized <- subset(df_p_mean_households_summarized, !grepl(string_to_remove, function_name))
+
+# Replace specific in the 'function_name' column
+for (i in 1:nrow(df_p_mean_households_summarized)) {
+  if (df_p_mean_households_summarized$function_name[i] == "SELECT-ACTIVITY")
+  { df_p_mean_households_summarized$function_name[i] <- "CONTEXT-SELECT-ACTIVITY" }
+  if (df_p_mean_households_summarized$function_name[i] == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR")
+  { df_p_mean_households_summarized$function_name[i] <- full_assocc_deliberation }
+}
+
+df_p_mean_households_summarized <- df_p_mean_households_summarized[order(df_p_mean_households_summarized$context,
+                                                                         df_p_mean_households_summarized$function_name), ]
+
+df_p_mean_households_summarized_go <- df_p_mean_households_summarized[df_p_mean_households_summarized$function_name == "GO", ]
+df_p_mean_households_summarized_activity <- df_p_mean_households_summarized[df_p_mean_households_summarized$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+df_p_mean_households_summarized_full_assocc <- df_p_mean_households_summarized[df_p_mean_households_summarized$function_name == full_assocc_deliberation, ]
+
+# Now I want to make a line plot for the incl time for the different context depths, with the y axis being the incl time and the x axis being the households
+
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_time_households_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+
+ggplot(df_p_mean_households_summarized_go, aes(x = households, y = incl_t_ms, group = context, color = context)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Execution time GO for different context-depths",
+       x = "Households",
+       y = "Incl time",
+       color = "Context-Depth") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+if (plot_type == "one") { dev.off() }
+
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_time_households_select_activity.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+
+ggplot(df_p_mean_households_summarized_activity, aes(x = households, y = incl_t_ms, group = context, color = context)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Execution time Activity for different context-depths",
+       x = "Households",
+       y = "Incl time",
+       color = "Context-Depth") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+if (plot_type == "one") { dev.off() }
+
+if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_time_households_full_assocc.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
+
+ggplot(df_p_mean_households_summarized_full_assocc, aes(x = households, y = incl_t_ms, group = context, color = context)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Execution time Full ASSOCC for different context-depths",
+       x = "Households",
+       y = "Incl time",
+       color = "Context-Depth") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+if (plot_type == "one") { dev.off() }
+
+# Interpretation:
+# - The go function is exponential for both context-depth of 5 and context-depth of 0, which most probably has to do with the contagiousness calculations.
+# - The Select Activity and Full ASSOCC deliberation functions are way quicker for context-depth of 5 than context-depth of 0.
+
+
+}
