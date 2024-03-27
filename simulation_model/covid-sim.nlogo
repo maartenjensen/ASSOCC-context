@@ -5114,6 +5114,7 @@ setup</setup>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
+    <metric>#people</metric>
     <metric>#dead-people</metric>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
@@ -5327,6 +5328,7 @@ setup</setup>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
+    <metric>#people</metric>
     <metric>#dead-people</metric>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
@@ -5540,6 +5542,7 @@ setup</setup>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
+    <metric>#people</metric>
     <metric>#dead-people</metric>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
