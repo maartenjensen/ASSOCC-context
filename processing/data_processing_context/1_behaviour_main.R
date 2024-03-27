@@ -188,12 +188,12 @@ for (depth_value in unique(df_final$ce_context_depth))
   # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
   df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
   # Now I want to for each of the columns `Minimal context` until `Full need` divide it by the people_alive column
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Minimal context` = `Minimal context` / people_alive)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Most salient need` = `Most salient need` / people_alive)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Compare need levels` = `Compare need levels` / people_alive)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Normative deliberation` = `Normative deliberation` / people_alive)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Conformity deliberation` = `Conformity deliberation` / people_alive)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Full need` = `Full need` / people_alive)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Minimal context` = (`Minimal context` / people_alive) * 100)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Most salient need` = (`Most salient need` / people_alive) * 100)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Compare need levels` = (`Compare need levels` / people_alive) * 100)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Normative deliberation` = (`Normative deliberation` / people_alive) * 100)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Conformity deliberation` = (`Conformity deliberation` / people_alive) * 100)
+  df_deliberation_type <- df_deliberation_type %>% mutate(`Full need` = (`Full need` / people_alive) * 100)
   
   df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
   
@@ -208,21 +208,21 @@ for (depth_value in unique(df_final$ce_context_depth))
              'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
     values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
     breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
-  p <- p + xlab("Ticks") + ylab("Used by n agents")
-  p <- p + theme_bw() + theme(legend.position="bottom") + guides(fill=guide_legend(nrow=2, byrow=TRUE))
+  p <- p + xlab("Ticks") + ylab("% used by agents")
+  p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
 
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 1)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 1)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
+  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
