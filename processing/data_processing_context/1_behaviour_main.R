@@ -28,7 +28,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This R file is for the main behaviour: only no lockdown or yes lockdown allowed.
 directory_files <- "2024_03_13_full_no_lockdown"
-#directory_files <- "2024_03_13_full_yes_lockdown"
+directory_files <- "2024_03_13_full_yes_lockdown"
 
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
