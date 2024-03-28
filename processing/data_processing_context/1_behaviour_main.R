@@ -28,7 +28,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This R file is for the main behaviour: only no lockdown or yes lockdown allowed.
 directory_files <- "2024_03_13_full_no_lockdown"
-directory_files <- "2024_03_13_full_yes_lockdown"
+#directory_files <- "2024_03_13_full_yes_lockdown"
 
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
@@ -185,6 +185,8 @@ for (depth_value in unique(df_final$ce_context_depth))
   #================= PLOT DELIBERATION TYPE  ===================
   #=============================================================
   
+  #-----------------    THE LINE PLOT: TIME    -----------------
+  
   # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
   df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
   # Now I want to for each of the columns `Minimal context` until `Full need` divide it by the people_alive column
@@ -226,6 +228,33 @@ for (depth_value in unique(df_final$ce_context_depth))
   show(p)
   if (plot_type == "one") { dev.off() }
   
+  #----------------  THE BAR PLOT: PROPORTIONS  ----------------
+  
+  # Now I want to plot the proportions of the different types of deliberation
+
+  # I want to sum the columns `Minimal context` until `Full need` in the df_deliberation_type dataframe
+  df_deliberation_type_sum <- df_deliberation_type %>% group_by(`Deliberation Type`) %>% summarise_all(sum)
+  df_deliberation_type_sum$`Deliberation Type` <- factor(df_deliberation_type_sum$`Deliberation Type`, levels = c(df_deliberation_type_sum$`Deliberation Type`))
+  #levels = c(3, 5, 6, 1, 2, 4))
+  
+  # Now i want an additional column for df_deliberation_type_sum that is the sum of the single measurement column
+  df_deliberation_type_sum$measurement_sum <- rep(sum(df_deliberation_type_sum$measurement), nrow(df_deliberation_type_sum))
+  df_deliberation_type_sum$deliberation_type_proportions <- df_deliberation_type_sum$measurement / df_deliberation_type_sum$measurement_sum * 100
+  
+  # Now i want to plot df_deliberation_type_sum in a bar plot
+  p <- ggplot(df_deliberation_type_sum, aes(x = `Deliberation Type`, y = deliberation_type_proportions, fill = `Deliberation Type`)) +
+       geom_bar(stat="identity") + theme_bw() + ylab("Overall % used by agents") + theme(axis.text.x = element_text(angle = 70, vjust = 0.5, hjust=0.5)) +
+       scale_fill_manual(
+        labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
+                 'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
+                 'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
+        values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
+        breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  # It should still be properly ordered, but that can come later.
   
   #=============================================================
   #==================== PLOT INFECTIONS  =======================
