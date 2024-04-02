@@ -4,14 +4,16 @@
 
 # Install the libraries
 #install.packages()
+install.packages("viridis")
 
 # Open the libraries
-if (!exists("libraries_loaded"))
+if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
 {
   library(tidyverse)
   library(ggplot2)
   library(sjmisc)
   library(readr)
+  library(viridis)
   
   #first empty working memory 
   rm(list=ls())
@@ -21,6 +23,8 @@ if (!exists("libraries_loaded"))
   rm(list=ls()) 
   libraries_loaded = TRUE
 }
+
+
 
 #-------------------------------
 #---     INITIALIZATION      ---
@@ -34,7 +38,7 @@ gl_pdf_height = 7
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-plot_type <- "one" 
+#plot_type <- "one" 
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
@@ -44,7 +48,7 @@ directory_files <- "2024_03_13_full_no_lockdown"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 #directory_files <- "2024_03_13_no_conflict"
 #directory_files <- "2024_03_13_rigid_norms"
-directory_files <- "2024_03_21_n_agents"
+#directory_files <- "2024_03_21_n_agents"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -194,9 +198,16 @@ plot_calls <- function(dataframe) {
          x = "Function Name",
          y = "Incl time",
          fill = "Context") +
-    theme_minimal() +
+    theme_minimal() + scale_fill_viridis_d() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
+
+
+# I want to plot the same function as before. However with the viridis colour palette.
+
+
+  if (plot_type == "one") { dev.off() }
+
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 plot_calls(df_p_mean_summarized)
@@ -242,11 +253,8 @@ ggplot(df_p_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fil
        x = "Context",
        y = "incl_t_ms",
        fill = "Function Name") +
-  theme_minimal() +
+  theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-if (plot_type == "one") { dev.off() }
-
 
 # Select only GO
 selected_strings <- c("GO")

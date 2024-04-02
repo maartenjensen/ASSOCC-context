@@ -163,7 +163,7 @@ df_final_filtered$people_alive <- (df_final_filtered$youngs_at_start + df_final_
 # One of: "none", "one", "all"
 plot_type <- "none"
 plot_type <- "one" 
-#plot_type <- "all"
+plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
