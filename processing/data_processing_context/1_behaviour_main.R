@@ -302,8 +302,8 @@ for (depth_value in unique(df_final$ce_context_depth))
     breaks=c('autonomy', 'belonging', 'compliance', 'conformity',
              'financial_stability', 'financial_survival', 'food_safety',
              'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
-  p <- p + xlab("Ticks") + ylab("Need Level")
-  p <- p + theme_bw()
+  p <- p + xlab("Ticks") + ylab("Need Level") + labs(col = "Need")
+  p <- p + theme_bw() + theme(text = element_text(size=16))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
@@ -336,8 +336,9 @@ for (depth_value in unique(df_final$ce_context_depth))
     breaks=c('at_essential_shops', 'at_homes', 'at_non_essential_shops',
              'at_private_leisure', 'at_public_leisure', 'at_schools',
              'at_universities', 'at_workplaces', 'at_treatment'))
-  p <- p + xlab("Ticks") + ylab("Agents at Location Type")
+  p <- p + xlab("Ticks") + ylab("Agents at Location Type") + labs(col="")
   p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
