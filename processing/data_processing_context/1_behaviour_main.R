@@ -163,7 +163,7 @@ df_final_filtered$people_alive <- (df_final_filtered$youngs_at_start + df_final_
 # One of: "none", "one", "all"
 plot_type <- "none"
 plot_type <- "one" 
-plot_type <- "all"
+#plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
@@ -271,14 +271,16 @@ for (depth_value in unique(df_final$ce_context_depth))
     labels=c('uninfected'='Uninfected', 'infected'='Infected',
              'believe_infected' ='Believe Infected', 'dead_people' ='Dead People', 
              'healthy' ='Healthy'),
-    values=c('#afd16f', '#ff1100', '#ff7c73', '#000000', '#3c9e34'),
+    values=c('#afd16f', '#b00300', '#ff7c73', '#000000', '#3c9e34'),
     breaks=c('uninfected', 'infected','believe_infected','dead_people','healthy'))
-  p <- p + xlab("Ticks") + ylab("Status of n agents")
-  p <- p + theme_bw()
+  p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
+  p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
+  
+  #p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
   
   
   #=============================================================

@@ -4,7 +4,7 @@
 
 # Install the libraries
 #install.packages()
-install.packages("viridis")
+#install.packages("viridis")
 
 # Open the libraries
 if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
@@ -38,7 +38,7 @@ gl_pdf_height = 7
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-#plot_type <- "one" 
+plot_type <- "one" 
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
@@ -197,16 +197,13 @@ plot_calls <- function(dataframe) {
     labs(title = "Execution time for different context-depths",
          x = "Function Name",
          y = "Incl time",
-         fill = "Context") +
+         fill = "CD") +
     theme_minimal() + scale_fill_viridis_d() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(angle = 7, hjust = 0.5, vjust = 0.5), text = element_text(size=16))
 }
-
+# + theme(legend.position="bottom", text = element_text(size=16))
 
 # I want to plot the same function as before. However with the viridis colour palette.
-
-
-  if (plot_type == "one") { dev.off() }
 
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
@@ -391,19 +388,19 @@ df_p_mean_filtered$factors <- factors
 df_p_mean_filtered$state <- state
 
 plot_calls <- function(dataframe, context_depth) {
-  ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
+  
+  p <- ggplot(dataframe, aes(x = state, y = calls, fill = as.factor(factors))) +
     geom_bar(stat = "identity", position = "dodge") +
     labs(title = paste("Context State Success - CD: ", context_depth, sep=""),
          x = "Function Name",
          y = "Calls",
          fill = "Context") +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    coord_cartesian(ylim = c(0, 85000)) #+
-    #scale_colour_manual(labels=c('Calls'='Calls', 'Succeeded'='Succeeded'), breaks=c('Calls','Succeeded'), values=c('#33ddff', '#48bf3f'))
+    theme(axis.text.x = element_text(angle = 45, hjust = 0.5, vjust = 0.5), text = element_text(size=15)) +
+    coord_cartesian(ylim = c(0, 85000))
+  p <- p + scale_fill_manual(values=c('#87e667', '#467536'))
+  return(p)
 }
-
-show(plot_calls(df_p_mean_filtered, depth_value))
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_cd_", depth_value, "_context_state_success.pdf", sep=""), width=9, height=5) }
 show(plot_calls(df_p_mean_filtered, depth_value))
@@ -436,7 +433,8 @@ for (depth_value in depth_values) {
   for (i in 1:length(selected_strings)) {
     if (!selected_strings[i] %in% df_p_mean_filtered$function_name) {
       df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
-                                                                                           function_name = selected_strings[i], calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
+                                                                 function_name = selected_strings[i],
+                                                                 calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
     }
   }
   
@@ -488,12 +486,18 @@ plot_calls <- function(dataframe) {
     labs(title = "Context State Success",
          x = "Function Name",
          y = "Calls",
-         fill = "Context") +
+         fill = "Function") +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(axis.text.x = element_text(angle = 70, hjust = 0.5, vjust = 0.5), legend.position="bottom", text = element_text(size=15)) +
     coord_cartesian(ylim = c(0, 85000)) +
-    facet_wrap(~ context, nrow = 3) # Combining plots into subplots
+    facet_wrap(~ context, nrow = 3) + scale_fill_manual(values=c('#87e667', '#467536')) # Combining plots into subplots
 }
+
+#p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
+# scale_colour_manual(
+# labels=c('Freetime'='Freetime', 'Freetime Sick'='Freetime Sick', 'Night'='Night', 'Night Sick'='Night Sick', 'Obligation'='Obligation', 'Obligation Sick'='Obligation Sick', 'Obligation WH'='Obligation WH', 'Obligation WH Sick'='Obligation WH Sick'),
+# values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000', '#9911ab', '#000000'),
+# breaks=c('Freetime', 'Freetime Sick', 'Night', 'Night Sick', 'Obligation', 'Obligation Sick', 'Obligation WH', 'Obligation WH Sick')) 
 
 plot_calls(combined_df)
 
@@ -530,12 +534,12 @@ for (ce in 0:5) {
   
   df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$context==ce, ]
   str_table_1 = paste(str_table_1, ce, "&", sep = " ")
-  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
-  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
   str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
   str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
   str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
-  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "\\\\ \n" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="FULL ASSOCC DELIBERATION"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="GO"],  "&" )
+  str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="GO"],  "\\\\ \n" )
 }
 
 #--- Exporting the data for the tables ---
