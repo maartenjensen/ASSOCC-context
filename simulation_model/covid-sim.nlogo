@@ -1937,7 +1937,7 @@ PENS
 
 PLOT
 1122
-494
+514
 1671
 815
 Activities
@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-1
+0
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-1
+0
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-1
+0
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -4376,32 +4376,32 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
 
 INPUTBOX
-1706
-549
-1824
-609
+1426
+387
+1544
+447
 ce-add-to-luxury
-0.1
+0.0
 1
 0
 Number
 
 INPUTBOX
-1705
-485
-1833
-545
+1425
+323
+1553
+383
 ce-day-add-to-sleep
-0.2
+0.0
 1
 0
 Number
 
 INPUTBOX
-1705
-420
-1854
-480
+1425
+258
+1574
+318
 ce-free-time-add-to-leisure
 -0.4
 1
@@ -4409,10 +4409,10 @@ ce-free-time-add-to-leisure
 Number
 
 INPUTBOX
-1390
-262
-1602
-322
+1635
+258
+1847
+318
 ce-risk-avoidance-private-leisure-preference
 0.65
 1
@@ -4426,15 +4426,15 @@ SWITCH
 382
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-1
+0
 1
 -1000
 
 INPUTBOX
-1707
-226
-1849
-286
+1865
+223
+2007
+283
 ce-need-salient-threshold
 0.5
 1
@@ -4442,10 +4442,10 @@ ce-need-salient-threshold
 Number
 
 INPUTBOX
-1707
-291
-1840
-351
+1865
+288
+1998
+348
 ce-need-critical-threshold
 0.1
 1
@@ -4464,10 +4464,10 @@ ce-log-agent
 -1000
 
 INPUTBOX
-1390
-325
-1568
-385
+1635
+321
+1813
+381
 ce-risk-avoidance-home-preference
 0.5
 1
@@ -4486,30 +4486,30 @@ ce-enable-salient-food-luxury-forced-obligation
 -1000
 
 TEXTBOX
-1390
-206
-1617
-236
+1635
+202
+1862
+232
 Experimental settings (deliberation)
 12
 125.0
 1
 
 TEXTBOX
-1708
-364
-1817
-382
+1428
+202
+1537
+220
 Needs balancing
 12
 125.0
 1
 
 TEXTBOX
-1709
-206
-1859
-224
+1867
+203
+2017
+221
 General context settings
 12
 125.0
@@ -4526,10 +4526,10 @@ SSC Settings
 1
 
 SWITCH
-1390
-225
-1564
-258
+1635
+221
+1809
+254
 ce-private-leisure-by-risk
 ce-private-leisure-by-risk
 1
@@ -4547,10 +4547,10 @@ ce: context experiment
 1
 
 SWITCH
-1705
-384
-1903
-417
+1425
+222
+1623
+255
 ce-enable-need-balancing
 ce-enable-need-balancing
 1
@@ -4576,16 +4576,16 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 0 1 2 3 4 5
-2
+1
 
 SWITCH
-999
+1226
 402
-1185
+1412
 435
 ce-disable-conflict-checking
 ce-disable-conflict-checking
-1
+0
 1
 -1000
 
@@ -4730,7 +4730,7 @@ NIL
 SWITCH
 999
 437
-1253
+1219
 470
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
@@ -4748,6 +4748,27 @@ slice-of-the-day-of-current-plots-and-data
 17
 1
 11
+
+SWITCH
+999
+402
+1219
+435
+ce-should-rigidly-follow-habits
+ce-should-rigidly-follow-habits
+0
+1
+-1000
+
+TEXTBOX
+1207
+386
+1372
+404
+AUTO: if ce-SRFH is True [ True
+11
+14.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5530,7 +5551,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine)</final>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine "-SRFH=" ce-should-rigidly-follow-habits "-B=" ce-enable-need-balancing)</final>
     <timeLimit steps="240"/>
     <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
@@ -5680,6 +5701,9 @@ setup</setup>
       <value value="5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-enable-global-lockdown">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-should-rigidly-follow-habits">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-disable-conflict-checking">

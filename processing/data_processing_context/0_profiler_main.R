@@ -57,6 +57,10 @@ getwd()
 
 source("../0_profiler_support.R")
 
+# behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed
+# "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking
+# "-SRFQ=" ce-should-rigidly-follow-quarantine "-SRFH=" ce-should-rigidly-follow-habits "-B=" ce-enable-need-balancing)
+
 # C = context depth
 # H = households
 # R = random see

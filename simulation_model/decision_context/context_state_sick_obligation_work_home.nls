@@ -41,7 +41,7 @@ to-report cssowh-function ; cssowh
   ; -------------------------------------------
   ; Determine whether there is conflict
   ; -------------------------------------------
-  if not cssowh-is-need-salient-and-conflicting
+  if not cssowh-is-need-salient-and-conflicting or ce-should-rigidly-follow-habits  ; ============== RIGID HABITS: Go to work
   [
     if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing default sick obligation work home" ]
     report cssowh-default
