@@ -30,6 +30,10 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 directory_files <- "2024_03_13_full_no_lockdown"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 
+# One of: "none", "one", "all"
+plot_type <- "none"
+#plot_type <- "one" 
+#plot_type <- "all"
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
 
@@ -159,11 +163,6 @@ df_final_filtered$people_alive <- (df_final_filtered$youngs_at_start + df_final_
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================
 #=============================================================
-
-# One of: "none", "one", "all"
-plot_type <- "none"
-plot_type <- "one" 
-#plot_type <- "all"
 
 gl_pdf_width = 9
 gl_pdf_height = 6
@@ -353,4 +352,15 @@ for (depth_value in unique(df_final$ce_context_depth))
 }
 
 if (plot_type == "all") { dev.off() }
+
+# I have the df_location_types dataframe
+# df_location_type contains the columns tick, ce_context_depth, at_essential_shops, at_homes, at_non_essential_shops, at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment
+# For each row I want to sum the columns at_essential_shops until at_treatment
+
+for (i in 1:nrow(df_location_types)) {
+  
+  row = df_location_types[i,]
+  sum_row = sum(row$at_essential_shops, row$at_homes, row$at_non_essential_shops, row$at_private_leisure, row$at_public_leisure, row$at_schools, row$at_universities, row$at_workplaces, row$at_treatment)
+  print(sum_row)
+}
 

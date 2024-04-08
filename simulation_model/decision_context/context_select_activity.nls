@@ -166,7 +166,11 @@ to-report context-check-should-rigidly-follow-quarantine
   ifelse not context-is-agent-sick
   [  ; If the agent is not sick just check the normative
     if context-normative-should-I-stay-home
-    [ report context-state-quarantine-rigidly-normative-home-succeeded (context-determine-social-distancing (list my-home "rest")) ]
+    [ 
+      ifelse age = worker-age and is-technically-feasible-to-work-from-home?
+      [ report context-determine-social-distancing (list my-home work-motive) ]
+      [ report context-state-quarantine-rigidly-normative-home-succeeded (context-determine-social-distancing (list my-home "rest")) ]
+    ]
   ]
   [  ; if the agent is sick check whether the agent needs and can get treatment
     let chosen-action cssct-function
