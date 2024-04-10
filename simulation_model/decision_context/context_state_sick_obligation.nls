@@ -43,7 +43,7 @@ to-report csso-function ; csso
   ; Determine whether there is conflict
   ; -------------------------------------------
   
-  if not csso-is-need-salient-and-conflicting or ce-should-rigidly-follow-habits  ; ============== RIGID HABITS: Go to work
+  if not csso-is-need-salient-and-conflicting or ce-disable-conflict-checking ; If no conflict checking, do default
   [
     if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing default sick obligation" ]
     report csso-default

@@ -258,7 +258,7 @@ end
 to-report context-determine-social-distancing [gp-and-motive]
   if not with-infected?
   [ report lput False gp-and-motive ]
-  if risk-avoidance-satisfaction-level < 0.75
+  if risk-avoidance-satisfaction-level < ce-risk-avoidance-threshold-for-sd
   [ report lput True gp-and-motive ]
   report lput False gp-and-motive
 end

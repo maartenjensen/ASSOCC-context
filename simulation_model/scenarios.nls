@@ -53,8 +53,12 @@ to load-scenario-specifics
     [ set ce-enable-salient-food-luxury-forced-obligation true ]
     [ set ce-enable-salient-food-luxury-forced-obligation false ] 
     
-    if ce-should-rigidly-follow-habits ; If rigidly follow habits, also disable conflict checking should be true
-    [ set ce-disable-conflict-checking true ]
+    ; If ce-context-depth > -1: it is not possible to have forced habits deliberation
+    if ce-context-depth > -1
+    [ set ce-forced-habits false ]
+    if ce-context-depth = -1
+    [ set ce-forced-habits true ]
+    
     stop
   ]
   

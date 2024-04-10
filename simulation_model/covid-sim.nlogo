@@ -4459,7 +4459,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-0
+1
 1
 -1000
 
@@ -4575,8 +4575,8 @@ CHOOSER
 270
 ce-context-depth
 ce-context-depth
-0 1 2 3 4 5
-1
+-1 0 1 2 3 4 5
+0
 
 SWITCH
 1226
@@ -4585,7 +4585,7 @@ SWITCH
 435
 ce-disable-conflict-checking
 ce-disable-conflict-checking
-0
+1
 1
 -1000
 
@@ -4729,9 +4729,9 @@ NIL
 
 SWITCH
 999
-437
+402
 1219
-470
+435
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
 1
@@ -4750,23 +4750,44 @@ slice-of-the-day-of-current-plots-and-data
 11
 
 SWITCH
-999
-402
-1219
-435
-ce-should-rigidly-follow-habits
-ce-should-rigidly-follow-habits
+998
+465
+1218
+498
+ce-forced-habits
+ce-forced-habits
 0
 1
 -1000
 
+INPUTBOX
+1865
+351
+2040
+411
+ce-risk-avoidance-threshold-for-sd
+-1.0
+1
+0
+Number
+
 TEXTBOX
-1207
-386
-1372
-404
-AUTO: if ce-SRFH is True [ True
-11
+1393
+1009
+1486
+1027
+If night, day -1
+12
+14.0
+1
+
+TEXTBOX
+1003
+443
+1197
+461
+Other deliberation types: CD = -1
+12
 14.0
 1
 
@@ -5735,6 +5756,9 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-need-critical-threshold">
       <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-threshold-for-sd">
+      <value value="0.75"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-private-leisure-by-risk">
       <value value="false"/>

@@ -322,7 +322,17 @@ to perform-people-activities
     if not is-being-away? current-activity and current-motivation = travelling-motive [error "wrong place while travelling"]
     ; ===============================================================================
     ; Context: use original need-based deliberation or context-sensitive deliberation
-    ifelse ce-context-depth > 0 [context-select-activity][select-activity]
+    ifelse ce-context-depth > 0 
+    [ context-select-activity ]
+    [
+      ifelse ce-context-depth = 0
+      [ select-activity ]
+      [
+        ifelse ce-context-depth = -1
+        [ forced-habits-select-activity ]
+        [ error word ce-context-depth " context-depth not recognized" ]
+      ] 
+    ]
     
     if not is-being-away? current-activity and current-motivation = travelling-motive [error (sentence "wrong place while travelling" current-activity current-motivation)]
 

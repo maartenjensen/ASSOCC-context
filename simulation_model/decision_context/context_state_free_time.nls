@@ -19,7 +19,7 @@
 ; Normative Needs
 ; - Compliance
 
-;Code check:
+; Code check:
 ; csft: NOT csn, cso, cssn, csso, cssft, csowh, cssowh
 ; leisure-satisfaction-level should only occur in the function csft-balance-needs, other than that it should be leisure-satisfaction-balanced
 ; Same goes for luxury-satisfaction-level and sleep-satisfaction-level

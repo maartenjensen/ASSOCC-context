@@ -37,9 +37,6 @@ to-report csowh-function ; csowh
   ; The time is morning or afternoon
   if ce-log-agent and who = ce-log-agent-id [ print "Obligation Work Home - Decision Making" ]
 
-  ; ============== RIGID HABITS: Go to work
-  if ce-should-rigidly-follow-habits [ report context-determine-social-distancing obligation-activity-descriptor ]
-  
   if ce-context-depth <= 1 [ report csowh-after-minimal-context-f ]  ; ===============  BREAKOUT: if not 2 or higher, after this is checking the most salient needs which is at level 2
   
   ; -------------------------------------------
