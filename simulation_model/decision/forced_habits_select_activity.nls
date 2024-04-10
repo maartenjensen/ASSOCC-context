@@ -1,5 +1,70 @@
 ; Filename: forced_habits_select_activity.nls
 
+to habits-init-variables
+  
+  set table-leisure-habits table:make
+
+  ; Available leisure time slots
+  let available-time-slots-evening (list "monday evening" "tuesday evening" "wednesday evening" "thursday evening" "friday evening" "saturday evening" "sunday evening")
+  let available-time-slots-day []
+  let time "empty"
+  
+  ifelse age != retired-age 
+  [ 
+    ; TODO add my shop
+    ;ifelse ask my-work is-shop?
+    set available-time-slots-day (list "saturday morning" "saturday afternoon" "sunday morning" "sunday afternoon")
+    ;[ set available-time-slots-day (list "sunday morning" "sunday afternoon") ]
+  ]
+  [ set available-time-slots-day (list "monday morning" "tuesday morning" "wednesday morning" "thursday morning" "friday morning" "saturday morning" "sunday morning"
+                                       "monday afternoon" "tuesday afternoon" "wednesday afternoon" "thursday afternoon" "friday afternoon" "saturday afternoon" "sunday afternoon") ]
+
+  ifelse age != young-age
+  [
+    ; Essential shopping
+    set time (one-of available-time-slots-evening) 
+    table:put table-leisure-habits time (activity-descriptor one-of my-essential-shops "essential shopping")
+    set available-time-slots-evening remove time available-time-slots-evening
+    
+    ; Non essential shopping
+    set time (one-of available-time-slots-evening) 
+    table:put table-leisure-habits time (activity-descriptor my-non-essential-shop "shopping")
+    set available-time-slots-evening remove time available-time-slots-evening
+  ]
+  [
+    ; Leisure in evening
+    set time (one-of available-time-slots-evening) 
+    table:put table-leisure-habits time get-pr-or-pu-leisure
+    set available-time-slots-evening remove time available-time-slots-evening
+  ]
+  
+  ; Leisure in evenings
+  set time (one-of available-time-slots-evening) 
+  table:put table-leisure-habits time get-pr-or-pu-leisure
+  set available-time-slots-evening remove time available-time-slots-evening
+  
+  ; 2x Extra leisure during weekends
+  set time (one-of available-time-slots-day) 
+  table:put table-leisure-habits time get-pr-or-pu-leisure
+  set available-time-slots-day remove time available-time-slots-day
+  
+  set time (one-of available-time-slots-day) 
+  table:put table-leisure-habits time get-pr-or-pu-leisure
+  set available-time-slots-day remove time available-time-slots-day
+  
+  ; (activity-descriptor my-non-essential-shop "shopping")
+  ; (activity-descriptor my-private-leisure "relaxing")
+  ; (activity-descriptor my-public-leisure "relaxing")
+  
+  if ce-log-agent and who = ce-log-agent-id [ print table-leisure-habits ]
+end
+
+to-report get-pr-or-pu-leisure
+  if random 5 >= 4 ; 20% chance
+  [ report (activity-descriptor my-public-leisure "relaxing") ]
+  report (activity-descriptor my-private-leisure "relaxing")
+end
+
 to forced-habits-select-activity
 
   let c-a forced-habits-deliberation-select-activity
@@ -50,6 +115,13 @@ to-report forced-habits-deliberation-select-activity
   ; Determine whether its a working day, working from home is not done since the agent just follows habits
   if age != retired-age and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me? [
     report (lput false obligation-activity-descriptor)
+  ]
+  
+  ; Check if there is a habitual action
+  let time (word day-of-the-week " " slice-of-the-day)
+  if member? time (table:keys table-leisure-habits)
+  [
+    report (lput false table:get table-leisure-habits time)
   ]
   
   report (list my-home "rest" false)

@@ -187,6 +187,8 @@ people-own [
   
   table-profiler-salient-needs
   
+  table-leisure-habits
+  
   ; variables for balancing needs
   leisure-satisfaction-balanced
   luxury-satisfaction-balanced

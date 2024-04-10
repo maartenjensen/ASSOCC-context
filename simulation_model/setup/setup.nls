@@ -274,6 +274,9 @@ to setup-person [current-home l-age]
     set delib-count-total-conformity-network-action 0
     set delib-count-total-full-need 0
     
+    ; Variables for habits
+    habits-init-variables
+    
     ; Variables for context-sensitive deliberation
     context-init-variables
   ]

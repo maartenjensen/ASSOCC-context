@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-1
+0
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-1
+0
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-1
+0
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.0
+0.8
 0.01
 1
 NIL
@@ -4362,18 +4362,18 @@ true
 true
 "" ""
 PENS
-"belonging" 1.0 0 -16777216 true "" "plot [belonging-satisfaction-level] of turtle #agent-id"
-"risk avoidance" 1.0 0 -13345367 true "" "plot [risk-avoidance-satisfaction-level] of turtle #agent-id"
-"autonomy" 1.0 0 -955883 true "" "plot [autonomy-satisfaction-level] of turtle #agent-id"
-"luxury" 1.0 0 -8330359 true "" "plot [luxury-satisfaction-level] of turtle #agent-id"
-"health" 1.0 0 -2674135 true "" "plot [health-satisfaction-level] of turtle #agent-id"
-"sleep" 1.0 0 -7500403 true "" "plot [sleep-satisfaction-level] of turtle #agent-id"
-"compliance" 1.0 0 -6459832 true "" "plot [compliance-satisfaction-level] of turtle #agent-id"
-"financial-stability" 1.0 0 -1184463 true "" "plot [financial-stability-satisfaction-level] of turtle #agent-id"
-"food-safety" 1.0 0 -10899396 true "" "plot [food-safety-satisfaction-level] of turtle #agent-id"
-"leisure" 1.0 0 -1264960 true "" "plot [leisure-satisfaction-level] of turtle #agent-id"
-"financial-survival" 1.0 0 -7858858 true "" "plot [financial-survival-satisfaction-level] of turtle #agent-id"
-"conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle #agent-id"
+"belonging" 1.0 0 -16777216 true "" "plot [belonging-satisfaction-level] of turtle ce-log-agent-id"
+"risk avoidance" 1.0 0 -13345367 true "" "plot [risk-avoidance-satisfaction-level] of turtle ce-log-agent-id"
+"autonomy" 1.0 0 -955883 true "" "plot [autonomy-satisfaction-level] of turtle ce-log-agent-id"
+"luxury" 1.0 0 -8330359 true "" "plot [luxury-satisfaction-level] of turtle ce-log-agent-id"
+"health" 1.0 0 -2674135 true "" "plot [health-satisfaction-level] of turtle ce-log-agent-id"
+"sleep" 1.0 0 -7500403 true "" "plot [sleep-satisfaction-level] of turtle ce-log-agent-id"
+"compliance" 1.0 0 -6459832 true "" "plot [compliance-satisfaction-level] of turtle ce-log-agent-id"
+"financial-stability" 1.0 0 -1184463 true "" "plot [financial-stability-satisfaction-level] of turtle ce-log-agent-id"
+"food-safety" 1.0 0 -10899396 true "" "plot [food-safety-satisfaction-level] of turtle ce-log-agent-id"
+"leisure" 1.0 0 -1264960 true "" "plot [leisure-satisfaction-level] of turtle ce-log-agent-id"
+"financial-survival" 1.0 0 -7858858 true "" "plot [financial-survival-satisfaction-level] of turtle ce-log-agent-id"
+"conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle ce-log-agent-id"
 
 INPUTBOX
 1426
@@ -4426,7 +4426,7 @@ SWITCH
 382
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-1
+0
 1
 -1000
 
@@ -4459,7 +4459,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
