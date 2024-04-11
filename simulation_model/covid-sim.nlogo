@@ -3433,7 +3433,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3477,7 +3477,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3490,7 +3490,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3501,7 +3501,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3544,7 +3544,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4426,7 +4426,7 @@ SWITCH
 382
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4790,6 +4790,16 @@ Other deliberation types: CD = -1
 12
 14.0
 1
+
+CHOOSER
+1226
+453
+1372
+498
+ce-forced-habits-level
+ce-forced-habits-level
+0 1 2 3 4
+3
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5714,12 +5724,16 @@ setup</setup>
     <metric>mean [delib-count-total-conformity-network-action] of people</metric>
     <metric>mean [delib-count-total-full-need] of people</metric>
     <enumeratedValueSet variable="ce-context-depth">
+      <value value="-1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-forced-habits">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-forced-habits-level">
       <value value="0"/>
       <value value="1"/>
       <value value="2"/>
       <value value="3"/>
-      <value value="4"/>
-      <value value="5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-enable-global-lockdown">
       <value value="false"/>
@@ -5735,15 +5749,6 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="1"/>
-      <value value="2"/>
-      <value value="3"/>
-      <value value="4"/>
-      <value value="5"/>
-      <value value="6"/>
-      <value value="7"/>
-      <value value="8"/>
-      <value value="9"/>
-      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
