@@ -105,7 +105,7 @@ to-report forced-habits-deliberation-select-activity
     ]
     [
       if ce-log-agent and who = ce-log-agent-id [ print "No treatment needed, however sick" ]
-      report (list my-home "rest" false)
+      report (list my-home "rest" true)
     ]
   ]
   ]
@@ -113,17 +113,17 @@ to-report forced-habits-deliberation-select-activity
   if ce-forced-habits-level >= 3
   [
     if should-I-stay-home?
-    [ report (list my-home "rest" false) ]
+    [ report forced-habits-determine-social-distancing (list my-home "rest") ]
   ]
   
   ; Determine if its night because then agents should just stay at home
   if slice-of-the-day = "night" [
-    report (list my-home "rest" false)
+    report forced-habits-determine-social-distancing (list my-home "rest")
   ]
   
   ; Determine whether its a working day, working from home is not done since the agent just follows habits
   if age != retired-age and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and is-working-day-for-me? [
-    report (lput false obligation-activity-descriptor)
+    report forced-habits-determine-social-distancing obligation-activity-descriptor
   ]
   
   if ce-forced-habits-level >= 1
@@ -132,10 +132,18 @@ to-report forced-habits-deliberation-select-activity
     let time (word day-of-the-week " " slice-of-the-day)
     if member? time (table:keys table-leisure-habits)
     [
-      report (lput false table:get table-leisure-habits time)
+      report forced-habits-determine-social-distancing (table:get table-leisure-habits time)
     ]
   ]
   
-  report (list my-home "rest" false)
+  report forced-habits-determine-social-distancing (list my-home "rest")
 end
 
+; Make this dependent on location?? Nope, not for now, its not needed for the research question.
+to-report forced-habits-determine-social-distancing [gp-and-motive]
+  if not with-infected?
+  [ report lput False gp-and-motive ]
+  if risk-avoidance-satisfaction-level < ce-risk-avoidance-threshold-for-sd
+  [ report lput True gp-and-motive ]
+  report lput False gp-and-motive
+end

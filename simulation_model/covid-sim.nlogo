@@ -351,10 +351,10 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-1933
-925
-2241
-971
+2509
+917
+2817
+963
 Measures (Interventions) Model
 16
 105.0
@@ -1362,10 +1362,10 @@ household-profiles
 4
 
 SLIDER
-2216
-663
-2503
-696
+2792
+655
+3079
+688
 ratio-population-randomly-tested-daily
 ratio-population-randomly-tested-daily
 0
@@ -1377,10 +1377,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-2214
-737
-2504
-770
+2790
+729
+3080
+762
 test-workplace-of-confirmed-people?
 test-workplace-of-confirmed-people?
 1
@@ -1388,10 +1388,10 @@ test-workplace-of-confirmed-people?
 -1000
 
 SWITCH
-2214
-700
-2503
-733
+2790
+692
+3079
+725
 test-home-of-confirmed-people?
 test-home-of-confirmed-people?
 1
@@ -1399,10 +1399,10 @@ test-home-of-confirmed-people?
 -1000
 
 TEXTBOX
-2330
-633
-2480
-651
+2906
+625
+3056
+643
 Testing
 11
 105.0
@@ -1599,20 +1599,20 @@ Density settings influence risk of becoming sick when travelling locally (is rel
 1
 
 TEXTBOX
-2524
-815
-2699
-846
+3100
+807
+3275
+838
 All people at home are tested if one is confirmed sick.
 9
 105.0
 1
 
 TEXTBOX
-2523
-855
-2705
-884
+3099
+847
+3281
+876
 All people at work are tested if one is confirmed sick.
 9
 105.0
@@ -1936,10 +1936,10 @@ PENS
 "school" 1.0 0 -8630108 true "" "plot #schools-out-of-capital"
 
 PLOT
-1122
-514
-1671
-815
+1677
+513
+2226
+814
 Activities
 NIL
 NIL
@@ -1978,9 +1978,9 @@ HORIZONTAL
 
 SLIDER
 2817
-425
+427
 3042
-458
+460
 mean-social-distance-profile
 mean-social-distance-profile
 0
@@ -2233,10 +2233,10 @@ hospital-effectiveness
 11
 
 SLIDER
-2214
-920
-2508
-953
+2790
+912
+3084
+945
 ratio-population-daily-immunity-testing
 ratio-population-daily-immunity-testing
 0
@@ -2726,10 +2726,10 @@ INPUTBOX
 Number
 
 MONITOR
-2524
-898
-2652
-943
+3100
+890
+3228
+935
 NIL
 #tests-performed
 17
@@ -3333,10 +3333,10 @@ disease-fsm-model
 1
 
 MONITOR
-1813
-817
-1898
-862
+2389
+809
+2474
+854
 NIL
 r0
 17
@@ -3344,10 +3344,10 @@ r0
 11
 
 INPUTBOX
-2673
-888
-2791
-949
+3249
+880
+3367
+941
 #available-tests
 10000.0
 1
@@ -3355,10 +3355,10 @@ INPUTBOX
 Number
 
 SWITCH
-2214
-775
-2505
-808
+2790
+767
+3081
+800
 prioritize-testing-health-care?
 prioritize-testing-health-care?
 1
@@ -3383,10 +3383,10 @@ NIL
 1
 
 SWITCH
-2214
-845
-2506
-878
+2790
+837
+3082
+870
 do-not-test-youth?
 do-not-test-youth?
 0
@@ -3394,10 +3394,10 @@ do-not-test-youth?
 -1000
 
 SWITCH
-2214
-883
-2508
-916
+2790
+875
+3084
+908
 only-test-retirees-with-extra-tests?
 only-test-retirees-with-extra-tests?
 1
@@ -3605,20 +3605,20 @@ count people-having-ever-been-recorded-as-positive-in-the-app
 11
 
 CHOOSER
-2520
-720
-2791
-765
+3096
+712
+3282
+757
 when-is-daily-testing-applied?
 when-is-daily-testing-applied?
 "always" "never" "7-days-before-end-of-global-quarantine" "at-end-of-global-quarantine"
 1
 
 MONITOR
-2520
-665
-2692
-710
+3096
+657
+3268
+702
 NIL
 #tests-used-by-daily-testing
 17
@@ -3626,10 +3626,10 @@ NIL
 11
 
 SWITCH
-2213
-809
-2505
-842
+2789
+801
+3081
+834
 prioritize-testing-education?
 prioritize-testing-education?
 1
@@ -3756,10 +3756,10 @@ PENS
 "queuing" 1.0 0 -13345367 true "" "plot  #contacts-in-queuing"
 
 PLOT
-1894
-726
-2183
-917
+2470
+718
+2759
+909
 #people infected in
 NIL
 NIL
@@ -3785,10 +3785,10 @@ PENS
 "queuing" 1.0 0 -13345367 true "" "plot #people-infected-in-queuing"
 
 PLOT
-1894
-551
-2182
-728
+2470
+543
+2758
+720
 infection per age
 NIL
 NIL
@@ -3878,10 +3878,10 @@ contagion-model
 0
 
 PLOT
-1686
-652
-1894
-772
+2262
+644
+2470
+764
 avg-infectiousity per person
 NIL
 NIL
@@ -3896,10 +3896,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "ifelse not any? people with [is-infected?] [plot 0]\n[plot mean [oxford-contagion-factor-between self (one-of people) (one-of gathering-points)] of people with [is-infected?]]"
 
 MONITOR
-1686
-771
-1895
-816
+2262
+763
+2471
+808
 NIL
 count people with [is-officially-asked-to-quarantine?]
 17
@@ -4237,10 +4237,10 @@ Context-sensitive deliberation
 1
 
 PLOT
-2181
-397
-2422
-547
+2170
+307
+2411
+457
 Global deliberation time
 NIL
 NIL
@@ -4532,7 +4532,7 @@ SWITCH
 254
 ce-private-leisure-by-risk
 ce-private-leisure-by-risk
-1
+0
 1
 -1000
 
@@ -4553,7 +4553,7 @@ SWITCH
 255
 ce-enable-need-balancing
 ce-enable-need-balancing
-1
+0
 1
 -1000
 
@@ -4576,7 +4576,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-0
+3
 
 SWITCH
 1226
@@ -4756,7 +4756,7 @@ SWITCH
 498
 ce-forced-habits
 ce-forced-habits
-0
+1
 1
 -1000
 
@@ -4766,7 +4766,7 @@ INPUTBOX
 2040
 411
 ce-risk-avoidance-threshold-for-sd
--1.0
+0.75
 1
 0
 Number
@@ -4799,7 +4799,25 @@ CHOOSER
 ce-forced-habits-level
 ce-forced-habits-level
 0 1 2 3 4
-3
+2
+
+PLOT
+1119
+513
+1668
+814
+Actions
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5582,7 +5600,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine "-SRFH=" ce-should-rigidly-follow-habits "-B=" ce-enable-need-balancing)</final>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine "-FHL=" ce-forced-habits-level "-B=" ce-enable-need-balancing)</final>
     <timeLimit steps="240"/>
     <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
     <metric>#infected</metric>
@@ -5594,7 +5612,7 @@ setup</setup>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
-    <metric>#people</metric>
+    <metric>count people</metric>
     <metric>#dead-people</metric>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
@@ -5736,9 +5754,6 @@ setup</setup>
       <value value="3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-enable-global-lockdown">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="ce-should-rigidly-follow-habits">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-disable-conflict-checking">

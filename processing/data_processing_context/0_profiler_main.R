@@ -49,6 +49,7 @@ directory_files <- "2024_03_13_full_no_lockdown"
 #directory_files <- "2024_03_13_no_conflict"
 #directory_files <- "2024_03_13_rigid_norms"
 #directory_files <- "2024_03_21_n_agents"
+directory_files <- "2024_04_11_forced_habits"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
