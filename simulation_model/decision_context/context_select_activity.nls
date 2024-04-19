@@ -25,6 +25,56 @@ to context-init-variables
   set table-profiler-salient-needs table:make
 end
 
+to context-habits-init-variables
+  
+  ; This variable is used by the agents to check whether there is a habit other than Rest at home
+  set table-leisure-habits table:make
+  
+  let time "empty"
+  
+  ; Evening time slots
+  let available-time-slots-evening (list "monday evening" "tuesday evening" "wednesday evening" "thursday evening" "friday evening" "saturday evening" "sunday evening")
+  
+  ; Day time slots
+  let available-time-slots-day []
+  
+  ifelse age != retired-age 
+  [ 
+    ; TODO add my shop
+    ;ifelse ask my-work is-shop?
+    set available-time-slots-day (list "saturday morning" "saturday afternoon" "sunday morning" "sunday afternoon")
+    ;[ set available-time-slots-day (list "sunday morning" "sunday afternoon") ]
+  ]
+  [ set available-time-slots-day (list "monday morning" "tuesday morning" "wednesday morning" "thursday morning" "friday morning" "saturday morning" "sunday morning"
+                                       "monday afternoon" "tuesday afternoon" "wednesday afternoon" "thursday afternoon" "friday afternoon" "saturday afternoon" "sunday afternoon") ]
+
+  ; Determine leisure in the evening, perhaps with a probability
+  if (random-float 1) < 0.7 [
+    set time (one-of available-time-slots-evening) 
+    table:put table-leisure-habits time context-get-pr-or-pu-leisure
+    set available-time-slots-evening remove time available-time-slots-evening
+  ]
+  
+  ; A leisure for the weekends
+  set time (one-of available-time-slots-day) 
+  table:put table-leisure-habits time get-pr-or-pu-leisure
+  set available-time-slots-day remove time available-time-slots-day
+  
+  if (random-float 1) < 0.5 or age = retired-age [
+    set time (one-of available-time-slots-day) 
+    table:put table-leisure-habits time get-pr-or-pu-leisure
+    set available-time-slots-day remove time available-time-slots-day
+  ]
+
+  if ce-log-agent and who = ce-log-agent-id [ print table-leisure-habits ]  
+end
+
+to-report context-get-pr-or-pu-leisure
+  if random 5 >= 4 ; 20% chance
+  [ report (activity-descriptor my-public-leisure "relaxing") ]
+  report (activity-descriptor my-private-leisure "relaxing")
+end
+
 ; =================================================
 ;  The function that replaces the original 'select-activity' function
 ; =================================================

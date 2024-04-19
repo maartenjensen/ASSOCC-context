@@ -330,7 +330,7 @@ to-report SUE-leisure [ad]
     report 0.6
   ]
   if gp = my-home and motive = "rest" [
-    report 0.1
+    report ce-leisure-need-at-home
   ]
   report 0
 end

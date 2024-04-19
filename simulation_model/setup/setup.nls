@@ -275,10 +275,13 @@ to setup-person [current-home l-age]
     set delib-count-total-full-need 0
     
     ; Variables for habits
-    habits-init-variables
+    if ce-context-depth = -1
+    [ habits-init-variables ]
     
     ; Variables for context-sensitive deliberation
     context-init-variables
+    if ce-leisure-habits and ce-context-depth > 0
+    [ context-habits-init-variables ]
   ]
 end
 

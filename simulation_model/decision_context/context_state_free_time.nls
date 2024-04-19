@@ -33,6 +33,21 @@ to-report csft-function ; csft
   csft-balance-needs
   
   ; -------------------------------------------
+  ; Determine whether there exists a different habit (leisure)
+  ; -------------------------------------------
+  let time (word day-of-the-week " " slice-of-the-day)
+  if table:has-key? table-leisure-habits time
+  [
+    ; TODO, check for leisure also the normative aspects. Make at least one decision tree.
+    ifelse not csft-is-need-salient-and-conflicting-habits or ce-disable-conflict-checking
+    [
+      if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing planned habit: leisure" ]
+      report context-determine-social-distancing (table:get table-leisure-habits time)
+    ]
+    [ report csft-habit-leisure-f ]
+  ]
+  
+  ; -------------------------------------------
   ; Determine whether there is conflict
   ; -------------------------------------------
   if not csft-is-need-salient-and-conflicting or ce-disable-conflict-checking
@@ -235,7 +250,11 @@ end
 to-report csft-exit-before-conformity-f
   report []
 end
-  
+
+to-report csft-habit-leisure-f
+  report []
+end
+
 to-report csft-leisure-f
   report []
 end
@@ -260,6 +279,17 @@ end
 ;============== SALIENT NEEDS ==================
 to-report csft-is-need-salient-and-conflicting
   if leisure-satisfaction-balanced < ce-need-salient-threshold or conformity-satisfaction-level < ce-need-salient-threshold or belonging-satisfaction-level < ce-need-salient-threshold
+  [ report true ]
+  ; Exit if young or if shops are closed today
+  if age = young-age or not is-shops-open-today?
+  [ report false ]
+  if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
+  [ report true ]
+  report false
+end
+
+to-report csft-is-need-salient-and-conflicting-habits
+  if sleep-satisfaction-balanced < ce-need-salient-threshold or conformity-satisfaction-level < ce-need-salient-threshold or risk-avoidance-satisfaction-level < ce-need-salient-threshold
   [ report true ]
   ; Exit if young or if shops are closed today
   if age = young-age or not is-shops-open-today?

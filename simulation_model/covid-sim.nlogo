@@ -1936,10 +1936,10 @@ PENS
 "school" 1.0 0 -8630108 true "" "plot #schools-out-of-capital"
 
 PLOT
-1677
-513
-2226
-814
+1131
+511
+1680
+812
 Activities
 NIL
 NIL
@@ -4481,7 +4481,7 @@ SWITCH
 328
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4553,7 +4553,7 @@ SWITCH
 255
 ce-enable-need-balancing
 ce-enable-need-balancing
-0
+1
 1
 -1000
 
@@ -4576,7 +4576,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-3
+6
 
 SWITCH
 1226
@@ -4802,10 +4802,10 @@ ce-forced-habits-level
 2
 
 PLOT
-1119
-513
-1668
-814
+1687
+511
+2236
+812
 Actions
 NIL
 NIL
@@ -4818,6 +4818,38 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles"
+
+INPUTBOX
+1635
+402
+1790
+462
+ce-leisure-need-at-home
+0.1
+1
+0
+Number
+
+TEXTBOX
+1637
+386
+1787
+404
+Default 0.1
+12
+14.0
+1
+
+SWITCH
+1459
+469
+1606
+502
+ce-leisure-habits
+ce-leisure-habits
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
