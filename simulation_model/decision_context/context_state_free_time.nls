@@ -35,16 +35,23 @@ to-report csft-function ; csft
   ; -------------------------------------------
   ; Determine whether there exists a different habit (leisure)
   ; -------------------------------------------
-  let time (word day-of-the-week " " slice-of-the-day)
-  if table:has-key? table-leisure-habits time
+  
+  if ce-leisure-habits
   [
-    ; TODO, check for leisure also the normative aspects. Make at least one decision tree.
-    ifelse not csft-is-need-salient-and-conflicting-habits or ce-disable-conflict-checking
+    if table:has-key? table-leisure-habits context-day-time ; There is a leisure habit available on this time.
     [
-      if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing planned habit: leisure" ]
-      report context-determine-social-distancing (table:get table-leisure-habits time)
+      if not csft-is-need-salient-and-conflicting-habits-critical or ce-disable-conflict-checking ; follow the habit strongly unless a need is critical?
+      [
+        if ce-context-depth < 3 [ report csft-exit-before-normative-f ] ; ===============  BREAKOUT: Normative
+        if not context-normative-should-I-stay-home
+        [
+          if ce-log-agent and who = ce-log-agent-id [ print "No conflict: performing planned habit: leisure" ]
+          report context-determine-social-distancing (table:get table-leisure-habits context-day-time)
+        ]
+      ]
+      
+      report csft-habit-leisure-f
     ]
-    [ report csft-habit-leisure-f ]
   ]
   
   ; -------------------------------------------
@@ -143,7 +150,7 @@ to-report csft-leisure
   if context-normative-should-I-stay-home
   [
     ifelse leisure-satisfaction-balanced < ce-need-critical-threshold
-    [ if leisure-satisfaction-balanced < compliance-satisfaction-level
+    [ if compliance-satisfaction-level < leisure-satisfaction-balanced ; If compliance is more salient than leisure the agent rests at home (which gives leisure as well), otherwise a leisure activity is chosen below
       [ report context-determine-social-distancing (list my-home "rest") ]
     ]
     [ report csft-leisure-f ]
@@ -295,6 +302,17 @@ to-report csft-is-need-salient-and-conflicting-habits
   if age = young-age or not is-shops-open-today?
   [ report false ]
   if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
+  [ report true ]
+  report false
+end
+
+to-report csft-is-need-salient-and-conflicting-habits-critical
+  if sleep-satisfaction-balanced < ce-need-critical-threshold or conformity-satisfaction-level < ce-need-critical-threshold or risk-avoidance-satisfaction-level < ce-need-critical-threshold
+  [ report true ]
+  ; Exit if young or if shops are closed today
+  if age = young-age or not is-shops-open-today?
+  [ report false ]
+  if food-safety-satisfaction-level < ce-need-critical-threshold or luxury-satisfaction-balanced < ce-need-critical-threshold
   [ report true ]
   report false
 end

@@ -16,7 +16,8 @@ globals [
   #who-became-sick-while-travelling-locally
   import-scenario-name
   global-deliberation-time
-  action_saving_table ; temporary
+  action_saving_table ; This was only used to save all the actions taken by agents into a table
+  context-day-time
 ]
 
 to go-profile
@@ -4403,7 +4404,7 @@ INPUTBOX
 1574
 318
 ce-free-time-add-to-leisure
--0.4
+0.0
 1
 0
 Number
@@ -4481,7 +4482,7 @@ SWITCH
 328
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4576,7 +4577,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+4
 
 SWITCH
 1226
@@ -4799,7 +4800,7 @@ CHOOSER
 ce-forced-habits-level
 ce-forced-habits-level
 0 1 2 3 4
-2
+1
 
 PLOT
 1687
@@ -4847,7 +4848,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
