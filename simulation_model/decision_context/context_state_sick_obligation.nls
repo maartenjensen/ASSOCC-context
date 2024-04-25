@@ -128,10 +128,19 @@ to-report csso-sleep-health-risk-avoidance-belonging-compliance
   report context-determine-social-distancing (list my-home "rest")
 end
 
-to-report csso-autonomy-financial [ most-salient-need-level ]
-  if most-salient-need-level < ce-need-critical-threshold
-  [ report context-determine-social-distancing obligation-activity-descriptor ]
-  report csso-autonomy-financial-f
+to-report csso-autonomy-financial [ most-salient-need-level ] ; If ce-only-obligation-when-health-risk-free-enough = false it will be activated
+  if ce-log-agent and who = ce-log-agent-id [ print (word "csso-autonomy-financial: AUT:" most-salient-need-level " , RISK: " risk-avoidance-satisfaction-level " , HEALTH: " health-satisfaction-level) ]
+  ifelse not ce-only-obligation-when-health-riskfree-enough
+  [
+    if most-salient-need-level < ce-need-critical-threshold
+    [ report context-determine-social-distancing obligation-activity-descriptor ]
+    report csso-autonomy-financial-f
+  ]
+  [
+    ifelse most-salient-need-level < ce-need-critical-threshold and risk-avoidance-satisfaction-level >= ce-need-critical-threshold and health-satisfaction-level >= ce-need-critical-threshold
+    [ report context-determine-social-distancing obligation-activity-descriptor ]
+    [ report context-determine-social-distancing (list my-home "rest") ] ; If the agent feels very unhealth and very risk avoidant it will stay home
+  ]
 end
 
 to-report csso-leisure

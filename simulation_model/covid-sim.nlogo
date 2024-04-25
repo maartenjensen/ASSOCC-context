@@ -30,6 +30,11 @@ end
 
 to go
 
+  if crash [
+    set crash false
+    error "Run manually stopped"
+  ]
+
   reset-timer
   reset-metrics
   reset-economy-measurements
@@ -4275,8 +4280,8 @@ NIL
 PLOT
 549
 307
-990
-474
+987
+493
 Deliberation information count
 NIL
 NIL
@@ -4342,7 +4347,7 @@ INPUTBOX
 1187
 134
 ce-log-agent-id
-636.0
+1038.0
 1
 0
 Number
@@ -4404,7 +4409,7 @@ INPUTBOX
 1574
 318
 ce-free-time-add-to-leisure
-0.0
+-0.4
 1
 0
 Number
@@ -4818,7 +4823,8 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
+"@School" 1.0 0 -8431303 true "" "plot count children with [is-at-school?]"
+"@Home" 1.0 0 -12087248 true "" "plot count people with [is-at-home?]"
 
 INPUTBOX
 1635
@@ -4842,13 +4848,45 @@ Default 0.1
 1
 
 SWITCH
-1459
-469
-1606
-502
+1426
+468
+1573
+501
 ce-leisure-habits
 ce-leisure-habits
+0
 1
+-1000
+
+SWITCH
+120
+493
+223
+526
+crash
+crash
+1
+1
+-1000
+
+TEXTBOX
+121
+472
+327
+490
+Press to stop running the program
+12
+14.0
+1
+
+SWITCH
+1592
+469
+1911
+502
+ce-only-obligation-when-health-riskfree-enough
+ce-only-obligation-when-health-riskfree-enough
+0
 1
 -1000
 

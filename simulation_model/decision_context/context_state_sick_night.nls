@@ -97,7 +97,7 @@ to-report cssn-sleep-health-belonging-autonomy-risk-avoidance-compliance
   report context-determine-social-distancing (list my-home "rest")
 end
 
-to-report cssn-leisure
+to-report cssn-leisure ;===== ce-context-depth >= 2
   ifelse leisure-satisfaction-level < ce-need-critical-threshold 
   [ report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ]
   [ report cssn-leisure-f ]
