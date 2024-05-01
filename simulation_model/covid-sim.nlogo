@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-3.0
+4.0
 1
 1
 NIL
@@ -2483,7 +2483,7 @@ BUTTON
 100
 332
 4 Weeks Run
-let starting-day current-day\nlet end-day starting-day + 28\nwhile [current-day <= end-day] [ go ]
+let starting-day current-day\nlet end-day starting-day + 27\nwhile [current-day <= end-day] [ go ]
 NIL
 1
 T
@@ -4347,7 +4347,7 @@ INPUTBOX
 1187
 134
 ce-log-agent-id
-1038.0
+596.0
 1
 0
 Number
@@ -4355,8 +4355,8 @@ Number
 PLOT
 10
 1179
-522
-1493
+540
+1512
 Specific agent need satisfaction
 time
 need satisfaction
@@ -4382,10 +4382,10 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle ce-log-agent-id"
 
 INPUTBOX
-1426
-387
-1544
-447
+1504
+323
+1595
+383
 ce-add-to-luxury
 0.0
 1
@@ -4393,9 +4393,9 @@ ce-add-to-luxury
 Number
 
 INPUTBOX
-1425
+1390
 323
-1553
+1499
 383
 ce-day-add-to-sleep
 0.0
@@ -4409,7 +4409,7 @@ INPUTBOX
 1574
 318
 ce-free-time-add-to-leisure
--0.4
+0.0
 1
 0
 Number
@@ -4582,7 +4582,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-4
+3
 
 SWITCH
 1226
@@ -4631,7 +4631,7 @@ BUTTON
 100
 368
 8 Weeks Run
-let starting-day current-day\nlet end-day starting-day + 56\nwhile [current-day <= end-day] [ go ]
+let starting-day current-day\nlet end-day starting-day + 55\nwhile [current-day <= end-day] [ go ]
 NIL
 1
 T
@@ -4648,7 +4648,7 @@ BUTTON
 100
 405
 12 Weeks Run
-let starting-day current-day\nlet end-day starting-day + 84\nwhile [current-day <= end-day] [ go ]
+let starting-day current-day\nlet end-day starting-day + 83\nwhile [current-day <= end-day] [ go ]
 NIL
 1
 T
@@ -4665,7 +4665,7 @@ BUTTON
 101
 442
 16 Weeks Run
-let starting-day current-day\nlet end-day starting-day + 112\nwhile [current-day <= end-day] [ go ]
+let starting-day current-day\nlet end-day starting-day + 111\nwhile [current-day <= end-day] [ go ]
 NIL
 1
 T
@@ -4820,11 +4820,12 @@ NIL
 0.0
 10.0
 true
-false
+true
 "" ""
 PENS
 "@School" 1.0 0 -8431303 true "" "plot count children with [is-at-school?]"
 "@Home" 1.0 0 -12087248 true "" "plot count people with [is-at-home?]"
+"@E-Shop" 1.0 0 -7858858 true "" "plot count people-at-essential-shops"
 
 INPUTBOX
 1635
@@ -4848,10 +4849,10 @@ Default 0.1
 1
 
 SWITCH
-1426
-468
-1573
-501
+1637
+469
+1784
+502
 ce-leisure-habits
 ce-leisure-habits
 0
@@ -4880,15 +4881,47 @@ Press to stop running the program
 1
 
 SWITCH
-1592
+1795
 469
-1911
+2114
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
 0
 1
 -1000
+
+INPUTBOX
+1427
+386
+1577
+446
+ce-add-to-food-safety
+-0.4
+1
+0
+Number
+
+SWITCH
+1423
+469
+1629
+502
+ce-more-likely-to-essential-shop
+ce-more-likely-to-essential-shop
+0
+1
+-1000
+
+TEXTBOX
+1426
+452
+1618
+470
+AUTO: If True, set rations bought = 4
+11
+14.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

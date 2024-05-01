@@ -33,7 +33,7 @@ to context-habits-init-variables
   let time "empty"
   
   ; Evening time slots
-  let available-time-slots-evening (list "monday evening" "tuesday evening" "wednesday evening" "thursday evening" "friday evening" "saturday evening" "sunday evening")
+  let available-time-slots-evening (list "monday evening" "tuesday evening" "wednesday evening" "thursday evening" "friday evening" "saturday evening" "sunday evening") ;  Is removed from this list since its the last moment the agents can buy something at the store
   
   ; Day time slots
   let available-time-slots-day []
@@ -108,7 +108,7 @@ to-report context-deliberation-select-activity
   reset-delib-count
   profiler-speed-test-functions
   let chosen-action []
-  if ce-log-agent and who = ce-log-agent-id [ ifelse (slice-of-the-day = "morning") [ print "" print (word "== STEP " (ticks) ", DAY START AGENT: " ce-log-agent-id ", AGE: " age " ==") ][ print "" ] ]
+  if ce-log-agent and who = ce-log-agent-id [ ifelse (slice-of-the-day = "morning") [ print "" print (word "== STEP " (ticks) ", DAY START " day-of-the-week " AGENT: " ce-log-agent-id ", AGE: " age " ==") ][ print "" ] ]
   if ce-log-agent and who = ce-log-agent-id [ print (word ":" slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) ":") ]
   
   set delib-count-minimal-context 1

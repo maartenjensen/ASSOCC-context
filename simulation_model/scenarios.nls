@@ -59,6 +59,10 @@ to load-scenario-specifics
     if ce-context-depth = -1
     [ set ce-forced-habits true ]
     
+    if ce-more-likely-to-essential-shop
+    [ set days-of-rations-bought 4 ]
+    ; else days-of-rations-bought = 3, This is automatically set
+    
     stop
   ]
   

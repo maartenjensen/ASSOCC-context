@@ -174,9 +174,9 @@ to-report csft-leisure-random-choice
 end
 
 to-report csft-food-safety
-  if not context-normative-should-I-stay-home or (food-safety-satisfaction-level < ce-need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level)
+  if not context-normative-should-I-stay-home or (food-safety-satisfaction-balanced < ce-need-critical-threshold and food-safety-satisfaction-balanced < compliance-satisfaction-level)
   [
-    if food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level
+    if food-safety-satisfaction-balanced < financial-stability-satisfaction-level and food-safety-satisfaction-balanced < financial-survival-satisfaction-level
     [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   ]
   report csft-food-safety-f
@@ -290,7 +290,7 @@ to-report csft-is-need-salient-and-conflicting
   ; Exit if young or if shops are closed today
   if age = young-age or not is-shops-open-today?
   [ report false ]
-  if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
+  if food-safety-satisfaction-balanced < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
   [ report true ]
   report false
 end
@@ -301,7 +301,7 @@ to-report csft-is-need-salient-and-conflicting-habits
   ; Exit if young or if shops are closed today
   if age = young-age or not is-shops-open-today?
   [ report false ]
-  if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
+  if food-safety-satisfaction-balanced < ce-need-salient-threshold or luxury-satisfaction-balanced < ce-need-salient-threshold
   [ report true ]
   report false
 end
@@ -312,7 +312,7 @@ to-report csft-is-need-salient-and-conflicting-habits-critical
   ; Exit if young or if shops are closed today
   if age = young-age or not is-shops-open-today?
   [ report false ]
-  if food-safety-satisfaction-level < ce-need-critical-threshold or luxury-satisfaction-balanced < ce-need-critical-threshold
+  if food-safety-satisfaction-balanced < ce-need-critical-threshold or luxury-satisfaction-balanced < ce-need-critical-threshold
   [ report true ]
   report false
 end
@@ -338,9 +338,9 @@ to-report csft-salient-needs
   ; Exit if not student, worker or retired OR when the shops are closed which is on Sunday
   if age = young-age or not is-shops-open-today?
   [ report list salient-needs salient-needs-level ]
-  if food-safety-satisfaction-level < ce-need-salient-threshold
+  if food-safety-satisfaction-balanced < ce-need-salient-threshold ; ======== Balanced need
   [ set salient-needs lput need-food-safety salient-needs 
-    set salient-needs-level lput food-safety-satisfaction-level salient-needs-level ]
+    set salient-needs-level lput food-safety-satisfaction-balanced salient-needs-level ]
   if luxury-satisfaction-balanced < ce-need-salient-threshold
   [ set salient-needs lput need-luxury salient-needs 
     set salient-needs-level lput luxury-satisfaction-balanced salient-needs-level ]
@@ -352,9 +352,11 @@ to csft-balance-needs
   [ set leisure-satisfaction-balanced leisure-satisfaction-level + ce-free-time-add-to-leisure 
     set luxury-satisfaction-balanced luxury-satisfaction-level + ce-add-to-luxury
     set sleep-satisfaction-balanced sleep-satisfaction-level + ce-day-add-to-sleep
+    set food-safety-satisfaction-balanced food-safety-satisfaction-level + ce-add-to-food-safety
   ]
   [ set leisure-satisfaction-balanced leisure-satisfaction-level
     set luxury-satisfaction-balanced luxury-satisfaction-level 
     set sleep-satisfaction-balanced sleep-satisfaction-level 
+    set food-safety-satisfaction-balanced food-safety-satisfaction-level
   ]
 end

@@ -193,6 +193,7 @@ people-own [
   leisure-satisfaction-balanced
   luxury-satisfaction-balanced
   sleep-satisfaction-balanced
+  food-safety-satisfaction-balanced
 ]
 
 to update-people-epistemic-status

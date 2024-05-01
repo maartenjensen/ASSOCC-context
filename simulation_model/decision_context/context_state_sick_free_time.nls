@@ -27,6 +27,8 @@ to-report cssft-function ; cssft
   ; The time is morning or afternoon
   if ce-log-agent and who = ce-log-agent-id [ print "Free time decision making" ]
   
+  cssft-balance-needs
+  
   ; -------------------------------------------
   ; Determine whether there is conflict
   ; -------------------------------------------
@@ -111,7 +113,7 @@ to-report cssft-leisure
 end
 
 to-report cssft-food-safety
-  if food-safety-satisfaction-level < ce-need-critical-threshold and food-safety-satisfaction-level < ce-need-critical-threshold and food-safety-satisfaction-level < compliance-satisfaction-level
+  if food-safety-satisfaction-balanced < ce-need-critical-threshold and food-safety-satisfaction-balanced < ce-need-critical-threshold and food-safety-satisfaction-balanced < compliance-satisfaction-level
   [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   report cssft-food-safety-f
 end
@@ -212,7 +214,7 @@ to-report cssft-is-need-salient-and-conflicting
   [ report true ]
   if age = young-age or not is-shops-open-today?
   [ report false ]
-  if food-safety-satisfaction-level < ce-need-salient-threshold or luxury-satisfaction-level < ce-need-salient-threshold
+  if food-safety-satisfaction-balanced < ce-need-salient-threshold or luxury-satisfaction-level < ce-need-salient-threshold
   [ report true ]
   report false
 end
@@ -244,11 +246,19 @@ to-report cssft-salient-needs
   ; Exit if not student, worker or retired or the shops are not open today
   if age = young-age or not is-shops-open-today?
   [ report list salient-needs salient-needs-level ]
-  if food-safety-satisfaction-level < ce-need-salient-threshold
+  if food-safety-satisfaction-balanced < ce-need-salient-threshold
   [ set salient-needs lput need-food-safety salient-needs 
-    set salient-needs-level lput food-safety-satisfaction-level salient-needs-level ]
+    set salient-needs-level lput food-safety-satisfaction-balanced salient-needs-level ]
   if luxury-satisfaction-level < ce-need-salient-threshold
   [ set salient-needs lput need-luxury salient-needs 
     set salient-needs-level lput luxury-satisfaction-level salient-needs-level ]
   report list salient-needs salient-needs-level
+end
+
+to cssft-balance-needs
+  ifelse ce-enable-need-balancing
+  [ set food-safety-satisfaction-balanced food-safety-satisfaction-level + ce-add-to-food-safety
+  ]
+  [ set food-safety-satisfaction-balanced food-safety-satisfaction-level
+  ]
 end

@@ -20,7 +20,9 @@ to-report food-safety-satisfaction-level
   if is-currently-being-treated-at-hospital? [
     report 1
   ]
-  report min (list ([available-food-rations] of my-home / amount-of-rations-I-buy-when-going-to-essential-shops) 1)
+  ifelse not ce-more-likely-to-essential-shop
+  [ report min (list ([available-food-rations] of my-home / amount-of-rations-I-buy-when-going-to-essential-shops) 1) ] ; This part is the original code
+  [ report min (list (0.5 * ([available-food-rations] of my-home / amount-of-rations-I-buy-when-going-to-essential-shops)) 1) ] ; The 0.5 * is customly made by me (Maarten) for making people buy essential food more
 end
 
 
