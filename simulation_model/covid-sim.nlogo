@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -2844,7 +2844,7 @@ INPUTBOX
 914
 87
 #random-seed
-3.0
+0.0
 1
 0
 Number
@@ -4234,9 +4234,9 @@ Number
 
 TEXTBOX
 999
-189
+151
 1229
-229
+191
 Context-sensitive deliberation
 16
 125.0
@@ -4382,9 +4382,9 @@ PENS
 "conformity" 1.0 0 -12345184 true "" "plot [conformity-satisfaction-level] of turtle ce-log-agent-id"
 
 INPUTBOX
-1504
+1994
 323
-1595
+2085
 383
 ce-add-to-luxury
 0.0
@@ -4393,20 +4393,20 @@ ce-add-to-luxury
 Number
 
 INPUTBOX
-1390
+1880
 323
-1499
+1989
 383
 ce-day-add-to-sleep
-0.0
+0.2
 1
 0
 Number
 
 INPUTBOX
-1425
+1915
 258
-1574
+2064
 318
 ce-free-time-add-to-leisure
 0.0
@@ -4427,9 +4427,9 @@ Number
 
 SWITCH
 998
-349
+357
 1200
-382
+390
 ce-enable-global-lockdown
 ce-enable-global-lockdown
 1
@@ -4437,10 +4437,10 @@ ce-enable-global-lockdown
 -1000
 
 INPUTBOX
-1865
-223
-2007
-283
+1444
+221
+1586
+281
 ce-need-salient-threshold
 0.5
 1
@@ -4448,10 +4448,10 @@ ce-need-salient-threshold
 Number
 
 INPUTBOX
-1865
-288
-1998
-348
+1444
+286
+1577
+346
 ce-need-critical-threshold
 0.1
 1
@@ -4465,7 +4465,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-0
+1
 1
 -1000
 
@@ -4482,9 +4482,9 @@ Number
 
 SWITCH
 998
-295
+299
 1196
-328
+332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
 1
@@ -4502,9 +4502,9 @@ Experimental settings (deliberation)
 1
 
 TEXTBOX
-1428
+1918
 202
-1537
+2027
 220
 Needs balancing
 12
@@ -4512,10 +4512,10 @@ Needs balancing
 1
 
 TEXTBOX
-1867
-203
-2017
-221
+1446
+201
+1596
+219
 General context settings
 12
 125.0
@@ -4544,18 +4544,18 @@ ce-private-leisure-by-risk
 
 TEXTBOX
 1001
-207
+169
 1151
-225
+187
 ce: context experiment
 11
 15.0
 1
 
 SWITCH
-1425
+1915
 222
-1623
+2113
 255
 ce-enable-need-balancing
 ce-enable-need-balancing
@@ -4576,13 +4576,13 @@ count people with [[gathering-type] of current-activity = \"public-leisure\"]
 
 CHOOSER
 998
-225
+235
 1196
-270
+280
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-3
+1
 
 SWITCH
 1226
@@ -4597,9 +4597,9 @@ ce-disable-conflict-checking
 
 TEXTBOX
 1001
-333
+341
 1151
-351
+359
 Policy settings
 11
 125.0
@@ -4688,9 +4688,9 @@ Context log
 
 TEXTBOX
 1002
-387
+395
 1152
-405
+413
 Other deliberation settings
 11
 125.0
@@ -4698,9 +4698,9 @@ Other deliberation settings
 
 TEXTBOX
 1001
-279
+283
 1190
-297
+301
 AUTO: If ce-context-depth = 5 [ True
 11
 14.0
@@ -4735,9 +4735,9 @@ NIL
 
 SWITCH
 999
-402
+410
 1219
-435
+443
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
 1
@@ -4767,10 +4767,10 @@ ce-forced-habits
 -1000
 
 INPUTBOX
-1865
-351
-2040
-411
+1444
+349
+1619
+409
 ce-risk-avoidance-threshold-for-sd
 0.75
 1
@@ -4788,10 +4788,10 @@ If night, day -1
 1
 
 TEXTBOX
-1003
-443
-1197
-461
+1002
+446
+1196
+464
 Other deliberation types: CD = -1
 12
 14.0
@@ -4805,7 +4805,7 @@ CHOOSER
 ce-forced-habits-level
 ce-forced-habits-level
 0 1 2 3 4
-1
+0
 
 PLOT
 1687
@@ -4855,7 +4855,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4887,17 +4887,17 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
 INPUTBOX
-1427
+1917
 386
-1577
+2067
 446
 ce-add-to-food-safety
--0.4
+0.0
 1
 0
 Number
@@ -4909,7 +4909,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4922,6 +4922,27 @@ AUTO: If True, set rations bought = 4
 11
 14.0
 1
+
+CHOOSER
+998
+188
+1196
+233
+ce-context-experiment-presets
+ce-context-experiment-presets
+"no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
+13
+
+INPUTBOX
+322
+471
+448
+531
+stop-before-tick
+24.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5904,6 +5925,209 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-add-to-luxury">
       <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-log-agent">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="ContextFinal" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup
+behavior-space-start-profiling
+load-scenario-specific-parameter-settings
+setup</setup>
+    <go>go</go>
+    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine "-FHL=" ce-forced-habits-level "-B=" ce-enable-need-balancing)</final>
+    <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
+    <metric>stop-before-tick</metric>
+    <metric>ce-context-depth</metric>
+    <metric>ce-forced-habits</metric>
+    <metric>ce-forced-habits-level</metric>
+    <metric>ce-enable-global-lockdown</metric>
+    <metric>ce-disable-conflict-checking</metric>
+    <metric>ce-should-rigidly-follow-quarantine</metric>
+    <metric>ce-enable-salient-food-luxury-forced-obligation</metric>
+    <metric>#infected</metric>
+    <metric>count people with [epistemic-infection-status = "infected"]</metric>
+    <metric>count people with [infection-status = "healthy"]</metric>
+    <metric>count people with [infection-status = "immune"]</metric>
+    <metric>count people with [is-believing-to-be-immune?]</metric>
+    <metric>count people with [infection-status = "healthy" or infection-status = "immune"]</metric>
+    <metric>#admissions-last-tick</metric>
+    <metric>#taken-hospital-beds</metric>
+    <metric>#denied-requests-for-hospital-beds</metric>
+    <metric>count people</metric>
+    <metric>#dead-people</metric>
+    <metric>#tests-performed</metric>
+    <metric>r0</metric>
+    <metric>count officially-quarantiners</metric>
+    <metric>count should-be-isolators</metric>
+    <metric>count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]</metric>
+    <metric>#contacts-last-tick</metric>
+    <metric>#people-infected-in-hospitals</metric>
+    <metric>#people-infected-in-workplaces</metric>
+    <metric>#people-infected-in-homes</metric>
+    <metric>#people-infected-in-public-leisure</metric>
+    <metric>#people-infected-in-private-leisure</metric>
+    <metric>#people-infected-in-schools</metric>
+    <metric>#people-infected-in-universities</metric>
+    <metric>#people-infected-in-essential-shops</metric>
+    <metric>#people-infected-in-non-essential-shops</metric>
+    <metric>#people-infected-in-pubtrans</metric>
+    <metric>#people-infected-in-shared-cars</metric>
+    <metric>#people-infected-in-queuing</metric>
+    <metric>#contacts-in-pubtrans</metric>
+    <metric>#contacts-in-shared-cars</metric>
+    <metric>#contacts-in-queuing</metric>
+    <metric>#contacts-in-pubtrans</metric>
+    <metric>#contacts-in-hospitals</metric>
+    <metric>#contacts-in-workplaces</metric>
+    <metric>#contacts-in-homes</metric>
+    <metric>#contacts-in-public-leisure</metric>
+    <metric>#contacts-in-private-leisure</metric>
+    <metric>#contacts-in-schools</metric>
+    <metric>#contacts-in-universities</metric>
+    <metric>#contacts-in-essential-shops</metric>
+    <metric>#contacts-in-non-essential-shops</metric>
+    <metric>#cumulative-youngs-infected</metric>
+    <metric>#cumulative-students-infected</metric>
+    <metric>#cumulative-workers-infected</metric>
+    <metric>#cumulative-retireds-infected</metric>
+    <metric>#cumulative-youngs-infector</metric>
+    <metric>#cumulative-students-infector</metric>
+    <metric>#cumulative-workers-infector</metric>
+    <metric>#cumulative-retireds-infector</metric>
+    <metric>ratio-quarantiners-currently-complying-to-quarantine</metric>
+    <metric>ratio-infected-youngs</metric>
+    <metric>ratio-infected-students</metric>
+    <metric>ratio-infected-workers</metric>
+    <metric>ratio-infected-retireds</metric>
+    <metric>#hospitalizations-youngs-this-tick</metric>
+    <metric>#hospitalizations-students-this-tick</metric>
+    <metric>#hospitalizations-workers-this-tick</metric>
+    <metric>#hospitalizations-retired-this-tick</metric>
+    <metric>#youngs-at-start</metric>
+    <metric>#students-at-start</metric>
+    <metric>#workers-at-start</metric>
+    <metric>#retireds-at-start</metric>
+    <metric>count people with [is-at-work?]</metric>
+    <metric>count people with [is-at-public-leisure-place?]</metric>
+    <metric>count people with [is-at-private-leisure-place?]</metric>
+    <metric>count people with [is-at-home?]</metric>
+    <metric>count people with [is-at-school?]</metric>
+    <metric>count people with [is-at-university?]</metric>
+    <metric>count people with [current-motivation = treatment-motive]</metric>
+    <metric>count people-at-essential-shops</metric>
+    <metric>count people-at-non-essential-shops</metric>
+    <metric>count children with [is-at-work?]</metric>
+    <metric>count children with [is-at-public-leisure-place?]</metric>
+    <metric>count children with [is-at-private-leisure-place?]</metric>
+    <metric>count children with [is-at-home?]</metric>
+    <metric>count children with [is-at-school?]</metric>
+    <metric>count children with [is-at-university?]</metric>
+    <metric>count children with [current-motivation = treatment-motive]</metric>
+    <metric>count children with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count children with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count students with [is-at-work?]</metric>
+    <metric>count students with [is-at-public-leisure-place?]</metric>
+    <metric>count students with [is-at-private-leisure-place?]</metric>
+    <metric>count students with [is-at-home?]</metric>
+    <metric>count students with [is-at-school?]</metric>
+    <metric>count students with [is-at-university?]</metric>
+    <metric>count students with [current-motivation = treatment-motive]</metric>
+    <metric>count students with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count students with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [is-at-work?]</metric>
+    <metric>count workers with [is-at-public-leisure-place?]</metric>
+    <metric>count workers with [is-at-private-leisure-place?]</metric>
+    <metric>count workers with [is-at-home?]</metric>
+    <metric>count workers with [is-at-school?]</metric>
+    <metric>count workers with [is-at-university?]</metric>
+    <metric>count workers with [current-motivation = treatment-motive]</metric>
+    <metric>count workers with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count workers with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [is-at-work?]</metric>
+    <metric>count retireds with [is-at-public-leisure-place?]</metric>
+    <metric>count retireds with [is-at-private-leisure-place?]</metric>
+    <metric>count retireds with [is-at-home?]</metric>
+    <metric>count retireds with [is-at-school?]</metric>
+    <metric>count retireds with [is-at-university?]</metric>
+    <metric>count retireds with [current-motivation = treatment-motive]</metric>
+    <metric>count retireds with [[is-essential-shop?] of current-activity]</metric>
+    <metric>count retireds with [[is-non-essential-shop?] of current-activity]</metric>
+    <metric>mean [belonging-satisfaction-level] of people</metric>
+    <metric>mean [risk-avoidance-satisfaction-level] of people</metric>
+    <metric>mean [autonomy-satisfaction-level] of people</metric>
+    <metric>mean [luxury-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [health-satisfaction-level] of people</metric>
+    <metric>mean [sleep-satisfaction-level] of people</metric>
+    <metric>mean [compliance-satisfaction-level] of people</metric>
+    <metric>mean [financial-stability-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [food-safety-satisfaction-level] of people</metric>
+    <metric>mean [leisure-satisfaction-level] of people</metric>
+    <metric>mean [financial-survival-satisfaction-level] of people with [not is-child?]</metric>
+    <metric>mean [conformity-satisfaction-level] of people</metric>
+    <metric>count people with [delib-count-minimal-context = 1]</metric>
+    <metric>count people with [delib-count-determine-most-salient-need = 1]</metric>
+    <metric>count people with [delib-count-compare-need-levels = 1]</metric>
+    <metric>count people with [delib-count-normative-consideration = 1]</metric>
+    <metric>count people with [delib-count-conformity-network-action = 1]</metric>
+    <metric>count people with [delib-count-full-need = 1]</metric>
+    <metric>(count people with [delib-count-minimal-context = 1]) / count people</metric>
+    <metric>(count people with [delib-count-determine-most-salient-need = 1]) / count people</metric>
+    <metric>(count people with [delib-count-compare-need-levels = 1]) / count people</metric>
+    <metric>(count people with [delib-count-normative-consideration = 1]) / count people</metric>
+    <metric>(count people with [delib-count-conformity-network-action = 1]) / count people</metric>
+    <metric>(count people with [delib-count-full-need = 1]) / count people</metric>
+    <metric>mean [delib-count-total-minimal-context] of people</metric>
+    <metric>mean [delib-count-total-determine-most-salient-need] of people</metric>
+    <metric>mean [delib-count-total-compare-need-levels] of people</metric>
+    <metric>mean [delib-count-total-normative-consideration] of people</metric>
+    <metric>mean [delib-count-total-conformity-network-action] of people</metric>
+    <metric>mean [delib-count-total-full-need] of people</metric>
+    <enumeratedValueSet variable="ce-context-experiment-presets">
+      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
+      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
+      <value value="&quot;1.3 DCSD-1&quot;"/>
+      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
+      <value value="&quot;2.1 DCSD-2&quot;"/>
+      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
+      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
+      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
+      <value value="&quot;3.3 DCSD-3&quot;"/>
+      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
+      <value value="&quot;4.1 DCSD-4&quot;"/>
+      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
+      <value value="&quot;0.0 Original ASSOCC&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="#random-seed">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-households-for-context-scenario">
+      <value value="350"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-action-space">
+      <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-need-salient-threshold">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-need-critical-threshold">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-threshold-for-sd">
+      <value value="0.75"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-private-leisure-by-risk">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-private-leisure-preference">
+      <value value="0.65"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-risk-avoidance-home-preference">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-enable-need-balancing">
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-log-agent">
       <value value="false"/>

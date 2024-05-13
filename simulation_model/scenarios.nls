@@ -30,6 +30,184 @@ to load-test-scenario
   ]
 end
 
+to load-scenario-specifics-context-lockdown
+  ; IF lockdown is enabled set specific lockdown variables
+  if ce-enable-global-lockdown [
+    set ratio-self-quarantining-when-a-family-member-is-symptomatic 0.8
+    set is-infected-and-their-families-requested-to-stay-at-home? true
+    set food-delivered-to-isolators? true
+    set all-self-isolate-for-35-days-when-first-hitting-2%-infected? true
+    set ratio-self-quarantining-when-symptomatic 0.8
+    set stop-before-tick 480
+  ]
+end
+  
+to load-scenario-specifics-context-experiment-preset
+  if ce-context-experiment-presets = "no-presets"
+  [ error "ERROR: ce-context-experiment-presets should not be 0.0 no-presets" ]
+  
+  ; Basic settings for basic model: Original ASSOCC
+  set with-infected? false
+  
+  set ce-context-depth 0
+  
+  set ce-forced-habits false
+  set ce-forced-habits-level 0
+  
+  set ce-private-leisure-by-risk true ; Only affects behaviour for DCSD 3 or up
+  set ce-leisure-habits false
+  set ce-only-obligation-when-health-riskfree-enough false
+  set ce-should-rigidly-follow-quarantine false
+  set ce-enable-global-lockdown false
+  set ce-enable-salient-food-luxury-forced-obligation false
+  
+  set stop-before-tick 240
+  
+  ; For all the context experiments except original ASSOCC
+  ifelse ce-context-experiment-presets = "0.0 Original ASSOCC"
+  [ set with-infected? true
+    
+    set ce-more-likely-to-essential-shop false
+    set days-of-rations-bought 3
+    stop
+  ]
+  [ set ce-more-likely-to-essential-shop true
+    set days-of-rations-bought 4
+  ]
+  
+  if ce-context-experiment-presets = "1.1 rigid-habits-no-infected"
+  [ set ce-context-depth -1
+    set ce-forced-habits true
+    set ce-forced-habits-level 1
+    set with-infected? false
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "1.2 rigid-habits-infected"
+  [ set ce-context-depth -1
+    set ce-forced-habits true
+    set ce-forced-habits-level 1
+    set with-infected? true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "1.3 DCSD-1"
+  [
+    set ce-context-depth 1
+    set ce-forced-habits false ;(already set)
+    set with-infected? true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "1.4 DCSD-1-leisure-habits"
+  [
+    set ce-context-depth 1
+    set ce-forced-habits false ;(already set)
+    set with-infected? true
+    set ce-leisure-habits true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "2.1 DCSD-2"
+  [
+    set ce-context-depth 2
+    set ce-only-obligation-when-health-riskfree-enough false ; (already set)
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "2.2 DCSD-2-obligation-constraint"
+  [
+    set ce-context-depth 2
+    set ce-only-obligation-when-health-riskfree-enough true
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "3.1 DCSD-3-rigid-norms"
+  [
+    set ce-context-depth 3
+    set ce-should-rigidly-follow-quarantine true
+    set ce-enable-global-lockdown false
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "3.2 DCSD-3-rigid-norms-lockdown"
+  [
+    set ce-context-depth 3
+    set ce-should-rigidly-follow-quarantine true
+    set ce-enable-global-lockdown true
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "3.3 DCSD-3"
+  [
+    set ce-context-depth 3
+    set ce-should-rigidly-follow-quarantine false ; (already set)
+    set ce-enable-global-lockdown false
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "3.4 DCSD-3-lockdown"
+  [
+    set ce-context-depth 3
+    set ce-should-rigidly-follow-quarantine false ; (already set)
+    set ce-enable-global-lockdown true
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "4.1 DCSD-4"
+  [
+    set ce-context-depth 4
+    
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "5.1 DCSD-5-optimisation"
+  [
+    set ce-context-depth 5
+    set ce-enable-salient-food-luxury-forced-obligation true
+
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  ; The function load-scenario-specifics-context-lockdown is called just outside of this function
+end
+  
 to load-scenario-specifics    
   if preset-scenario = "default-scenario" [stop]  
   
@@ -41,27 +219,28 @@ to load-scenario-specifics
     set #households ce-households-for-context-scenario
     load-number-of-gathering-points-based-on-number-of-households #households
     
-    if ce-enable-global-lockdown [
-      set ratio-self-quarantining-when-a-family-member-is-symptomatic 0.8
-      set is-infected-and-their-families-requested-to-stay-at-home? true
-      set food-delivered-to-isolators? true
-      set all-self-isolate-for-35-days-when-first-hitting-2%-infected? true
-      set ratio-self-quarantining-when-symptomatic 0.8
+    ifelse ce-context-experiment-presets = "no-presets"
+    [
+      ifelse ce-context-depth = 5
+      [ set ce-enable-salient-food-luxury-forced-obligation true ]
+      [ set ce-enable-salient-food-luxury-forced-obligation false ] 
+      
+      ; If ce-context-depth > -1: it is not possible to have forced habits deliberation
+      if ce-context-depth > -1
+      [ set ce-forced-habits false ]
+      if ce-context-depth = -1
+      [ set ce-forced-habits true ]
+      
+      if ce-more-likely-to-essential-shop
+      [ set days-of-rations-bought 4 ]
+      ; else days-of-rations-bought = 3, This is automatically set
+      
+      load-scenario-specifics-context-lockdown
     ]
-    
-    ifelse ce-context-depth = 5
-    [ set ce-enable-salient-food-luxury-forced-obligation true ]
-    [ set ce-enable-salient-food-luxury-forced-obligation false ] 
-    
-    ; If ce-context-depth > -1: it is not possible to have forced habits deliberation
-    if ce-context-depth > -1
-    [ set ce-forced-habits false ]
-    if ce-context-depth = -1
-    [ set ce-forced-habits true ]
-    
-    if ce-more-likely-to-essential-shop
-    [ set days-of-rations-bought 4 ]
-    ; else days-of-rations-bought = 3, This is automatically set
+    [
+      load-scenario-specifics-context-experiment-preset
+      load-scenario-specifics-context-lockdown
+    ]
     
     stop
   ]
