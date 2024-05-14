@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-3.0
+4.0
 1
 1
 NIL
@@ -4582,7 +4582,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-1
+0
 
 SWITCH
 1226
@@ -4762,7 +4762,7 @@ SWITCH
 498
 ce-forced-habits
 ce-forced-habits
-1
+0
 1
 -1000
 
@@ -4805,7 +4805,7 @@ CHOOSER
 ce-forced-habits-level
 ce-forced-habits-level
 0 1 2 3 4
-0
+1
 
 PLOT
 1687
@@ -4909,7 +4909,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-1
+0
 1
 -1000
 
@@ -4931,7 +4931,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
-13
+2
 
 INPUTBOX
 322
@@ -4939,7 +4939,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-24.0
+240.0
 1
 0
 Number

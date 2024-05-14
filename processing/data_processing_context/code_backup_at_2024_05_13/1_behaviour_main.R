@@ -27,7 +27,7 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
 # This R file is for the main behaviour: only no lockdown or yes lockdown allowed.
-directory_files <- "2024_05_13_full_experiment"
+directory_files <- "2024_03_13_full_no_lockdown"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 
 # One of: "none", "one", "all"
@@ -153,7 +153,7 @@ df_final = df_renamed
 #================= SELECT SUBSET OF DATA =====================
 #=============================================================
 
-random_seed = 0
+random_seed = 1
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
 # Add a column for the amount of people that are alive, todo: just take the column of people (alive)
