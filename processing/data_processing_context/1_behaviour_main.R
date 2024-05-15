@@ -29,11 +29,13 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 # This R file is for the main behaviour: only no lockdown or yes lockdown allowed.
 directory_files <- "2024_05_13_full_experiment"
 #directory_files <- "2024_03_13_full_yes_lockdown"
+directory_files <- "2024_05_15_small_experiment"
 
 # One of: "none", "one", "all"
 plot_type <- "none"
 #plot_type <- "one" 
 #plot_type <- "all"
+plot_only_specific <- TRUE
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
 
@@ -153,6 +155,7 @@ df_final = df_renamed
 #================= SELECT SUBSET OF DATA =====================
 #=============================================================
 
+# Just select one random seed. Since we are interested in just the single run results.
 random_seed = 0
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
@@ -175,10 +178,16 @@ if (plot_type == "all") { pdf(paste("plot_", directory_files, "_behaviour_all_pl
 # For deliberation types:
 # Should the agent numbers be a percentage?? Well to be honest I think so, but I can do this in Netlogo! That's way easier!
 
-depth_value = unique(df_final$ce_context_depth)[1]   # Check the depth values and make dependent on the dataframe's depth levels
-for (depth_value in unique(df_final$ce_context_depth))
+#-----------------    CREATE THE FOR LOOP    -----------------
+experiment_preset = unique(df_final_filtered$ce_context_experiment_presets)[1]   # Check the depth values and make dependent on the dataframe's depth levels
+
+for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets))
 {
-  subset_df <- df_final_filtered[df_final_filtered$ce_context_depth == depth_value, ]
+  print(paste("Plotting: Starting to print plots for ", experiment_preset))
+  # This retrieve all the rows for a single run with the experimental presets
+  subset_df <- df_final_filtered[df_final_filtered$ce_context_experiment_presets == experiment_preset, ]
+  
+  depth_value = unique(subset_df$ce_context_depth)[1] # This should be the same for all the rows because its the same settings
   
   #=============================================================
   #================= PLOT DELIBERATION TYPE  ===================
@@ -213,17 +222,17 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
 
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - Overall", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Beginning", sep=""))
+  p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
-  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (CD:", depth_value,") - At Peak Infections", sep=""))
+  p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -249,7 +258,7 @@ for (depth_value in unique(df_final$ce_context_depth))
                  'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
         values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
         breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -274,8 +283,8 @@ for (depth_value in unique(df_final$ce_context_depth))
     breaks=c('uninfected', 'infected','believe_infected','dead_people','healthy'))
   p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (CD:", depth_value,") - Overall", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_population_status_overall.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (", experiment_preset,") - Overall", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -303,15 +312,15 @@ for (depth_value in unique(df_final$ce_context_depth))
              'health', 'leisure', 'luxury', 'risk_avoidance', 'sleep'))
   p <- p + xlab("Ticks") + ylab("Need Level") + labs(col = "Need")
   p <- p + theme_bw() + theme(text = element_text(size=16))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (", experiment_preset,") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_needs_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -338,15 +347,52 @@ for (depth_value in unique(df_final$ce_context_depth))
   p <- p + xlab("Ticks") + ylab("Agents at Location Type") + labs(col="")
   p <- p + theme_bw()
   p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (CD:", depth_value,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Location Types (", experiment_preset,") - Overall", sep=""))  
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  #==================== LOCATION TYPES: HOME NOT HOME =================
+  
+  df_activities <- select(subset_df, tick, ce_context_depth, at_homes, at_essential_shops, at_non_essential_shops,
+                              at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment)
+  # Now I want to sum the columns at_essential_shops until at_treatment
+  # take df_activities and sum the columns at_essential_shops until at_treatment
+  # So that I have one column tick, ce_context_depth, at_home, at_not_home
+  df_activities <- df_activities %>% mutate(at_home = at_homes)
+  #df_activities <- df_activities %>% mutate(not_at_home = at_essential_shops + at_non_essential_shops + at_private_leisure +
+  #                                                        at_public_leisure + at_schools + at_universities + at_workplaces + at_treatment)
+  df_activities <- df_activities %>% mutate (obligation = at_schools + at_universities + at_workplaces)
+  df_activities <- df_activities %>% mutate (shopping = at_essential_shops + at_non_essential_shops)
+  df_activities <- df_activities %>% mutate (leisure = at_private_leisure + at_public_leisure)
+  #df_activities <- df_activities %>% mutate (treatment = at_treatment)
+  df_activities <- select(df_activities, tick, ce_context_depth, at_home, obligation, shopping, leisure)
+  
+  df_activities <- gather(df_activities, `Location Type`, measurement, at_home:leisure)
+  
+  p <- ggplot(df_activities, aes(x = tick, y = measurement, col=`Location Type`))
+  p <- p + scale_colour_manual(
+    labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
+    values=c('#197221','#345da9','#881556','#f16a15'),
+    breaks=c('at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
+  p_smooth <- p + geom_smooth(se = TRUE)
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
 }
@@ -357,10 +403,10 @@ if (plot_type == "all") { dev.off() }
 # df_location_type contains the columns tick, ce_context_depth, at_essential_shops, at_homes, at_non_essential_shops, at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment
 # For each row I want to sum the columns at_essential_shops until at_treatment
 
-for (i in 1:nrow(df_location_types)) {
+#for (i in 1:nrow(df_location_types)) {
   
-  row = df_location_types[i,]
-  sum_row = sum(row$at_essential_shops, row$at_homes, row$at_non_essential_shops, row$at_private_leisure, row$at_public_leisure, row$at_schools, row$at_universities, row$at_workplaces, row$at_treatment)
-  print(sum_row)
-}
+  #row = df_location_types[i,]
+  #sum_row = sum(row$at_essential_shops, row$at_homes, row$at_non_essential_shops, row$at_private_leisure, row$at_public_leisure, row$at_schools, row$at_universities, row$at_workplaces, row$at_treatment)
+  #print(sum_row)
+#}
 

@@ -404,7 +404,7 @@ MONITOR
 992
 1382
 1037
-NIL
+day-of-the-week
 day-of-the-week
 17
 1
@@ -3411,10 +3411,10 @@ only-test-retirees-with-extra-tests?
 -1000
 
 MONITOR
-2827
-1485
-2974
-1530
+2426
+429
+2573
+474
 #Violating quarantine
 count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]
 17
@@ -3422,10 +3422,10 @@ count should-be-isolators with [current-activity != my-home and current-activity
 11
 
 MONITOR
-2973
-1485
-3122
-1530
+2572
+429
+2721
+474
 #Quarantiners
 count should-be-isolators
 17
@@ -3444,10 +3444,10 @@ food-delivered-to-isolators?
 -1000
 
 PLOT
-2828
-1336
-3206
-1486
+2427
+280
+2805
+430
 Quarantining & isolation
 time
 #people
@@ -3463,6 +3463,8 @@ PENS
 "of. quarantiners" 1.0 0 -11085214 true "" "plot count officially-quarantiners"
 "online supplying" 1.0 0 -7171555 true "" "plot  #delivered-supply-proposed-this-tick"
 "sick quarantiners" 1.0 0 -13791810 true "" "plot count people with [is-officially-asked-to-quarantine? and is-believing-to-be-infected?]"
+"isolators isolating" 1.0 0 -7500403 true "" "plot count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]"
+"should be isolators" 1.0 0 -16777216 true "" "plot count should-be-isolators"
 
 TEXTBOX
 2512
@@ -3816,10 +3818,10 @@ PENS
 "S-R" 1.0 0 -11033397 true "" "plot #cumulative-retireds-infector"
 
 MONITOR
-2826
-1538
-3185
-1583
+2425
+482
+2784
+527
 NIL
 ratio-quarantiners-currently-complying-to-quarantine
 17
@@ -3857,7 +3859,7 @@ influence-of-age-on-value-system
 influence-of-age-on-value-system
 0
 25
-5.0
+6.0
 1
 1
 NIL
@@ -4582,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-0
+2
 
 SWITCH
 1226
@@ -4762,7 +4764,7 @@ SWITCH
 498
 ce-forced-habits
 ce-forced-habits
-0
+1
 1
 -1000
 
@@ -4805,7 +4807,7 @@ CHOOSER
 ce-forced-habits-level
 ce-forced-habits-level
 0 1 2 3 4
-1
+0
 
 PLOT
 1687
@@ -4931,7 +4933,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
-2
+3
 
 INPUTBOX
 322
@@ -5936,7 +5938,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-L=" ce-enable-global-lockdown "-DCC=" ce-disable-conflict-checking "-SRFQ=" ce-should-rigidly-follow-quarantine "-FHL=" ce-forced-habits-level "-B=" ce-enable-need-balancing)</final>
+    <final>behavior-space-export-profiling (list "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-P=" ce-context-experiment-presets "X")</final>
     <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
     <metric>stop-before-tick</metric>
     <metric>ce-context-depth</metric>
@@ -5960,6 +5962,7 @@ setup</setup>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
     <metric>count officially-quarantiners</metric>
+    <metric>count people with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
     <metric>count should-be-isolators</metric>
     <metric>count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]</metric>
     <metric>#contacts-last-tick</metric>
@@ -6085,19 +6088,12 @@ setup</setup>
     <metric>mean [delib-count-total-conformity-network-action] of people</metric>
     <metric>mean [delib-count-total-full-need] of people</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
       <value value="&quot;1.2 rigid-habits-infected&quot;"/>
-      <value value="&quot;1.3 DCSD-1&quot;"/>
       <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
-      <value value="&quot;2.1 DCSD-2&quot;"/>
-      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
       <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
       <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
       <value value="&quot;3.3 DCSD-3&quot;"/>
       <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
-      <value value="&quot;4.1 DCSD-4&quot;"/>
-      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
-      <value value="&quot;0.0 Original ASSOCC&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
