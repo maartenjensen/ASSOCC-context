@@ -30,24 +30,17 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 directory_files <- "2024_05_13_full_experiment"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 directory_files <- "2024_05_15_small_experiment"
+directory_files <- "2024_05_15_presentation_experiment_2"
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-#plot_type <- "one" 
+plot_type <- "one" 
 #plot_type <- "all"
 plot_only_specific <- TRUE
 
+limit_plots <- TRUE
+
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
-
-if (directory_files == "2024_03_13_full_yes_lockdown") {
-  
-  gl_limits_x_max <- 480
-} else {
-  gl_limits_x_max <- 240
-}
-
-
-
 
 #--- WORKSPACE AND DIRECTORY ---
 setwd(paste(directory_r, directory_files, sep="/"))
@@ -189,12 +182,16 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   
   depth_value = unique(subset_df$ce_context_depth)[1] # This should be the same for all the rows because its the same settings
   
+  gl_limits_x_max <- subset_df$stop_before_tick[1]
+  
   #=============================================================
   #================= PLOT DELIBERATION TYPE  ===================
   #=============================================================
   
   #-----------------    THE LINE PLOT: TIME    -----------------
   
+  if (!limit_plots)
+  {
   # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
   df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
   # Now I want to for each of the columns `Minimal context` until `Full need` divide it by the people_alive column
@@ -236,6 +233,7 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   show(p)
   if (plot_type == "one") { dev.off() }
   
+  
   #----------------  THE BAR PLOT: PROPORTIONS  ----------------
   
   # Now I want to plot the proportions of the different types of deliberation
@@ -263,7 +261,7 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   if (plot_type == "one") { dev.off() }
   
   # It should still be properly ordered, but that can come later.
-  
+  }
   #=============================================================
   #==================== PLOT INFECTIONS  =======================
   #=============================================================
@@ -289,6 +287,44 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   if (plot_type == "one") { dev.off() }
   
   #p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
+  
+  #==================== Minimal infection curve ===================
+  df_population_status <- select(subset_df, tick, ce_context_depth, infected, believe_infected, healthy) # uninfected, dead_people, immune, believe_immune, 
+  df_population_status <- gather(df_population_status, `Population Status`, measurement, infected:healthy)
+  
+  p <- ggplot(df_population_status, aes(x = tick, y = measurement, col=`Population Status`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('infected'='Infected',
+             'believe_infected' ='Believe Infected', 
+             'healthy' ='Healthy'),
+    values=c('#b00300', '#ff7c73', '#3c9e34'),
+    breaks=c('infected','believe_infected','healthy'))
+  p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
+  p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (", experiment_preset,")", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_population_status_simplified.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  #=============================================================
+  #====================== QUARANTINERS  ========================
+  #=============================================================
+  
+  df_population_status <- select(subset_df, tick, ce_context_depth, count_officially_quarantiners, count_people_with_is_officially_asked_to_quarantine_and_not_is_in_quarantine) # uninfected, dead_people, immune, believe_immune, 
+  df_population_status <- gather(df_population_status, `Population Status`, measurement, count_officially_quarantiners, count_people_with_is_officially_asked_to_quarantine_and_not_is_in_quarantine)
+  
+  p <- ggplot(df_population_status, aes(x = tick, y = measurement, col=`Population Status`)) + geom_line()
+  p <- p + scale_colour_manual(
+    labels=c('count_officially_quarantiners'='Officially asked to quarantine',
+             'count_people_with_is_officially_asked_to_quarantine_and_not_is_in_quarantine' ='Breaking quarantine'),
+    values=c('#2269ee', '#b00300'),
+    breaks=c('count_officially_quarantiners','count_people_with_is_officially_asked_to_quarantine_and_not_is_in_quarantine'))
+  p <- p + labs(x = "Time (Ticks)", y = "Status of n agents", col = "Status")
+  p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_quarantining.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
   
   
   #=============================================================
@@ -380,19 +416,20 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   p <- ggplot(df_activities, aes(x = tick, y = measurement, col=`Location Type`))
   p <- p + scale_colour_manual(
     labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
-    values=c('#197221','#345da9','#881556','#f16a15'),
+    values=c('#197221','#33ddff','#881556','#f16a15'),
     breaks=c('at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
   p <- p + theme_bw()
   p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
-  p_smooth <- p + geom_smooth(se = TRUE)
+  p <- p + xlab("Time (Ticks)") + ylab("Agents performing activity") + labs(col="")
+  p_smooth <- p + geom_smooth(se = TRUE, span = .7)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
 }
