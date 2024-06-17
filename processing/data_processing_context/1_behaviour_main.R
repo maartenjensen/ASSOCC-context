@@ -34,9 +34,11 @@ directory_files <- "2024_05_15_presentation_experiment_2"
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-plot_type <- "one" 
-#plot_type <- "all"
-plot_only_specific <- TRUE
+#plot_type <- "one" 
+plot_type <- "all"
+plot_only_specific <- TRUE # At the moment this one is not used
+
+only_specific_presets <- FALSE # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
 
 limit_plots <- TRUE
 
@@ -174,7 +176,14 @@ if (plot_type == "all") { pdf(paste("plot_", directory_files, "_behaviour_all_pl
 #-----------------    CREATE THE FOR LOOP    -----------------
 experiment_preset = unique(df_final_filtered$ce_context_experiment_presets)[1]   # Check the depth values and make dependent on the dataframe's depth levels
 
-for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets))
+if (only_specific_presets)
+{
+  experiment_presets = c("1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected")
+} else {
+  experiment_presets = unique(df_final_filtered$ce_context_experiment_presets)
+}
+
+for (experiment_preset in experiment_presets)
 {
   print(paste("Plotting: Starting to print plots for ", experiment_preset))
   # This retrieve all the rows for a single run with the experimental presets
@@ -411,9 +420,9 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   #df_activities <- df_activities %>% mutate (treatment = at_treatment)
   df_activities <- select(df_activities, tick, ce_context_depth, at_home, obligation, shopping, leisure)
   
-  df_activities <- gather(df_activities, `Location Type`, measurement, at_home:leisure)
+  df_activities_gathered <- gather(df_activities, `Location Type`, measurement, at_home:leisure)
   
-  p <- ggplot(df_activities, aes(x = tick, y = measurement, col=`Location Type`))
+  p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Location Type`))
   p <- p + scale_colour_manual(
     labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
     values=c('#197221','#33ddff','#881556','#f16a15'),
@@ -431,6 +440,56 @@ for (experiment_preset in unique(df_final_filtered$ce_context_experiment_presets
   
   if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  #==================== LOCATION TYPES: SMOOTH THE LINES - DAY =================
+  
+  df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  # mean for each day
+  df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
+  # remove column tick
+  df_activities_day <- select(df_activities_day, -tick)
+  
+  df_activities_day_gathered <- gather(df_activities_day, `Location Type`, measurement, at_home:leisure)
+  
+  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Location Type`))
+  p <- p + scale_colour_manual(
+    labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
+    values=c('#197221','#33ddff','#881556','#f16a15'),
+    breaks=c('at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 1020)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
+  p <- p + xlab("Time (Days)") + ylab("Agents performing activity") + labs(col="")
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  #==================== LOCATION TYPES: SMOOTH THE LINES - WEEK =================
+  
+  df_activities_week <- df_activities %>% mutate(week = (tick - (tick %% 28)) / 28)
+  # mean for each week
+  df_activities_week <- df_activities_week %>% group_by(week) %>% summarise_all(mean)
+  # remove column tick
+  df_activities_week <- select(df_activities_week, -tick)
+  
+  df_activities_week_gathered <- gather(df_activities_week, `Location Type`, measurement, at_home:leisure)
+  
+  p <- ggplot(df_activities_week_gathered, aes(x = week, y = measurement, col=`Location Type`))
+  p <- p + scale_colour_manual(
+    labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
+    values=c('#197221','#33ddff','#881556','#f16a15'),
+    breaks=c('at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/28), ylim = c(0, 1020)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
+  p <- p + xlab("Time (Weeks)") + ylab("Agents performing activity") + labs(col="")
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
+  show(p)
   if (plot_type == "one") { dev.off() }
 }
 
