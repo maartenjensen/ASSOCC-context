@@ -1,6 +1,7 @@
 #--- LIBRARIES ---
 # Install the libraries
 #install.packages()
+#install.packages("zoo")
 
 # Open the libraries
 if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
@@ -9,6 +10,7 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
   library(ggplot2)
   library(sjmisc)
   library(readr)
+  library(zoo)
   
   #first empty working memory 
   rm(list=ls())
@@ -18,6 +20,8 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
   rm(list=ls()) 
   libraries_loaded = TRUE
 }
+
+if (length(dev.list()!=0)) {dev.off()} # Close all open pdf's
 
 #-------------------------------
 #---     INITIALIZATION      ---
@@ -31,16 +35,16 @@ directory_files <- "2024_05_13_full_experiment"
 #directory_files <- "2024_03_13_full_yes_lockdown"
 directory_files <- "2024_05_15_small_experiment"
 directory_files <- "2024_05_15_presentation_experiment_2"
+directory_files <- "2024_06_20_activities_check"
 
 # One of: "none", "one", "all"
-plot_type <- "none"
-#plot_type <- "one" 
-plot_type <- "all"
+plot_type <- "none" # Generate no pdf's, just generate it in the viewer
+#plot_type <- "one" # One plot per pdf
+plot_type <- "all" # All plots in one pdf
 plot_only_specific <- TRUE # At the moment this one is not used
+limit_plots <- TRUE # If this is true, then deliberation_type plots are not generated
 
 only_specific_presets <- FALSE # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
-
-limit_plots <- TRUE
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
 
@@ -102,13 +106,15 @@ for (i in 1:length(df_initial)){
 
 df_renamed = df_initial
 old_variable_names <- names(t_df)
-# Custom column names
+#- Custom column names
+# Rename colnames for population status
 colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
 colnames(df_renamed)[match("count_people_with_infection_status_healthy", colnames(df_renamed))] = "uninfected";
 colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
 colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
 colnames(df_renamed)[match("count_people_with_infection_status_healthy_or_infection_status_immune", colnames(df_renamed))] = "healthy";
 
+# Rename colnames for the needs
 colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
 colnames(df_renamed)[match("mean_risk_avoidance_satisfaction_level_of_people", colnames(df_renamed))] = "risk_avoidance";
 colnames(df_renamed)[match("mean_autonomy_satisfaction_level_of_people", colnames(df_renamed))] = "autonomy";
@@ -122,16 +128,27 @@ colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames
 colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
 colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
 
+# Rename colnames for the activities
+colnames(df_renamed)[match("count_people_with_current_motivation_rest", colnames(df_renamed))] = "rest_at_home";
+colnames(df_renamed)[match("count_people_with_is_working_at_home", colnames(df_renamed))] = "work_at_home";
+colnames(df_renamed)[match("count_people_with_is_working_at_work", colnames(df_renamed))] = "work_at_work";
+colnames(df_renamed)[match("count_children_with_is_at_school", colnames(df_renamed))] = "study_at_school";
+colnames(df_renamed)[match("count_students_with_is_at_university", colnames(df_renamed))] = "study_at_university";
+colnames(df_renamed)[match("count_people_with_is_at_private_leisure_place", colnames(df_renamed))] = "at_private_leisure"; # is also leisure_at_private
+colnames(df_renamed)[match("count_people_with_is_at_public_leisure_place", colnames(df_renamed))] = "at_public_leisure"; # is also leisure_at_public
+colnames(df_renamed)[match("count_people_with_current_motivation_essential_shopping", colnames(df_renamed))] = "shop_groceries";
+colnames(df_renamed)[match("count_people_with_current_motivation_shopping", colnames(df_renamed))] = "shop_luxury";
+colnames(df_renamed)[match("count_people_with_current_motivation_treatment_motive", colnames(df_renamed))] = "at_treatment";
+
+# Rename colnames for the location types
 colnames(df_renamed)[match("count_people_at_essential_shops", colnames(df_renamed))] = "at_essential_shops";
 colnames(df_renamed)[match("count_people_with_is_at_home", colnames(df_renamed))] = "at_homes";
 colnames(df_renamed)[match("count_people_at_non_essential_shops", colnames(df_renamed))] = "at_non_essential_shops";
-colnames(df_renamed)[match("count_people_with_is_at_private_leisure_place", colnames(df_renamed))] = "at_private_leisure";
-colnames(df_renamed)[match("count_people_with_is_at_public_leisure_place", colnames(df_renamed))] = "at_public_leisure";
 colnames(df_renamed)[match("count_people_with_is_at_school", colnames(df_renamed))] = "at_schools";
 colnames(df_renamed)[match("count_people_with_is_at_university", colnames(df_renamed))] = "at_universities";
 colnames(df_renamed)[match("count_people_with_is_at_work", colnames(df_renamed))] = "at_workplaces";
-colnames(df_renamed)[match("count_people_with_current_motivation_treatment_motive", colnames(df_renamed))] = "at_treatment";
 
+# Rename colnames for the deliberation types
 colnames(df_renamed)[match("count_people_with_delib_count_minimal_context_1", colnames(df_renamed))] = "Minimal context";
 colnames(df_renamed)[match("count_people_with_delib_count_determine_most_salient_need_1", colnames(df_renamed))] = "Most salient need";
 colnames(df_renamed)[match("count_people_with_delib_count_compare_need_levels_1", colnames(df_renamed))] = "Compare need levels";
@@ -185,6 +202,8 @@ if (only_specific_presets)
 
 for (experiment_preset in experiment_presets)
 {
+  # Remove the first line??
+  
   print(paste("Plotting: Starting to print plots for ", experiment_preset))
   # This retrieve all the rows for a single run with the experimental presets
   subset_df <- df_final_filtered[df_final_filtered$ce_context_experiment_presets == experiment_preset, ]
@@ -192,6 +211,8 @@ for (experiment_preset in experiment_presets)
   depth_value = unique(subset_df$ce_context_depth)[1] # This should be the same for all the rows because its the same settings
   
   gl_limits_x_max <- subset_df$stop_before_tick[1]
+  
+  plot_base_name = paste("plot_", directory_files, "_behaviour_", experiment_preset, sep="")
   
   #=============================================================
   #================= PLOT DELIBERATION TYPE  ===================
@@ -227,17 +248,17 @@ for (experiment_preset in experiment_presets)
   p <- p + xlab("Ticks") + ylab("% used by agents")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
 
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_cd_", depth_value, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -265,7 +286,7 @@ for (experiment_preset in experiment_presets)
                  'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
         values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
         breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -291,7 +312,7 @@ for (experiment_preset in experiment_presets)
   p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (", experiment_preset,") - Overall", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_population_status_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_population_status_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -311,7 +332,7 @@ for (experiment_preset in experiment_presets)
   p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Population Status (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_population_status_simplified.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_population_status_simplified.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -331,7 +352,7 @@ for (experiment_preset in experiment_presets)
   p <- p + labs(x = "Time (Ticks)", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_quarantining.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -361,18 +382,17 @@ for (experiment_preset in experiment_presets)
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
   #=============================================================
   #==================== LOCATION TYPES  ========================
   #=============================================================
-  # Perhaps actions at is a better one, or complete action with location. E.g. Shop at ES, Shop at NES, Rest at home, etc....
   
   df_location_types <- select(subset_df, tick, ce_context_depth, at_essential_shops, at_homes, at_non_essential_shops,
                               at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment)
@@ -396,15 +416,76 @@ for (experiment_preset in experiment_presets)
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_location_types.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
-  #==================== LOCATION TYPES: HOME NOT HOME =================
+  #------------------------------------------------------------------
+  #==================== Agent Activities All =================
+  
+  # "rest_at_home", "work_at_home", "work_at_work", "study_at_school", "study_at_university", "at_private_leisure", 
+  # "at_public_leisure", "shop_groceries", "shop_luxury", "at_treatment"
+  
+  # Roll mean/moving average
+  df_activities <- select(subset_df, tick, ce_context_depth, people_alive, shop_groceries, rest_at_home, shop_luxury,
+                          at_private_leisure, at_public_leisure, study_at_school,
+                          study_at_university, work_at_work, work_at_home, at_treatment)
+  
+  # for each column shop_groceries:at_treatment I want to mutate each column and multiply by 100
+  for (column_i in 4:13)
+  { df_activities[, column_i] <- (df_activities[, column_i] / df_activities$people_alive) * 100 }
+  
+  k_rollmean = 27
+  decrease = floor(k_rollmean/2)
+  v_tick <- (1+decrease):(gl_limits_x_max-decrease)
+  
+  df_activities_mean <- data.frame(v_tick, rep(df_activities$ce_context_depth[1], times=length(v_tick)))
+  for (column_i in 4:13)
+  { df_activities_mean <- cbind(df_activities_mean, rollmean(df_activities[, column_i], k_rollmean)) }
+  
+  colnames(df_activities_mean) <- c("tick", "ce_context_depth", "shop_groceries", "rest_at_home", "shop_luxury",
+                                   "at_private_leisure", "at_public_leisure", "study_at_school",
+                                   "study_at_university", "work_at_work", "work_at_home", "at_treatment")
+  
+  df_activities <- gather(df_activities, `Location Type`, measurement, shop_groceries:at_treatment)
+  df_activities_mean <- gather(df_activities_mean, `Location Type`, measurement, shop_groceries:at_treatment)
+  
+  p <- ggplot(df_activities, aes(x = tick, y = measurement, col=`Location Type`))
+  p <- p + scale_colour_manual(
+    labels=c('shop_groceries'='Shop groceries', 'rest_at_home'='Rest at home', 'shop_luxury'='Shop luxury',
+             'at_private_leisure'='Leisure at Pr', 'at_public_leisure'='Leisure at Pu', 'study_at_school'='Study at school',
+             'study_at_university'='Study at uni', 'work_at_work'='Work at work', 'work_at_home'='Work at home', 'at_treatment'='Treatment'),
+    values=c('#881556','#80e389','#f2ccd5',
+             '#f16a15','#d73229','#9d6e48', 
+             '#E69F00','#345da9', '#000000', '#8d8d8d'),
+    breaks=c('shop_groceries', 'rest_at_home', 'shop_luxury',
+             'at_private_leisure', 'at_public_leisure', 'study_at_school',
+             'study_at_university', 'work_at_work', 'work_at_home', 'at_treatment'))
+  p <- p + xlab("Ticks") + ylab("% Activities Chosen") + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Location Types (", experiment_preset,") - Overall", sep=""))  
+  p_smooth <- p + geom_smooth()
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_smooth.pdf", sep=""), width=9, height=5) }
+  show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  
+  
+  #------------------------------------------------------------------
+  #==================== Agent Activities Simplified =================
+  
+  #----- Prepare the data frame ------
   
   df_activities <- select(subset_df, tick, ce_context_depth, at_homes, at_essential_shops, at_non_essential_shops,
                               at_private_leisure, at_public_leisure, at_schools, at_universities, at_workplaces, at_treatment)
@@ -420,6 +501,7 @@ for (experiment_preset in experiment_presets)
   #df_activities <- df_activities %>% mutate (treatment = at_treatment)
   df_activities <- select(df_activities, tick, ce_context_depth, at_home, obligation, shopping, leisure)
   
+  #----- Gather data for the plot -----
   df_activities_gathered <- gather(df_activities, `Location Type`, measurement, at_home:leisure)
   
   p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Location Type`))
@@ -434,15 +516,15 @@ for (experiment_preset in experiment_presets)
   p_smooth <- p + geom_smooth(se = TRUE, span = .7)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
-  #==================== LOCATION TYPES: SMOOTH THE LINES - DAY =================
+  #==================== Agent Activities Simplified - SMOOTH THE LINES - DAY =================
   
   df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
   # mean for each day
@@ -463,11 +545,11 @@ for (experiment_preset in experiment_presets)
   p <- p + xlab("Time (Days)") + ylab("Agents performing activity") + labs(col="")
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_day.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  #==================== LOCATION TYPES: SMOOTH THE LINES - WEEK =================
+  #==================== Agent Activities Simplified - SMOOTH THE LINES - WEEK =================
   
   df_activities_week <- df_activities %>% mutate(week = (tick - (tick %% 28)) / 28)
   # mean for each week
@@ -488,9 +570,10 @@ for (experiment_preset in experiment_presets)
   p <- p + xlab("Time (Weeks)") + ylab("Agents performing activity") + labs(col="")
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste("plot_", directory_files, "_behaviour_", experiment_preset, "_activities.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_week.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
+  
 }
 
 if (plot_type == "all") { dev.off() }

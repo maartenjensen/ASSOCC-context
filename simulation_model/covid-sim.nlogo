@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-2
+5
 
 SWITCH
 1226
@@ -4825,9 +4825,16 @@ true
 true
 "" ""
 PENS
-"@School" 1.0 0 -8431303 true "" "plot count children with [is-at-school?]"
-"@Home" 1.0 0 -12087248 true "" "plot count people with [is-at-home?]"
-"@E-Shop" 1.0 0 -7858858 true "" "plot count people-at-essential-shops"
+"Work @Work" 1.0 0 -8431303 true "" "plot count people with [is-working-at-work?]"
+"Leisure @Pu" 1.0 0 -2674135 true "" "plot count people with [is-at-public-leisure-place?]"
+"Leisure @Pr" 1.0 0 -955883 true "" "plot count people with [is-at-private-leisure-place?]"
+"Rest @Home" 1.0 0 -10899396 true "" "plot count people with [current-motivation = \"rest\"]"
+"Study @Uni" 1.0 0 -1184463 true "" "plot count students with [is-at-university?]"
+"Treated" 1.0 0 -7500403 true "" "plot count people with [current-motivation = treatment-motive]"
+"Shop @E" 1.0 0 -8630108 true "" "plot count people with [current-motivation = \"essential shopping\"]"
+"Shop @NE" 1.0 0 -5825686 true "" "plot count people with [current-motivation = \"shopping\"]"
+"Study @School" 1.0 0 -6459832 true "" "plot count children with [is-at-school?]"
+"Work @Home" 1.0 0 -11221820 true "" "plot count people with [is-working-at-home?]"
 
 INPUTBOX
 1635
@@ -4857,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-1
+0
 1
 -1000
 
@@ -4889,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-1
+0
 1
 -1000
 
@@ -4933,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
-3
+11
 
 INPUTBOX
 322
@@ -6012,13 +6019,20 @@ setup</setup>
     <metric>#students-at-start</metric>
     <metric>#workers-at-start</metric>
     <metric>#retireds-at-start</metric>
-    <metric>count people with [is-at-work?]</metric>
-    <metric>count people with [is-at-public-leisure-place?]</metric>
+    <metric>count people with [current-motivation = "rest"]</metric>
+    <metric>count people with [is-working-at-home?]</metric>
+    <metric>count people with [is-working-at-work?]</metric>
+    <metric>count children with [is-at-school?]</metric>
+    <metric>count students with [is-at-university?]</metric>
     <metric>count people with [is-at-private-leisure-place?]</metric>
+    <metric>count people with [is-at-public-leisure-place?]</metric>
+    <metric>count people with [current-motivation = "essential shopping"]</metric>
+    <metric>count people with [current-motivation = "shopping"]</metric>
+    <metric>count people with [current-motivation = treatment-motive]</metric>
+    <metric>count people with [is-at-work?]</metric>
     <metric>count people with [is-at-home?]</metric>
     <metric>count people with [is-at-school?]</metric>
     <metric>count people with [is-at-university?]</metric>
-    <metric>count people with [current-motivation = treatment-motive]</metric>
     <metric>count people-at-essential-shops</metric>
     <metric>count people-at-non-essential-shops</metric>
     <metric>count children with [is-at-work?]</metric>
@@ -6088,12 +6102,8 @@ setup</setup>
     <metric>mean [delib-count-total-conformity-network-action] of people</metric>
     <metric>mean [delib-count-total-full-need] of people</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
-      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
-      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
-      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
-      <value value="&quot;3.3 DCSD-3&quot;"/>
-      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
+      <value value="&quot;4.1 DCSD-4&quot;"/>
+      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
