@@ -37,7 +37,7 @@ to-report csowh-function ; csowh
   ; The time is morning or afternoon
   if ce-log-agent and who = ce-log-agent-id [ print "Obligation Work Home - Decision Making" ]
 
-  if ce-context-depth <= 1 [ report csowh-after-minimal-context-f ]  ; ===============  BREAKOUT: if not 2 or higher, after this is checking the most salient needs which is at level 2
+  if ce-context-depth <= 1 [ report csowh-after-minimal-context-f ]  ; ===============  BREAKOUT: if not 2 or higher, since all deliberations require at least 2 or higher to be solved (2: leisure, shopping), (3+ working and the others)
   
   ; -------------------------------------------
   ; Determine whether there is a need salient
@@ -147,6 +147,7 @@ to-report csowh-risk-avoidance-sleep [ most-salient-need-level ] ; TODO split th
 end
 
 to-report csowh-leisure
+  context-set-delib-count-compare-needs
   if leisure-satisfaction-level < ce-need-critical-threshold
   [
     ifelse risk-avoidance-satisfaction-level < ce-risk-avoidance-private-leisure-preference ; Create preference for private leisure, when risk avoidance is more salient
@@ -159,30 +160,34 @@ end
 to-report csowh-luxury
   if luxury-satisfaction-level < ce-need-critical-threshold
   [
+    context-set-delib-count-compare-needs
     if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
     [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
   ]
-  if ce-enable-salient-food-luxury-forced-obligation
+  ifelse ce-enable-salient-food-luxury-forced-obligation
   [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
     ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
     [ report context-determine-social-distancing (list my-home work-motive) ]
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
+  [ context-set-delib-count-compare-needs ]
   report csowh-luxury-f
 end
 
 to-report csowh-food-safety
   if food-safety-satisfaction-level < ce-need-critical-threshold
   [
+    context-set-delib-count-compare-needs
     if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)
     [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   ]
-  if ce-enable-salient-food-luxury-forced-obligation
+  ifelse ce-enable-salient-food-luxury-forced-obligation
   [ if ce-context-depth < 3 [ report csowh-exit-before-normative-f ] ; ===================== BREAKOUT: normative consideration when food-luxury-forced-obligation is enabled
     ifelse is-working-from-home-recommended? or context-normative-should-I-stay-home
     [ report context-determine-social-distancing (list my-home work-motive) ]
     [ report context-determine-social-distancing obligation-activity-descriptor ]
   ]
+  [ context-set-delib-count-compare-needs ]
   report csowh-food-safety-f
 end
 

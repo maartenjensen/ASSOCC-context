@@ -78,6 +78,7 @@ to-report cssn-salient-need-deliberation [most-salient-need]
   ; Conformity is a little bit of an exception where if the network stays home the agent can just following conformity
   if most-salient-need = need-leisure [
     if ce-context-depth < 2  [ report cssn-exit-before-strategic-f ] ; ===============  BREAKOUT: Strategic
+    context-set-delib-count-compare-needs
     report cssn-leisure
   ]
   

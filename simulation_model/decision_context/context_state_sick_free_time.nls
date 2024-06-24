@@ -105,6 +105,7 @@ to-report cssft-sleep-health-risk-avoidance-belonging-compliance
 end
 
 to-report cssft-leisure
+  context-set-delib-count-compare-needs
   if leisure-satisfaction-level < ce-need-critical-threshold
   [
     report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") ; Always private leisure because the agent is sick so wants to avoid public leisure
@@ -113,12 +114,14 @@ to-report cssft-leisure
 end
 
 to-report cssft-food-safety
+  context-set-delib-count-compare-needs
   if food-safety-satisfaction-balanced < ce-need-critical-threshold and food-safety-satisfaction-balanced < ce-need-critical-threshold and food-safety-satisfaction-balanced < compliance-satisfaction-level
   [ report context-determine-social-distancing (activity-descriptor one-of my-essential-shops "essential shopping") ]
   report cssft-food-safety-f
 end
 
 to-report cssft-luxury
+  context-set-delib-count-compare-needs
   if luxury-satisfaction-level < ce-need-critical-threshold and luxury-satisfaction-level < ce-need-critical-threshold and luxury-satisfaction-level < compliance-satisfaction-level
   [ report context-determine-social-distancing (activity-descriptor my-non-essential-shop "shopping") ]
   report cssft-luxury-f

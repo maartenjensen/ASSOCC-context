@@ -86,16 +86,15 @@ to-report cssowh-salient-need-deliberation [most-salient-need most-salient-need-
      most-salient-need = need-belonging or most-salient-need = need-compliance
   [ report cssowh-sleep-health-risk-avoidance-belonging-compliance ]
   
-  if most-salient-need = need-autonomy ; TODO: Split this function
+  if most-salient-need = need-autonomy ; Chosen to not be implemented
   [ report cssowh-autonomy-financial most-salient-need-level ]
   
   if most-salient-need = need-leisure
   [ report cssowh-leisure ]
   
-  if most-salient-need = need-conformity ; TODO
+  if most-salient-need = need-conformity ; Chosen to not be implemented
   [ if ce-context-depth < 4 [ report cssowh-exit-before-conformity-f ] ; ===============  BREAKOUT: Conformity
     report cssowh-conformity ]
-  ;report cssowh-conformity WHY is this here?
  
   if most-salient-need = need-luxury
   [ report cssowh-luxury ]
@@ -118,13 +117,14 @@ to-report cssowh-sleep-health-risk-avoidance-belonging-compliance
   report context-determine-social-distancing (list my-home "rest")
 end
 
-to-report cssowh-autonomy-financial [ most-salient-need-level ]; TODO: Split this function
+to-report cssowh-autonomy-financial [ most-salient-need-level ]; Chosen to not be implemented
 ;  if most-salient-need-level < ce-need-critical-threshold
 ;  [ report context-determine-social-distancing obligation-activity-descriptor ]
   report cssowh-autonomy-financial-f
 end
 
 to-report cssowh-leisure
+  context-set-delib-count-compare-needs
   if leisure-satisfaction-level < ce-need-critical-threshold
   [
     report context-determine-social-distancing (activity-descriptor my-private-leisure "relaxing") 
@@ -133,6 +133,7 @@ to-report cssowh-leisure
 end
 
 to-report cssowh-luxury
+  context-set-delib-count-compare-needs
   if luxury-satisfaction-level < ce-need-critical-threshold
   [
     if age = worker-age or (luxury-satisfaction-level < financial-stability-satisfaction-level and luxury-satisfaction-level < financial-survival-satisfaction-level)
@@ -142,6 +143,7 @@ to-report cssowh-luxury
 end
 
 to-report cssowh-food-safety
+  context-set-delib-count-compare-needs
   if food-safety-satisfaction-level < ce-need-critical-threshold
   [
     if age = worker-age or (food-safety-satisfaction-level < financial-stability-satisfaction-level and food-safety-satisfaction-level < financial-survival-satisfaction-level)

@@ -243,6 +243,10 @@ end
 ; =================================================
 ;  Deliberation and context exploration functions
 ; =================================================
+to context-set-delib-count-compare-needs
+  set delib-count-compare-need-levels 1
+end
+
 to-report context-heuristic-random-action [p-list-of-actions]
   if ce-log-agent and who = ce-log-agent-id [ print (word "Heuristic: Take random action of " p-list-of-actions ) ]
   report one-of p-list-of-actions
