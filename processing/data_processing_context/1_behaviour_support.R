@@ -1,0 +1,63 @@
+behaviourRenameDataframe <- function(df_to_rename) {
+
+  df_renamed = df_to_rename
+  old_variable_names <- names(t_df)
+  #- Custom column names
+  # Rename colnames for population status
+  colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
+  colnames(df_renamed)[match("count_people_with_infection_status_healthy", colnames(df_renamed))] = "uninfected";
+  colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
+  colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
+  colnames(df_renamed)[match("count_people_with_infection_status_healthy_or_infection_status_immune", colnames(df_renamed))] = "healthy";
+  
+  # Rename colnames for the needs
+  colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
+  colnames(df_renamed)[match("mean_risk_avoidance_satisfaction_level_of_people", colnames(df_renamed))] = "risk_avoidance";
+  colnames(df_renamed)[match("mean_autonomy_satisfaction_level_of_people", colnames(df_renamed))] = "autonomy";
+  colnames(df_renamed)[match("mean_luxury_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "luxury";
+  colnames(df_renamed)[match("mean_health_satisfaction_level_of_people", colnames(df_renamed))] = "health";
+  colnames(df_renamed)[match("mean_sleep_satisfaction_level_of_people", colnames(df_renamed))] = "sleep";
+  colnames(df_renamed)[match("mean_compliance_satisfaction_level_of_people", colnames(df_renamed))] = "compliance";
+  colnames(df_renamed)[match("mean_financial_stability_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_stability";
+  colnames(df_renamed)[match("mean_food_safety_satisfaction_level_of_people", colnames(df_renamed))] = "food_safety";
+  colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames(df_renamed))] = "leisure";
+  colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
+  colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
+  
+  # Rename colnames for the activities
+  colnames(df_renamed)[match("count_people_with_current_motivation_rest", colnames(df_renamed))] = "rest_at_home";
+  colnames(df_renamed)[match("count_people_with_is_working_at_home", colnames(df_renamed))] = "work_at_home";
+  colnames(df_renamed)[match("count_people_with_is_working_at_work", colnames(df_renamed))] = "work_at_work";
+  colnames(df_renamed)[match("count_children_with_is_at_school", colnames(df_renamed))] = "study_at_school";
+  colnames(df_renamed)[match("count_students_with_is_at_university", colnames(df_renamed))] = "study_at_university";
+  colnames(df_renamed)[match("count_people_with_is_at_private_leisure_place", colnames(df_renamed))] = "at_private_leisure"; # is also leisure_at_private
+  colnames(df_renamed)[match("count_people_with_is_at_public_leisure_place", colnames(df_renamed))] = "at_public_leisure"; # is also leisure_at_public
+  colnames(df_renamed)[match("count_people_with_current_motivation_essential_shopping", colnames(df_renamed))] = "shop_groceries";
+  colnames(df_renamed)[match("count_people_with_current_motivation_shopping", colnames(df_renamed))] = "shop_luxury";
+  colnames(df_renamed)[match("count_people_with_current_motivation_treatment_motive", colnames(df_renamed))] = "at_treatment";
+  
+  # Rename colnames for the location types
+  colnames(df_renamed)[match("count_people_at_essential_shops", colnames(df_renamed))] = "at_essential_shops";
+  colnames(df_renamed)[match("count_people_with_is_at_home", colnames(df_renamed))] = "at_homes";
+  colnames(df_renamed)[match("count_people_at_non_essential_shops", colnames(df_renamed))] = "at_non_essential_shops";
+  colnames(df_renamed)[match("count_people_with_is_at_school", colnames(df_renamed))] = "at_schools";
+  colnames(df_renamed)[match("count_people_with_is_at_university", colnames(df_renamed))] = "at_universities";
+  colnames(df_renamed)[match("count_people_with_is_at_work", colnames(df_renamed))] = "at_workplaces";
+  
+  # Rename colnames for the deliberation types
+  colnames(df_renamed)[match("count_people_with_delib_count_minimal_context_1", colnames(df_renamed))] = "Minimal context";
+  colnames(df_renamed)[match("count_people_with_delib_count_determine_most_salient_need_1", colnames(df_renamed))] = "Most salient need";
+  colnames(df_renamed)[match("count_people_with_delib_count_compare_need_levels_1", colnames(df_renamed))] = "Compare need levels";
+  colnames(df_renamed)[match("count_people_with_delib_count_normative_consideration_1", colnames(df_renamed))] = "Normative deliberation";
+  colnames(df_renamed)[match("count_people_with_delib_count_conformity_network_action_1", colnames(df_renamed))] = "Conformity deliberation";
+  colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "Full need";
+  
+  colnames(df_renamed)[match("count_people_with_epistemic_infection_status_infected", colnames(df_renamed))] = "believe_infected";
+  
+  df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
+  print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
+  
+  df_final = df_renamed
+  
+  return(df_final)
+}

@@ -1,9 +1,4 @@
-#--- LIBRARIES ---
-# Install the libraries
-#install.packages()
-#install.packages("zoo")
-
-# Open the libraries
+# Load libraries
 if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
 {
   library(tidyverse)
@@ -14,39 +9,33 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
   
   #first empty working memory 
   rm(list=ls())
-  libraries_loaded = TRUE
+  libraries_loaded = TRUE # For libraries loaded
 } else {
   #first empty working memory 
   rm(list=ls()) 
-  libraries_loaded = TRUE
+  libraries_loaded = TRUE # For libraries loaded
 }
 
 if (length(dev.list()!=0)) {dev.off()} # Close all open pdf's
 
+
 #-------------------------------
-#---     INITIALIZATION      ---
+#---     Setup variables      ---
 #-------------------------------
 
 #---   Settings   ---
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-
-# This R file is for the main behaviour: only no lockdown or yes lockdown allowed.
-directory_files <- "2024_05_13_full_experiment"
-#directory_files <- "2024_03_13_full_yes_lockdown"
-directory_files <- "2024_05_15_small_experiment"
-directory_files <- "2024_05_15_presentation_experiment_2"
-directory_files <- "2024_06_20_activities_check"
-directory_files <- "2024-06-21-activities-habitual"
 #directory_files <- "2024-06-21-activities-normative"
+directory_files <- "2024_06_24_full_exp_single_runs"
 
-# One of: "none", "one", "all"
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 #plot_type <- "one" # One plot per pdf
 plot_type <- "all" # All plots in one pdf
+
 plot_only_specific <- TRUE # At the moment this one is not used
 limit_plots <- TRUE # If this is true, then deliberation_type plots are not generated
 
-only_specific_presets <- FALSE # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
+only_specific_presets <- TRUE # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
 
 dataFileNames <- c(paste(directory_files, "csv", sep = "."))
 
@@ -54,6 +43,7 @@ dataFileNames <- c(paste(directory_files, "csv", sep = "."))
 setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
+source("../1_behaviour_support.R")
 
 ### MANUAL INPUT: Optionally specify filepath (i.e. where the behaviorspace csv is situated) ###
 #NOTE: if csv files are placed in the workdirec, then leave filesPath unchanged
@@ -106,64 +96,8 @@ for (i in 1:length(df_initial)){
   print(paste(i ,". ", col_name, " >>> ", new_name, sep=""));
 }
 
-df_renamed = df_initial
-old_variable_names <- names(t_df)
-#- Custom column names
-# Rename colnames for population status
-colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
-colnames(df_renamed)[match("count_people_with_infection_status_healthy", colnames(df_renamed))] = "uninfected";
-colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
-colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
-colnames(df_renamed)[match("count_people_with_infection_status_healthy_or_infection_status_immune", colnames(df_renamed))] = "healthy";
-
-# Rename colnames for the needs
-colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
-colnames(df_renamed)[match("mean_risk_avoidance_satisfaction_level_of_people", colnames(df_renamed))] = "risk_avoidance";
-colnames(df_renamed)[match("mean_autonomy_satisfaction_level_of_people", colnames(df_renamed))] = "autonomy";
-colnames(df_renamed)[match("mean_luxury_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "luxury";
-colnames(df_renamed)[match("mean_health_satisfaction_level_of_people", colnames(df_renamed))] = "health";
-colnames(df_renamed)[match("mean_sleep_satisfaction_level_of_people", colnames(df_renamed))] = "sleep";
-colnames(df_renamed)[match("mean_compliance_satisfaction_level_of_people", colnames(df_renamed))] = "compliance";
-colnames(df_renamed)[match("mean_financial_stability_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_stability";
-colnames(df_renamed)[match("mean_food_safety_satisfaction_level_of_people", colnames(df_renamed))] = "food_safety";
-colnames(df_renamed)[match("mean_leisure_satisfaction_level_of_people", colnames(df_renamed))] = "leisure";
-colnames(df_renamed)[match("mean_financial_survival_satisfaction_level_of_people_with_not_is_child", colnames(df_renamed))] = "financial_survival";
-colnames(df_renamed)[match("mean_conformity_satisfaction_level_of_people", colnames(df_renamed))] = "conformity";
-
-# Rename colnames for the activities
-colnames(df_renamed)[match("count_people_with_current_motivation_rest", colnames(df_renamed))] = "rest_at_home";
-colnames(df_renamed)[match("count_people_with_is_working_at_home", colnames(df_renamed))] = "work_at_home";
-colnames(df_renamed)[match("count_people_with_is_working_at_work", colnames(df_renamed))] = "work_at_work";
-colnames(df_renamed)[match("count_children_with_is_at_school", colnames(df_renamed))] = "study_at_school";
-colnames(df_renamed)[match("count_students_with_is_at_university", colnames(df_renamed))] = "study_at_university";
-colnames(df_renamed)[match("count_people_with_is_at_private_leisure_place", colnames(df_renamed))] = "at_private_leisure"; # is also leisure_at_private
-colnames(df_renamed)[match("count_people_with_is_at_public_leisure_place", colnames(df_renamed))] = "at_public_leisure"; # is also leisure_at_public
-colnames(df_renamed)[match("count_people_with_current_motivation_essential_shopping", colnames(df_renamed))] = "shop_groceries";
-colnames(df_renamed)[match("count_people_with_current_motivation_shopping", colnames(df_renamed))] = "shop_luxury";
-colnames(df_renamed)[match("count_people_with_current_motivation_treatment_motive", colnames(df_renamed))] = "at_treatment";
-
-# Rename colnames for the location types
-colnames(df_renamed)[match("count_people_at_essential_shops", colnames(df_renamed))] = "at_essential_shops";
-colnames(df_renamed)[match("count_people_with_is_at_home", colnames(df_renamed))] = "at_homes";
-colnames(df_renamed)[match("count_people_at_non_essential_shops", colnames(df_renamed))] = "at_non_essential_shops";
-colnames(df_renamed)[match("count_people_with_is_at_school", colnames(df_renamed))] = "at_schools";
-colnames(df_renamed)[match("count_people_with_is_at_university", colnames(df_renamed))] = "at_universities";
-colnames(df_renamed)[match("count_people_with_is_at_work", colnames(df_renamed))] = "at_workplaces";
-
-# Rename colnames for the deliberation types
-colnames(df_renamed)[match("count_people_with_delib_count_minimal_context_1", colnames(df_renamed))] = "Minimal context";
-colnames(df_renamed)[match("count_people_with_delib_count_determine_most_salient_need_1", colnames(df_renamed))] = "Most salient need";
-colnames(df_renamed)[match("count_people_with_delib_count_compare_need_levels_1", colnames(df_renamed))] = "Compare need levels";
-colnames(df_renamed)[match("count_people_with_delib_count_normative_consideration_1", colnames(df_renamed))] = "Normative deliberation";
-colnames(df_renamed)[match("count_people_with_delib_count_conformity_network_action_1", colnames(df_renamed))] = "Conformity deliberation";
-colnames(df_renamed)[match("count_people_with_delib_count_full_need_1", colnames(df_renamed))] = "Full need";
-
-colnames(df_renamed)[match("count_people_with_epistemic_infection_status_infected", colnames(df_renamed))] = "believe_infected";
-
-df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
-print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
-
-df_final = df_renamed
+# Rename the dataframe
+df_final <- behaviourRenameDataframe(df_initial)
 
 #=============================================================
 #================= SELECT SUBSET OF DATA =====================
@@ -437,24 +371,26 @@ for (experiment_preset in experiment_presets)
                           at_private_leisure, at_public_leisure, study_at_school,
                           study_at_university, work_at_work, work_at_home, at_treatment)
   
+  df_activities$rest_at_home[1] <- df_activities$people_alive[1]
+  
   # for each column shop_groceries:at_treatment I want to mutate each column and multiply by 100
   for (column_i in 4:13)
   { df_activities[, column_i] <- (df_activities[, column_i] / df_activities$people_alive) * 100 }
   
-  k_rollmean = 27#27 # 19/21 is a fine number
-  decrease = 0 #floor(k_rollmean/2)
-  v_tick <- (1+decrease):(gl_limits_x_max-decrease)
+  #k_rollmean = 27#27 # 19/21 is a fine number
+  #decrease = 0 #floor(k_rollmean/2)
+  #v_tick <- (1+decrease):(gl_limits_x_max-decrease)
   
-  df_activities_mean <- data.frame(v_tick, rep(df_activities$ce_context_depth[1], times=length(v_tick)))
-  for (column_i in 4:13)
-  { df_activities_mean <- cbind(df_activities_mean, rollapplyr(df_activities[, column_i], k_rollmean, mean, partial = TRUE)) } #rollmean(df_activities[, column_i], k_rollmean)) }
+  #df_activities_mean <- data.frame(v_tick, rep(df_activities$ce_context_depth[1], times=length(v_tick)))
+  #for (column_i in 4:13)
+  #{ df_activities_mean <- cbind(df_activities_mean, rollapplyr(df_activities[, column_i], k_rollmean, mean, partial = TRUE)) } #rollmean(df_activities[, column_i], k_rollmean)) }
   
-  colnames(df_activities_mean) <- c("tick", "ce_context_depth", "shop_groceries", "rest_at_home", "shop_luxury",
-                                   "at_private_leisure", "at_public_leisure", "study_at_school",
-                                   "study_at_university", "work_at_work", "work_at_home", "at_treatment")
+  #colnames(df_activities_mean) <- c("tick", "ce_context_depth", "shop_groceries", "rest_at_home", "shop_luxury",
+  #                                 "at_private_leisure", "at_public_leisure", "study_at_school",
+  #                                 "study_at_university", "work_at_work", "work_at_home", "at_treatment")
   
   df_activities_gathered <- gather(df_activities, `Location Type`, measurement, shop_groceries:at_treatment)
-  df_activities_mean_gathered <- gather(df_activities_mean, `Location Type`, measurement, shop_groceries:at_treatment)
+  #df_activities_mean_gathered <- gather(df_activities_mean, `Location Type`, measurement, shop_groceries:at_treatment)
   
   p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Location Type`))
   p <- p + scale_colour_manual(
@@ -470,7 +406,7 @@ for (experiment_preset in experiment_presets)
   p <- p + xlab("Ticks") + ylab("% Activities Chosen") + labs(col="")
   p <- p + theme_bw()
   p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Location Types (", experiment_preset,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
