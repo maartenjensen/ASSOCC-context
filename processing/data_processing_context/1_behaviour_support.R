@@ -1,7 +1,72 @@
+#=====
+behaviourLoadLibraries <- function() {
+  
+  # Load libraries
+  if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
+  {
+    print("Loading libraries and initialise program")
+    library(tidyverse)
+    library(ggplot2)
+    library(sjmisc)
+    library(readr)
+    library(zoo)
+    
+    #first empty working memory 
+    rm(list=ls())
+    libraries_loaded = TRUE # For libraries loaded
+  } else {
+    #first empty working memory 
+    rm(list=ls()) 
+    libraries_loaded = TRUE # For libraries loaded
+  }
+  
+  if (length(dev.list()!=0)) {dev.off()} # Close all open pdf's
+  
+  print("Initialised program")
+}
+
+behaviourLoadDataframe <- function(p_files_path, p_files_names) {
+  
+  #read in datafiles using filesNames and filesPath variables
+  for (i in 1:length(p_files_names)) {
+    print(paste("read csv from:", p_files_path, p_files_names[i], sep=""))
+    #bind data from dataframe into new dataframe
+    if (exists('t_df') && is.data.frame(get('t_df'))) { # Create additional rows, skips first 6 lines
+      temp_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",", head=TRUE, stringsAsFactors = TRUE)
+      temp_df$X.run.number. <- temp_df$X.run.number + max_run_number
+      t_df <- rbind(t_df, temp_df)
+    } else { # Create the first row
+      t_df <- read.csv(paste(p_files_path, p_files_names[i], sep=""), skip = 6, sep = ",", head=TRUE, stringsAsFactors = TRUE)
+    }
+    max_run_number <- max(t_df$X.run.number.)
+  }
+  
+  return(t_df)
+}
+
 behaviourRenameDataframe <- function(df_to_rename) {
 
+  #change variable names
+  for (i in 1:length(df_to_rename)){
+    
+    col_name = names(df_to_rename)[i];
+    # BASIC ADJUSTMENTS
+    new_name = str_remove_all(col_name, "X.");
+    new_name = str_replace_all(new_name, "\\.\\.\\.\\.", "_")
+    new_name = str_replace_all(new_name, "\\.\\.\\.", "_")
+    new_name = str_replace_all(new_name, "\\.\\.", "_")
+    new_name = str_replace_all(new_name, "\\.", "_")
+    if (substr(new_name, nchar(new_name), nchar(new_name)) == "_" ) {
+      new_name = substr(new_name, 1, nchar(new_name)-1);
+    }
+    # ADVANCED ADJUSTMENTS
+    new_name = str_remove(new_name, "age_group_to_age_group_")
+    colnames(df_to_rename)[i] = new_name;
+    print(paste(i ,". ", col_name, " >>> ", new_name, sep=""));
+  }
+  
   df_renamed = df_to_rename
-  old_variable_names <- names(t_df)
+  old_variable_names <- names(df_to_rename)
   #- Custom column names
   # Rename colnames for population status
   colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
