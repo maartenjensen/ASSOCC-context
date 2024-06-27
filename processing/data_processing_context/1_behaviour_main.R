@@ -1,6 +1,11 @@
+# The single sign version | returns an entire vector. The double sign version || returns the result of the OR operator on the first element of each vector.
 #--- WORKSPACE AND DIRECTORY ---
-if (exists("libraries_loaded") && getwd() != "C:/Users/maart/OneDrive/Documenten") 
-{ libraries_loaded <- TRUE } 
+libraries_need_to_be_loaded <- FALSE
+if (!exists("libraries_loaded") || libraries_loaded == FALSE || getwd() == "C:/Users/maart/OneDrive/Documenten") 
+{ libraries_need_to_be_loaded <- TRUE } 
+
+# Directory files
+directory_files <- "2024_06_24_full_exp_single_runs"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -13,31 +18,45 @@ source("../1_behaviour_plots_4_needs.R")
 source("../1_behaviour_plots_5_location_types.R")
 source("../1_behaviour_plots_6_activities.R")
 
-behaviourLoadLibraries()
+libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 
 #-------------------------------
 #---     Setup variables     ---
 #-------------------------------
-
-# Directory files
-#directory_files <- "2024-06-21-activities-normative"
-directory_files <- "2024_06_24_full_exp_single_runs"
 
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 #plot_type <- "one" # One plot per pdf
 plot_type <- "all" # All plots in one pdf
 
-# If this is true, then deliberation_type plots are not generated
-limit_plots <- FALSE 
+# Create functions that have to be called
+plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1DeliberationTypeBar",
+                         "behaviourPlot2Infections", "behaviourPlot2InfectionsBelieveInfected",
+                         "behaviourPlot3Quarantiners",
+                         "behaviourPlot4Needs",
+                         "behaviourPlot5LocationTypes",
+                         "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified")
+
+plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
+plot_specifics_h <- hash()
+plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified", "behaviourPlot2InfectionsBelieveInfected")
+plot_specifics_h[["1.2 rigid-habits-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified", "behaviourPlot2InfectionsBelieveInfected")
+
+
+#[1] 1.1 rigid-habits-no-infected     1.2 rigid-habits-infected        1.3 DCSD-1                       1.4 DCSD-1-leisure-habits       
+#[5] 2.1 DCSD-2                       2.2 DCSD-2-obligation-constraint 3.1 DCSD-3-rigid-norms           3.2 DCSD-3-rigid-norms-lockdown 
+#[9] 3.3 DCSD-3                       3.4 DCSD-3-lockdown              4.1 DCSD-4                       5.1 DCSD-5-optimisation  
 
 # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
-specific_experiment_presets <- c("2.2 DCSD-2-obligation-constraint", "5.1 DCSD-5-optimisation") 
+specific_experiment_presets <- c("1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected") 
+#specific_experiment_presets <- NULL
 
 # Plots general size
 gl_pdf_width = 9
 gl_pdf_height = 6
 
+gl_plot_theme  <- theme_bw()
+gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
 
 #-------------------------------
 #---     Fixed variables     ---
@@ -51,15 +70,12 @@ filesNames   <- c(paste(directory_files, "csv", sep = "."))
 #=============================================================
 
 df_initial = behaviourLoadDataframe(filesPath, filesNames)
-df_final <- behaviourRenameDataframe(df_initial)
+df_renamed <- behaviourRenameDataframe(df_initial)
+df_final <- behaviourAddNormalizedColumns(df_renamed)
 
 # Filter on one random seed, since this is a single run
 random_seed = 0
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
-
-# Add a column for the amount of people that are alive, todo: just take the column of people (alive)
-df_final_filtered$people_alive <- (df_final_filtered$youngs_at_start + df_final_filtered$students_at_start +
-                                   df_final_filtered$workers_at_start + df_final_filtered$retireds_at_start) - df_final_filtered$dead_people
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================
@@ -70,7 +86,7 @@ if (plot_type == "all") { pdf(paste("plot_", directory_files, "_behaviour_all_pl
 #-----------------    CREATE THE FOR LOOP    -----------------
 experiment_preset = unique(df_final_filtered$ce_context_experiment_presets)[1]   # Check the depth values and make dependent on the dataframe's depth levels
 
-if (length(specific_experiment_presets) > 0)
+if (!is.null(length(specific_experiment_presets)))
 {
   experiment_presets = specific_experiment_presets
 } else {
@@ -95,21 +111,29 @@ for (experiment_preset in experiment_presets)
   
   #-----------------    THE LINE PLOT: TIME    -----------------
   
-  if (!limit_plots)
-  {
-    behaviourPlot1DeliberationType()
+  # https://stackoverflow.com/questions/33702924/r-call-a-function-from-function-name-that-is-stored-in-a-variable
+  #
+  # a<-function(){1+1}                                                                                                  
+  # var<-"a"
+  # > get(var)()
+  # [1] 2
+  # Plan for tomorrow
+  # Make separate functions (that don't need parameters ;) ), then decide per preset which functions are usefull, just give a list for each preset
+  # (perhaps make a dictionary), then after that call them with get() (if specific plotting is TRUE!)
+  # get("behaviourPlot1DeliberationType")()
+  
+  if (plot_specifics_only && !is.null(plot_specifics_h[[experiment_preset]])) {
+    
+    for (plot_specific_f_name in plot_specifics_h[[experiment_preset]]) {
+      get(plot_specific_f_name)(plot_specific_f_name)
+    }
   }
-  
-  behaviourPlot2Infections()
-  
-  behaviourPlot3Quarantiners()
-  
-  behaviourPlot4Needs()
-  
-  behaviourPlot5LocationTypes()
-  
-  behaviourPlot6Activities()
-  
+  else {
+    
+    for (plot_f_name in plot_full_functions) {
+      get(plot_f_name)(plot_f_name)
+    }
+  }
 }
 
 if (plot_type == "all") { dev.off() }

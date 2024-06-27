@@ -1,19 +1,12 @@
 # 1_behaviour_plots_1_deliberation_type.R
 # subset_df, plot_type, plot_base_name, experiment_preset, gl_limits_x_max
-behaviourPlot1DeliberationType <- function() {
+behaviourPlot1DeliberationType <- function(plot_specific_f_name) {
   
-  print("-- Plot deliberation types ...")
-  # Gather (tidyr) and select (dyplr), maybe its not a good idea to mix these?
-  df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context`, `Most salient need`, `Compare need levels`, `Normative deliberation`, `Conformity deliberation`, `Full need`)
-  # Now I want to for each of the columns `Minimal context` until `Full need` divide it by the people_alive column
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Minimal context` = (`Minimal context` / people_alive) * 100)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Most salient need` = (`Most salient need` / people_alive) * 100)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Compare need levels` = (`Compare need levels` / people_alive) * 100)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Normative deliberation` = (`Normative deliberation` / people_alive) * 100)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Conformity deliberation` = (`Conformity deliberation` / people_alive) * 100)
-  df_deliberation_type <- df_deliberation_type %>% mutate(`Full need` = (`Full need` / people_alive) * 100)
+  cat("-- Plot", plot_specific_f_name, "...\n")
   
-  df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context`:`Full need`)
+  # Create the dataframe for plotting
+  df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context perc`, `Most salient need perc`, `Compare need levels perc`, `Normative deliberation perc`, `Conformity deliberation perc`, `Full need perc`)
+  df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context perc`:`Full need perc`)
   
   # Can remove: p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
   
@@ -21,11 +14,11 @@ behaviourPlot1DeliberationType <- function() {
   # fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
   p <- ggplot(df_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line()
   p <- p + scale_colour_manual(
-    labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
-             'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
-             'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
+    labels=c('Minimal context perc'='Minimal context','Compare need levels perc'='Compare need levels',
+             'Most salient need perc'='Most salient need','Normative deliberation perc'='Normative deliberation',
+             'Conformity deliberation perc'='Conformity deliberation','Full need perc'='Full need'),
     values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
-    breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
+    breaks=c('Minimal context perc','Most salient need perc','Compare need levels perc','Normative deliberation perc','Conformity deliberation perc','Full need perc'))
   p <- p + xlab("Ticks") + ylab("% used by agents")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
   
@@ -44,10 +37,17 @@ behaviourPlot1DeliberationType <- function() {
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  
+  print("-- ... finished!")
+}
+
+behaviourPlot1DeliberationTypeBar <- function(plot_specific_f_name) {
   #----------------  THE BAR PLOT: PROPORTIONS  ----------------
   
-  # Now I want to plot the proportions of the different types of deliberation
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  # Create the dataframe for plotting
+  df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context perc`, `Most salient need perc`, `Compare need levels perc`, `Normative deliberation perc`, `Conformity deliberation perc`, `Full need perc`)
+  df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context perc`:`Full need perc`)
   
   # I want to sum the columns `Minimal context` until `Full need` in the df_deliberation_type dataframe
   df_deliberation_type_sum <- df_deliberation_type %>% group_by(`Deliberation Type`) %>% summarise_all(sum)
@@ -62,11 +62,11 @@ behaviourPlot1DeliberationType <- function() {
   p <- ggplot(df_deliberation_type_sum, aes(x = `Deliberation Type`, y = deliberation_type_proportions, fill = `Deliberation Type`)) +
     geom_bar(stat="identity") + theme_bw() + ylab("Overall % used by agents") + theme(axis.text.x = element_text(angle = 70, vjust = 0.5, hjust=0.5)) +
     scale_fill_manual(
-      labels=c('Minimal context'='Minimal context','Compare need levels'='Compare need levels',
-               'Most salient need'='Most salient need','Normative deliberation'='Normative deliberation',
-               'Conformity deliberation'='Conformity deliberation','Full need'='Full need'),
+      labels=c('Minimal context perc'='Minimal context','Compare need levels perc'='Compare need levels',
+               'Most salient need perc'='Most salient need','Normative deliberation perc'='Normative deliberation',
+               'Conformity deliberation perc'='Conformity deliberation','Full need perc'='Full need'),
       values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
-      breaks=c('Minimal context','Most salient need','Compare need levels','Normative deliberation','Conformity deliberation','Full need'))
+      breaks=c('Minimal context perc','Most salient need perc','Compare need levels perc','Normative deliberation perc','Conformity deliberation perc','Full need perc'))
   if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }

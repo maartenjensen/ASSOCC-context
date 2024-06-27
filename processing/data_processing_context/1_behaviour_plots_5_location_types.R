@@ -1,4 +1,6 @@
-behaviourPlot5LocationTypes <- function() {
+behaviourPlot5LocationTypes <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
   
   #=============================================================
   #==================== LOCATION TYPES  ========================
@@ -33,4 +35,6 @@ behaviourPlot5LocationTypes <- function() {
   if (plot_type == "one") { pdf(paste(plot_base_name, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
+  
+  print("-- ... finished!")
 }

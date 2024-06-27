@@ -1,4 +1,6 @@
-behaviourPlot4Needs <- function() {
+behaviourPlot4Needs <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
   
   #=============================================================
   #======================= PLOT NEEDS  =========================
@@ -32,4 +34,6 @@ behaviourPlot4Needs <- function() {
   if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
+  
+  print("-- ... finished!")
 }

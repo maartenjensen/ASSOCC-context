@@ -1,6 +1,7 @@
-behaviourPlot3Quarantiners <- function() {
+behaviourPlot3Quarantiners <- function(plot_specific_f_name) {
   
-  print("-- Plot quarantiners ...")
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
   #=============================================================
   #====================== QUARANTINERS  ========================
   #=============================================================

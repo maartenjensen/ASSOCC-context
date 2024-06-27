@@ -1,28 +1,29 @@
 #=====
-behaviourLoadLibraries <- function() {
+behaviourLoadLibraries <- function(p_libraries_need_to_be_loaded) {
+  
+  print("Initialise program")
+  
+  #install.packages("envnames","hash")
   
   # Load libraries
-  if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
+  if (p_libraries_need_to_be_loaded)
   {
-    print("Loading libraries and initialise program")
+    print("Loading libraries ...")
     library(tidyverse)
     library(ggplot2)
     library(sjmisc)
     library(readr)
     library(zoo)
-    
-    #first empty working memory 
-    rm(list=ls())
-    libraries_loaded = TRUE # For libraries loaded
-  } else {
-    #first empty working memory 
-    rm(list=ls()) 
-    libraries_loaded = TRUE # For libraries loaded
+    library(envnames)
+    library(hash)
   }
+  
+  rm(list=ls())
   
   if (length(dev.list()!=0)) {dev.off()} # Close all open pdf's
   
   print("Initialised program")
+  return(TRUE)
 }
 
 behaviourLoadDataframe <- function(p_files_path, p_files_names) {
@@ -70,6 +71,7 @@ behaviourRenameDataframe <- function(df_to_rename) {
   #- Custom column names
   # Rename colnames for population status
   colnames(df_renamed)[match("step", colnames(df_renamed))] = "tick";
+  colnames(df_renamed)[match("count_people", colnames(df_renamed))] = "people_alive";
   colnames(df_renamed)[match("count_people_with_infection_status_healthy", colnames(df_renamed))] = "uninfected";
   colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
   colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
@@ -125,4 +127,27 @@ behaviourRenameDataframe <- function(df_to_rename) {
   df_final = df_renamed
   
   return(df_final)
+}
+
+behaviourAddNormalizedColumns <- function(df_to_normalize) {
+  
+  df_to_normalize <- df_to_normalize %>% mutate(`Minimal context perc` = (`Minimal context` / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(`Most salient need perc` = (`Most salient need` / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(`Compare need levels perc` = (`Compare need levels` / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(`Normative deliberation perc` = (`Normative deliberation` / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(`Conformity deliberation perc` = (`Conformity deliberation` / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(`Full need perc` = (`Full need` / people_alive) * 100)
+  
+  df_to_normalize <- df_to_normalize %>% mutate(shop_groceries_perc = (shop_groceries / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(rest_at_home_perc = (rest_at_home / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(shop_luxury_perc = (shop_luxury / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(at_private_leisure_perc = (at_private_leisure / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(at_public_leisure_perc = (at_public_leisure / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(study_at_school_perc = (study_at_school / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(study_at_university_perc = (study_at_university / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(work_at_work_perc = (work_at_work / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(work_at_home_perc = (work_at_home / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(at_treatment_perc = (at_treatment / people_alive) * 100)
+  
+  return(df_to_normalize)
 }

@@ -1,13 +1,11 @@
 # 1_behaviour_plots_2_infections.R
-behaviourPlot2Infections <- function() {
+behaviourPlot2Infections <- function(plot_specific_f_name) {
   
-  print("-- Plot infections ...")
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
   #=============================================================
   #==================== PLOT INFECTIONS  =======================
   #=============================================================
-  
-  gl_plot_theme  <- theme_bw()
-  gl_plot_guides <- guides(colour = guide_legend(nrow=2, byrow=TRUE, override.aes = list(size=5, alpha=1)))
   
   df_population_status <- select(subset_df, tick, ce_context_depth, uninfected, infected, believe_infected, dead_people, healthy) #, immune, believe_immune, 
   df_population_status <- gather(df_population_status, `Population Status`, measurement, uninfected:healthy)
@@ -27,6 +25,12 @@ behaviourPlot2Infections <- function() {
   if (plot_type == "one") { dev.off() }
   
   #p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
+  print("-- ... finished!")
+}
+
+behaviourPlot2InfectionsBelieveInfected <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
   
   #==================== Minimal infection curve ===================
   df_population_status <- select(subset_df, tick, ce_context_depth, infected, believe_infected, healthy) # uninfected, dead_people, immune, believe_immune, 
@@ -37,7 +41,7 @@ behaviourPlot2Infections <- function() {
     labels=c('infected'='Infected',
              'believe_infected' ='Believe Infected', 
              'healthy' ='Healthy'),
-    values=c('#b00300', '#ff7c73', '#3c9e34'),
+    values=c('#ff7c73', '#b00300', '#afd16f'),
     breaks=c('infected','believe_infected','healthy'))
   p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
