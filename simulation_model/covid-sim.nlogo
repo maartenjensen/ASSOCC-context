@@ -4357,8 +4357,8 @@ Number
 PLOT
 10
 1179
-540
-1512
+558
+1531
 Specific agent need satisfaction
 time
 need satisfaction
@@ -4467,7 +4467,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-5
+2
 
 SWITCH
 1226
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
-11
+3
 
 INPUTBOX
 322
@@ -6101,6 +6101,18 @@ setup</setup>
     <metric>mean [delib-count-total-normative-consideration] of people</metric>
     <metric>mean [delib-count-total-conformity-network-action] of people</metric>
     <metric>mean [delib-count-total-full-need] of people</metric>
+    <metric>[belonging-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[risk-avoidance-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[autonomy-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[luxury-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[health-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[sleep-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[compliance-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[financial-stability-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[food-safety-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[leisure-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[financial-survival-satisfaction-level] of turtle ce-log-agent-id</metric>
+    <metric>[conformity-satisfaction-level] of turtle ce-log-agent-id</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
       <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
       <value value="&quot;1.2 rigid-habits-infected&quot;"/>
@@ -6148,6 +6160,9 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-log-agent">
       <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-log-agent-id">
+      <value value="596"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">

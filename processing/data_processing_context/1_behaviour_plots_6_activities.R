@@ -28,10 +28,10 @@ behaviourPlot6Activities <- function(plot_specific_f_name) {
   #                                 "at_private_leisure", "at_public_leisure", "study_at_school",
   #                                 "study_at_university", "work_at_work", "work_at_home", "at_treatment")
   
-  df_activities_gathered <- gather(df_activities, `Location Type`, measurement, shop_groceries_perc:at_treatment_perc)
-  #df_activities_mean_gathered <- gather(df_activities_mean, `Location Type`, measurement, shop_groceries:at_treatment)
+  df_activities_gathered <- gather(df_activities, `Activity`, measurement, shop_groceries_perc:at_treatment_perc)
+  #df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, shop_groceries:at_treatment)
   
-  p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Location Type`))
+  p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
     labels=c('shop_groceries_perc'='Shop groceries', 'rest_at_home_perc'='Rest at home', 'shop_luxury_perc'='Shop luxury',
              'at_private_leisure_perc'='Leisure at Pr', 'at_public_leisure_perc'='Leisure at Pu', 'study_at_school_perc'='Study at school',
@@ -60,13 +60,7 @@ behaviourPlot6Activities <- function(plot_specific_f_name) {
   print("-- ... finished!")
 }
 
-behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
-  
-  cat("-- Plot", plot_specific_f_name, "...\n")
-  
-  #------------------------------------------------------------------
-  #=================== Agent Activities Simplified 4 ================
-  
+behaviourPrepareActivitiesSimplified4 <- function() {
   
   df_activities <- select(subset_df, tick, ce_context_depth, people_alive, shop_groceries_perc, rest_at_home_perc, shop_luxury_perc,
                           at_private_leisure_perc, at_public_leisure_perc, study_at_school_perc,
@@ -75,17 +69,28 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   df_activities$rest_at_home_perc[1] <- 100 # Everyone is at home, but since the motivation is not taken into account, all cells in the first row indicate 0
   
   #----- Prepare the data frame ------
-  df_activities <- df_activities %>% mutate(rest_at_home = rest_at_home_perc + work_at_home_perc)
-  df_activities <- df_activities %>% mutate(obligation = study_at_school_perc + study_at_university_perc + work_at_work_perc)
+  df_activities <- df_activities %>% mutate(rest_at_home = rest_at_home_perc)
+  df_activities <- df_activities %>% mutate(obligation = study_at_school_perc + study_at_university_perc + work_at_work_perc + work_at_home_perc)
   df_activities <- df_activities %>% mutate(shopping = shop_groceries_perc + shop_luxury_perc)
   df_activities <- df_activities %>% mutate(leisure = at_private_leisure_perc + at_public_leisure_perc)
   
   df_activities <- select(df_activities, tick, ce_context_depth, rest_at_home, obligation, shopping, leisure)
   
-  #----- Gather data for the plot -----
-  df_activities_mean_gathered <- gather(df_activities, `Location Type`, measurement, rest_at_home:leisure)
+  return(df_activities)
+}
+
+behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   
-  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Location Type`))
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #------------------------------------------------------------------
+  #=================== Agent Activities Simplified 4 ================
+  df_activities <- behaviourPrepareActivitiesSimplified4()
+  
+  #----- Gather data for the plot -----
+  df_activities_mean_gathered <- gather(df_activities, `Activity`, measurement, rest_at_home:leisure)
+  
+  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
     labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
     values=c('#197221','#33ddff','#881556','#f16a15'),
@@ -113,9 +118,9 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   # remove column tick
   df_activities_day <- select(df_activities_day, -tick)
   
-  df_activities_day_gathered <- gather(df_activities_day, `Location Type`, measurement, rest_at_home:leisure)
+  df_activities_day_gathered <- gather(df_activities_day, `Activity`, measurement, rest_at_home:leisure)
   
-  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Location Type`))
+  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
     labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
     values=c('#197221','#33ddff','#881556','#f16a15'),
@@ -132,7 +137,39 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   if (plot_type == "one") { dev.off() }
 }
 
-behaviourPlot6ActivitiesSimplified <- function(plot_specific_f_name) {
+behaviourPlot6ActivitiesSimplified4Leisure <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #------------------------------------------------------------------
+  #=================== Agent Activities Simplified 4 ================
+  df_activities <- behaviourPrepareActivitiesSimplified4()
+  
+  #----- Gather data for the plot -----
+  df_activities_mean_gathered <- gather(df_activities, `Activity`, measurement, rest_at_home:leisure)
+  
+  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
+    values=c('#197221','#33ddff','#881556','#f16a15'),
+    breaks=c('rest_at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) 
+  p <- p + xlab("Time (Ticks)") + ylab("% Activities Chosen") + labs(col="")
+  p_smooth <- p + geom_smooth(se = TRUE, span = .7) + labs(title=paste("Activities (", experiment_preset,") - Simplified Smooth", sep="")) + gghighlight::gghighlight(`Activity` == "leisure")
+  p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))  + gghighlight::gghighlight(`Activity` == "leisure")
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4_smooth.pdf", sep=""), width=9, height=5) }
+  show(p_smooth) 
+  if (plot_type == "one") { dev.off() }
+}
+
+behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   
   cat("-- Plot", plot_specific_f_name, "...\n")
   
@@ -146,8 +183,8 @@ behaviourPlot6ActivitiesSimplified <- function(plot_specific_f_name) {
   df_activities$rest_at_home_perc[1] <- 100 # Everyone is at home, but since the motivation is not taken into account, all cells in the first row indicate 0
   
   #----- Prepare the data frame ------
-  df_activities_mean <- df_activities %>% mutate(rest_at_home = rest_at_home_perc + work_at_home_perc)
-  df_activities_mean <- df_activities_mean %>% mutate(obligation = study_at_school_perc + study_at_university_perc + work_at_work_perc)
+  df_activities_mean <- df_activities %>% mutate(rest_at_home = rest_at_home_perc)
+  df_activities_mean <- df_activities_mean %>% mutate(obligation = study_at_school_perc + study_at_university_perc + work_at_work_perc + work_at_home_perc)
   df_activities_mean <- df_activities_mean %>% mutate(shop_grocery = shop_groceries_perc)
   df_activities_mean <- df_activities_mean %>% mutate(shop_luxury = shop_luxury_perc)
   df_activities_mean <- df_activities_mean %>% mutate(leisure = at_private_leisure_perc + at_public_leisure_perc)
@@ -155,9 +192,9 @@ behaviourPlot6ActivitiesSimplified <- function(plot_specific_f_name) {
   df_activities_mean <- select(df_activities_mean, tick, ce_context_depth, rest_at_home, obligation, shop_grocery, shop_luxury, leisure)
   
   #----- Gather data for the plot -----
-  df_activities_mean_gathered <- gather(df_activities_mean, `Location Type`, measurement, rest_at_home:leisure)
+  df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, rest_at_home:leisure)
   
-  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Location Type`))
+  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
     labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury', 'leisure'='Leisure'),
     values=c('#197221','#33ddff','#881556','#9d6e48','#f16a15'),
@@ -185,9 +222,9 @@ behaviourPlot6ActivitiesSimplified <- function(plot_specific_f_name) {
   # remove column tick
   df_activities_day <- select(df_activities_day, -tick)
   
-  df_activities_day_gathered <- gather(df_activities_day, `Location Type`, measurement, rest_at_home:leisure)
+  df_activities_day_gathered <- gather(df_activities_day, `Activity`, measurement, rest_at_home:leisure)
   
-  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Location Type`))
+  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
     labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury', 'leisure'='Leisure'),
     values=c('#197221','#33ddff','#881556','#9d6e48','#f16a15'),
@@ -215,9 +252,9 @@ behaviourPlot6ActivitiesSimplified <- function(plot_specific_f_name) {
     # remove column tick
     df_activities_week <- select(df_activities_week, -tick)
     
-    df_activities_week_gathered <- gather(df_activities_week, `Location Type`, measurement, at_home:leisure)
+    df_activities_week_gathered <- gather(df_activities_week, `Activity`, measurement, at_home:leisure)
     
-    p <- ggplot(df_activities_week_gathered, aes(x = week, y = measurement, col=`Location Type`))
+    p <- ggplot(df_activities_week_gathered, aes(x = week, y = measurement, col=`Activity`))
     p <- p + scale_colour_manual(
       labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
       values=c('#197221','#33ddff','#881556','#f16a15'),

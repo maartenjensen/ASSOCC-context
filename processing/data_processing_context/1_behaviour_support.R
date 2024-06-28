@@ -3,7 +3,7 @@ behaviourLoadLibraries <- function(p_libraries_need_to_be_loaded) {
   
   print("Initialise program")
   
-  #install.packages("envnames","hash")
+  #install.packages("envnames","hash","gghighlight")
   
   # Load libraries
   if (p_libraries_need_to_be_loaded)
@@ -16,6 +16,7 @@ behaviourLoadLibraries <- function(p_libraries_need_to_be_loaded) {
     library(zoo)
     library(envnames)
     library(hash)
+    library(gghighlight)
   }
   
   rm(list=ls())

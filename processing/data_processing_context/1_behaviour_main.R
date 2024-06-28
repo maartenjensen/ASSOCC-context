@@ -44,14 +44,20 @@ plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activitie
                                                         "behaviourPlot2InfectionsBelieveInfected")
 plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot6ActivitiesSimplified4", 
                                                         "behaviourPlot2InfectionsBelieveInfected")
-plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot6ActivitiesSimplified4", 
-                                                        "behaviourPlot2InfectionsBelieveInfected", "behaviourPlot4Needs")
-plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6ActivitiesSimplified4", 
-                                                        "behaviourPlot2InfectionsBelieveInfected")
+plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot6ActivitiesSimplified4Leisure", 
+                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping")
+plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot1DeliberationType",
+                                                        "behaviourPlot6ActivitiesSimplified4Leisure")
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot6ActivitiesSimplified4Leisure", 
+                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping")
+
 
 #[1] 1.1 rigid-habits-no-infected     1.2 rigid-habits-infected        1.3 DCSD-1                       1.4 DCSD-1-leisure-habits       
 #[5] 2.1 DCSD-2                       2.2 DCSD-2-obligation-constraint 3.1 DCSD-3-rigid-norms           3.2 DCSD-3-rigid-norms-lockdown 
-#[9] 3.3 DCSD-3                       3.4 DCSD-3-lockdown              4.1 DCSD-4                       5.1 DCSD-5-optimisation  
+#[9] 3.3 DCSD-3                       3.4 DCSD-3-lockdown              4.1 DCSD-4                       5.1 DCSD-5-optimisation
 
 # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
 specific_experiment_presets <- c("1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected") 
@@ -102,7 +108,7 @@ if (!is.null(specific_experiment_presets))
 for (experiment_preset in experiment_presets)
 {
   # Start the plot creating loop
-  print(paste("Plotting: Starting to print plots for ", experiment_preset))
+  print(paste("== Plotting for ", experiment_preset, " ==", sep=""))
 
   subset_df <- df_final_filtered[df_final_filtered$ce_context_experiment_presets == experiment_preset, ]
   
