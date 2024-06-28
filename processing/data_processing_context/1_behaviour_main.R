@@ -30,6 +30,8 @@ plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
+plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
+
 plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1DeliberationTypeBar",
                          "behaviourPlot2Infections", "behaviourPlot2InfectionsBelieveInfected",
                          "behaviourPlot3Quarantiners",
@@ -37,11 +39,15 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot5LocationTypes",
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified")
 
-plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
 plot_specifics_h <- hash()
-plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified", "behaviourPlot2InfectionsBelieveInfected")
-plot_specifics_h[["1.2 rigid-habits-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified", "behaviourPlot2InfectionsBelieveInfected")
-
+plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4", 
+                                                        "behaviourPlot2InfectionsBelieveInfected")
+plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot6ActivitiesSimplified4", 
+                                                        "behaviourPlot2InfectionsBelieveInfected")
+plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot6ActivitiesSimplified4", 
+                                                        "behaviourPlot2InfectionsBelieveInfected", "behaviourPlot4Needs")
+plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6ActivitiesSimplified4", 
+                                                        "behaviourPlot2InfectionsBelieveInfected")
 
 #[1] 1.1 rigid-habits-no-infected     1.2 rigid-habits-infected        1.3 DCSD-1                       1.4 DCSD-1-leisure-habits       
 #[5] 2.1 DCSD-2                       2.2 DCSD-2-obligation-constraint 3.1 DCSD-3-rigid-norms           3.2 DCSD-3-rigid-norms-lockdown 
@@ -49,7 +55,7 @@ plot_specifics_h[["1.2 rigid-habits-infected"]] <- c("behaviourPlot6Activities",
 
 # True: plot 1.1 rigid-habits-, 1.2 rigid-habits-infected
 specific_experiment_presets <- c("1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected") 
-#specific_experiment_presets <- NULL
+specific_experiment_presets <- NULL
 
 # Plots general size
 gl_pdf_width = 9
@@ -86,7 +92,7 @@ if (plot_type == "all") { pdf(paste("plot_", directory_files, "_behaviour_all_pl
 #-----------------    CREATE THE FOR LOOP    -----------------
 experiment_preset = unique(df_final_filtered$ce_context_experiment_presets)[1]   # Check the depth values and make dependent on the dataframe's depth levels
 
-if (!is.null(length(specific_experiment_presets)))
+if (!is.null(specific_experiment_presets))
 {
   experiment_presets = specific_experiment_presets
 } else {
@@ -122,10 +128,12 @@ for (experiment_preset in experiment_presets)
   # (perhaps make a dictionary), then after that call them with get() (if specific plotting is TRUE!)
   # get("behaviourPlot1DeliberationType")()
   
-  if (plot_specifics_only && !is.null(plot_specifics_h[[experiment_preset]])) {
+  if (plot_specifics_only) {
     
-    for (plot_specific_f_name in plot_specifics_h[[experiment_preset]]) {
-      get(plot_specific_f_name)(plot_specific_f_name)
+    if (!is.null(plot_specifics_h[[experiment_preset]])) {
+      for (plot_specific_f_name in plot_specifics_h[[experiment_preset]]) {
+        get(plot_specific_f_name)(plot_specific_f_name)
+      }
     }
   }
   else {
