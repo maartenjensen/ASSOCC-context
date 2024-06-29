@@ -59,12 +59,38 @@ behaviourPlot4NeedsLeisureAndShopping <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth()
   p <- p + geom_line() 
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping.pdf", sep=""), width=9, height=5) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping_smooth.pdf", sep=""), width=9, height=5) }
   show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  print("-- ... finished!")
+}
+
+behaviourPlot4NeedsLeisureAndShoppingIndividual <- function(plot_specific_f_name) {
+  
+  # + gghighlight::gghighlight(`Need Type` == "leisure")
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #========== Needs and need level ===========
+  df_needs <- select(subset_df, tick, ce_context_depth, food_safety_individual, leisure_individual, luxury_individual)
+  df_needs <- gather(df_needs, `Need Type`, measurement, food_safety_individual:luxury_individual)
+  
+  p <- ggplot(df_needs, aes(x = tick, y = measurement, col=`Need Type`))
+  p <- p + scale_colour_manual(
+    labels=c('food_safety_individual'='FOO','leisure_individual'='LEI','luxury_individual'='LUX'),
+    values=c('#1A4B09','#f16a15','#881556'),
+    breaks=c('food_safety_individual','leisure_individual', 'luxury_individual'))
+  p <- p + xlab("Ticks") + ylab("Need Level") + labs(col = "Need")
+  p <- p + theme_bw() + theme(text = element_text(size=16))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (", experiment_preset,") - Agents 596", sep=""))
+  p <- p + geom_hline(yintercept=0.5, linetype="dashed", color = "red") + geom_line() 
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping_individual.pdf", sep=""), width=9, height=5) }
+  show(p)
   if (plot_type == "one") { dev.off() }
   
   print("-- ... finished!")

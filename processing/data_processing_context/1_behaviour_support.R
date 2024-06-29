@@ -122,6 +122,20 @@ behaviourRenameDataframe <- function(df_to_rename) {
   
   colnames(df_renamed)[match("count_people_with_epistemic_infection_status_infected", colnames(df_renamed))] = "believe_infected";
   
+  # Rename colnames for individual agent needs
+  colnames(df_renamed)[match("belonging_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "belonging_individual";
+  colnames(df_renamed)[match("risk_avoidance_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "risk_avoidance_individual";
+  colnames(df_renamed)[match("autonomy_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "autonomy_individual";
+  colnames(df_renamed)[match("luxury_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "luxury_individual";
+  colnames(df_renamed)[match("health_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "health_individual";
+  colnames(df_renamed)[match("sleep_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "sleep_individual";
+  colnames(df_renamed)[match("compliance_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "compliance_individual";
+  colnames(df_renamed)[match("financial_stability_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "financial_stability_individual";
+  colnames(df_renamed)[match("food_safety_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "food_safety_individual";
+  colnames(df_renamed)[match("leisure_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "leisure_individual";
+  colnames(df_renamed)[match("financial_survival_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "financial_survival_individual";
+  colnames(df_renamed)[match("conformity_satisfaction_level_of_turtle_ce_log_agent_id", colnames(df_renamed))] = "conformity_individual";
+  
   df_names_compare <- data.frame("new" = names(df_renamed), "old" = old_variable_names)
   print("Renamed the dateframe, please check the df_names_compare dataframe for correct column translation")
   

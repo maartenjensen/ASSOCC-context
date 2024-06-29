@@ -272,3 +272,126 @@ behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   
   print("-- ... finished!")
 }
+
+behaviourPlot6ActivitiesWorkStudyHome <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #------------------------------------------------------------------
+  #==================== Agent Activities All =================
+  
+  # "rest_at_home", "work_at_home", "work_at_work", "study_at_school", "study_at_university", "at_private_leisure", 
+  # "at_public_leisure", "shop_groceries", "shop_luxury", "at_treatment"
+  
+  # Roll mean/moving average
+  df_activities <- select(subset_df, tick, ce_context_depth, people_alive, study_at_school_perc,
+                          study_at_university_perc, work_at_work_perc, work_at_home_perc)
+  
+  df_activities$rest_at_home[1] <- df_activities$people_alive[1]
+  
+  
+  df_activities <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  # mean for each day
+  df_activities <- df_activities %>% group_by(day) %>% summarise_all(mean)
+  # remove column tick
+  df_activities <- select(df_activities, -tick)
+
+  df_activities_gathered <- gather(df_activities, `Activity`, measurement, study_at_school_perc:work_at_home_perc)
+  #df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, shop_groceries:at_treatment)
+  
+  p <- ggplot(df_activities_gathered, aes(x = day, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('study_at_school_perc'='Study at school',
+             'study_at_university_perc'='Study at uni', 'work_at_work_perc'='Work at work', 'work_at_home_perc'='Work at home'),
+    values=c('#9d6e48', 
+             '#E69F00','#345da9','#000000'),
+    breaks=c('study_at_school_perc',
+             'study_at_university_perc', 'work_at_work_perc', 'work_at_home_perc'))
+  p <- p + xlab("Days") + ylab("% Activities Chosen") + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 25)) + labs(title=paste("Activities (", experiment_preset,") - Work Study", sep=""))  
+  p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_smooth.pdf", sep=""), width=9, height=5) }
+  show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  print("-- ... finished!")
+}
+
+behaviourPlot6ActivitiesWorkStudy <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #------------------------------------------------------------------
+  #==================== Agent Activities All =================
+  
+  # "rest_at_home", "work_at_home", "work_at_work", "study_at_school", "study_at_university", "at_private_leisure", 
+  # "at_public_leisure", "shop_groceries", "shop_luxury", "at_treatment"
+  
+  # Roll mean/moving average
+  df_activities <- select(subset_df, tick, ce_context_depth, people_alive, study_at_school_perc,
+                          study_at_university_perc, work_at_work_perc)
+  
+  df_activities$rest_at_home[1] <- df_activities$people_alive[1]
+  
+  
+  df_activities_gathered <- gather(df_activities, `Activity`, measurement, study_at_school_perc:work_at_work_perc)
+  
+  p <- ggplot(df_activities_gathered, aes(x = tick, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('study_at_school_perc'='Study at school',
+             'study_at_university_perc'='Study at uni', 'work_at_work_perc'='Work at work'),
+    values=c('#9d6e48', 
+             '#E69F00','#345da9'),
+    breaks=c('study_at_school_perc', 'study_at_university_perc', 'work_at_work_perc'))
+  p <- p + xlab("Ticks") + ylab("% Activities Chosen") + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 25)) + labs(title=paste("Activities (", experiment_preset,") - Work Study", sep=""))  
+  p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_smooth.pdf", sep=""), width=9, height=5) }
+  show(p_smooth)
+  if (plot_type == "one") { dev.off() }
+  
+  # Day
+  df_activities <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  # mean for each day
+  df_activities <- df_activities %>% group_by(day) %>% summarise_all(mean)
+  # remove column tick
+  df_activities <- select(df_activities, -tick)
+  
+  df_activities_gathered <- gather(df_activities, `Activity`, measurement, study_at_school_perc:work_at_work_perc)
+  #df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, shop_groceries:at_treatment)
+  
+  p <- ggplot(df_activities_gathered, aes(x = day, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('study_at_school_perc'='Study at school', 'study_at_university_perc'='Study at uni', 'work_at_work_perc'='Work at work'),
+    values=c('#9d6e48', '#E69F00','#345da9'),
+    breaks=c('study_at_school_perc', 'study_at_university_perc', 'work_at_work_perc'))
+  p <- p + xlab("Days") + ylab("% Activities Chosen") + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 25)) + labs(title=paste("Activities (", experiment_preset,") - Work Study", sep=""))  
+  p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_day.pdf", sep=""), width=9, height=5) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  
+  print("-- ... finished!")
+}

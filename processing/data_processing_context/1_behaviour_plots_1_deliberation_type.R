@@ -41,7 +41,9 @@ behaviourPlot1DeliberationType <- function(plot_specific_f_name) {
 }
 
 behaviourPlot1DeliberationTypeBar <- function(plot_specific_f_name) {
+  
   #----------------  THE BAR PLOT: PROPORTIONS  ----------------
+  # This bar plot doesn't properly represent how much is used of the deliberation type.
   
   cat("-- Plot", plot_specific_f_name, "...\n")
   

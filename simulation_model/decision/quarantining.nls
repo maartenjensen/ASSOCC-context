@@ -27,6 +27,22 @@ to-report officially-quarantiners
   report people with [is-officially-asked-to-quarantine?]
 end
 
+to-report officially-quarantiners-children
+  report children with [is-officially-asked-to-quarantine?]
+end
+
+to-report officially-quarantiners-students
+  report students with [is-officially-asked-to-quarantine?]
+end
+
+to-report officially-quarantiners-workers
+  report workers with [is-officially-asked-to-quarantine?]
+end
+
+to-report officially-quarantiners-retireds
+  report retireds with [is-officially-asked-to-quarantine?]
+end
+
 to-report is-in-quarantine?
   report is-officially-asked-to-quarantine? and (current-activity = my-home or (current-activity = my-hospital and work-motive != current-motivation) or current-activity = away-gathering-point)
 end
