@@ -64,10 +64,10 @@ to load-scenario-specifics-context-experiment-preset
   set stop-before-tick 240
   
   ; For all the context experiments except original ASSOCC
-  ifelse ce-context-experiment-presets = "0.0 Original ASSOCC" or ce-context-experiment-presets = "0.0 Original ASSOCC-lockdown"
+  ifelse ce-context-experiment-presets = "0.1 Original ASSOCC" or ce-context-experiment-presets = "0.2 Original ASSOCC-lockdown"
   [ set with-infected? true
     
-    if ce-context-experiment-presets = "0.0 Original ASSOCC-lockdown"
+    if ce-context-experiment-presets = "0.2 Original ASSOCC-lockdown"
     [ set ce-enable-global-lockdown true ]
     
     set ce-more-likely-to-essential-shop false
