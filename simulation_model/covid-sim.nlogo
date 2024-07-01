@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-4
+1
 
 SWITCH
 1226
@@ -4742,7 +4742,7 @@ SWITCH
 443
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
-0
+1
 1
 -1000
 
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4935,12 +4935,12 @@ AUTO: If True, set rations bought = 4
 CHOOSER
 998
 188
-1196
+1237
 233
 ce-context-experiment-presets
 ce-context-experiment-presets
-"no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "0.0 Original ASSOCC"
-8
+"no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC" "0.0 Original ASSOCC-lockdown"
+15
 
 INPUTBOX
 322
@@ -6153,7 +6153,9 @@ setup</setup>
       <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
       <value value="&quot;4.1 DCSD-4&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
+      <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
       <value value="&quot;0.0 Original ASSOCC&quot;"/>
+      <value value="&quot;0.0 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>

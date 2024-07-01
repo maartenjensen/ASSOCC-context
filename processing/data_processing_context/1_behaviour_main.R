@@ -44,6 +44,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4")
 # There are more!
 
+# To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
 plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4", 
                                                         "behaviourPlot2InfectionsBelieveInfected")
@@ -55,17 +56,22 @@ plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot6Activitie
 plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot1DeliberationType", "behaviourPlot1DeliberationTypeBar",
                                                         "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
+
 plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
 plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected", "behaviourPlot3QuarantinersAgeGroup",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
 # I need time to think about this, something like:
 plot_specifics_h <- hash()
-plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot3Quarantiners")
+plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
+                                                           "behaviourPlot3Quarantiners")
+plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
+                                                           "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure")
+plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
+                                                           "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure")
 
-plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
-                                                        "behaviourPlot3Quarantiners")
 
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesSimplified4Leisure", 

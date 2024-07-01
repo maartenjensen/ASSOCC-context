@@ -64,8 +64,11 @@ to load-scenario-specifics-context-experiment-preset
   set stop-before-tick 240
   
   ; For all the context experiments except original ASSOCC
-  ifelse ce-context-experiment-presets = "0.0 Original ASSOCC"
+  ifelse ce-context-experiment-presets = "0.0 Original ASSOCC" or ce-context-experiment-presets = "0.0 Original ASSOCC-lockdown"
   [ set with-infected? true
+    
+    if ce-context-experiment-presets = "0.0 Original ASSOCC-lockdown"
+    [ set ce-enable-global-lockdown true ]
     
     set ce-more-likely-to-essential-shop false
     set days-of-rations-bought 3
@@ -202,6 +205,19 @@ to load-scenario-specifics-context-experiment-preset
     set with-infected? true
     set ce-leisure-habits true
     set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "5.2 DCSD-5-optimisation-lockdown"
+  [
+    set ce-context-depth 5
+    set ce-enable-salient-food-luxury-forced-obligation true
+
+    ; From previous section
+    set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    set ce-enable-global-lockdown true
     stop
   ]
   
