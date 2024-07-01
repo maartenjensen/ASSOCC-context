@@ -9,6 +9,7 @@ directory_files <- "2024_06_24_full_exp_single_runs"
 #directory_files <- "2024_06_23_single_run_1_3"
 directory_files <- "2024_06_23_run_for_1_and_2_quarantining"
 directory_files <- "2024_06_29_full_exp_single_runs"
+directory_files <- "2024_07_01_full_quick"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()

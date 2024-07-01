@@ -5988,7 +5988,7 @@ setup</setup>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
     <metric>count officially-quarantiners</metric>
-    <metric>count people with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
+    <metric>count people with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count should-be-isolators</metric>
     <metric>count should-be-isolators with [current-activity != my-home and current-activity != my-hospital and current-activity != away-gathering-point]</metric>
     <metric>#contacts-last-tick</metric>
@@ -6133,13 +6133,13 @@ setup</setup>
     <metric>[financial-survival-satisfaction-level] of turtle ce-log-agent-id</metric>
     <metric>[conformity-satisfaction-level] of turtle ce-log-agent-id</metric>
     <metric>count officially-quarantiners-children</metric>
-    <metric>count children with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
+    <metric>count children with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count officially-quarantiners-students</metric>
-    <metric>count students with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
+    <metric>count students with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count officially-quarantiners-workers</metric>
-    <metric>count workers with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
+    <metric>count workers with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count officially-quarantiners-retireds</metric>
-    <metric>count retireds with [is-officially-asked-to-quarantine? and not is-in-quarantine?]</metric>
+    <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
       <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
       <value value="&quot;1.2 rigid-habits-infected&quot;"/>
