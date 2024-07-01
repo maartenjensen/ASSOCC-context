@@ -8,6 +8,7 @@ if (!exists("libraries_loaded") || libraries_loaded == FALSE || getwd() == "C:/U
 directory_files <- "2024_06_24_full_exp_single_runs"
 #directory_files <- "2024_06_23_single_run_1_3"
 directory_files <- "2024_06_23_run_for_1_and_2_quarantining"
+directory_files <- "2024_06_29_full_exp_single_runs"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -55,9 +56,15 @@ plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6Activitie
                                                         "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
 plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
-plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected", "behaviourPlot3QuarantinersAgeGroup",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
 # I need time to think about this, something like:
+plot_specifics_h <- hash()
+plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot3Quarantiners")
+
+plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot3Quarantiners")
 
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesSimplified4Leisure", 

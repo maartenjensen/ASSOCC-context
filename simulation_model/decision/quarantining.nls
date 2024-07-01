@@ -2,6 +2,13 @@ to-report is-officially-asked-to-quarantine?
   report #days-I-should-remain-in-self-quarantining > 0 or is-believing-to-be-infected? or [home-in-isolation?] of my-home
 end
 
+; Maarten edit, this function is added to properly export when agents are in quarantine or not.
+to-report is-officially-asked-to-quarantine-for-plots?
+  ifelse start-tick-of-global-quarantine = "never"
+  [ report #days-I-should-remain-in-self-quarantining > 0 or is-believing-to-be-infected? or [home-in-isolation?] of my-home ]
+  [ report (ticks > (start-tick-of-global-quarantine + 1) and #days-I-should-remain-in-self-quarantining > 0) or is-believing-to-be-infected? or [home-in-isolation?] of my-home ]
+end
+
 to update-quarantining-decisions
   ask people with [#days-I-should-remain-in-self-quarantining > 0] [
     set #days-I-should-remain-in-self-quarantining #days-I-should-remain-in-self-quarantining - 1
@@ -24,23 +31,23 @@ to quarantining-reaction-when-someone-from-household-is-infected
 end
 
 to-report officially-quarantiners
-  report people with [is-officially-asked-to-quarantine?]
+  report people with [is-officially-asked-to-quarantine-for-plots?]
 end
 
 to-report officially-quarantiners-children
-  report children with [is-officially-asked-to-quarantine?]
+  report children with [is-officially-asked-to-quarantine-for-plots?]
 end
 
 to-report officially-quarantiners-students
-  report students with [is-officially-asked-to-quarantine?]
+  report students with [is-officially-asked-to-quarantine-for-plots?]
 end
 
 to-report officially-quarantiners-workers
-  report workers with [is-officially-asked-to-quarantine?]
+  report workers with [is-officially-asked-to-quarantine-for-plots?]
 end
 
 to-report officially-quarantiners-retireds
-  report retireds with [is-officially-asked-to-quarantine?]
+  report retireds with [is-officially-asked-to-quarantine-for-plots?]
 end
 
 to-report is-in-quarantine?
