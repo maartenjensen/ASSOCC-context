@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-4
+6
 
 SWITCH
 1226
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-10
+13
 
 INPUTBOX
 322

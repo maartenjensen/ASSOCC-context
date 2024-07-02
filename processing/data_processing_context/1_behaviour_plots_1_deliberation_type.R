@@ -7,9 +7,7 @@ behaviourPlot1DeliberationType <- function(plot_specific_f_name) {
   # Create the dataframe for plotting
   df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context perc`, `Most salient need perc`, `Compare need levels perc`, `Normative deliberation perc`, `Conformity deliberation perc`, `Full need perc`)
   df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context perc`:`Full need perc`)
-  
-  # Can remove: p <- ggplot(seg_acc_deliberation_type, aes(tick, measurement)) + geom_boxplot(aes(fill=Status), alpha=0.5)
-  
+
   # col  = for the outline
   # fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
   p <- ggplot(df_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line()
@@ -34,6 +32,34 @@ behaviourPlot1DeliberationType <- function(plot_specific_f_name) {
   
   if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
   p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Peak Infections", sep=""))
+  show(p)
+  if (plot_type == "one") { dev.off() }
+  
+  print("-- ... finished!")
+}
+
+behaviourPlot1DeliberationTypeConformity <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  # Create the dataframe for plotting
+  df_deliberation_type <- select(subset_df, tick, ce_context_depth, people_alive, `Minimal context perc`, `Most salient need perc`, `Compare need levels perc`, `Normative deliberation perc`, `Conformity deliberation perc`, `Full need perc`)
+  df_deliberation_type <- gather(df_deliberation_type, `Deliberation Type`, measurement, `Minimal context perc`:`Full need perc`)
+  
+  # col  = for the outline
+  # fill = for filling the line (which then makes the whole line black because if col is not specified the outline will be the thing seen)
+  p <- ggplot(df_deliberation_type, aes(x = tick, y = measurement, col=`Deliberation Type`)) + geom_line() + gghighlight::gghighlight(`Deliberation Type` == "Conformity deliberation perc", use_direct_label = FALSE)
+  p <- p + scale_colour_manual(
+    labels=c('Minimal context perc'='Minimal context','Compare need levels perc'='Compare need levels',
+             'Most salient need perc'='Most salient need','Normative deliberation perc'='Normative deliberation',
+             'Conformity deliberation perc'='Conformity deliberation','Full need perc'='Full need'),
+    values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
+    breaks=c('Minimal context perc','Most salient need perc','Compare need levels perc','Normative deliberation perc','Conformity deliberation perc','Full need perc'))
+  p <- p + xlab("Ticks") + ylab("% used by agents")
+  p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
+  
+  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
