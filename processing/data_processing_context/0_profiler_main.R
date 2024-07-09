@@ -38,18 +38,13 @@ gl_pdf_height = 7
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-plot_type <- "one" 
+#plot_type <- "one" 
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
 # This is just a string with the directory name
-directory_files <- "2024_03_13_full_no_lockdown"
-#directory_files <- "2024_03_13_full_yes_lockdown"
-#directory_files <- "2024_03_13_no_conflict"
-#directory_files <- "2024_03_13_rigid_norms"
-#directory_files <- "2024_03_21_n_agents"
-directory_files <- "2024_04_11_forced_habits"
+directory_files <- "2024_07_01_full_exp_single_runs"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -75,48 +70,29 @@ source("../0_profiler_support.R")
 #   "-SRFQ=" ce-should-rigidly-follow-quarantine)
 
 
-if (directory_files == "2024_03_13_full_no_lockdown")
+if (directory_files == "2024_07_01_full_exp_single_runs")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0", "1", "2", "3", "4", "5"),
-                                                    c("350"),
-                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
-                                                    c("6"), c("false"), c("false"), c("false"))
-}
-if (directory_files == "2024_03_13_full_yes_lockdown")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0", "1", "2", "3", "4", "5"),
-                                                    c("350"),
-                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
-                                                    c("6"), c("true"), c("false"), c("false"))
-}
-if (directory_files == "2024_03_13_no_conflict")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("1"),
-                                                    c("350"),
-                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
-                                                    c("6"), c("false"), c("false", "true"), c("false"))
-}
-if (directory_files == "2024_03_13_rigid_norms")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("3"),
-                                                    c("350"),
-                                                    c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
-                                                    c("6"), c("false"),  c("false"), c("false", "true"))
+  filenames_profiler <- retrieve_filenames_profiler(c("350"),
+                                                    c("0"),
+                                                    c("6"), c("0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown"))
 }
 if (directory_files == "2024_03_21_n_agents")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0", "5"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),  
+  filenames_profiler <- retrieve_filenames_profiler(c("350", "700", "1400", "2100", "2800", "3500"),  
                                                     c("1", "2", "3"),
                                                     c("6"), c("false"),  c("false"), c("false"))
 }
 
+# Households, Random seed, Action space, Preset
+# report-[-H= 350 -R= 0 -A= 6 -P= 0.1 Original ASSOCC X]
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
 #--------------------------------------
-df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
+p_filepath_workspace <- paste(directory_r, directory_files, sep="/")
+p_filenames_profiler <- filenames_profiler
 
+df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 df_p_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-DELIBERATION-SELECT-ACTIVITY"))
 
 df_p_csn = profilerLoadSpecificData(df_profiler, "CSN")
@@ -142,14 +118,14 @@ full_assocc_deliberation = "FULL ASSOCC DELIBERATION"
 
 # Converting the data frame to an aggregate
 df_p_mean <- df_profiler %>% 
-  group_by(context, function_name) %>% 
+  group_by(preset, function_name) %>% 
   summarise(calls = mean(calls, na.rm = TRUE),
             incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
             excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
             excl_calls = mean(excl_calls, na.rm = TRUE))
 
 df_p_mean_std <- df_profiler %>% 
-  group_by(context, function_name) %>% 
+  group_by(preset, function_name) %>% 
   summarise(calls = sd(calls, na.rm = TRUE),
             incl_t_ms = sd(incl_t_ms, na.rm = TRUE),
             excl_t_ms = sd(excl_t_ms, na.rm = TRUE),
@@ -187,7 +163,7 @@ for (i in 1:nrow(df_p_mean_summarized)) {
   { df_p_mean_summarized$function_name[i] <- full_assocc_deliberation }
 }
 
-df_p_mean_summarized <- df_p_mean_summarized[order(df_p_mean_summarized$context, df_p_mean_summarized$function_name), ]
+df_p_mean_summarized <- df_p_mean_summarized[order(df_p_mean_summarized$preset, df_p_mean_summarized$function_name), ]
 
 
 
@@ -197,7 +173,7 @@ df_p_mean_summarized <- df_p_mean_summarized[order(df_p_mean_summarized$context,
 #-----------------------------------------
 
 plot_calls <- function(dataframe) {
-  ggplot(dataframe, aes(x = function_name, y = incl_t_ms, fill = as.factor(context))) +
+  ggplot(dataframe, aes(x = function_name, y = incl_t_ms, fill = as.factor(preset))) +
     geom_bar(stat = "identity", position = "dodge") +
     labs(title = "Execution time for different context-depths",
          x = "Function Name",
@@ -214,6 +190,17 @@ plot_calls <- function(dataframe) {
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 plot_calls(df_p_mean_summarized)
 if (plot_type == "one") { dev.off() }
+
+
+
+
+
+
+
+
+
+
+
 
 #-----------------------------------------
 #--- Prepare the data                  ---
@@ -249,7 +236,7 @@ df_p_context_and_full_assocc <- df_p_filtered[grep(paste(selected_strings, colla
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_deliberation.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 
 # Combined
-ggplot(df_p_context_and_full_assocc, aes(x = factor(context), y = incl_t_ms, fill = function_name)) +
+ggplot(df_p_context_and_full_assocc, aes(x = factor(preset), y = incl_t_ms, fill = function_name)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for Deliberation",
        x = "Context",
@@ -264,7 +251,7 @@ df_p_go <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_filter
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_results_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_p_go, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_go, aes(x = factor(preset), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for GO",
        x = "Context-depth",
@@ -281,7 +268,7 @@ df_p_context <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df_p_f
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_select_activity.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_p_context, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_context, aes(x = factor(preset), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for CONTEXT-SELECT-ACTIVITY",
        x = "Context-depth",
@@ -298,7 +285,7 @@ df_p_full_ASSOCC <- df_p_filtered[grep(paste(selected_strings, collapse="|"), df
 
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_incl_t_ms_full_ASSOCC.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 # Separated
-ggplot(df_p_full_ASSOCC, aes(x = factor(context), y = incl_t_ms)) +
+ggplot(df_p_full_ASSOCC, aes(x = factor(preset), y = incl_t_ms)) +
   geom_boxplot() +
   labs(title = "Box Plots of incl_t_ms for Full ASSOCC",
        x = "Context-depth",
@@ -433,11 +420,11 @@ for (depth_value in depth_values) {
   depth_value_str <- toString(depth_value)
   
   df_p_mean_filtered <- df_p_mean[grep(paste(selected_strings, collapse = "|"), df_p_mean$function_name), ]
-  df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$context == depth_value, ]
+  df_p_mean_filtered <- df_p_mean_filtered[df_p_mean_filtered$preset == depth_value, ]
   
   for (i in 1:length(selected_strings)) {
     if (!selected_strings[i] %in% df_p_mean_filtered$function_name) {
-      df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(context = depth_value_str,
+      df_p_mean_filtered <- rbind(df_p_mean_filtered, data.frame(preset = depth_value_str,
                                                                  function_name = selected_strings[i],
                                                                  calls = 0, incl_t_ms = 0, excl_t_ms = 0, excl_calls = 0))
     }
@@ -495,7 +482,7 @@ plot_calls <- function(dataframe) {
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 70, hjust = 0.5, vjust = 0.5), legend.position="bottom", text = element_text(size=15)) +
     coord_cartesian(ylim = c(0, 85000)) +
-    facet_wrap(~ context, nrow = 3) + scale_fill_manual(values=c('#87e667', '#467536')) # Combining plots into subplots
+    facet_wrap(~ preset, nrow = 3) + scale_fill_manual(values=c('#87e667', '#467536')) # Combining plots into subplots
 }
 
 #p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
@@ -537,7 +524,7 @@ str_table_1 = ""
 
 for (ce in 0:5) {
   
-  df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$context==ce, ]
+  df_p_mean_summarized_temp <- df_p_mean_summarized[df_p_mean_summarized$preset==preset, ]
   str_table_1 = paste(str_table_1, ce, "&", sep = " ")
   str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
   str_table_1 = paste(str_table_1, df_p_mean_summarized_temp$incl_t_ms_sd[df_p_mean_summarized_temp$function_name=="CONTEXT-SELECT-ACTIVITY"],  "&" )
@@ -616,6 +603,7 @@ writeLines(str_table_3)
 
 # -------------------------------------------------
 # Experiments specific to "2024_03_21_n_agents"
+# NEED TO UPDATE THIS CODE AS WELL!
 # -------------------------------------------------
 
 # Next experiments is with the additional runs and taking the mean
