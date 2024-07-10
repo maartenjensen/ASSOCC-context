@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -3439,7 +3439,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3485,7 +3485,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3498,7 +3498,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3509,7 +3509,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3552,7 +3552,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4434,7 +4434,7 @@ SWITCH
 390
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1226
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-13
+14
 
 INPUTBOX
 322
@@ -4948,7 +4948,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-480.0
+240.0
 1
 0
 Number
@@ -5964,7 +5964,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-P=" ce-context-experiment-presets)</final>
+    <final>behavior-space-export-profiling (list "-C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-P=" ce-context-experiment-presets)</final>
     <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
     <metric>stop-before-tick</metric>
     <metric>ce-context-depth</metric>
@@ -6159,6 +6159,8 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
+      <value value="1"/>
+      <value value="2"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
