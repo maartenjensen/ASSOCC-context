@@ -44,7 +44,7 @@ plot_type <- "none"
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
 # This is just a string with the directory name
-directory_files <- "2024_07_01_full_exp_single_runs"
+directory_files <- "2024_07_10_full_three_runs"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -70,12 +70,13 @@ source("../0_profiler_support.R")
 #   "-SRFQ=" ce-should-rigidly-follow-quarantine)
 
 
-if (directory_files == "2024_07_01_full_exp_single_runs")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("350"),
+if (directory_files == "2024_07_10_full_three_runs")
+{ report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown"),
+                                                    c("350"),
                                                     c("0"),
-                                                    c("6"), c("0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown"))
-}
+                                                    c("6"))
+}# -P= 0.1 Original ASSOCC
 if (directory_files == "2024_03_21_n_agents")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("350", "700", "1400", "2100", "2800", "3500"),  
@@ -84,7 +85,7 @@ if (directory_files == "2024_03_21_n_agents")
 }
 
 # Households, Random seed, Action space, Preset
-# report-[-H= 350 -R= 0 -A= 6 -P= 0.1 Original ASSOCC X]
+# report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
@@ -521,6 +522,10 @@ df_p_mean_summarized$incl_t_ms_sd <- round(df_p_mean_summarized$incl_t_ms_sd, di
 
 # Step two, output the data to a nice table
 str_table_1 = ""
+
+###############################################
+# ERROR STARTS HERE
+###############################################
 
 for (ce in 0:5) {
   

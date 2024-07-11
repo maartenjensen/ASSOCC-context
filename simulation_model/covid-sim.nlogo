@@ -5964,7 +5964,7 @@ behavior-space-start-profiling
 load-scenario-specific-parameter-settings
 setup</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "-C=" ce-context-depth "-H=" ce-households-for-context-scenario "-R=" #random-seed "-A=" ce-action-space "-P=" ce-context-experiment-presets)</final>
+    <final>behavior-space-export-profiling (list "-P=" ce-context-experiment-presets "-H=" ce-households-for-context-scenario "-A=" ce-action-space "-R=" #random-seed)</final>
     <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
     <metric>stop-before-tick</metric>
     <metric>ce-context-depth</metric>
