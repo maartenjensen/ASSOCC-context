@@ -44,7 +44,7 @@ plot_type <- "none"
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
 # This is just a string with the directory name
-directory_files <- "2024_07_10_full_three_runs"
+directory_files <- "2024_07_11_full_three_runs"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -59,7 +59,7 @@ source("../0_profiler_support.R")
 
 # C = context depth
 # H = households
-# R = random see
+# R = random seed
 # A = action space
 # L = lockdown
 # DCC = disable conflict checking
@@ -70,22 +70,44 @@ source("../0_profiler_support.R")
 #   "-SRFQ=" ce-should-rigidly-follow-quarantine)
 
 
-if (directory_files == "2024_07_10_full_three_runs")
-{ report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown"),
+# report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
+# report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 1]
+# report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 2]
+
+if (directory_files == "2024_07_11_full_three_runs")
+{ #report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0],     report-[-P= 0.2 Original ASSOCC-lockdown -H= 350 -A= 6 -R= 0]
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "1.1 rigid-habits-no-infected"),
                                                     c("350"),
-                                                    c("0"),
-                                                    c("6"))
-}# -P= 0.1 Original ASSOCC
-if (directory_files == "2024_03_21_n_agents")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("350", "700", "1400", "2100", "2800", "3500"),  
-                                                    c("1", "2", "3"),
-                                                    c("6"), c("false"),  c("false"), c("false"))
+                                                    c("6"),
+                                                    c("0", "1", "2"))
 }
+
+#"1.1 rigid-habits-no-infected"
+#"1.2 rigid-habits-infected"
+#"1.3 DCSD-1"
+#"1.4 DCSD-1-leisure-habits"
+#"2.1 DCSD-2"
+#"2.2 DCSD-2-obligation-constraint"
+#"3.1 DCSD-3-rigid-norms"
+#"3.2 DCSD-3-rigid-norms-lockdown"
+#"3.3 DCSD-3"
+#"3.4 DCSD-3-lockdown"
+#"4.1 DCSD-4"
+#"5.1 DCSD-5-optimisation"
+#"5.2 DCSD-5-optimisation-lockdown"
+#"0.1 Original ASSOCC"
+#"0.2 Original ASSOCC-lockdown"
+
+#if (directory_files == "2024_03_21_n_agents")
+#{
+#  filenames_profiler <- retrieve_filenames_profiler(c("350", "700", "1400", "2100", "2800", "3500"),  
+#                                                    c("1", "2", "3"),
+#                                                    c("6"), c("false"),  c("false"), c("false"))
+#}
 
 # Households, Random seed, Action space, Preset
 # report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
+# report-[-P= 0.2 Original ASSOCC-lockdown -H= 350 -A= 6 -R= 0]
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
@@ -166,9 +188,6 @@ for (i in 1:nrow(df_p_mean_summarized)) {
 
 df_p_mean_summarized <- df_p_mean_summarized[order(df_p_mean_summarized$preset, df_p_mean_summarized$function_name), ]
 
-
-
-
 #-----------------------------------------
 #--- Plot the data                     ---
 #-----------------------------------------
@@ -191,16 +210,6 @@ plot_calls <- function(dataframe) {
 if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
 plot_calls(df_p_mean_summarized)
 if (plot_type == "one") { dev.off() }
-
-
-
-
-
-
-
-
-
-
 
 
 #-----------------------------------------

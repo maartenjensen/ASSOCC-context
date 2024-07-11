@@ -1,6 +1,6 @@
 profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
-  df_results = data.frame(households=NA, random_seed=NA, action_space=NA, preset=NA, 
+  df_results = data.frame(preset=NA, households=NA, action_space=NA, random_seed=NA, context = NA,  
                           function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
 
   print("- GO Function")
@@ -22,8 +22,12 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
 
         result_v = profilerStrToVWithoutWhiteSpaces(df_initial[j,1])
         settings_v = profilerSettingStrToV(file_name)
-        df_new_line = c(settings_v[1], settings_v[2], settings_v[3], settings_v[4],
+        df_new_line = c(settings_v[1], settings_v[2], settings_v[3], settings_v[4], profilerGetContextDepth(settings_v[1]),
                          result_v[1], as.double(result_v[2]), result_v[3], result_v[4], result_v[5])
+        
+        if (length(df_new_line) != 10) {
+          print(df_new_line)
+        }
         df_results = rbind(df_results, df_new_line)
       }
       if (str_contains(df_initial[j,1], "Sorted by Inclusive Time")) {
@@ -33,11 +37,12 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   }
   
   # Making the dataframe nice
-  colnames(df_results) <- c("households", "random_seed", "action_space", "preset",
+  colnames(df_results) <- c("preset", "households", "action_space", "random_seed", "context",
                             "function_name", "calls", "incl_t_ms", "excl_t_ms", "excl_calls")
   df_results$households = as.integer(df_results$households)
-  df_results$random_seed = as.integer(df_results$random_seed)
   df_results$action_space = as.integer(df_results$action_space)
+  df_results$random_seed = as.integer(df_results$random_seed)
+  df_results$context = as.integer(df_results$context)
   df_results$calls = as.double(df_results$calls)
   df_results$incl_t_ms = as.double(df_results$incl_t_ms)
   df_results$excl_t_ms = as.double(df_results$excl_t_ms)
@@ -50,7 +55,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
 
 profilerLoadSpecificData <- function(p_df_profiler, p_string) {
   
-  df_profiler_specific = data.frame(context=NA, households=NA, random_seed=NA, action_space=NA, global_lockdown=NA, disable_conflict_check=NA, follow_quarantine=NA,
+  df_profiler_specific = data.frame(preset=NA, households=NA, action_space=NA, random_seed=NA, context = NA,  
                                     function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
   
   # Check if it is a single string
@@ -91,19 +96,19 @@ profilerSummarize <- function(df_profiler, df_profiler_overview) {
   # It depends on what I want to know, what is going to be in this function.
 }
 
-retrieve_filenames_profiler <- function(p_households = c("350"), p_random_seed = c("1"), p_action_space = c("6"), p_preset = c("0.1 Original ASSOCC")) {
+retrieve_filenames_profiler <- function(p_preset = c("0.1 Original ASSOCC"), p_households = c("350"), p_action_space = c("6"), p_random_seed = c("0")) {
   
   p_filenames_profiler <- c()
-  for (households in p_households)
+  for (preset in p_preset)
   {
-    for (random_seed in p_random_seed)
+    for (households in p_households)
     {
       for (action_space in p_action_space)
       {
-        for (preset in p_preset)
+        for (random_seed in p_random_seed)
         {
-           p_filenames_profiler <- c(p_filenames_profiler, paste("report-[-H= ", households, " -R= ", random_seed,
-                                                                    " -A= ", action_space, " -P= ", p_preset, "].csv", sep=""))
+           p_filenames_profiler <- c(p_filenames_profiler, paste("report-[-P= ", preset, " -H= ", households, 
+                                                                    " -A= ", action_space, " -R= ", random_seed, "].csv", sep=""))
         }
       }
     }
@@ -144,12 +149,31 @@ profilerSettingStrToV <- function(p_str) {
   t_index = 1
   # Split the whole line into separate characters
   str_split <- strsplit(p_str, "")[[1]] 
-  # Check H= 175, 350, 1000, etc.
+  
+  # Check P= Preset
   while (length(t_settings_vector) == 0) {
+    if (str_split[t_index] == "P") {
+      t_index = t_index + 3
+      t_preset = str_split[t_index]
+      while (length(t_settings_vector) == 0) {
+        t_index = t_index + 1 # before, since the first character is already added when t_preset is initialized
+        if (str_split[t_index+1] != "-" || str_split[t_index+2] != "H") {
+          t_preset = paste(t_preset, str_split[t_index], sep="")
+        }
+        else if (str_split[t_index] == " " && str_split[t_index+1] == "-" && str_split[t_index+2] == "H") {
+          t_settings_vector <- c(t_settings_vector, t_preset)
+        }
+      }
+    }
+    t_index = t_index + 1
+  }
+  
+  # Check H= 175, 350, 1000, etc.
+  while (length(t_settings_vector) == 1) {
     if (str_split[t_index] == "H") {
       t_index = t_index + 3
       t_households = str_split[t_index]
-      while (length(t_settings_vector) == 0) {
+      while (length(t_settings_vector) == 1) {
         t_index = t_index + 1 # before, since the first number is already added when t_households is initialized
         if (str_split[t_index] != " ") {
           t_households = paste(t_households, str_split[t_index], sep="")
@@ -161,23 +185,7 @@ profilerSettingStrToV <- function(p_str) {
     }
     t_index = t_index + 1
   }
-  # Check R= 1 or 2 or something
-  while (length(t_settings_vector) == 1) {
-    if (str_split[t_index] == "R") {
-      t_index = t_index + 3
-      t_random_seed = str_split[t_index]
-      while (length(t_settings_vector) == 1) {
-        t_index = t_index + 1 # before, since the first number is already added when t_random_seed is initialized
-        if (str_split[t_index] != " ") {
-          t_random_seed = paste(t_random_seed, str_split[t_index], sep="")
-        }
-        else if (str_split[t_index] == " ") {
-          t_settings_vector <- c(t_settings_vector, t_random_seed)
-        }
-      }
-    }
-    t_index = t_index + 1
-  }
+  
   # Check A= Action space
   while (length(t_settings_vector) == 2) {
     if (str_split[t_index] == "A") {
@@ -186,18 +194,19 @@ profilerSettingStrToV <- function(p_str) {
     }
     t_index = t_index + 1
   }
-  # Check P= Preset
+  
+  # Check R= 1 or 2 or something
   while (length(t_settings_vector) == 3) {
-    if (str_split[t_index] == "P") {
+    if (str_split[t_index] == "R") {
       t_index = t_index + 3
-      t_preset = str_split[t_index]
+      t_random_seed = str_split[t_index]
       while (length(t_settings_vector) == 3) {
-        t_index = t_index + 1 # before, since the first character is already added when t_preset is initialized
+        t_index = t_index + 1 # before, since the first number is already added when t_random_seed is initialized
         if (str_split[t_index] != "]") {
-          t_preset = paste(t_preset, str_split[t_index], sep="")
+          t_random_seed = paste(t_random_seed, str_split[t_index], sep="")
         }
         else if (str_split[t_index] == "]") {
-          t_settings_vector <- c(t_settings_vector, t_preset)
+          t_settings_vector <- c(t_settings_vector, t_random_seed)
         }
       }
     }
@@ -206,4 +215,52 @@ profilerSettingStrToV <- function(p_str) {
   
   return(t_settings_vector)
 }
-# Solution for tomorrow, a for loop through the characters and find C, then 3 steps further, then find H, then further until space, do the same for R and A, etc.
+
+profilerGetContextDepth <- function(p_preset) {
+  
+  if (p_preset == "1.1 rigid-habits-no-infected") {
+    return(1)
+  }
+  else if (p_preset == "1.2 rigid-habits-infected") {
+    return(1)
+  }
+  else if (p_preset == "1.3 DCSD-1") {
+    return(1)
+  }
+  else if (p_preset == "1.4 DCSD-1-leisure-habits") {
+    return(1)
+  }
+  else if (p_preset == "2.1 DCSD-2") {
+    return(2)
+  }
+  else if (p_preset == "2.2 DCSD-2-obligation-constraint") {
+    return(2)
+  }
+  else if (p_preset == "3.1 DCSD-3-rigid-norms") {
+    return(3)
+  }
+  else if (p_preset == "3.2 DCSD-3-rigid-norms-lockdown") {
+    return(3)
+  }
+  else if (p_preset == "3.3 DCSD-3") {
+    return(3)
+  }
+  else if (p_preset == "3.4 DCSD-3-lockdown") {
+    return(3)
+  }
+  else if (p_preset == "4.1 DCSD-4") {
+    return(4)
+  }
+  else if (p_preset == "5.1 DCSD-5-optimisation") {
+    return(5)
+  }
+  else if (p_preset == "5.2 DCSD-5-optimisation-lockdown") {
+    return(5)
+  }
+  else if (p_preset == "0.1 Original ASSOCC") {
+    return(0)
+  }
+  else if (p_preset == "0.2 Original ASSOCC-lockdown") {
+    return(0)
+  }
+}
