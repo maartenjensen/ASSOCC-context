@@ -197,7 +197,7 @@ INPUTBOX
 915
 899
 #schools-gp
-12.0
+23.0
 1
 0
 Number
@@ -208,7 +208,7 @@ INPUTBOX
 1006
 899
 #universities-gp
-4.0
+7.0
 1
 0
 Number
@@ -219,7 +219,7 @@ INPUTBOX
 1098
 899
 #workplaces-gp
-23.0
+47.0
 1
 0
 Number
@@ -240,7 +240,7 @@ INPUTBOX
 1211
 899
 #public-leisure-gp
-18.0
+35.0
 1
 0
 Number
@@ -251,7 +251,7 @@ INPUTBOX
 1331
 899
 #private-leisure-gp
-50.0
+100.0
 1
 0
 Number
@@ -427,7 +427,7 @@ INPUTBOX
 1448
 899
 #essential-shops-gp
-9.0
+18.0
 1
 0
 Number
@@ -468,7 +468,7 @@ INPUTBOX
 1575
 899
 #non-essential-shops-gp
-9.0
+18.0
 1
 0
 Number
@@ -479,7 +479,7 @@ INPUTBOX
 829
 899
 #hospital-gp
-4.0
+7.0
 1
 0
 Number
@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-3.0
+4.0
 1
 1
 NIL
@@ -2003,7 +2003,7 @@ INPUTBOX
 636
 679
 #households
-350.0
+700.0
 1
 0
 Number
@@ -2025,7 +2025,7 @@ INPUTBOX
 2443
 102
 #beds-in-hospital
-11.0
+23.0
 1
 0
 Number
@@ -2394,7 +2394,7 @@ INPUTBOX
 3471
 748
 #bus-per-timeslot
-27.0
+54.0
 1
 0
 Number
@@ -4308,7 +4308,7 @@ INPUTBOX
 1380
 285
 ce-households-for-context-scenario
-350.0
+700.0
 1
 0
 Number
@@ -4349,7 +4349,7 @@ INPUTBOX
 1187
 134
 ce-log-agent-id
-596.0
+1556.0
 1
 0
 Number
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-1
+6
 
 SWITCH
 1226
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-1
+0
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-1
+0
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-1
+0
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-14
+12
 
 INPUTBOX
 322
@@ -5962,7 +5962,8 @@ setup</setup>
     <setup>setup
 behavior-space-start-profiling
 load-scenario-specific-parameter-settings
-setup</setup>
+setup
+if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setup>
     <go>go</go>
     <final>behavior-space-export-profiling (list "-P=" ce-context-experiment-presets "xH=" ce-households-for-context-scenario "-A=" ce-action-space "-R=" #random-seed)</final>
     <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
@@ -6141,29 +6142,20 @@ setup</setup>
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
-      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
-      <value value="&quot;1.3 DCSD-1&quot;"/>
-      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
-      <value value="&quot;2.1 DCSD-2&quot;"/>
-      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
-      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
-      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
-      <value value="&quot;3.3 DCSD-3&quot;"/>
-      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
-      <value value="&quot;4.1 DCSD-4&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
-      <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
       <value value="&quot;0.1 Original ASSOCC&quot;"/>
-      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
-      <value value="0"/>
       <value value="1"/>
       <value value="2"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
+      <value value="700"/>
+      <value value="1400"/>
+      <value value="2100"/>
+      <value value="2800"/>
+      <value value="3500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>
