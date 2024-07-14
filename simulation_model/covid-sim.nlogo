@@ -5965,7 +5965,7 @@ load-scenario-specific-parameter-settings
 setup
 if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setup>
     <go>go</go>
-    <final>behavior-space-export-profiling (list "-P=" ce-context-experiment-presets "xH=" ce-households-for-context-scenario "-A=" ce-action-space "-R=" #random-seed)</final>
+    <final>behavior-space-export-profiling (list "-P=" ce-context-experiment-presets "-H=" ce-households-for-context-scenario "-A=" ce-action-space "-R=" #random-seed)</final>
     <exitCondition>ticks &gt;= stop-before-tick - 1</exitCondition>
     <metric>stop-before-tick</metric>
     <metric>ce-context-depth</metric>
