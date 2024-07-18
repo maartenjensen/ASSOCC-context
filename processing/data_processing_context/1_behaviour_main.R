@@ -6,6 +6,7 @@ if (!exists("libraries_loaded") || libraries_loaded == FALSE || getwd() == "C:/U
 
 # Directory files
 directory_files <- "2024_07_01_full_exp_single_runs"
+#directory_files <- "2024_07_15_full_single_runs"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -27,7 +28,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "one" # One plot per pdf
-#plot_type <- "all" # All plots in one pdf
+plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
 plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
