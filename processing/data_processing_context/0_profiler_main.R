@@ -6,6 +6,7 @@
 #install.packages()
 #install.packages("viridis")
 
+#% Make the libraries the same as in 1_behaviour_main
 # Open the libraries
 if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documenten")
 {

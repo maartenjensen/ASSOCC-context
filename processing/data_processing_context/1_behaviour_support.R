@@ -166,3 +166,24 @@ behaviourAddNormalizedColumns <- function(df_to_normalize) {
   
   return(df_to_normalize)
 }
+
+behaviourProcessFilename <- function(p_str) {
+  
+  # This function will replace . and ' ' blank space with _ 
+  p_str <- str_replace_all(p_str, "-", "_")
+  p_str <- str_replace_all(p_str, " ", "_")
+  p_str <- str_replace_all(p_str, "\\.", "_")
+  return(p_str)
+}
+
+behaviourEnablePdf <- function(p_str, p_width = 9, p_height = 5) {
+  
+  # Contains .pdf in string
+  if (p_str %in% c(".pdf", ".PDF")) {
+    print(paste("ERROR in printing:", p_str))
+  }
+  
+  p_str <- behaviourProcessFilename(p_str)
+  # This function will enable pdf output
+  pdf(paste(p_str, ".pdf", sep=""), width=p_width, height=p_height)
+}

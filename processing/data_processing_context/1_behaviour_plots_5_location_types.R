@@ -28,11 +28,11 @@ behaviourPlot5LocationTypes <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_location_types.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_location_types", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_location_types_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_location_types_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   

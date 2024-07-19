@@ -49,11 +49,11 @@ behaviourPlot6Activities <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_rollmean.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_rollmean", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_rollmean_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_rollmean_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -102,11 +102,11 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth(se = TRUE, span = .7) + labs(title=paste("Activities (", experiment_preset,") - Simplified Smooth", sep=""))  
   p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))  
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -132,7 +132,7 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth(se = TRUE, span = .75)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_day.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_day", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }
@@ -160,11 +160,11 @@ behaviourPlot6ActivitiesSimplified4Leisure <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth(se = TRUE, span = .7) + labs(title=paste("Activities (", experiment_preset,") - Simplified Smooth", sep="")) + gghighlight::gghighlight(`Activity` == "leisure")
   p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))  + gghighlight::gghighlight(`Activity` == "leisure")
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_leisure_highlight", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_leisure_highlight_smooth", sep="")) }
   show(p_smooth) 
   if (plot_type == "one") { dev.off() }
 }
@@ -206,11 +206,11 @@ behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth(se = TRUE, span = .7)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -236,11 +236,11 @@ behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth(se = TRUE, span = .75)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_day.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_day", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_day_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_day_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -265,7 +265,7 @@ behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
     p <- p + xlab("Time (Weeks)") + ylab("Agents performing activity") + labs(col="")
     p <- p + geom_line()
     
-    if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_week.pdf", sep=""), width=9, height=5) }
+    if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_week", sep="")) }
     show(p)
     if (plot_type == "one") { dev.off() }
   }
@@ -314,11 +314,11 @@ behaviourPlot6ActivitiesWorkStudyHome <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_work_study", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_work_study_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -358,11 +358,11 @@ behaviourPlot6ActivitiesWorkStudy <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_work_study", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_work_study_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -388,7 +388,7 @@ behaviourPlot6ActivitiesWorkStudy <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_work_study_day.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_work_study_day", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -441,11 +441,11 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHome <- function(plot_specific_f_n
   p_smooth <- p + geom_smooth(se = TRUE, span = .7) + labs(title=paste("Activities (", experiment_preset,") - Simplified Smooth", sep=""))  
   p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))  
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4_rest_and_work_home.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_rest_and_work_home", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_4_rest_and_work_home_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_rest_and_work_home_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -471,7 +471,7 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHome <- function(plot_specific_f_n
   p_smooth <- p + geom_smooth(se = TRUE, span = .75)
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_activities_day_rest_and_work_home.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_day_rest_and_work_home", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }

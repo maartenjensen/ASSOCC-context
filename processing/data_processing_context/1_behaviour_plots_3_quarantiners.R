@@ -18,7 +18,7 @@ behaviourPlot3Quarantiners <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_quarantining", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -45,7 +45,7 @@ behaviourPlot3QuarantinersAgeGroup <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n children", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining_children.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_quarantining_children", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -61,7 +61,7 @@ behaviourPlot3QuarantinersAgeGroup <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n students", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining_students.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_quarantining_students", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -77,7 +77,7 @@ behaviourPlot3QuarantinersAgeGroup <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n workers", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining_workers.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_quarantining_workers", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
@@ -93,7 +93,7 @@ behaviourPlot3QuarantinersAgeGroup <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n retireds", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Quarantining (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_quarantining_retireds.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_quarantining_retireds", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   

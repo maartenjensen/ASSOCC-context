@@ -28,11 +28,11 @@ behaviourPlot4Needs <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth()
   p <- p + geom_line()
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_needs_overall", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_overall_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_needs_overall_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -59,11 +59,11 @@ behaviourPlot4NeedsLeisureAndShopping <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth()
   p <- p + geom_line() 
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_needs_leisure_shopping", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping_smooth.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_needs_leisure_shopping_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -89,7 +89,7 @@ behaviourPlot4NeedsLeisureAndShoppingIndividual <- function(plot_specific_f_name
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1)) + labs(title=paste("Need Levels (", experiment_preset,") - Agents 596", sep=""))
   p <- p + geom_hline(yintercept=0.5, linetype="dashed", color = "red") + geom_line() 
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_needs_leisure_shopping_individual.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_needs_leisure_shopping_individual", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   

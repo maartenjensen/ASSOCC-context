@@ -20,17 +20,17 @@ behaviourPlot1DeliberationType <- function(plot_specific_f_name) {
   p <- p + xlab("Ticks") + ylab("% used by agents")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_overall", sep="")) }
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_at_beginning.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_at_beginning", sep="")) }
   p <- p + coord_cartesian(xlim = c(0, 53), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Beginning", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_at_peak_infections.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_at_peak_infections", sep="")) }
   p <- p + coord_cartesian(xlim = c(84, 138), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - At Peak Infections", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -58,7 +58,7 @@ behaviourPlot1DeliberationTypeConformity <- function(plot_specific_f_name) {
   p <- p + xlab("Ticks") + ylab("% used by agents")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
   
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_overall.pdf", sep=""), width=9, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_overall", sep="")) }
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }
@@ -95,7 +95,7 @@ behaviourPlot1DeliberationTypeBar <- function(plot_specific_f_name) {
                'Conformity deliberation perc'='Conformity deliberation','Full need perc'='Full need'),
       values=c('#33ddff', '#48bf3f', '#8c8c8c', '#E69F00', '#9911ab', '#000000'),
       breaks=c('Minimal context perc','Most salient need perc','Compare need levels perc','Normative deliberation perc','Conformity deliberation perc','Full need perc'))
-  if (plot_type == "one") { pdf(paste(plot_base_name, "_deliberation_type_bar_plot.pdf", sep=""), width=6, height=5) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_bar_plot", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   

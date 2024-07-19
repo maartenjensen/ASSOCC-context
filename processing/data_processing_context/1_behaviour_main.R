@@ -7,6 +7,7 @@ if (!exists("libraries_loaded") || libraries_loaded == FALSE || getwd() == "C:/U
 # Directory files
 directory_files <- "2024_07_01_full_exp_single_runs"
 #directory_files <- "2024_07_15_full_single_runs"
+directory_files <- "2024_07_18_realism"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -28,7 +29,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "one" # One plot per pdf
-plot_type <- "all" # All plots in one pdf
+#plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
 plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
@@ -43,23 +44,26 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
-plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome", 
+plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot5LocationTypes", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
+
+plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", 
                                                         "behaviourPlot2InfectionsBelieveInfected")
 plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", 
                                                         "behaviourPlot2InfectionsBelieveInfected")
 plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesSimplified4Leisure",
-                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping")
+                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
+plot_specifics_h <- hash()
 plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
-                                                        "behaviourPlot1DeliberationType", "behaviourPlot1DeliberationTypeBar",
-                                                        "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
+                                                        "behaviourPlot6ActivitiesSimplified4Leisure",
+                                                        "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup") # For comparison in CH2
 
 plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
 plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected", "behaviourPlot3QuarantinersAgeGroup",
                                                         "behaviourPlot6ActivitiesWorkStudy", "behaviourPlot3QuarantinersAgeGroup")
-# I need time to think about this, something like:
 
+if (TRUE == FALSE) {
 plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot3Quarantiners")
 plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
@@ -72,7 +76,7 @@ plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot6Activi
 plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot3Quarantiners", "behaviourPlot1DeliberationType", "behaviourPlot1DeliberationType",
                                                         "behaviourPlot1DeliberationTypeConformity")
-plot_specifics_h <- hash()
+
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", 
                                                         "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot6ActivitiesWorkStudyHome")
@@ -83,7 +87,7 @@ plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot6Activi
                                                            "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome")
 plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
                                                            "behaviourPlot3Quarantiners", "behaviourPlot3QuarantinersAgeGroup", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome")
-
+}
 # [1] 1.1 rigid-habits-no-infected     1.2 rigid-habits-infected        1.3 DCSD-1                       1.4 DCSD-1-leisure-habits        2.1 DCSD-2                      
 # [6] 2.2 DCSD-2-obligation-constraint 3.1 DCSD-3-rigid-norms           3.2 DCSD-3-rigid-norms-lockdown  3.3 DCSD-3                       3.4 DCSD-3-lockdown             
 #[11] 4.1 DCSD-4                       5.1 DCSD-5-optimisation          5.2 DCSD-5-optimisation-lockdown 0.1 Original ASSOCC              0.2 Original ASSOCC-lockdown  
@@ -137,7 +141,6 @@ if (!is.null(specific_experiment_presets))
 for (experiment_preset in experiment_presets)
 {
   # Start the plot creating loop
-  print(paste("== Plotting for ", experiment_preset, " ==", sep=""))
 
   subset_df <- df_final_filtered[df_final_filtered$ce_context_experiment_presets == experiment_preset, ]
   
@@ -166,13 +169,14 @@ for (experiment_preset in experiment_presets)
   if (plot_specifics_only) {
     
     if (!is.null(plot_specifics_h[[experiment_preset]])) {
+      print(paste("== Plotting for ", experiment_preset, " ==", sep=""))
       for (plot_specific_f_name in plot_specifics_h[[experiment_preset]]) {
         get(plot_specific_f_name)(plot_specific_f_name)
       }
     }
   }
   else {
-    
+    print(paste("== Plotting for ", experiment_preset, " ==", sep=""))
     for (plot_f_name in plot_full_functions) {
       get(plot_f_name)(plot_f_name)
     }
