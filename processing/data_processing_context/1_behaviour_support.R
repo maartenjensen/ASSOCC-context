@@ -77,6 +77,7 @@ behaviourRenameDataframe <- function(df_to_rename) {
   colnames(df_renamed)[match("count_people_with_infection_status_immune", colnames(df_renamed))] = "immune";
   colnames(df_renamed)[match("count_people_with_is_believing_to_be_immune", colnames(df_renamed))] = "believe_immune";
   colnames(df_renamed)[match("count_people_with_infection_status_healthy_or_infection_status_immune", colnames(df_renamed))] = "healthy";
+  colnames(df_renamed)[match("count_people_with_is_i_apply_social_distancing", colnames(df_renamed))] = "social_distancing";
   
   # Rename colnames for the needs
   colnames(df_renamed)[match("mean_belonging_satisfaction_level_of_people", colnames(df_renamed))] = "belonging";
