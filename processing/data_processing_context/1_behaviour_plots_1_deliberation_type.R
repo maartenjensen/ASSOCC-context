@@ -58,7 +58,7 @@ behaviourPlot1DeliberationTypeConformity <- function(plot_specific_f_name) {
   p <- p + xlab("Ticks") + ylab("% used by agents")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=2, byrow=TRUE))
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_overall", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_deliberation_type_conformity", sep="")) }
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Deliberation Type per Agent (", experiment_preset,") - Overall", sep=""))
   show(p)
   if (plot_type == "one") { dev.off() }

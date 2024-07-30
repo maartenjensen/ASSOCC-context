@@ -49,11 +49,11 @@ behaviourPlot6Activities <- function(plot_specific_f_name) {
   p_smooth <- p + geom_smooth() # se = True (confidence interval), span = .2 span = 0.75 (default = 0.75), method = 'lm' (for a linear line)
   p <- p + geom_line()
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_rollmean", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_rollmean_smooth", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
@@ -79,6 +79,7 @@ behaviourPrepareActivitiesSimplified4 <- function() {
   return(df_activities)
 }
 
+# Perhaps this function could be split into specifically creating the smoothing and the day average (FUTURE WORK)
 behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   
   cat("-- Plot", plot_specific_f_name, "...\n")
@@ -448,6 +449,42 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHome <- function(plot_specific_f_n
   if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_rest_and_work_home_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
+  
+  #=========================
+  # Activities Day
+  df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  # mean for each day
+  df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
+  # remove column tick
+  df_activities_day <- select(df_activities_day, -tick)
+  
+  df_activities_day_gathered <- gather(df_activities_day, `Activity`, measurement, work_rest_at_home:leisure)
+  
+  p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('work_rest_at_home'='Rest or Work at Home', 'obligation_out'='Work or Study out', 'shopping'='Shopping', 'leisure'='Leisure'),
+    values=c('#197221','#33ddff','#881556','#f16a15'),
+    breaks=c('work_rest_at_home', 'obligation_out', 'shopping', 'leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 100)) + labs(title=paste("Activities (", experiment_preset,") - Simplified Day", sep=""))  
+  p <- p + xlab("Time (Days)") + ylab("% Activities Chosen") + labs(col="")
+  p_smooth <- p + geom_smooth(se = TRUE, span = .75)
+  p <- p + geom_line()
+  
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_day_rest_and_work_home", sep="")) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+}
+
+
+behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #----------------------------------------------------------------------------------------
+  #=================== Agent Activities Simplified 4 Work and Rest at home ================
+  df_activities <- behaviourPrepareActivitiesSimplified4RestAndWorkHome()
   
   #=========================
   # Activities Day

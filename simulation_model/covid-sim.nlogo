@@ -5981,6 +5981,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count people with [infection-status = "immune"]</metric>
     <metric>count people with [is-believing-to-be-immune?]</metric>
     <metric>count people with [infection-status = "healthy" or infection-status = "immune"]</metric>
+    <metric>count people with [is-i-apply-social-distancing?]</metric>
     <metric>#admissions-last-tick</metric>
     <metric>#taken-hospital-beds</metric>
     <metric>#denied-requests-for-hospital-beds</metric>
