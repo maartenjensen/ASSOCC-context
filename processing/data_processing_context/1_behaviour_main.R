@@ -94,6 +94,15 @@ plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot6Activi
 plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
                                                            "behaviourPlot3Quarantiners", "behaviourPlot3QuarantinersAgeGroup", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
                                                            "behaviourPlot7SocialDistancing")
+plot_specifics_h <- hash()
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot7SocialDistancing")
+plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected","behaviourPlot7SocialDistancing")
+
+plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+                                                           "behaviourPlot7SocialDistancing")
+plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+                                                           "behaviourPlot7SocialDistancing")
 if (TRUE == FALSE) { print("Test") }
 # [1] 1.1 rigid-habits-no-infected     1.2 rigid-habits-infected        1.3 DCSD-1                       1.4 DCSD-1-leisure-habits        2.1 DCSD-2                      
 # [6] 2.2 DCSD-2-obligation-constraint 3.1 DCSD-3-rigid-norms           3.2 DCSD-3-rigid-norms-lockdown  3.3 DCSD-3                       3.4 DCSD-3-lockdown             
@@ -127,7 +136,7 @@ df_final <- behaviourAddNormalizedColumns(df_renamed)
 
 # Filter on one random seed, since this is a single run
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
-df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.50, ]  # 0.75 0.70 0.65 0.60 0.55 0.50
+df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.85, ]  # 0.75 0.76 0.77 0.78 0.79 0.80 0.85 0.90
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================
