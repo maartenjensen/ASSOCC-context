@@ -10,6 +10,7 @@ directory_files <- "2024_07_01_full_exp_single_runs"
 directory_files <- "2024_07_18_realism"
 directory_files <- "2024_07_11_full_three_runs"
 directory_files <- "2024_07_30_comparison"
+directory_files <- "2024_07_31_comparison"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -44,7 +45,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 2
+random_seed = 0
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -126,6 +127,7 @@ df_final <- behaviourAddNormalizedColumns(df_renamed)
 
 # Filter on one random seed, since this is a single run
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
+df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.50, ]  # 0.75 0.70 0.65 0.60 0.55 0.50
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================

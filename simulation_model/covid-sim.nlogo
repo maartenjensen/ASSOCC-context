@@ -4774,7 +4774,7 @@ INPUTBOX
 1619
 409
 ce-risk-avoidance-threshold-for-sd
-0.75
+0.8
 1
 0
 Number
@@ -6175,7 +6175,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
       <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-risk-avoidance-threshold-for-sd">
-      <value value="0.75"/>
+      <value value="0.8"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-private-leisure-by-risk">
       <value value="true"/>
