@@ -44,7 +44,7 @@ end
   
 to load-scenario-specifics-context-experiment-preset
   if ce-context-experiment-presets = "no-presets"
-  [ error "ERROR: ce-context-experiment-presets should not be 0.0 no-presets" ]
+  [ error "ERROR: ce-context-experiment-presets should not be no-presets" ]
   
   ; Basic settings for basic model: Original ASSOCC
   set with-infected? false
@@ -64,9 +64,13 @@ to load-scenario-specifics-context-experiment-preset
   set stop-before-tick 241
   
   ; For all the context experiments except original ASSOCC
-  ifelse ce-context-experiment-presets = "0.1 Original ASSOCC" or ce-context-experiment-presets = "0.2 Original ASSOCC-lockdown"
-  [ set with-infected? true
+  ifelse ce-context-experiment-presets = "0.0 Original ASSOCC-no-infections" or ce-context-experiment-presets = "0.1 Original ASSOCC" or ce-context-experiment-presets = "0.2 Original ASSOCC-lockdown"
+  [ 
+    ; With infected not with 0.0, only with 0.1 and 0.2
+    if ce-context-experiment-presets != "0.0 Original ASSOCC-no-infections"
+    [ set with-infected? true ]
     
+    ; Only with lockdown in 0.2
     if ce-context-experiment-presets = "0.2 Original ASSOCC-lockdown"
     [ set ce-enable-global-lockdown true ]
     
@@ -191,6 +195,18 @@ to load-scenario-specifics-context-experiment-preset
     
     ; From previous section
     set with-infected? true
+    set ce-leisure-habits true
+    set ce-only-obligation-when-health-riskfree-enough true
+    stop
+  ]
+  
+  if ce-context-experiment-presets = "5.0 DCSD-5-optimisation-no-infections"
+  [
+    set ce-context-depth 5
+    set ce-enable-salient-food-luxury-forced-obligation true
+
+    ; From previous section
+    set with-infected? false
     set ce-leisure-habits true
     set ce-only-obligation-when-health-riskfree-enough true
     stop

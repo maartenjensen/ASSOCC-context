@@ -197,7 +197,7 @@ INPUTBOX
 915
 899
 #schools-gp
-23.0
+12.0
 1
 0
 Number
@@ -208,7 +208,7 @@ INPUTBOX
 1006
 899
 #universities-gp
-7.0
+4.0
 1
 0
 Number
@@ -219,7 +219,7 @@ INPUTBOX
 1098
 899
 #workplaces-gp
-47.0
+23.0
 1
 0
 Number
@@ -240,7 +240,7 @@ INPUTBOX
 1211
 899
 #public-leisure-gp
-35.0
+18.0
 1
 0
 Number
@@ -251,7 +251,7 @@ INPUTBOX
 1331
 899
 #private-leisure-gp
-100.0
+50.0
 1
 0
 Number
@@ -427,7 +427,7 @@ INPUTBOX
 1448
 899
 #essential-shops-gp
-18.0
+9.0
 1
 0
 Number
@@ -468,7 +468,7 @@ INPUTBOX
 1575
 899
 #non-essential-shops-gp
-18.0
+9.0
 1
 0
 Number
@@ -479,7 +479,7 @@ INPUTBOX
 829
 899
 #hospital-gp
-7.0
+4.0
 1
 0
 Number
@@ -1061,7 +1061,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-0
+1
 1
 -1000
 
@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -2003,7 +2003,7 @@ INPUTBOX
 636
 679
 #households
-700.0
+350.0
 1
 0
 Number
@@ -2025,7 +2025,7 @@ INPUTBOX
 2443
 102
 #beds-in-hospital
-23.0
+11.0
 1
 0
 Number
@@ -2394,7 +2394,7 @@ INPUTBOX
 3471
 748
 #bus-per-timeslot
-54.0
+27.0
 1
 0
 Number
@@ -4308,7 +4308,7 @@ INPUTBOX
 1380
 285
 ce-households-for-context-scenario
-700.0
+350.0
 1
 0
 Number
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,13 +4584,13 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
-1226
-402
-1412
-435
+1225
+410
+1411
+443
 ce-disable-conflict-checking
 ce-disable-conflict-checking
 1
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4939,8 +4939,8 @@ CHOOSER
 233
 ce-context-experiment-presets
 ce-context-experiment-presets
-"no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-12
+"no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
+15
 
 INPUTBOX
 322
@@ -4948,7 +4948,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-240.0
+241.0
 1
 0
 Number
@@ -6143,6 +6143,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
+      <value value="&quot;0.0 Original ASSOCC-no-infections&quot;"/>
       <value value="&quot;0.1 Original ASSOCC&quot;"/>
       <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
       <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
@@ -6156,6 +6157,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
       <value value="&quot;3.3 DCSD-3&quot;"/>
       <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
       <value value="&quot;4.1 DCSD-4&quot;"/>
+      <value value="&quot;5.0 DCSD-5-optimisation-no-infections&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
       <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
     </enumeratedValueSet>

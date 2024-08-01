@@ -1,0 +1,28 @@
+0.75
+plot_2024_07_31_comparison_behaviour_0.1 Original ASSOCC :  827.008333333333"
+plot_2024_07_31_comparison_behaviour_0.2 Original ASSOCC-lockdown :  776.339583333333"
+plot_2024_07_31_comparison_behaviour_5.1 DCSD-5-optimisation :  608.5375"
+plot_2024_07_31_comparison_behaviour_5.2 DCSD-5-optimisation-lockdown :  595.758333333333"
+
+0.76
+plot_2024_07_31_comparison_behaviour_0.1 Original ASSOCC :  827.008333333333"
+plot_2024_07_31_comparison_behaviour_0.2 Original ASSOCC-lockdown :  776.339583333333"
+plot_2024_07_31_comparison_behaviour_5.1 DCSD-5-optimisation :  627.891666666667"
+plot_2024_07_31_comparison_behaviour_5.2 DCSD-5-optimisation-lockdown :  625.945833333333"
+
+0.77
+
+
+0.78
+
+0.80
+plot_2024_07_31_comparison_behaviour_0.1 Original ASSOCC :  827.008333333333"
+plot_2024_07_31_comparison_behaviour_0.2 Original ASSOCC-lockdown :  776.339583333333"
+plot_2024_07_31_comparison_behaviour_5.1 DCSD-5-optimisation :  704.758333333333"
+plot_2024_07_31_comparison_behaviour_5.2 DCSD-5-optimisation-lockdown :  732.339583333333"
+
+0.85
+
+
+
+plot_2024_07_31_comparison_behaviour_5.2 DCSD-5-optimisation-lockdown :  850.129166666667"
