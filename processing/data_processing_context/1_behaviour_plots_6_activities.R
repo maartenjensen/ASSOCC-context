@@ -112,8 +112,8 @@ behaviourPlot6ActivitiesSimplified4 <- function(plot_specific_f_name) {
   if (plot_type == "one") { dev.off() }
   
   #=========================
-  # Activities Day
-  df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  # Activities Day: +3 is added because the first day is not taken into account, the original formula was: (tick - (tick %% 4)) / 4
+  df_activities_day <- df_activities %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
   # mean for each day
   df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
   # remove column tick
@@ -170,6 +170,7 @@ behaviourPlot6ActivitiesSimplified4Leisure <- function(plot_specific_f_name) {
   if (plot_type == "one") { dev.off() }
 }
 
+# This code is used for the final comparison where we need to distinguish between luxury shopping and grocery shopping to explain the differences.
 behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   
   cat("-- Plot", plot_specific_f_name, "...\n")
@@ -184,92 +185,78 @@ behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   df_activities$rest_at_home_perc[1] <- 100 # Everyone is at home, but since the motivation is not taken into account, all cells in the first row indicate 0
   
   #----- Prepare the data frame ------
-  df_activities_mean <- df_activities %>% mutate(rest_at_home = rest_at_home_perc)
-  df_activities_mean <- df_activities_mean %>% mutate(obligation = study_at_school_perc + study_at_university_perc + work_at_work_perc + work_at_home_perc)
+  df_activities_mean <- df_activities %>% mutate(work_rest_at_home = rest_at_home_perc + work_at_home_perc)
+  df_activities_mean <- df_activities_mean %>% mutate(obligation_out = study_at_school_perc + study_at_university_perc + work_at_work_perc)
   df_activities_mean <- df_activities_mean %>% mutate(shop_grocery = shop_groceries_perc)
   df_activities_mean <- df_activities_mean %>% mutate(shop_luxury = shop_luxury_perc)
   df_activities_mean <- df_activities_mean %>% mutate(leisure = at_private_leisure_perc + at_public_leisure_perc)
   
-  df_activities_mean <- select(df_activities_mean, tick, ce_context_depth, rest_at_home, obligation, shop_grocery, shop_luxury, leisure)
+  #----- Print the data for the activity averages -----
+  print(plot_base_name)
+  print(paste("RH/WH & WW/S & GROC & LUX & LEI \\" , sep=""))
+
+  print(paste(round(mean(df_activities_mean$work_rest_at_home), digits = 2), " & ", round(mean(df_activities_mean$obligation_out), digits = 2), " & ", 
+              round(mean(df_activities_mean$shop_grocery), digits = 2), " & ", round(mean(df_activities_mean$shop_luxury), digits = 2)," & ",
+              round(mean(df_activities_mean$leisure), digits = 2), " \\", sep=""))
+
+  #df_activities_mean <- select(df_activities_mean, tick, ce_context_depth, work_rest_at_home, obligation_out, shop_grocery, shop_luxury, leisure)
+  df_activities_mean <- select(df_activities_mean, tick, ce_context_depth, shop_grocery, shop_luxury, leisure)
   
   #----- Gather data for the plot -----
-  df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, rest_at_home:leisure)
+  #df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, work_rest_at_home:leisure)
+  df_activities_mean_gathered <- gather(df_activities_mean, `Activity`, measurement, shop_grocery:shop_luxury)
+  
+  #labels=c('work_rest_at_home'='Rest or Work at Home', 'obligation_out'='Work or Study out', 'shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury', 'leisure'='Leisure'),
+  #values=c('#197221','#33ddff','#881556','#9d6e48','#f16a15'),
+  #breaks=c('work_rest_at_home', 'obligation_out', 'shop_grocery', 'shop_luxury', 'leisure')) + labs(col="")
   
   p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
-    labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury', 'leisure'='Leisure'),
-    values=c('#197221','#33ddff','#881556','#9d6e48','#f16a15'),
-    breaks=c('rest_at_home', 'obligation', 'shop_grocery', 'shop_luxury', 'leisure')) + labs(col="")
+    labels=c('shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury'),
+    values=c('#881556','#9d6e48'),
+    breaks=c('shop_grocery', 'shop_luxury')) + labs(col="")
   p <- p + theme_bw()
   p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 100)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 15)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
   p <- p + xlab("Time (Ticks)") + ylab("% Activities Chosen") + labs(col="")
   p_smooth <- p + geom_smooth(se = TRUE, span = .7)
   p <- p + geom_line()
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_5", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_smooth", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_5_smooth", sep="")) }
   show(p_smooth)
   if (plot_type == "one") { dev.off() }
   
   #==================== Agent Activities Simplified - SMOOTH THE LINES - DAY =================
   
-  df_activities_day <- df_activities_mean %>% mutate(day = (tick - (tick %% 4)) / 4)
+  df_activities_day <- df_activities_mean %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
+  # Print the averages for comparison
+  
   # mean for each day
   df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
   # remove column tick
   df_activities_day <- select(df_activities_day, -tick)
   
-  df_activities_day_gathered <- gather(df_activities_day, `Activity`, measurement, rest_at_home:leisure)
+  df_activities_day_gathered <- gather(df_activities_day, `Activity`, measurement, shop_grocery:shop_luxury)
   
   p <- ggplot(df_activities_day_gathered, aes(x = day, y = measurement, col=`Activity`))
   p <- p + scale_colour_manual(
-    labels=c('rest_at_home'='Rest at Home', 'obligation'='Work or Study', 'shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury', 'leisure'='Leisure'),
-    values=c('#197221','#33ddff','#881556','#9d6e48','#f16a15'),
-    breaks=c('rest_at_home', 'obligation', 'shop_grocery', 'shop_luxury', 'leisure')) + labs(col="")
+    labels=c('shop_grocery'='Shop grocery', 'shop_luxury'='Shop luxury'),
+    values=c('#881556','#9d6e48'),
+    breaks=c('shop_grocery', 'shop_luxury')) + labs(col="")
   p <- p + theme_bw()
   p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 100)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
+  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/4), ylim = c(0, 15)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
   p <- p + xlab("Time (Days)") + ylab("% Activities Chosen") + labs(col="")
   p_smooth <- p + geom_smooth(se = TRUE, span = .75)
   p <- p + geom_line()
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_day", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_5_day", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
-  
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_day_smooth", sep="")) }
-  show(p_smooth)
-  if (plot_type == "one") { dev.off() }
-  
-  #==================== Agent Activities Simplified - SMOOTH THE LINES - WEEK - USELESS DEPRICATED =================
-  if (TRUE==FALSE) {
-    df_activities_week <- df_activities_mean %>% mutate(week = (tick - (tick %% 28)) / 28)
-    # mean for each week
-    df_activities_week <- df_activities_week %>% group_by(week) %>% summarise_all(mean)
-    # remove column tick
-    df_activities_week <- select(df_activities_week, -tick)
-    
-    df_activities_week_gathered <- gather(df_activities_week, `Activity`, measurement, at_home:leisure)
-    
-    p <- ggplot(df_activities_week_gathered, aes(x = week, y = measurement, col=`Activity`))
-    p <- p + scale_colour_manual(
-      labels=c('at_home'='Rest at Home', 'obligation'='Work or Study', 'shopping'='Shopping', 'leisure'='Leisure'),
-      values=c('#197221','#33ddff','#881556','#f16a15'),
-      breaks=c('at_home', 'obligation', 'shopping', 'leisure')) + labs(col="")
-    p <- p + theme_bw()
-    p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-    p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max/28), ylim = c(0, 1020)) + labs(title=paste("Activities (", experiment_preset,") - Overall", sep=""))  
-    p <- p + xlab("Time (Weeks)") + ylab("Agents performing activity") + labs(col="")
-    p <- p + geom_line()
-    
-    if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_week", sep="")) }
-    show(p)
-    if (plot_type == "one") { dev.off() }
-  }
   
   print("-- ... finished!")
 }
@@ -291,7 +278,7 @@ behaviourPlot6ActivitiesWorkStudyHome <- function(plot_specific_f_name) {
   df_activities$rest_at_home[1] <- df_activities$people_alive[1]
   
   
-  df_activities <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  df_activities <- df_activities %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
   # mean for each day
   df_activities <- df_activities %>% group_by(day) %>% summarise_all(mean)
   # remove column tick
@@ -368,7 +355,7 @@ behaviourPlot6ActivitiesWorkStudy <- function(plot_specific_f_name) {
   if (plot_type == "one") { dev.off() }
   
   # Day
-  df_activities <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  df_activities <- df_activities %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
   # mean for each day
   df_activities <- df_activities %>% group_by(day) %>% summarise_all(mean)
   # remove column tick
@@ -452,7 +439,7 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHome <- function(plot_specific_f_n
   
   #=========================
   # Activities Day
-  df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  df_activities_day <- df_activities %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
   # mean for each day
   df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
   # remove column tick
@@ -488,7 +475,7 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay <- function(plot_specific_
   
   #=========================
   # Activities Day
-  df_activities_day <- df_activities %>% mutate(day = (tick - (tick %% 4)) / 4)
+  df_activities_day <- df_activities %>% mutate(day = (tick + 3 - ((tick + 3) %% 4)) / 4)
   # mean for each day
   df_activities_day <- df_activities_day %>% group_by(day) %>% summarise_all(mean)
   # remove column tick

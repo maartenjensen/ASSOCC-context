@@ -3,7 +3,7 @@ behaviourPlot7SocialDistancing <- function(plot_specific_f_name) {
   cat("-- Plot", plot_specific_f_name, "...\n")
   
   #=============================================================
-  #====================== QUARANTINERS  ========================
+  #==================== SOCIAL DISTANCING  =====================
   #=============================================================
   
   df_population_status <- select(subset_df, tick, ce_context_depth, people_alive, social_distancing)  
@@ -19,7 +19,7 @@ behaviourPlot7SocialDistancing <- function(plot_specific_f_name) {
   p <- p + labs(x = "Time (Ticks)", y = "Status of n agents", col = "Status")
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Social Distancing (", experiment_preset,")", sep=""))
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "social_distancing", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_social_distancing", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   

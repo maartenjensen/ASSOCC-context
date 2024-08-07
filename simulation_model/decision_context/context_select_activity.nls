@@ -55,12 +55,19 @@ to context-habits-init-variables
     set available-time-slots-evening remove time available-time-slots-evening
   ]
   
+  ; This was added to increase leisure activities
+  ;if (random-float 1) < 0.75 [
+  ;  set time (one-of available-time-slots-evening) 
+  ;  table:put table-leisure-habits time context-get-pr-or-pu-leisure
+  ;  set available-time-slots-evening remove time available-time-slots-evening
+  ;]
+  
   ; A leisure for the weekends
   set time (one-of available-time-slots-day) 
   table:put table-leisure-habits time get-pr-or-pu-leisure
   set available-time-slots-day remove time available-time-slots-day
   
-  if (random-float 1) < 0.5 or age = retired-age [
+  if (random-float 1) < 0.5 or age = retired-age [ ; This value was changed from 0.5 to 0.75 to increase leisure activities
     set time (one-of available-time-slots-day) 
     table:put table-leisure-habits time get-pr-or-pu-leisure
     set available-time-slots-day remove time available-time-slots-day

@@ -165,6 +165,14 @@ behaviourAddNormalizedColumns <- function(df_to_normalize) {
   df_to_normalize <- df_to_normalize %>% mutate(work_at_home_perc = (work_at_home / people_alive) * 100)
   df_to_normalize <- df_to_normalize %>% mutate(at_treatment_perc = (at_treatment / people_alive) * 100)
   
+  df_to_normalize <- df_to_normalize %>% mutate(quarantine_asked_to_perc = (count_officially_quarantiners / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(quarantine_breaking_perc = (count_people_with_is_officially_asked_to_quarantine_for_plots_and_not_is_in_quarantine / people_alive) * 100)
+  
+  # infected, believe_infected, healthy
+  df_to_normalize <- df_to_normalize %>% mutate(infected_perc= (infected / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(believe_infected_perc= (believe_infected / people_alive) * 100)
+  df_to_normalize <- df_to_normalize %>% mutate(healthy_perc= (healthy / people_alive) * 100)
+  
   return(df_to_normalize)
 }
 
