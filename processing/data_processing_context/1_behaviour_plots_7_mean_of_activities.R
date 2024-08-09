@@ -8,7 +8,7 @@ behaviourPlot7MeanOfActivities <- function() {
   
   str_activities_print <- "\nPreset & RH/WH & WW/S & GROC & LUX & LEI \\\\ \n"
   str_population_status_print <- "\nPreset & Infected & Believe Infected & Healthy \\\\ \n"
-  str_quarantine_print <- "\nPreset & Asked to quarantine & Breaking Quarantine & Perc \\\\ \n"
+  str_quarantine_print <- "\nPreset & Should quarantine & Breaking & Perc \\\\ \n"
   
   for (experiment_preset in experiment_presets)
   {
@@ -52,12 +52,18 @@ behaviourPlot7MeanOfActivities <- function() {
     
     df_quarantiners <- select(subset_df, tick, ce_context_depth, quarantine_asked_to_perc, quarantine_breaking_perc)
     
+    # Solve divide by zero of quarantine_breaking_perc
+    if (mean(df_quarantiners$quarantine_asked_to_perc) > 0) {
+      percentage_breaking_quarantine_of_quarantiners <- round(mean(df_quarantiners$quarantine_breaking_perc)/mean(df_quarantiners$quarantine_asked_to_perc)*100, digits = 2)
+    } else {
+      percentage_breaking_quarantine_of_quarantiners <- 0 
+    } 
     
     str_quarantine_print <- paste(str_quarantine_print,
                                   experiment_preset, " & ",
                                   round(mean(df_quarantiners$quarantine_asked_to_perc), digits = 2), " & ",
                                   round(mean(df_quarantiners$quarantine_breaking_perc), digits = 2), " & ", 
-                                  round(mean(df_quarantiners$quarantine_breaking_perc)/mean(df_quarantiners$quarantine_asked_to_perc)*100, digits = 2),"% \\\\ \n", sep="")
+                                  percentage_breaking_quarantine_of_quarantiners,"\\% \\\\ \n", sep="")
   }
   
   cat(str_activities_print)

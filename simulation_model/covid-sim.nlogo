@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -3439,7 +3439,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -4349,7 +4349,7 @@ INPUTBOX
 1187
 134
 ce-log-agent-id
-622.0
+596.0
 1
 0
 Number
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1225
@@ -4774,7 +4774,7 @@ INPUTBOX
 1619
 409
 ce-risk-avoidance-threshold-for-sd
-0.8
+0.75
 1
 0
 Number
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-14
+17
 
 INPUTBOX
 322
@@ -4971,6 +4971,24 @@ true
 PENS
 "Officially asked to quarantine" 1.0 0 -13345367 true "" "plot count officially-quarantiners"
 "Breaking quarantine" 1.0 0 -2674135 true "" "plot count people with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]"
+
+PLOT
+1594
+829
+2111
+952
+Essential shopping
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count people with [current-motivation = \"essential shopping\"]"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5989,6 +6007,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>#dead-people</metric>
     <metric>#tests-performed</metric>
     <metric>r0</metric>
+    <metric>start-tick-of-global-quarantine</metric>
     <metric>count officially-quarantiners</metric>
     <metric>count people with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count should-be-isolators</metric>
@@ -6143,26 +6162,13 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;0.0 Original ASSOCC-no-infections&quot;"/>
-      <value value="&quot;0.1 Original ASSOCC&quot;"/>
       <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
-      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
-      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
-      <value value="&quot;1.3 DCSD-1&quot;"/>
-      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
-      <value value="&quot;2.1 DCSD-2&quot;"/>
-      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
-      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
-      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
-      <value value="&quot;3.3 DCSD-3&quot;"/>
-      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
-      <value value="&quot;4.1 DCSD-4&quot;"/>
-      <value value="&quot;5.0 DCSD-5-optimisation-no-infections&quot;"/>
-      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
       <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
+      <value value="1"/>
+      <value value="2"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>

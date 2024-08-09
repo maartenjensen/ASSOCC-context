@@ -170,6 +170,41 @@ behaviourPlot6ActivitiesSimplified4Leisure <- function(plot_specific_f_name) {
   if (plot_type == "one") { dev.off() }
 }
 
+behaviourPlot6ActivitiesSimplified4Leisure2Weeks <- function(plot_specific_f_name) {
+  
+  cat("-- Plot", plot_specific_f_name, "...\n")
+  
+  #------------------------------------------------------------------
+  #=================== Agent Activities Simplified 4 ================
+  df_activities <- behaviourPrepareActivitiesSimplified4()
+  
+  #----- Gather data for the plot -----
+  df_activities_mean_gathered <- gather(df_activities, `Activity`, measurement, leisure)
+  
+  p <- ggplot(df_activities_mean_gathered, aes(x = tick, y = measurement, col=`Activity`))
+  p <- p + scale_colour_manual(
+    labels=c('leisure'='Leisure'),
+    values=c('#f16a15'),
+    breaks=c('leisure')) + labs(col="")
+  p <- p + theme_bw()
+  p <- p + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+  p <- p + coord_cartesian(xlim = c(0, 28), ylim = c(0, 100)) 
+  p <- p + xlab("Time (Ticks)") + ylab("% Activities Chosen") + labs(col="")
+  p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))
+  p <- p + scale_x_continuous(breaks=c(0,4,8,12,16,20,24,28))
+  p <- p + annotate("text", x = 2, y=-2, label = "Mo")
+  p <- p + annotate("text", x = 6, y=-2, label = "Tu")
+  p <- p + annotate("text", x = 10, y=-2, label = "We")
+  p <- p + annotate("text", x = 14, y=-2, label = "Th")
+  p <- p + annotate("text", x = 18, y=-2, label = "Fr")
+  p <- p + annotate("text", x = 22, y=-2, label = "Sa")
+  p <- p + annotate("text", x = 26, y=-2, label = "Su")
+  
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_leisure_highlight_2_week", sep="")) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+}
+
 # This code is used for the final comparison where we need to distinguish between luxury shopping and grocery shopping to explain the differences.
 behaviourPlot6ActivitiesSimplified5 <- function(plot_specific_f_name) {
   
@@ -428,6 +463,13 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHome <- function(plot_specific_f_n
   p <- p + xlab("Time (Ticks)") + ylab("% Activities Chosen") + labs(col="")
   p_smooth <- p + geom_smooth(se = TRUE, span = .7) + labs(title=paste("Activities (", experiment_preset,") - Simplified Smooth", sep=""))  
   p <- p + geom_line() + labs(title=paste("Activities (", experiment_preset,") - Simplified", sep=""))  
+  
+  # Add rectangle for global lockdown
+  #if (gl_limits_x_max > 300) {
+    # start-tick-of-global-quarantine
+  #  p <- p + geom_rect(aes(xmin = 26, xmax = (26 + 56 * 4), ymin = 0, ymax = 100), fill = "red", alpha = 0.002)
+  #}
+  #show(p)
   
   if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_rest_and_work_home", sep="")) }
   show(p)
