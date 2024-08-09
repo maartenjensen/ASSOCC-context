@@ -12,8 +12,8 @@ directory_files <- "2024_07_11_full_three_runs"
 directory_files <- "2024_07_30_comparison"
 directory_files <- "2024_07_31_comparison"
 directory_files <- "2024_08_01_comparison"
-directory_files <- "2024_08_08_lockdown"
-directory_files <- "2024_08_09_comparison"
+#directory_files <- "2024_08_08_lockdown"
+#directory_files <- "2024_08_09_comparison"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -25,7 +25,7 @@ source("../1_behaviour_plots_3_quarantiners.R")
 source("../1_behaviour_plots_4_needs.R")
 source("../1_behaviour_plots_5_location_types.R")
 source("../1_behaviour_plots_6_activities.R")
-source("../1_behaviour_plots_7_mean_of_activities.R")  
+source("../1_behaviour_plots_7_mean_of_activities.R")
 
 libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 
@@ -36,7 +36,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "one" # One plot per pdf
-#plot_type <- "all" # All plots in one pdf
+plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
 plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
@@ -49,7 +49,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 1
+random_seed = 2
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -155,6 +155,8 @@ filesNames   <- c(paste(directory_files, "csv", sep = "."))
 df_initial = behaviourLoadDataframe(filesPath, filesNames)
 df_renamed <- behaviourRenameDataframe(df_initial)
 df_final <- behaviourAddNormalizedColumns(df_renamed)
+
+behaviourPlot7InfectionsComparison()
 
 # Filter on one random seed, since this is a single run
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
