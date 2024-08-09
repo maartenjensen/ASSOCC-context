@@ -35,7 +35,7 @@ to load-scenario-specifics-context-lockdown
   if ce-enable-global-lockdown [
     set ratio-self-quarantining-when-a-family-member-is-symptomatic 0.8
     set is-infected-and-their-families-requested-to-stay-at-home? true
-    set food-delivered-to-isolators? false
+    set food-delivered-to-isolators? true
     set all-self-isolate-for-35-days-when-first-hitting-2%-infected? true
     set ratio-self-quarantining-when-symptomatic 0.8
     set stop-before-tick 481

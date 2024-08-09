@@ -13,6 +13,7 @@ directory_files <- "2024_07_30_comparison"
 directory_files <- "2024_07_31_comparison"
 directory_files <- "2024_08_01_comparison"
 directory_files <- "2024_08_08_lockdown"
+directory_files <- "2024_08_09_comparison"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -48,7 +49,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 0
+random_seed = 1
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
