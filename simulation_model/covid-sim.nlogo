@@ -1061,7 +1061,7 @@ SWITCH
 108
 with-infected?
 with-infected?
-0
+1
 1
 -1000
 
@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -3439,7 +3439,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3485,7 +3485,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3498,7 +3498,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3509,7 +3509,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3552,7 +3552,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4434,7 +4434,7 @@ SWITCH
 390
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1225
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-14
+15
 
 INPUTBOX
 322
@@ -4948,7 +4948,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-481.0
+241.0
 1
 0
 Number
@@ -6162,13 +6162,37 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
+      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
       <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
+      <value value="&quot;0.1 Original ASSOCC&quot;"/>
+      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
       <value value="1"/>
       <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
+      <value value="7"/>
+      <value value="8"/>
+      <value value="9"/>
+      <value value="10"/>
+      <value value="11"/>
+      <value value="12"/>
+      <value value="13"/>
+      <value value="14"/>
+      <value value="15"/>
+      <value value="16"/>
+      <value value="17"/>
+      <value value="18"/>
+      <value value="19"/>
+      <value value="20"/>
+      <value value="21"/>
+      <value value="22"/>
+      <value value="23"/>
+      <value value="24"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
