@@ -14,6 +14,7 @@ directory_files <- "2024_07_31_comparison"
 directory_files <- "2024_08_01_comparison"
 #directory_files <- "2024_08_08_lockdown"
 #directory_files <- "2024_08_09_comparison"
+directory_files <- "2024_08_12_comparison_full"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()

@@ -5,48 +5,69 @@ behaviourPlot7InfectionsComparison <- function() {
   
   df_infections_comparison <- df_final
   df_infections_comparison <- select(df_infections_comparison, tick, ce_context_depth, random_seed, ce_context_experiment_presets, infected, believe_infected, healthy)
-  #df_infections_comparison$run_setting <- paste("CE:", df_infections_comparison$ce_context_depth, ", R:", df_infections_comparison$random_seed , sep="")
   
-  df_infections_comparison <- df_infections_comparison[df_final$random_seed == 0, ]
+  # To change the random seed if needed, basically to test what effect there is with less runs
+  #df_infections_comparison <- df_infections_comparison[df_infections_comparison$random_seed %in% c(0:24), ]
   
+  n = length(unique(df_infections_comparison$random_seed))
   # In df_infections_comparison filter the ce_context_experiment_presets = "0.2 Original ASSOCC-lockdown" and "5.2 DCSD-5-optimisation-lockdown"
   df_infections_comparison_normal <- df_infections_comparison[df_infections_comparison$ce_context_experiment_presets %in% c("0.1 Original ASSOCC" , "5.1 DCSD-5-optimisation"), ]
   
-  p <- ggplot(df_infections_comparison_normal, aes(x = tick, y = infected, col=ce_context_experiment_presets)) + geom_line()
+  df_infections_comparison_normal_summarised <- df_infections_comparison_normal %>%
+    group_by(tick, ce_context_experiment_presets) %>%
+    summarise(avg_infected = mean(infected),
+              sd_infected = sd(infected),
+              lower = avg_infected - sd_infected,
+              upper = avg_infected + sd_infected)
   
-  #p <- p + scale_colour_manual(
-  #  labels=c('infected'='Infected',
-  #           'believe_infected' ='Believe Infected', 
-  #           'healthy' ='Healthy'),
-  #  values=c('#ff7c73', '#b00300', '#afd16f'),
-  #  breaks=c('infected','believe_infected','healthy'))
-  p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
+  p <- ggplot(df_infections_comparison_normal_summarised, aes(x = tick, y = avg_infected, 
+                                                         color = ce_context_experiment_presets,
+                                                         fill = ce_context_experiment_presets)) +
+    geom_line(linewidth = 1.2) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    labs(title = paste("Average Infections over Time - Normal infection curve (n = ", n, ")", sep = ""),
+         x = "Ticks",
+         y = "Infected agents",
+         color = "Model",
+         fill = "Model") +
+    theme_minimal()
+
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, gl_limits_x_max), ylim = c(0, 1020)) + labs(title=paste("Infections comparison (", experiment_preset,")", sep=""))
-  #p <- p + geom_line(data = filter(df_population_status, `Population Status` == "believe_infected"), linewidth = 2)
-  if (plot_type == "one") { behaviourEnablePdf(paste(directory_files, "_infections_comparison_normal", sep="")) }
+  p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+  
+
+  if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
   
   print("-- Comparison of infections plot for global lockdown --")
 
-  
   # In df_infections_comparison filter the ce_context_experiment_presets = "0.2 Original ASSOCC-lockdown" and "5.2 DCSD-5-optimisation-lockdown"
   df_infections_comparison_lockdown <- df_infections_comparison[df_infections_comparison$ce_context_experiment_presets %in% c("0.2 Original ASSOCC-lockdown" , "5.2 DCSD-5-optimisation-lockdown"), ]
   
-  p <- ggplot(df_infections_comparison_lockdown, aes(x = tick, y = infected, col=ce_context_experiment_presets)) + geom_line()
+  df_infections_comparison_lockdown_summarised <- df_infections_comparison_lockdown %>%
+    group_by(tick, ce_context_experiment_presets) %>%
+    summarise(avg_infected = mean(infected),
+              sd_infected = sd(infected),
+              lower = avg_infected - sd_infected,
+              upper = avg_infected + sd_infected)
   
-  #p <- p + scale_colour_manual(
-  #  labels=c('infected'='Infected',
-  #           'believe_infected' ='Believe Infected', 
-  #           'healthy' ='Healthy'),
-  #  values=c('#ff7c73', '#b00300', '#afd16f'),
-  #  breaks=c('infected','believe_infected','healthy'))
-  p <- p + labs(x = "Ticks", y = "Status of n agents", col = "Status")
+  p <- ggplot(df_infections_comparison_lockdown_summarised, aes(x = tick, y = avg_infected, 
+                                                              color = ce_context_experiment_presets,
+                                                              fill = ce_context_experiment_presets)) +
+    geom_line(linewidth = 1.2) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    labs(title = paste("Average Infections over Time - Global lockdown (n = ", n, ")", sep = ""),
+         x = "Ticks",
+         y = "Infected agents",
+         color = "Model",
+         fill = "Model") +
+    theme_minimal()
+  
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-  p <- p + coord_cartesian(xlim = c(0, 480), ylim = c(0, 1020)) + labs(title=paste("Infections comparison (", experiment_preset,")", sep=""))
-  #p <- p + geom_line(data = filter(df_population_status, `Population Status` == "believe_infected"), linewidth = 2)
-  if (plot_type == "one") { behaviourEnablePdf(paste(directory_files, "_infections_comparison_global_lockdown", sep="")) }
+  p <- p + coord_cartesian(xlim = c(0, 480), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+  
+  if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_global_lockdown", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }
