@@ -15,6 +15,7 @@ directory_files <- "2024_08_01_comparison"
 #directory_files <- "2024_08_08_lockdown"
 #directory_files <- "2024_08_09_comparison"
 directory_files <- "2024_08_12_comparison_full"
+directory_files <- "2024_08_14_comparison_extreme"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -165,6 +166,7 @@ df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
 # Print the data for the comparison section
 behaviourPlot7MeanOfActivities()
+
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================

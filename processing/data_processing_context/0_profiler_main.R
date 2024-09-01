@@ -46,6 +46,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This is just a string with the directory name
 directory_files <- "2024_07_11_full_three_runs"
+directory_files <- "2024_07_21_scalability"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -99,12 +100,14 @@ if (directory_files == "2024_07_11_full_three_runs")
 #"0.1 Original ASSOCC"
 #"0.2 Original ASSOCC-lockdown"
 
-#if (directory_files == "2024_03_21_n_agents")
-#{
-#  filenames_profiler <- retrieve_filenames_profiler(c("350", "700", "1400", "2100", "2800", "3500"),  
-#                                                    c("1", "2", "3"),
-#                                                    c("6"), c("false"),  c("false"), c("false"))
-#}
+#2024_07_21_scalability
+if (directory_files == "2024_07_21_scalability")
+{
+ filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+                                                   c("350", "700", "1400", "2100", "2800", "3500"),
+                                                   c("6"),
+                                                   c("5", "6", "7"))
+}
 
 # Households, Random seed, Action space, Preset
 # report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
