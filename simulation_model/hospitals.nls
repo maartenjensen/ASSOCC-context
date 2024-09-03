@@ -20,7 +20,9 @@ to  acquire-a-bed-in-hospital
 end
 
 to-report any-free-bed-in-hospital?
-  report #taken-hospital-beds < #beds-available-for-admission
+  ; Aparently this piece of code is slow, replace with true to see the effect (since most of the time there are some available free beds in the hospital
+  ;report #taken-hospital-beds < #beds-available-for-admission
+  report true
 end
 
 to-report is-currently-being-treated-at-hospital?

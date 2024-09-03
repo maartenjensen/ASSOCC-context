@@ -197,7 +197,7 @@ INPUTBOX
 915
 899
 #schools-gp
-12.0
+117.0
 1
 0
 Number
@@ -208,7 +208,7 @@ INPUTBOX
 1006
 899
 #universities-gp
-4.0
+35.0
 1
 0
 Number
@@ -219,7 +219,7 @@ INPUTBOX
 1098
 899
 #workplaces-gp
-23.0
+233.0
 1
 0
 Number
@@ -240,7 +240,7 @@ INPUTBOX
 1211
 899
 #public-leisure-gp
-18.0
+175.0
 1
 0
 Number
@@ -251,7 +251,7 @@ INPUTBOX
 1331
 899
 #private-leisure-gp
-50.0
+500.0
 1
 0
 Number
@@ -427,7 +427,7 @@ INPUTBOX
 1448
 899
 #essential-shops-gp
-9.0
+88.0
 1
 0
 Number
@@ -468,7 +468,7 @@ INPUTBOX
 1575
 899
 #non-essential-shops-gp
-9.0
+88.0
 1
 0
 Number
@@ -479,7 +479,7 @@ INPUTBOX
 829
 899
 #hospital-gp
-4.0
+35.0
 1
 0
 Number
@@ -2003,7 +2003,7 @@ INPUTBOX
 636
 679
 #households
-350.0
+3500.0
 1
 0
 Number
@@ -2025,7 +2025,7 @@ INPUTBOX
 2443
 102
 #beds-in-hospital
-11.0
+116.0
 1
 0
 Number
@@ -2394,7 +2394,7 @@ INPUTBOX
 3471
 748
 #bus-per-timeslot
-27.0
+269.0
 1
 0
 Number
@@ -3439,7 +3439,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3485,7 +3485,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3498,7 +3498,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3509,7 +3509,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3552,7 +3552,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4308,7 +4308,7 @@ INPUTBOX
 1380
 285
 ce-households-for-context-scenario
-350.0
+3500.0
 1
 0
 Number
@@ -4434,7 +4434,7 @@ SWITCH
 390
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-17
+16
 
 INPUTBOX
 322
@@ -4948,7 +4948,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-481.0
+241.0
 1
 0
 Number

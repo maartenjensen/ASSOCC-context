@@ -48,6 +48,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This is just a string with the directory name
 directory_files <- "2024_07_21_scalability"
+directory_files <- "2026_01_01_scalability_everything"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -70,6 +71,13 @@ if (directory_files == "2024_07_21_scalability")
                                                     c("5", "6", "7"))
 }
 
+if (directory_files == "2026_01_01_scalability_everything")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+                                                    c("350", "700", "1400", "2100", "2800", "3500"),
+                                                    c("6"),
+                                                    c("10", "11", "12", "13", "14"))
+}
 # Households, Random seed, Action space, Preset
 # report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
 # report-[-P= 0.2 Original ASSOCC-lockdown -H= 350 -A= 6 -R= 0]
@@ -131,19 +139,30 @@ df_p_overview_mean$calls_mean <- v_calls_mean
 df_p_overview_mean$incl_t_ms_recalculated <- df_p_overview_mean$incl_t_ms_per_call * df_p_overview_mean$calls_mean
 
 #--------------------------------------
-# Now it is time to plot
+# Now it is time to plothttp://127.0.0.1:36269/graphics/plot_zoom_png?width=1105&height=861
 #--------------------------------------
 
 # I want a line plot with the different households
 # Using ggplot and the df_p_overview_mean dataframe, the households as x-axis, and the incl_t_ms_recalculated column as y-axis
 
-plot_incl_t_ms <- function(dataframe) {
+plot_incl_t_ms_recalculated <- function(dataframe, p_title = "No title") {
   ggplot(dataframe, aes(x = households, y = incl_t_ms_recalculated, group = preset, colour = preset)) +
     geom_line() +
     geom_point() +
-    labs(title = "Execution time for different context-depths",
+    labs(title = p_title,
          x = "Households",
          y = "Incl time") +
+    theme_minimal() + scale_colour_viridis_d() +
+    theme(text = element_text(size=16))
+}
+
+plot_calls <- function(dataframe, p_title = "No title") {
+  ggplot(dataframe, aes(x = households, y = calls, group = preset, colour = preset)) +
+    geom_line() +
+    geom_point() +
+    labs(title = p_title,
+         x = "Households",
+         y = "Calls") +
     theme_minimal() + scale_colour_viridis_d() +
     theme(text = element_text(size=16))
 }
@@ -151,21 +170,21 @@ plot_incl_t_ms <- function(dataframe) {
 # Filter the df_p_overview_mean dataframe, by only retaining the GO function
 
 df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
-plot_incl_t_ms(df_p_overview_mean_GO)
+plot_incl_t_ms_recalculated(df_p_overview_mean_GO, "Execution time GO function")
 
 df_p_overview_mean_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
-plot_incl_t_ms(df_p_overview_mean_SELECT_ACTIVITY)
+plot_incl_t_ms_recalculated(df_p_overview_mean_SELECT_ACTIVITY, "Execution time Select-activity")
 
 df_p_overview_mean_FULL_ASSOCC_DELIBERATION <- df_p_overview_mean[df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION", ]
-plot_incl_t_ms(df_p_overview_mean_FULL_ASSOCC_DELIBERATION)
+plot_calls(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, "Calls of Full ASSOCC Deliberation")
 
 # Deliberation analysis DCSD
 
-plot_incl_t_ms_function_name <- function(dataframe) {
-  ggplot(dataframe, aes(x = households, y = incl_t_ms_recalculated, group = function_name, colour = function_name)) +
+plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
+  ggplot(dataframe, aes(x = households, y = incl_t_ms, group = function_name, colour = function_name)) +
     geom_line() +
     geom_point() +
-    labs(title = "Deliberation time DCSD",
+    labs(title = p_title,
          x = "Households",
          y = "Incl time") +
     theme_minimal() + scale_colour_viridis_d() +
@@ -176,7 +195,39 @@ plot_incl_t_ms_function_name <- function(dataframe) {
 df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 Original ASSOCC", ]
 # Remove GO from df_p_overview_mean_DCSD
 df_p_overview_mean_DCSD <- df_p_overview_mean_DCSD[df_p_overview_mean_DCSD$function_name != "GO", ]
-plot_incl_t_ms_function_name(df_p_overview_mean_DCSD)
+
+# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, households, and incl_t_ms
+df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% 
+  select(preset, function_name, households, incl_t_ms)
+
+# Create a dataframe and add 
+
+preset = c()
+function_name = c()
+households = c()
+incl_t_ms = c()
+
+for (i in 1:6) {
+  
+  preset = c(t_preset, df_p_overview_mean_DCSD_selection$preset[i])
+  function_name = c(t_function_name, "DCSD Time")
+  households = c(t_households, df_p_overview_mean_DCSD_selection$households[i])
+  incl_t_ms = c(t_incl_t_ms, df_p_overview_mean_DCSD_selection$incl_t_ms[i] - df_p_overview_mean_DCSD_selection$incl_t_ms[i + 6])
+}
+
+df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, households, incl_t_ms)
+
+df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
+
+# --- The plotting function ---
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection)
+
+# Remove everything except the function_name "DCSD Time", df_p_overview_mean_DCSD_selection
+df_p_overview_mean_DCSD_selection_DCSD_time <- df_p_overview_mean_DCSD_selection[df_p_overview_mean_DCSD_selection$function_name == "DCSD Time", ]
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection_DCSD_time, "Execution time DCSD Time to show its linear")
+
+# next task, use the excel sheet to put the number of agents on the x-axis, rather than the households
+
 
 
 
