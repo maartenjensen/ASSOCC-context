@@ -113,7 +113,7 @@ end
 ; =================================================
 to-report context-deliberation-select-activity
   reset-delib-count
-  profiler-speed-test-functions
+  ;profiler-speed-test-functions
   let chosen-action []
   if ce-log-agent and who = ce-log-agent-id [ ifelse (slice-of-the-day = "morning") [ print "" print (word "== STEP " (ticks) ", DAY START " day-of-the-week " AGENT: " ce-log-agent-id ", AGE: " age " ==") ][ print "" ] ]
   if ce-log-agent and who = ce-log-agent-id [ print (word ":" slice-of-the-day ", working-day: " is-working-day-for-me? ", sick: " (has-internally-visible-symptoms? or is-believing-to-be-infected?) ":") ]

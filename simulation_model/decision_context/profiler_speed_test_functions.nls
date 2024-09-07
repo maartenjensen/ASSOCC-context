@@ -5,6 +5,123 @@ to profiler-speed-test-init ; Called from setup/setup.nls
   
 end 
 
+to profiler-speed-test-infect-population
+  set first-infected-people n-of (min list floor((count people) / 2) count people) people
+  ask first-infected-people [contaminate nobody ("setup")]
+  set #first-infected-people count first-infected-people
+end
+
+to profiler-speed-test-functions-final
+  
+  foreach [1 2 3 4 5] 
+  [ n -> 
+    
+    set #random-seed n
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 350 
+    load-and-setup
+    
+    let n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 700 
+    load-and-setup
+    
+    set n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 1400 
+    load-and-setup
+    
+    set n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 2100 
+    load-and-setup
+    
+    set n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 2800 
+    load-and-setup
+    
+    set n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+    
+    ; ----------------------------------------
+    set ce-households-for-context-scenario 3500 
+    load-and-setup
+    
+    set n_agents (count people)
+    profiler-start
+    repeat n_agents
+    [
+      profiler-speed-test-function-1-free-bed
+    ]
+    profiler-export (word "profiler-report-H-" #households "-" n ".csv")
+  ]
+end
+
+to profiler-speed-test-function-1-free-bed
+  let free_bed any-free-bed-in-hospital?
+end
+
+to profiler-speed-test-function-1-hired-workers
+  let n_workers [count hired-workers] of hospitals
+end
+
+to profiler-speed-test-function-1-people
+  let n_agents count people
+end
+
+to profiler-speed-test-function-1-retired
+  let n_retired count retireds
+end
+
+to profiler-start
+  profiler:reset
+  profiler:start
+end
+
+to profiler-export [ p_fname ]
+  profiler:stop
+  let _fname p_fname
+  carefully [file-delete _fname] []
+  file-open _fname
+  file-print profiler:report
+  file-close
+end
+
 to profiler-speed-test-functions ; Called from context_select_activity.nls
   ;if who = #agent-id [ print ("Start speed test") ]
   
