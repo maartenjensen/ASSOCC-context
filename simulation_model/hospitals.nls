@@ -23,6 +23,16 @@ to-report any-free-bed-in-hospital?
   report #taken-hospital-beds < #beds-available-for-admission
 end
 
+; Maarten: Added by me, for optimising the code
+to-report any-free-bed-in-hospital-pre-calculated?
+  
+  let t-hospital-effectiveness hospital-effectiveness
+  print hospital-effectiveness
+  let t-beds-available-for-admission floor (#beds-in-hospital * t-hospital-effectiveness - #taken-hospital-beds)
+  
+  report #taken-hospital-beds < t-beds-available-for-admission
+end
+
 to-report any-free-bed-in-hospital-fake?
   ; Aparently this piece of code is slow, replace with true to see the effect (since most of the time there are some available free beds in the hospital
   report true

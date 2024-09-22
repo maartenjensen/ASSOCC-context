@@ -195,7 +195,7 @@ to-report risk-avoidance-increase [ad others]
   let result 0.2
 
   ifelse is-believing-to-be-infected? or has-internally-visible-symptoms? [
-    if any-free-bed-in-hospital-fake? and is-get-healed-to-hospital-descriptor? ad [
+    if any-free-bed-in-hospital-pre-calculated? and is-get-healed-to-hospital-descriptor? ad [
       set result 0.3
     ]
     if is-currently-being-treated-at-hospital? and is-get-healed-to-hospital-descriptor? ad [
@@ -480,11 +480,11 @@ to-report SUE-health [ad]
   if is-believing-to-be-infected? or has-internally-visible-symptoms?
   [
     ifelse is-observing-critical-symptoms? [
-      ifelse is-get-healed-to-hospital-descriptor? ad and (is-currently-allocated-a-bed-in-hospital? or any-free-bed-in-hospital-fake?)
+      ifelse is-get-healed-to-hospital-descriptor? ad and (is-currently-allocated-a-bed-in-hospital? or any-free-bed-in-hospital-pre-calculated?)
       [set base .8]
       [set base 0]
     ] [
-      ifelse is-get-healed-to-hospital-descriptor? ad and (is-currently-allocated-a-bed-in-hospital? or any-free-bed-in-hospital-fake?)
+      ifelse is-get-healed-to-hospital-descriptor? ad and (is-currently-allocated-a-bed-in-hospital? or any-free-bed-in-hospital-pre-calculated?)
       [set base .3]
       [ ifelse is-rest-at-home-descriptor? ad
         [ set base 0.3 ]
