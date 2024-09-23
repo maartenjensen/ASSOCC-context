@@ -320,6 +320,9 @@ to perform-people-activities
   
   ; for deliberation determine time
   set context-day-time (word day-of-the-week " " slice-of-the-day)
+  ; for optimizing the any-free-bed-in-hospital? function
+  any-free-bed-in-hospital-pre-calculate
+  ; start deliberation loop
   ask people [
     if not is-being-away? current-activity and current-motivation = travelling-motive [error "wrong place while travelling"]
     ; ===============================================================================

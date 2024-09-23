@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-3.0
+4.0
 1
 1
 NIL
@@ -2020,10 +2020,10 @@ count people
 11
 
 INPUTBOX
-2248
-42
-2443
-102
+2605
+12
+2800
+72
 #beds-in-hospital
 11.0
 1
@@ -2228,10 +2228,10 @@ NIL
 1
 
 MONITOR
-2559
-212
-2739
-257
+2616
+180
+2796
+225
 NIL
 hospital-effectiveness
 17
@@ -3133,10 +3133,10 @@ make-social-distance-profile-value-based?
 -1000
 
 MONITOR
-2558
-109
-2742
-154
+2615
+77
+2799
+122
 NIL
 #healthy-hospital-personel
 17
@@ -3144,10 +3144,10 @@ NIL
 11
 
 MONITOR
-2559
-162
-2741
-207
+2616
+130
+2798
+175
 NIL
 #sick-hospital-personel
 17
@@ -3526,9 +3526,9 @@ start-tick-of-global-quarantine
 
 PLOT
 2249
-110
-2551
-250
+10
+2594
+150
 hospitals
 NIL
 NIL
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-1
+0
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-1
+6
 
 SWITCH
 1225
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-1
+0
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-1
+0
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-1
+0
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-16
+13
 
 INPUTBOX
 322
@@ -4989,6 +4989,35 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot count people with [current-motivation = \"essential shopping\"]"
+
+MONITOR
+2615
+229
+2684
+274
+Free bed?
+any-free-bed-in-hospital-pre-calculated-before-agent-deliberation
+17
+1
+11
+
+PLOT
+2249
+154
+2500
+274
+hospital-currently-free-beds
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot #beds-available-for-admission - #taken-hospital-beds"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -6162,40 +6191,19 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
-      <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
       <value value="&quot;0.1 Original ASSOCC&quot;"/>
-      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
+      <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
-      <value value="1"/>
-      <value value="2"/>
-      <value value="3"/>
-      <value value="4"/>
-      <value value="5"/>
-      <value value="6"/>
-      <value value="7"/>
-      <value value="8"/>
-      <value value="9"/>
-      <value value="10"/>
-      <value value="11"/>
-      <value value="12"/>
-      <value value="13"/>
-      <value value="14"/>
-      <value value="15"/>
-      <value value="16"/>
-      <value value="17"/>
-      <value value="18"/>
-      <value value="19"/>
-      <value value="20"/>
-      <value value="21"/>
-      <value value="22"/>
-      <value value="23"/>
-      <value value="24"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
+      <value value="700"/>
+      <value value="1400"/>
+      <value value="2100"/>
+      <value value="2800"/>
+      <value value="3500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>

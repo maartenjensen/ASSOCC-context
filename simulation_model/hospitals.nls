@@ -2,6 +2,7 @@ globals [#taken-hospital-beds
   #denied-requests-for-hospital-beds
   #max-hospital-beds-taken-at-once
   #admissions-last-tick
+  any-free-bed-in-hospital-pre-calculated-before-agent-deliberation
 ]
 
 to release-bed-in-hospital
@@ -24,19 +25,16 @@ to-report any-free-bed-in-hospital?
 end
 
 ; Maarten: Added by me, for optimising the code
+; This function is called just before the deliberation of all the agents
+; The outcome of the function any-free-bed-in-hospital? does not change based on deliberation, it changes based on agent action and disease transition
 to-report any-free-bed-in-hospital-pre-calculated?
-  
-  let t-hospital-effectiveness hospital-effectiveness
-  print hospital-effectiveness
-  let t-beds-available-for-admission floor (#beds-in-hospital * t-hospital-effectiveness - #taken-hospital-beds)
-  
-  report #taken-hospital-beds < t-beds-available-for-admission
+  report any-free-bed-in-hospital-pre-calculated-before-agent-deliberation
 end
 
-to-report any-free-bed-in-hospital-fake?
-  ; Aparently this piece of code is slow, replace with true to see the effect (since most of the time there are some available free beds in the hospital
-  report true
+to any-free-bed-in-hospital-pre-calculate
+  set any-free-bed-in-hospital-pre-calculated-before-agent-deliberation any-free-bed-in-hospital?
 end
+; Maarten: End what I added
 
 to-report is-currently-being-treated-at-hospital?
   report  current-motivation = treatment-motive and [is-hospital?] of current-activity and is-currently-allocated-a-bed-in-hospital?
