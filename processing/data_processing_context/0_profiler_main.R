@@ -25,8 +25,6 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
   libraries_loaded = TRUE
 }
 
-
-
 #-------------------------------
 #---     INITIALIZATION      ---
 #-------------------------------
@@ -46,7 +44,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 
 # This is just a string with the directory name
 directory_files <- "2024_07_11_full_three_runs"
-directory_files <- "2024_07_21_scalability"
+directory_files <- "2024_09_23_scalability_hospital_fix"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -107,6 +105,14 @@ if (directory_files == "2024_07_21_scalability")
                                                    c("350", "700", "1400", "2100", "2800", "3500"),
                                                    c("6"),
                                                    c("5", "6", "7"))
+}
+
+if (directory_files == "2024_09_23_scalability_hospital_fix")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+                                                    c("350", "700", "1400", "2100", "2800", "3500"),
+                                                    c("6"),
+                                                    c("0"))
 }
 
 # Households, Random seed, Action space, Preset
@@ -535,6 +541,9 @@ df_p_mean_summarized$incl_t_ms_sd <- round(df_p_mean_summarized$incl_t_ms_sd, di
 
 # Step two, output the data to a nice table
 str_table_1 = ""
+
+
+
 
 ###############################################
 # ERROR STARTS HERE

@@ -1,5 +1,3 @@
-# Next GOAL: Check the number of agents, check if its the same for different random seeds, and then plot the number of agents instead of the households
-
 #-------------------------------
 #---  INITIALISE LIBRARIES   ---
 #-------------------------------
@@ -49,6 +47,7 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 # This is just a string with the directory name
 directory_files <- "2024_07_21_scalability"
 directory_files <- "2026_01_01_scalability_everything"
+directory_files <- "2024_09_23_scalability_hospital_fix"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -77,6 +76,14 @@ if (directory_files == "2026_01_01_scalability_everything")
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
                                                     c("6"),
                                                     c("10", "11", "12", "13", "14"))
+}
+
+if (directory_files == "2024_09_23_scalability_hospital_fix")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+                                                    c("350", "700", "1400", "2100", "2800", "3500"),
+                                                    c("6"),
+                                                    c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
 }
 # Households, Random seed, Action space, Preset
 # report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
@@ -107,8 +114,14 @@ profilerSummarize(df_profiler, df_p_overview)
 # for df_p_overview I want to divide incl_t_ms by the number of calls
 df_p_overview$incl_t_ms_per_call <- df_p_overview$incl_t_ms / df_p_overview$calls
 
+# in df_p_overview I want to add another column for the number of agents
+# for each number of households there are specific number of agents, see below where households = agents, households = agents, ...
+# 350 = 1004, 700 = 2008, 1400 = 4016, 2100 = 6016, 2800 = 8024, 3500 = 10028
+df_p_overview$agents <- c(1004, 2008, 4016, 6016, 8024, 10028)[match(df_p_overview$households, c(350, 700, 1400, 2100, 2800, 3500))]
+
+# In the following functions and plots the households column is exchanged for the agents column
 df_p_overview_mean <- df_p_overview %>% 
-  group_by(preset, function_name, households) %>% 
+  group_by(preset, function_name, agents) %>% 
   summarise(calls = mean(calls, na.rm = TRUE),
             incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
             excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
@@ -117,14 +130,14 @@ df_p_overview_mean <- df_p_overview %>%
 
 # Average the calls over the two presets
 df_p_overview_mean_calls <- df_p_overview_mean %>% 
-  group_by(function_name, households) %>% 
+  group_by(function_name, agents) %>% 
   summarise(calls_mean = mean(calls, na.rm = TRUE))
 
 v_calls_mean = c()
 for (i in 1:2) {
   for (j in 1:nrow(df_p_overview_mean_calls)) {
     if (df_p_overview_mean_calls$function_name[j] == df_p_overview_mean$function_name[j + (i - 1) * nrow(df_p_overview_mean_calls)] &&
-        df_p_overview_mean_calls$households[j] == df_p_overview_mean$households[j + (i - 1) * nrow(df_p_overview_mean_calls)])
+        df_p_overview_mean_calls$agents[j] == df_p_overview_mean$agents[j + (i - 1) * nrow(df_p_overview_mean_calls)])
     {
       v_calls_mean = c(v_calls_mean, df_p_overview_mean_calls$calls_mean[j])
     }
@@ -138,30 +151,32 @@ df_p_overview_mean$calls_mean <- v_calls_mean
 
 df_p_overview_mean$incl_t_ms_recalculated <- df_p_overview_mean$incl_t_ms_per_call * df_p_overview_mean$calls_mean
 
+
+
 #--------------------------------------
-# Now it is time to plothttp://127.0.0.1:36269/graphics/plot_zoom_png?width=1105&height=861
+# PLOTTING
 #--------------------------------------
 
-# I want a line plot with the different households
-# Using ggplot and the df_p_overview_mean dataframe, the households as x-axis, and the incl_t_ms_recalculated column as y-axis
+# I want a line plot with the different agents
+# Using ggplot and the df_p_overview_mean dataframe, the agents as x-axis, and the incl_t_ms_recalculated column as y-axis
 
 plot_incl_t_ms_recalculated <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = households, y = incl_t_ms_recalculated, group = preset, colour = preset)) +
+  ggplot(dataframe, aes(x = agents, y = incl_t_ms_recalculated, group = preset, colour = preset)) +
     geom_line() +
     geom_point() +
     labs(title = p_title,
-         x = "Households",
+         x = "Agents",
          y = "Incl time") +
     theme_minimal() + scale_colour_viridis_d() +
     theme(text = element_text(size=16))
 }
 
 plot_calls <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = households, y = calls, group = preset, colour = preset)) +
+  ggplot(dataframe, aes(x = agents, y = calls, group = preset, colour = preset)) +
     geom_line() +
     geom_point() +
     labs(title = p_title,
-         x = "Households",
+         x = "Agents",
          y = "Calls") +
     theme_minimal() + scale_colour_viridis_d() +
     theme(text = element_text(size=16))
@@ -181,11 +196,11 @@ plot_calls(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, "Calls of Full ASSOCC De
 # Deliberation analysis DCSD
 
 plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = households, y = incl_t_ms, group = function_name, colour = function_name)) +
+  ggplot(dataframe, aes(x = agents, y = incl_t_ms, group = function_name, colour = function_name)) +
     geom_line() +
     geom_point() +
     labs(title = p_title,
-         x = "Households",
+         x = "Agents",
          y = "Incl time") +
     theme_minimal() + scale_colour_viridis_d() +
     theme(text = element_text(size=16))
@@ -196,37 +211,65 @@ df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 
 # Remove GO from df_p_overview_mean_DCSD
 df_p_overview_mean_DCSD <- df_p_overview_mean_DCSD[df_p_overview_mean_DCSD$function_name != "GO", ]
 
-# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, households, and incl_t_ms
+# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, agents, and incl_t_ms
 df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% 
-  select(preset, function_name, households, incl_t_ms)
+  select(preset, function_name, agents, incl_t_ms)
 
 # Create a dataframe and add 
 
 preset = c()
 function_name = c()
-households = c()
+agents = c()
 incl_t_ms = c()
 
 for (i in 1:6) {
   
-  preset = c(t_preset, df_p_overview_mean_DCSD_selection$preset[i])
-  function_name = c(t_function_name, "DCSD Time")
-  households = c(t_households, df_p_overview_mean_DCSD_selection$households[i])
-  incl_t_ms = c(t_incl_t_ms, df_p_overview_mean_DCSD_selection$incl_t_ms[i] - df_p_overview_mean_DCSD_selection$incl_t_ms[i + 6])
+  preset = c(preset, df_p_overview_mean_DCSD_selection$preset[i])
+  function_name = c(function_name, "DCSD Time")
+  agents = c(agents, df_p_overview_mean_DCSD_selection$agents[i])
+  incl_t_ms = c(incl_t_ms, df_p_overview_mean_DCSD_selection$incl_t_ms[i] - df_p_overview_mean_DCSD_selection$incl_t_ms[i + 6])
 }
 
-df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, households, incl_t_ms)
+df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, incl_t_ms)
 
 df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
 
 # --- The plotting function ---
-plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection)
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection, "In detail DCSD execution time")
 
 # Remove everything except the function_name "DCSD Time", df_p_overview_mean_DCSD_selection
 df_p_overview_mean_DCSD_selection_DCSD_time <- df_p_overview_mean_DCSD_selection[df_p_overview_mean_DCSD_selection$function_name == "DCSD Time", ]
 plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection_DCSD_time, "Execution time DCSD Time to show its linear")
+# This is obsolete
 
-# next task, use the excel sheet to put the number of agents on the x-axis, rather than the households
+# So which numbers do I need?
+df_p_overview_mean
+
+# Do the tests and see how much the results vary, e.g. plot the line with just 1 experiment run, then with 5, then 10 and see.
+# Then dependent on what I want to say I need to run more or not. But probably since we only look at a trend that's kind of
+# linear its fine to just do it with 10 runs.
+
+
+# -------- Divide execution time ----------
+
+# select in df_p_overview_mean only the context-select-activity columns
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+df_p_overview_mean_divide_execution_time <- df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[1:6] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[7:12]
+
+# plot the df_p_overview_mean_divide_execution_time in a line plot
+data_divide_execution_time <- c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
+
+# plot data in a line plot
+plot(data_divide_execution_time, type = "o", col = "blue", xlab = "Agents", ylab = "Execution time ratio", main = "Execution time ratio of context-select-activity")
+
+# I'm not sure if it says anything so I don't need to include it.
+
+
+
+
+
+
 
 
 
