@@ -189,6 +189,70 @@ show(p)
 #if (plot_type == "one") { dev.off() }
 
 
+#--------------------------------------
+# ANALYSIS OF DCSD
+#--------------------------------------
+
+
+# From df_p_overview_mean remove all rows with preset 0.1 Original ASSOCC
+df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 Original ASSOCC", ]
+# Remove GO from df_p_overview_mean_DCSD
+df_p_overview_mean_DCSD <- df_p_overview_mean_DCSD[df_p_overview_mean_DCSD$function_name != "GO", ]
+
+# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, agents, and incl_t_ms_mean
+df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% 
+  select(preset, function_name, agents, incl_t_ms_mean)
+
+preset = c()
+function_name = c()
+agents = c()
+incl_t_ms_mean = c()
+
+for (i in 1:6) {
+  
+  preset = c(preset, df_p_overview_mean_DCSD_selection$preset[i])
+  function_name = c(function_name, "DCSD Time")
+  agents = c(agents, df_p_overview_mean_DCSD_selection$agents[i])
+  incl_t_ms_mean = c(incl_t_ms_mean, df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i] - df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i + 6])
+}
+
+df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, incl_t_ms_mean)
+
+df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
+
+
+p <- ggplot(df_p_overview_mean_DCSD_selection, aes(x = agents, y = incl_t_ms_mean, group = function_name, colour = function_name)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "DCSD execution time in depth",
+       x = "Agents",
+       y = "Incl time") +
+  theme_minimal() + scale_colour_viridis_d() +
+  theme(text = element_text(size=16))
+show(p)
+
+#--------------------------------------
+# PREPARE FOR PRINTING SPECIFIC PERCENTAGES
+#--------------------------------------
+
+speed_up_factor <- c()
+for (i in 1:6) {
+  speed_up_factor = c(speed_up_factor, df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i + 6])
+}
+speed_up_factor
+
+# Print percentage
+
+
+#--------------------------------------
+# PRINT SPECIFIC PERCENTAGES FOR THE TEXT
+#--------------------------------------
+
+print("Printing the speed up factor for each agent setting")
+print(speed_up_factor)
+
+
+
 
 
 
@@ -338,30 +402,3 @@ p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=1
 #if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
 show(p)
 #if (plot_type == "one") { dev.off() }
-
-
-
-
-#--------------------------------------
-# OLDER CODE FOR PLOTTING
-#--------------------------------------
-
-plot_calls <- function(dataframe) {
-  ggplot(dataframe, aes(x = function_name, y = incl_t_ms, fill = as.factor(preset))) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Execution time for different context-depths",
-         x = "Function Name",
-         y = "Incl time",
-         fill = "CD") +
-    theme_minimal() + scale_fill_viridis_d() +
-    theme(axis.text.x = element_text(angle = 7, hjust = 0.5, vjust = 0.5), text = element_text(size=16))
-}
-# + theme(legend.position="bottom", text = element_text(size=16))
-
-# I want to plot the same function as before. However with the viridis colour palette.
-
-
-if (plot_type == "one") { pdf(paste("plot_", directory_files, "_profiler_execution_context_depths.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height, pointsize=12) }
-plot_calls(df_p_mean_summarized)
-if (plot_type == "one") { dev.off() }
-
