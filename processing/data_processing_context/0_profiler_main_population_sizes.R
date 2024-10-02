@@ -43,10 +43,6 @@ plot_type <- "none"
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-
-# This is just a string with the directory name
-directory_files <- "2024_07_21_scalability"
-directory_files <- "2026_01_01_scalability_everything"
 directory_files <- "2024_09_23_scalability_hospital_fix"
 
 #--- WORKSPACE AND DIRECTORY ---
@@ -56,38 +52,19 @@ getwd()
 
 source("../0_profiler_support_population_sizes.R")
 
-# C = context depth
-# H = households
-# A = action space
-# R = random seed
+# C = context depth, H = households, A = action space, R = random seed
 
-#2024_07_21_scalability
-if (directory_files == "2024_07_21_scalability")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"),
-                                                    c("5", "6", "7"))
-}
-
-if (directory_files == "2026_01_01_scalability_everything")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"),
-                                                    c("10", "11", "12", "13", "14"))
-}
+n_experiments_active = 10
+random_seeds = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")[1:n_experiments_active]
 
 if (directory_files == "2024_09_23_scalability_hospital_fix")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
                                                     c("6"),
-                                                    c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
+                                                    random_seeds)
 }
-# Households, Random seed, Action space, Preset
-# report-[-P= 0.1 Original ASSOCC -H= 350 -A= 6 -R= 0]
-# report-[-P= 0.2 Original ASSOCC-lockdown -H= 350 -A= 6 -R= 0]
+
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
@@ -104,94 +81,120 @@ df_p_overview$function_name[df_p_overview$function_name == "SELECT-ACTIVITY"] <-
 # Rename the "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR" to "FULL ASSOCC DELIBERATION"
 df_p_overview$function_name[df_p_overview$function_name == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR"] <- "FULL ASSOCC DELIBERATION"
 
+# There are some double entries in the dataframe, so I need to remove them
+df_p_overview <- df_p_overview[!duplicated(df_p_overview), ]
+
 # The profiler function that summarizes all the important results
 profilerSummarize(df_profiler, df_p_overview)
 
 
 #--------------------------------------
-# Recalculate data and take mean
+#---      ADD SPECIFIC ROWS         ---
 #--------------------------------------
+
 # for df_p_overview I want to divide incl_t_ms by the number of calls
 df_p_overview$incl_t_ms_per_call <- df_p_overview$incl_t_ms / df_p_overview$calls
+
 
 # in df_p_overview I want to add another column for the number of agents
 # for each number of households there are specific number of agents, see below where households = agents, households = agents, ...
 # 350 = 1004, 700 = 2008, 1400 = 4016, 2100 = 6016, 2800 = 8024, 3500 = 10028
 df_p_overview$agents <- c(1004, 2008, 4016, 6016, 8024, 10028)[match(df_p_overview$households, c(350, 700, 1400, 2100, 2800, 3500))]
 
+
+
+
+#----------------------------------------
+# Calculate the mean and sd of the data
+#----------------------------------------
+
 # In the following functions and plots the households column is exchanged for the agents column
 df_p_overview_mean <- df_p_overview %>% 
   group_by(preset, function_name, agents) %>% 
-  summarise(calls = mean(calls, na.rm = TRUE),
-            incl_t_ms = mean(incl_t_ms, na.rm = TRUE),
-            excl_t_ms = mean(excl_t_ms, na.rm = TRUE),
-            excl_calls = mean(excl_calls, na.rm = TRUE),
-            incl_t_ms_per_call = mean(incl_t_ms_per_call, na.rm = TRUE))
-
-# Average the calls over the two presets
-df_p_overview_mean_calls <- df_p_overview_mean %>% 
-  group_by(function_name, agents) %>% 
-  summarise(calls_mean = mean(calls, na.rm = TRUE))
-
-v_calls_mean = c()
-for (i in 1:2) {
-  for (j in 1:nrow(df_p_overview_mean_calls)) {
-    if (df_p_overview_mean_calls$function_name[j] == df_p_overview_mean$function_name[j + (i - 1) * nrow(df_p_overview_mean_calls)] &&
-        df_p_overview_mean_calls$agents[j] == df_p_overview_mean$agents[j + (i - 1) * nrow(df_p_overview_mean_calls)])
-    {
-      v_calls_mean = c(v_calls_mean, df_p_overview_mean_calls$calls_mean[j])
-    }
-    else {
-      stop(paste("Error for calculating the mean calls at i = ", i, ", j = ", j, sep = ""))
-    }
-  }
-}
-
-df_p_overview_mean$calls_mean <- v_calls_mean
-
-df_p_overview_mean$incl_t_ms_recalculated <- df_p_overview_mean$incl_t_ms_per_call * df_p_overview_mean$calls_mean
-
-
+  summarise(calls_mean = mean(calls),
+            calls_sd = sd(calls),
+            incl_t_ms_mean = mean(incl_t_ms),
+            incl_t_ms_sd = sd(incl_t_ms),
+            excl_t_ms_mean = mean(excl_t_ms),
+            excl_t_ms_sd = sd(excl_t_ms),
+            excl_calls_mean = mean(excl_calls),
+            excl_calls_sd = sd(excl_calls))
 
 #--------------------------------------
 # PLOTTING
 #--------------------------------------
 
-# I want a line plot with the different agents
-# Using ggplot and the df_p_overview_mean dataframe, the agents as x-axis, and the incl_t_ms_recalculated column as y-axis
+#========= SELECT ACTIVITY =========
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
 
-plot_incl_t_ms_recalculated <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = agents, y = incl_t_ms_recalculated, group = preset, colour = preset)) +
-    geom_line() +
-    geom_point() +
-    labs(title = p_title,
-         x = "Agents",
-         y = "Incl time") +
-    theme_minimal() + scale_colour_viridis_d() +
-    theme(text = element_text(size=16))
-}
+p <- ggplot(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, aes(x = agents, y = incl_t_ms_mean, 
+                                                            color = preset,
+                                                            fill = preset)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = paste("Execution time comparison of Deliberation", sep = ""),
+       x = "Agents at start",
+       y = "Included execution time mean",
+       color = "Model",
+       fill = "Model") +
+  theme_minimal()
 
-plot_calls <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = agents, y = calls, group = preset, colour = preset)) +
-    geom_line() +
-    geom_point() +
-    labs(title = p_title,
-         x = "Agents",
-         y = "Calls") +
-    theme_minimal() + scale_colour_viridis_d() +
-    theme(text = element_text(size=16))
-}
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
 
-# Filter the df_p_overview_mean dataframe, by only retaining the GO function
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+show(p)
+#if (plot_type == "one") { dev.off() }
 
-df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
-plot_incl_t_ms_recalculated(df_p_overview_mean_GO, "Execution time GO function")
-
-df_p_overview_mean_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
-plot_incl_t_ms_recalculated(df_p_overview_mean_SELECT_ACTIVITY, "Execution time Select-activity")
-
+#========= FULL ASSOCC DELIBERATION =========
 df_p_overview_mean_FULL_ASSOCC_DELIBERATION <- df_p_overview_mean[df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION", ]
-plot_calls(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, "Calls of Full ASSOCC Deliberation")
+
+p <- ggplot(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, aes(x = agents, y = incl_t_ms_mean, 
+                                                            color = preset,
+                                                            fill = preset)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = paste("Execution time comparison of Full ASSOCC Delib", sep = ""),
+       x = "Agents at start",
+       y = "Included execution time mean",
+       color = "Model",
+       fill = "Model") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+show(p)
+#if (plot_type == "one") { dev.off() }
+
+
+#========= GO =========
+df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
+
+p <- ggplot(df_p_overview_mean_GO, aes(x = agents, y = incl_t_ms_mean, 
+                                                             color = preset,
+                                                             fill = preset)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = paste("Execution time comparison of GO", sep = ""),
+       x = "Agents at start",
+       y = "Included execution time mean",
+       color = "Model",
+       fill = "Model") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+show(p)
+#if (plot_type == "one") { dev.off() }
+
+
+
+
+
+
+
+
 
 # Deliberation analysis DCSD
 
@@ -235,11 +238,11 @@ df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, in
 df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
 
 # --- The plotting function ---
-plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection, "In detail DCSD execution time")
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection, paste("In detail DCSD execution time n=", n_experiments_active))
 
 # Remove everything except the function_name "DCSD Time", df_p_overview_mean_DCSD_selection
 df_p_overview_mean_DCSD_selection_DCSD_time <- df_p_overview_mean_DCSD_selection[df_p_overview_mean_DCSD_selection$function_name == "DCSD Time", ]
-plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection_DCSD_time, "Execution time DCSD Time to show its linear")
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection_DCSD_time, paste("Execution time DCSD Time to show its linear n=", n_experiments_active))
 # This is obsolete
 
 # So which numbers do I need?
@@ -258,12 +261,7 @@ df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_m
 df_p_overview_mean_divide_execution_time <- df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[1:6] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[7:12]
 
 # plot the df_p_overview_mean_divide_execution_time in a line plot
-data_divide_execution_time <- c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
-
-# plot data in a line plot
-plot(data_divide_execution_time, type = "o", col = "blue", xlab = "Agents", ylab = "Execution time ratio", main = "Execution time ratio of context-select-activity")
-
-# I'm not sure if it says anything so I don't need to include it.
+data_divide_execution_time <- df_p_overview_mean_divide_execution_time #c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
 
 
 
@@ -272,6 +270,74 @@ plot(data_divide_execution_time, type = "o", col = "blue", xlab = "Agents", ylab
 
 
 
+#--------------------------------------
+# OLDER CODE FOR CHECKING CALLS NUMBER DIFFERENCES
+#--------------------------------------
+
+# in df_p_overview select only the rows with context-select-activity
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+for (i in 1:6) {
+  t_dif = abs(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i] - df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i + 6])
+  print(paste("Difference:", t_dif,
+              "Percentage:" , (t_dif/df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i]) * 100))
+}
+
+# For 3500 households the percentage difference is 0.06 %
+# In the text I could say the percentage is around 0.1 % for all experiments, so the difference is negligible for this comparison.
+# Therefore the code below is obsolete
+
+#-----------------------------------------
+# OLDER OBSOLETE CODE FOR: Recalculate the mean calls and incl_t_ms
+#-----------------------------------------
+
+# Average the calls over the two presets
+df_p_overview_mean_calls <- df_p_overview_mean %>% 
+  group_by(function_name, agents) %>% 
+  summarise(calls_mean = mean(calls, na.rm = TRUE))
+
+v_calls_mean = c()
+for (i in 1:2) {
+  for (j in 1:nrow(df_p_overview_mean_calls)) {
+    if (df_p_overview_mean_calls$function_name[j] == df_p_overview_mean$function_name[j + (i - 1) * nrow(df_p_overview_mean_calls)] &&
+        df_p_overview_mean_calls$agents[j] == df_p_overview_mean$agents[j + (i - 1) * nrow(df_p_overview_mean_calls)])
+    {
+      v_calls_mean = c(v_calls_mean, df_p_overview_mean_calls$calls_mean[j])
+    }
+    else {
+      stop(paste("Error for calculating the mean calls at i = ", i, ", j = ", j, sep = ""))
+    }
+  }
+}
+
+df_p_overview_mean$calls_mean <- v_calls_mean
+
+df_p_overview_mean$incl_t_ms_recalculated <- df_p_overview_mean$incl_t_ms_per_call * df_p_overview_mean$calls_mean
+
+#-----------------------------------------
+# OLDER OBSOLETE, SINCE PLOTTING THE RIBBON DOES NOT SHOW ANYTHING NEW SINCE THE SD IS SO SMALL
+#-----------------------------------------
+
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+p <- ggplot(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, aes(x = agents, y = incl_t_ms_mean, 
+                                                            color = preset,
+                                                            fill = preset)) +
+  geom_line(linewidth = 1.2) +
+  geom_ribbon(aes(ymin = incl_t_ms_lower, ymax = incl_t_ms_upper), alpha = 0.2) +
+  labs(title = paste("Execution time", sep = ""),
+       x = "Agents at start",
+       y = "Included execution time mean",
+       color = "Model",
+       fill = "Model") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+show(p)
+#if (plot_type == "one") { dev.off() }
 
 
 
