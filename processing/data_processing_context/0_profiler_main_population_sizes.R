@@ -40,7 +40,7 @@ gl_pdf_height = 7
 # One of: "none", "one", "all"
 plot_type <- "none"
 #plot_type <- "one" 
-#plot_type <- "all"
+plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 directory_files <- "2024_09_23_scalability_hospital_fix"
@@ -100,7 +100,6 @@ df_p_overview$incl_t_ms_per_call <- df_p_overview$incl_t_ms / df_p_overview$call
 # for each number of households there are specific number of agents, see below where households = agents, households = agents, ...
 # 350 = 1004, 700 = 2008, 1400 = 4016, 2100 = 6016, 2800 = 8024, 3500 = 10028
 df_p_overview$agents <- c(1004, 2008, 4016, 6016, 8024, 10028)[match(df_p_overview$households, c(350, 700, 1400, 2100, 2800, 3500))]
-
 
 
 
@@ -227,9 +226,17 @@ p <- ggplot(df_p_overview_mean_DCSD_selection, aes(x = agents, y = incl_t_ms_mea
   labs(title = "DCSD execution time in depth",
        x = "Agents",
        y = "Incl time") +
-  theme_minimal() + scale_colour_viridis_d() +
+  scale_colour_viridis_d() +
   theme(text = element_text(size=16))
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+
+gl_pdf_width = 10
+gl_pdf_height = 7
+plot_type = "all"
+if (plot_type == "all") { pdf(paste("plot_", directory_files, "_dcsd_execution_time_in_depth.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) }
 show(p)
+if (plot_type == "all") { dev.off() }
 
 #--------------------------------------
 # PREPARE FOR PRINTING SPECIFIC PERCENTAGES
@@ -239,10 +246,16 @@ speed_up_factor <- c()
 for (i in 1:6) {
   speed_up_factor = c(speed_up_factor, df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i + 6])
 }
-speed_up_factor
 
-# Print percentage
+percentage_deliberation_from_go_original <- c()
+for (i in 1:6) {
+  percentage_deliberation_from_go_original = c(percentage_deliberation_from_go_original, round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_GO$incl_t_ms_mean[i] * 100, 2))
+}
 
+percentage_deliberation_from_go_dcsd <- c()
+for (i in 7:12) {
+  percentage_deliberation_from_go_dcsd = c(percentage_deliberation_from_go_dcsd, round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_GO$incl_t_ms_mean[i] * 100, 2))
+}
 
 #--------------------------------------
 # PRINT SPECIFIC PERCENTAGES FOR THE TEXT
@@ -251,6 +264,33 @@ speed_up_factor
 print("Printing the speed up factor for each agent setting")
 print(speed_up_factor)
 
+print("Printing the deliberation percentage from go for original")
+print(percentage_deliberation_from_go_original)
+
+print("Printing the deliberation percentage from go for DCSD")
+print(percentage_deliberation_from_go_dcsd)
+
+# from df_p_overview_mean get the row with preset = 0.1 Original ASSOCC, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "0.1 Original ASSOCC" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+#--------------------------------------
+# PRINT TABLE
+#--------------------------------------
+
+
+# from df_p_overview_mean get the row with preset = 0.1 Original ASSOCC, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "0.1 Original ASSOCC" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+print("Printing execution time and calls for 0.1 Original ASSOCC, FULL ASSOCC DELIBERATION, 10028 agents")
+print(paste(df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028$incl_t_ms_mean, "ms"))
+print(paste(df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028$calls_mean, "calls"))
+
+# from df_p_overview_mean get the row with preset = 5.1 DCSD-5-optimisation, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "5.1 DCSD-5-optimisation" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+print("Printing execution time and calls for 5.1 DCSD-5-optimisation, FULL ASSOCC DELIBERATION, 10028 agents")
+print(paste(df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028$incl_t_ms_mean, "ms"))
+print(paste(df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028$calls_mean, "calls"))
 
 
 
@@ -261,9 +301,8 @@ print(speed_up_factor)
 
 
 # Deliberation analysis DCSD
-
 plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
-  ggplot(dataframe, aes(x = agents, y = incl_t_ms, group = function_name, colour = function_name)) +
+  ggplot(dataframe, aes(x = agents, y = incl_t_ms_mean, group = function_name, colour = function_name)) +
     geom_line() +
     geom_point() +
     labs(title = p_title,
@@ -278,26 +317,25 @@ df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 
 # Remove GO from df_p_overview_mean_DCSD
 df_p_overview_mean_DCSD <- df_p_overview_mean_DCSD[df_p_overview_mean_DCSD$function_name != "GO", ]
 
-# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, agents, and incl_t_ms
-df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% 
-  select(preset, function_name, agents, incl_t_ms)
+# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, agents, and incl_t_ms_mean
+df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% select(preset, function_name, agents, incl_t_ms_mean)
 
 # Create a dataframe and add 
 
 preset = c()
 function_name = c()
 agents = c()
-incl_t_ms = c()
+incl_t_ms_mean = c()
 
 for (i in 1:6) {
   
   preset = c(preset, df_p_overview_mean_DCSD_selection$preset[i])
   function_name = c(function_name, "DCSD Time")
   agents = c(agents, df_p_overview_mean_DCSD_selection$agents[i])
-  incl_t_ms = c(incl_t_ms, df_p_overview_mean_DCSD_selection$incl_t_ms[i] - df_p_overview_mean_DCSD_selection$incl_t_ms[i + 6])
+  incl_t_ms_mean = c(incl_t_ms_mean, df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i] - df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i + 6])
 }
 
-df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, incl_t_ms)
+df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, incl_t_ms_mean)
 
 df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
 
