@@ -39,8 +39,8 @@ gl_pdf_height = 7
 
 # One of: "none", "one", "all"
 plot_type <- "none"
-#plot_type <- "one" 
-plot_type <- "all"
+plot_type <- "one" 
+#plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 directory_files <- "2024_09_23_scalability_hospital_fix"
@@ -119,30 +119,95 @@ df_p_overview_mean <- df_p_overview %>%
             excl_calls_mean = mean(excl_calls),
             excl_calls_sd = sd(excl_calls))
 
+
 #--------------------------------------
 # PLOTTING
 #--------------------------------------
+
+#==============================================
+#==============================================
+# SELECT ACTIVITY EXECUTION TIME
+#==============================================
+#==============================================
+
 
 #========= SELECT ACTIVITY =========
 df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
 
 p <- ggplot(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, aes(x = agents, y = incl_t_ms_mean, 
                                                             color = preset,
-                                                            fill = preset)) +
+                                                            fill = preset,
+                                                            linetype = preset)) +
   geom_line(linewidth = 1.2) +
-  labs(title = paste("Execution time comparison of Deliberation", sep = ""),
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Execution time comparison of Deliberation (n = 10)", sep = ""),
        x = "Agents at start",
-       y = "Included execution time mean",
+       y = "Incl execution time (ms)",
        color = "Model",
-       fill = "Model") +
-  theme_minimal()
+       fill = "Model",
+       linetype = "Model")
 
-p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p <- p + theme_bw() +
+  theme(legend.position="bottom", text = element_text(size=16)) + 
+  guides(fill=guide_legend(nrow=1, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
+
+#==============================================
+# PLOTTING 11111111111111111111
+#==============================================
+
+show(p)
 
 #p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
-#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+if (plot_type == "one") 
+{ 
+  pdf(paste("plot_", directory_files, "_profiler_time_comparison_deliberation.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
+
+
+
+
+
+#==============================================
+#==============================================
+# GO FUNCTION EXECUTION TIME
+#==============================================
+#==============================================
+
+#========= GO =========
+df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
+
+p <- ggplot(df_p_overview_mean_GO, aes(x = agents, y = incl_t_ms_mean, 
+                                       color = preset,
+                                       fill = preset,
+                                       linetype = preset)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Execution time comparison of complete run (n = 10)", sep = ""),
+       x = "Agents at start",
+       y = "Incl execution time (ms)",
+       color = "Model",
+       fill = "Model",
+       linetype = "Model")
+
+p <- p + theme_bw() +
+  theme(legend.position="bottom", text = element_text(size=16)) +
+  guides(fill=guide_legend(nrow=1, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
+
+#==============================================
+# PLOTTING 3333333333333333333333
+#==============================================
+
 show(p)
-#if (plot_type == "one") { dev.off() }
+
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+if (plot_type == "one") 
+{ 
+  pdf(paste("plot_", directory_files, "_profiler_time_comparison_go.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
 
 #========= FULL ASSOCC DELIBERATION =========
 df_p_overview_mean_FULL_ASSOCC_DELIBERATION <- df_p_overview_mean[df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION", ]
@@ -151,9 +216,10 @@ p <- ggplot(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, aes(x = agents, y = inc
                                                             color = preset,
                                                             fill = preset)) +
   geom_line(linewidth = 1.2) +
-  labs(title = paste("Execution time comparison of Full ASSOCC Delib", sep = ""),
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Execution time comparison of Full ASSOCC Delib (n = 10)", sep = ""),
        x = "Agents at start",
-       y = "Included execution time mean",
+       y = "Incl execution time (ms)",
        color = "Model",
        fill = "Model") +
   theme_minimal()
@@ -162,36 +228,18 @@ p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=1
 
 #p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
 #if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
-show(p)
+#show(p)
 #if (plot_type == "one") { dev.off() }
 
 
-#========= GO =========
-df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
-
-p <- ggplot(df_p_overview_mean_GO, aes(x = agents, y = incl_t_ms_mean, 
-                                                             color = preset,
-                                                             fill = preset)) +
-  geom_line(linewidth = 1.2) +
-  labs(title = paste("Execution time comparison of GO", sep = ""),
-       x = "Agents at start",
-       y = "Included execution time mean",
-       color = "Model",
-       fill = "Model") +
-  theme_minimal()
-
-p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
-
-#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
-#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
-show(p)
-#if (plot_type == "one") { dev.off() }
 
 
-#--------------------------------------
-# ANALYSIS OF DCSD
-#--------------------------------------
 
+#==============================================
+#==============================================
+# INDEPTH ANALYSIS OF DCSD EXECUTION TIME
+#==============================================
+#==============================================
 
 # From df_p_overview_mean remove all rows with preset 0.1 Original ASSOCC
 df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 Original ASSOCC", ]
@@ -219,24 +267,41 @@ df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, in
 
 df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
 
-
-p <- ggplot(df_p_overview_mean_DCSD_selection, aes(x = agents, y = incl_t_ms_mean, group = function_name, colour = function_name)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "DCSD execution time in depth",
+#==============================================
+# PLOTTING 22222222222222222222
+#==============================================
+p <- ggplot(df_p_overview_mean_DCSD_selection, aes(x = agents, y = incl_t_ms_mean,
+                                                   group = function_name,
+                                                   color = function_name,
+                                                   fill = function_name,
+                                                   linetype = function_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = "DCSD execution time in depth (n = 10)",
        x = "Agents",
-       y = "Incl time") +
-  scale_colour_viridis_d() +
-  theme(text = element_text(size=16))
+       y = "Incl execution time (ms)",
+       color = "Type",
+       fill = "Type",
+       linetype = "Type")
 
-p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) +
+  guides(fill=guide_legend(nrow=2, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
 
-gl_pdf_width = 10
-gl_pdf_height = 7
-plot_type = "all"
-if (plot_type == "all") { pdf(paste("plot_", directory_files, "_dcsd_execution_time_in_depth.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) }
+# Actual plotting
 show(p)
-if (plot_type == "all") { dev.off() }
+
+if (plot_type == "one") 
+{
+  pdf(paste("plot_", directory_files, "_profiler_time_comparison_dcsd_in_detail.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
+
+
+
+
+
+
 
 #--------------------------------------
 # PREPARE FOR PRINTING SPECIFIC PERCENTAGES
@@ -295,11 +360,6 @@ print(paste(df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028$calls_mean, "
 
 
 
-
-
-
-
-
 # Deliberation analysis DCSD
 plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
   ggplot(dataframe, aes(x = agents, y = incl_t_ms_mean, group = function_name, colour = function_name)) +
@@ -307,7 +367,7 @@ plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
     geom_point() +
     labs(title = p_title,
          x = "Agents",
-         y = "Incl time") +
+         y = "Incl execution time (ms)") +
     theme_minimal() + scale_colour_viridis_d() +
     theme(text = element_text(size=16))
 }
@@ -358,12 +418,21 @@ df_p_overview_mean
 # -------- Divide execution time ----------
 
 # select in df_p_overview_mean only the context-select-activity columns
-df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+# df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
 
-df_p_overview_mean_divide_execution_time <- df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[1:6] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[7:12]
+# df_p_overview_mean_divide_execution_time <- df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[1:6] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[7:12]
 
 # plot the df_p_overview_mean_divide_execution_time in a line plot
-data_divide_execution_time <- df_p_overview_mean_divide_execution_time #c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
+# data_divide_execution_time <- df_p_overview_mean_divide_execution_time #c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
+
+
+
+
+
+
+
+
+
 
 
 
