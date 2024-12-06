@@ -86,7 +86,7 @@ to-report cssowh-salient-need-deliberation [most-salient-need most-salient-need-
      most-salient-need = need-belonging or most-salient-need = need-compliance
   [ report cssowh-sleep-health-risk-avoidance-belonging-compliance ]
   
-  if most-salient-need = need-autonomy ; Chosen to not be implemented
+  if most-salient-need = need-autonomy
   [ report cssowh-autonomy-financial most-salient-need-level ]
   
   if most-salient-need = need-leisure
@@ -102,7 +102,7 @@ to-report cssowh-salient-need-deliberation [most-salient-need most-salient-need-
   if most-salient-need = need-food-safety
   [ report cssowh-food-safety ]
   
-  if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival ; TODO: Split this function
+  if most-salient-need = need-financial-stability or most-salient-need = need-financial-survival 
   [ report cssowh-autonomy-financial most-salient-need-level ]
   
   report cssowh-error-f
@@ -117,9 +117,9 @@ to-report cssowh-sleep-health-risk-avoidance-belonging-compliance
   report context-determine-social-distancing (list my-home "rest")
 end
 
-to-report cssowh-autonomy-financial [ most-salient-need-level ]; Chosen to not be implemented
-;  if most-salient-need-level < ce-need-critical-threshold
-;  [ report context-determine-social-distancing obligation-activity-descriptor ]
+to-report cssowh-autonomy-financial [ most-salient-need-level ]
+  if most-salient-need-level < ce-need-critical-threshold
+  [ report context-determine-social-distancing (list my-home work-motive) ]
   report cssowh-autonomy-financial-f
 end
 
@@ -152,6 +152,7 @@ to-report cssowh-food-safety
   report cssowh-food-safety-f
 end
 
+; Chosen to not be implemented
 to-report cssowh-conformity
   
 ;  let network-action context-conformity-get-network-action

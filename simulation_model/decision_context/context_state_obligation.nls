@@ -217,7 +217,6 @@ to-report cso-conformity
       [ if network-motive = "rest" [ report (list my-home "rest" network-sd) ] ]
     ]
   ]
-  
   report cso-conformity-f
 end
 
