@@ -6199,6 +6199,11 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>
+      <value value="700"/>
+      <value value="1400"/>
+      <value value="2100"/>
+      <value value="2800"/>
+      <value value="3500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>
