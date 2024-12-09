@@ -44,6 +44,7 @@ plot_type <- "one"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 directory_files <- "2024_09_23_scalability_hospital_fix"
+directory_files <- "2024_12_07_scalability_wh_autonomy"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -54,10 +55,10 @@ source("../0_profiler_support_population_sizes.R")
 
 # C = context depth, H = households, A = action space, R = random seed
 
-n_experiments_active = 10
+n_experiments_active = 1
 random_seeds = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")[1:n_experiments_active]
 
-if (directory_files == "2024_09_23_scalability_hospital_fix")
+if (directory_files == "2024_12_07_scalability_wh_autonomy")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
@@ -140,7 +141,7 @@ p <- ggplot(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, aes(x = agents, y = incl
                                                             linetype = preset)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5, show.legend = FALSE) +
-  labs(title = paste("Execution time comparison of Deliberation (n = 10)", sep = ""),
+  labs(title = paste("Execution time comparison of Deliberation (n = ", n_experiments_active, ")", sep = ""),
        x = "Agents at start",
        y = "Incl execution time (ms)",
        color = "Model",
@@ -184,7 +185,7 @@ p <- ggplot(df_p_overview_mean_GO, aes(x = agents, y = incl_t_ms_mean,
                                        linetype = preset)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5, show.legend = FALSE) +
-  labs(title = paste("Execution time comparison of complete run (n = 10)", sep = ""),
+  labs(title = paste("Execution time comparison of complete run (n = ", n_experiments_active, ")", sep = ""),
        x = "Agents at start",
        y = "Incl execution time (ms)",
        color = "Model",
@@ -217,7 +218,7 @@ p <- ggplot(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, aes(x = agents, y = inc
                                                             fill = preset)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5, show.legend = FALSE) +
-  labs(title = paste("Execution time comparison of Full ASSOCC Delib (n = 10)", sep = ""),
+  labs(title = paste("Execution time comparison of Full ASSOCC Delib (n = ", n_experiments_active, ")", sep = ""),
        x = "Agents at start",
        y = "Incl execution time (ms)",
        color = "Model",
@@ -277,7 +278,7 @@ p <- ggplot(df_p_overview_mean_DCSD_selection, aes(x = agents, y = incl_t_ms_mea
                                                    linetype = function_name)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5, show.legend = FALSE) +
-  labs(title = "DCSD execution time in depth (n = 10)",
+  labs(title = paste("DCSD execution time in depth (n = ", n_experiments_active, ")", sep = ""),
        x = "Agents",
        y = "Incl execution time (ms)",
        color = "Type",
@@ -298,11 +299,13 @@ if (plot_type == "one")
 }
 
 
+#===============================
+# STOP
+#===============================
 
 
 
-
-
+# This part should be reworked??
 #--------------------------------------
 # PREPARE FOR PRINTING SPECIFIC PERCENTAGES
 #--------------------------------------

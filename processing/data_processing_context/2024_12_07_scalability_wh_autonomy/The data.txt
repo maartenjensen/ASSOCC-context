@@ -1,0 +1,30 @@
+
+
+
+0.1 Original ASSOCC 3500
+
+GO                                               240 8996052.313      5.284      0.022
+SELECT-ACTIVITY                              2399000 1177537.590   5486.525      0.002
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR   2399000 1166728.564  15501.727      0.006
+
+
+5 DCSD ASSOCC 3500
+
+GO                                               240 4431621.600      5.149      0.021
+CONTEXT-SELECT-ACTIVITY                       2400562  56737.038   2860.097      0.001
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      25073  12865.719    172.973      0.007
+
+
+1177537/56737 = 20.75
+
+13.1% is deliberation in Original ASSOCC, the other parts are non deliberation.
+
+Non deliberation of Original ASSOCC
+8996052 - 1177537 = 7818515 ms
+
+If the agents did the same, the assumed total execution time would be.
+
+7818515 + 56737 = 7875252
+
+
+7818515/56737 = We need to speed up the other processes by 138 times if we want deliberation to matter again, with 10.000 agents.
