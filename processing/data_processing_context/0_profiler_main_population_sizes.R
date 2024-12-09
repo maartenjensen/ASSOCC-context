@@ -120,6 +120,8 @@ df_p_overview_mean <- df_p_overview %>%
             excl_calls_mean = mean(excl_calls),
             excl_calls_sd = sd(excl_calls))
 
+# --- NOTE!! ---
+# if there is only n_experiments_active, df_p_overview_mean
 
 #--------------------------------------
 # PLOTTING
@@ -166,6 +168,31 @@ if (plot_type == "one")
   dev.off()
 }
 
+#==============================================
+# DATA PRINTING 1111111111111111111
+#==============================================
+
+agents = df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$agents[1:6]
+incl_t_original_assocc = df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[1:6]
+incl_t_dcsd_assocc = df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[7:12]
+
+df_speed_up <- data.frame(agents, incl_t_original_assocc, incl_t_dcsd_assocc)
+df_speed_up$speed_up <- df_speed_up$incl_t_original_assocc/df_speed_up$incl_t_dcsd_assocc
+
+
+
+#\begin{table}[!ht]
+#\begin{tabular}{ll|lll}
+#\textbf{Agents} & \textbf{Households} & \textbf{\begin{tabular}[c]{@{}l@{}}Original\\ ASSOCC\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}DCSD\\ ASSOCC\end{tabular}} & \textbf{Speed-up factor} \\ \hline
+#\textbf{\begin{tabular}[c]{@{}l@{}}DCSD\\ ASSOCC\end{tabular}} & \textbf{Speed-up factor} \\ \hline
+for (i in 1:6) {
+  cat(df_speed_up$agents[i], "&", round(df_speed_up$incl_t_original_assocc[i], digits = 0), "ms &",
+      round(df_speed_up$incl_t_dcsd_assocc[i], digits = 0), "ms &",  round(df_speed_up$speed_up[i], digits = 1), "\\\\ \n") 
+}
+
+#\end{tabular}
+#\caption{\textcolor{red}{Execution time with speed-up factor - Original VS DCSD}}
+#\label{tab:results_scalability_n_agents_deliberation_comparison_and_speed_up}
 
 
 
@@ -232,7 +259,11 @@ p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=1
 #show(p)
 #if (plot_type == "one") { dev.off() }
 
-
+#==============================================
+# DATA PRINTING 333333333333333333
+#==============================================
+df_p_overview_mean_FULL_ASSOCC_DELIBERATION[, c(1,2,3,6)]
+df_p_overview_mean_GO[, c(1,2,3,6)]
 
 
 
@@ -297,6 +328,53 @@ if (plot_type == "one")
   show(p)
   dev.off()
 }
+
+
+#==============================================
+# DATA PRINTING 22222222222222222222
+#==============================================
+df_p_overview_mean_DCSD_selection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #===============================
