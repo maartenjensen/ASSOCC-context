@@ -90,10 +90,6 @@ profilerSummarize <- function(df_profiler, df_profiler_overview) {
   print("Profiler summary")
   print("----------------------------")
   print(df_profiler_overview)
-  # I need a way to combine the data, but I don't know how.
-  # I just forgot so much about R, pff do I want to spend the whole day on R?? I don't know
-  # I think I'm soo tired I really need to go home. 
-  # It depends on what I want to know, what is going to be in this function.
 }
 
 retrieve_filenames_profiler <- function(p_preset = c("0.1 Original ASSOCC"), p_households = c("350"), p_action_space = c("6"), p_random_seed = c("0")) {
@@ -263,4 +259,40 @@ profilerGetContextDepth <- function(p_preset) {
   else if (p_preset == "0.2 Original ASSOCC-lockdown") {
     return(0)
   }
+}
+
+profilerPrepareOverviewDataframe <- function(df_p_overview) {
+  
+  # Remove the "CONTEXT-DELIBERATION-SELECT-ACTIVITY"
+  df_p_overview <- df_p_overview[!grepl("CONTEXT-DELIBERATION-SELECT-ACTIVITY", df_p_overview$function_name), ]
+  # Rename
+  df_p_overview$function_name[df_p_overview$function_name == "SELECT-ACTIVITY"] <- "CONTEXT-SELECT-ACTIVITY"
+  # Rename the "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR" to "FULL ASSOCC DELIBERATION"
+  df_p_overview$function_name[df_p_overview$function_name == "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR"] <- "FULL ASSOCC DELIBERATION"
+  
+  # There are some double entries in the dataframe, so I need to remove them
+  df_p_overview <- df_p_overview[!duplicated(df_p_overview), ]
+  
+  # For df_p_overview I want to divide incl_t_ms by the number of calls
+  df_p_overview$incl_t_ms_per_call <- df_p_overview$incl_t_ms / df_p_overview$calls
+  
+  # Add a column for the agent numberss
+  df_p_overview$agents <- c(1004, 2008, 4016, 6016, 8024, 10028)[match(df_p_overview$households, c(350, 700, 1400, 2100, 2800, 3500))]
+  
+  return(df_p_overview)
+}
+
+#--------------------------------------------------------------------------------------------------------
+# Calculate the mean and sd of the data || # --- NOTE!! --- # if there is only ONE experiment: SD = NA ||
+#--------------------------------------------------------------------------------------------------------
+
+profilerGetOverviewMean <- function(df_p_overview) {
+  df_p_overview_mean <- df_p_overview %>% 
+    group_by(preset, function_name, agents) %>% 
+    summarise(calls_mean = mean(calls), calls_sd = sd(calls),
+              incl_t_ms_mean = mean(incl_t_ms), incl_t_ms_sd = sd(incl_t_ms),
+              excl_t_ms_mean = mean(excl_t_ms), excl_t_ms_sd = sd(excl_t_ms),
+              excl_calls_mean = mean(excl_calls), excl_calls_sd = sd(excl_calls))
+  
+  return(df_p_overview_mean)
 }

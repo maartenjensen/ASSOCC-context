@@ -1,0 +1,215 @@
+
+
+#===============================
+# STOP
+#===============================
+
+
+
+# This part should be reworked??
+#--------------------------------------
+# PREPARE FOR PRINTING SPECIFIC PERCENTAGES
+#--------------------------------------
+
+speed_up_factor <- c()
+for (i in 1:6) {
+  speed_up_factor = c(speed_up_factor, df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i + 6])
+}
+
+percentage_deliberation_from_go_original <- c()
+for (i in 1:6) {
+  percentage_deliberation_from_go_original = c(percentage_deliberation_from_go_original, round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_GO$incl_t_ms_mean[i] * 100, 2))
+}
+
+percentage_deliberation_from_go_dcsd <- c()
+for (i in 7:12) {
+  percentage_deliberation_from_go_dcsd = c(percentage_deliberation_from_go_dcsd, round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean[i] / df_p_overview_mean_GO$incl_t_ms_mean[i] * 100, 2))
+}
+
+#--------------------------------------
+# PRINT SPECIFIC PERCENTAGES FOR THE TEXT
+#--------------------------------------
+
+print("Printing the speed up factor for each agent setting")
+print(speed_up_factor)
+
+print("Printing the deliberation percentage from go for original")
+print(percentage_deliberation_from_go_original)
+
+print("Printing the deliberation percentage from go for DCSD")
+print(percentage_deliberation_from_go_dcsd)
+
+# from df_p_overview_mean get the row with preset = 0.1 Original ASSOCC, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "0.1 Original ASSOCC" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+#--------------------------------------
+# PRINT TABLE
+#--------------------------------------
+
+
+# from df_p_overview_mean get the row with preset = 0.1 Original ASSOCC, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "0.1 Original ASSOCC" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+print("Printing execution time and calls for 0.1 Original ASSOCC, FULL ASSOCC DELIBERATION, 10028 agents")
+print(paste(df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028$incl_t_ms_mean, "ms"))
+print(paste(df_p_overview_mean_ORIGINAL_FULL_ASSOCC_DELIBERATION_10028$calls_mean, "calls"))
+
+# from df_p_overview_mean get the row with preset = 5.1 DCSD-5-optimisation, function_name = FULL ASSOCC DELIBERATION, agents = 10028
+df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028 <- df_p_overview_mean[df_p_overview_mean$preset == "5.1 DCSD-5-optimisation" & df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION" & df_p_overview_mean$agents == 10028, ]
+
+print("Printing execution time and calls for 5.1 DCSD-5-optimisation, FULL ASSOCC DELIBERATION, 10028 agents")
+print(paste(df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028$incl_t_ms_mean, "ms"))
+print(paste(df_p_overview_mean_DCSD_FULL_ASSOCC_DELIBERATION_10028$calls_mean, "calls"))
+
+
+
+
+# Deliberation analysis DCSD
+plot_incl_t_ms_function_name <- function(dataframe, p_title = "No title") {
+  ggplot(dataframe, aes(x = agents, y = incl_t_ms_mean, group = function_name, colour = function_name)) +
+    geom_line() +
+    geom_point() +
+    labs(title = p_title,
+         x = "Agents",
+         y = "Incl execution time (ms)") +
+    theme_minimal() + scale_colour_viridis_d() +
+    theme(text = element_text(size=16))
+}
+
+# From df_p_overview_mean remove all rows with preset 0.1 Original ASSOCC
+df_p_overview_mean_DCSD <- df_p_overview_mean[df_p_overview_mean$preset != "0.1 Original ASSOCC", ]
+# Remove GO from df_p_overview_mean_DCSD
+df_p_overview_mean_DCSD <- df_p_overview_mean_DCSD[df_p_overview_mean_DCSD$function_name != "GO", ]
+
+# I just want to select from df_p_overview_mean_DCSD, the preset, function_name, agents, and incl_t_ms_mean
+df_p_overview_mean_DCSD_selection <- df_p_overview_mean_DCSD %>% select(preset, function_name, agents, incl_t_ms_mean)
+
+# Create a dataframe and add 
+
+preset = c()
+function_name = c()
+agents = c()
+incl_t_ms_mean = c()
+
+for (i in 1:6) {
+  
+  preset = c(preset, df_p_overview_mean_DCSD_selection$preset[i])
+  function_name = c(function_name, "DCSD Time")
+  agents = c(agents, df_p_overview_mean_DCSD_selection$agents[i])
+  incl_t_ms_mean = c(incl_t_ms_mean, df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i] - df_p_overview_mean_DCSD_selection$incl_t_ms_mean[i + 6])
+}
+
+df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, incl_t_ms_mean)
+
+df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
+
+# --- The plotting function ---
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection, paste("In detail DCSD execution time n=", n_experiments_active))
+
+# Remove everything except the function_name "DCSD Time", df_p_overview_mean_DCSD_selection
+df_p_overview_mean_DCSD_selection_DCSD_time <- df_p_overview_mean_DCSD_selection[df_p_overview_mean_DCSD_selection$function_name == "DCSD Time", ]
+plot_incl_t_ms_function_name(df_p_overview_mean_DCSD_selection_DCSD_time, paste("Execution time DCSD Time to show its linear n=", n_experiments_active))
+# This is obsolete
+
+# So which numbers do I need?
+df_p_overview_mean
+
+# Do the tests and see how much the results vary, e.g. plot the line with just 1 experiment run, then with 5, then 10 and see.
+# Then dependent on what I want to say I need to run more or not. But probably since we only look at a trend that's kind of
+# linear its fine to just do it with 10 runs.
+
+
+# -------- Divide execution time ----------
+
+# select in df_p_overview_mean only the context-select-activity columns
+# df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+# df_p_overview_mean_divide_execution_time <- df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[1:6] / df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_recalculated[7:12]
+
+# plot the df_p_overview_mean_divide_execution_time in a line plot
+# data_divide_execution_time <- df_p_overview_mean_divide_execution_time #c(15.34235, 15.74206, 15.85221, 15.82626, 15.95528, 15.99495)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------
+# OLDER CODE FOR CHECKING CALLS NUMBER DIFFERENCES
+#--------------------------------------
+
+# in df_p_overview select only the rows with context-select-activity
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+for (i in 1:6) {
+  t_dif = abs(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i] - df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i + 6])
+  print(paste("Difference:", t_dif,
+              "Percentage:" , (t_dif/df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$calls_mean[i]) * 100))
+}
+
+# For 3500 households the percentage difference is 0.06 %
+# In the text I could say the percentage is around 0.1 % for all experiments, so the difference is negligible for this comparison.
+# Therefore the code below is obsolete
+
+#-----------------------------------------
+# OLDER OBSOLETE CODE FOR: Recalculate the mean calls and incl_t_ms
+#-----------------------------------------
+
+# Average the calls over the two presets
+df_p_overview_mean_calls <- df_p_overview_mean %>% 
+  group_by(function_name, agents) %>% 
+  summarise(calls_mean = mean(calls, na.rm = TRUE))
+
+v_calls_mean = c()
+for (i in 1:2) {
+  for (j in 1:nrow(df_p_overview_mean_calls)) {
+    if (df_p_overview_mean_calls$function_name[j] == df_p_overview_mean$function_name[j + (i - 1) * nrow(df_p_overview_mean_calls)] &&
+        df_p_overview_mean_calls$agents[j] == df_p_overview_mean$agents[j + (i - 1) * nrow(df_p_overview_mean_calls)])
+    {
+      v_calls_mean = c(v_calls_mean, df_p_overview_mean_calls$calls_mean[j])
+    }
+    else {
+      stop(paste("Error for calculating the mean calls at i = ", i, ", j = ", j, sep = ""))
+    }
+  }
+}
+
+df_p_overview_mean$calls_mean <- v_calls_mean
+
+df_p_overview_mean$incl_t_ms_recalculated <- df_p_overview_mean$incl_t_ms_per_call * df_p_overview_mean$calls_mean
+
+#-----------------------------------------
+# OLDER OBSOLETE, SINCE PLOTTING THE RIBBON DOES NOT SHOW ANYTHING NEW SINCE THE SD IS SO SMALL
+#-----------------------------------------
+
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+p <- ggplot(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, aes(x = agents, y = incl_t_ms_mean, 
+                                                            color = preset,
+                                                            fill = preset)) +
+  geom_line(linewidth = 1.2) +
+  geom_ribbon(aes(ymin = incl_t_ms_lower, ymax = incl_t_ms_upper), alpha = 0.2) +
+  labs(title = paste("Execution time", sep = ""),
+       x = "Agents at start",
+       y = "Included execution time mean",
+       color = "Model",
+       fill = "Model") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+
+#p <- p + coord_cartesian(xlim = c(0, 240), ylim = c(0, 1020)) # + labs(title=paste("Infections comparison (With infections)", sep=""))
+#if (plot_type == "one") { behaviourEnablePdf(paste("plot_", directory_files, "_infections_comparison_normal_n_", n_samples, sep="")) }
+show(p)
+#if (plot_type == "one") { dev.off() }
