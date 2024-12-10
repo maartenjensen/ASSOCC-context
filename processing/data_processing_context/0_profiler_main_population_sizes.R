@@ -339,39 +339,139 @@ df_p_overview_mean_DCSD_selection
 
 
 
+#==============================================
+# PLOTTING 4444444444444444444: Total, Deliberation and Non-Deliberation Time
+#==============================================
+
+# Data preparations
+round_i = 0
+v_incl_t_ms_mean_non_deliberation = df_p_overview_mean_GO$incl_t_ms_mean - df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean
+
+df_incl_t_ms_mean_all <- data.frame(df_p_overview_mean_GO$agents, df_p_overview_mean_GO$preset, 
+                                    round(df_p_overview_mean_GO$incl_t_ms_mean, round_i),
+                                    round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean, round_i),
+                                    round(v_incl_t_ms_mean_non_deliberation, round_i))
+
+colnames(df_incl_t_ms_mean_all) = c("Agents", "Preset", "Total Time", "Deliberation Time", "Non-Deliberation Time")
+
+# plot for Original ASSOCC
+df_time_original_assocc <- gather(df_incl_t_ms_mean_all[1:6, c(1,2,4,5)], time_type, incl_t_ms_mean, `Deliberation Time`:`Non-Deliberation Time`)
+
+p <- ggplot(df_time_original_assocc, aes(x = Agents, y = incl_t_ms_mean, 
+                                                     color = time_type,
+                                                     fill = time_type,
+                                                     linetype = time_type)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Original ASSOCC - Time Comparison (n = ", n_experiments_active, ")", sep = ""),
+       x = "Agents at start",
+       y = "Incl execution time (ms)",
+       color = "Time Type",
+       fill = "Time Type",
+       linetype = "Time Type") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p
+
+if (plot_type == "one") 
+{
+  pdf(paste("plot_", directory_files, "_profiler_time_comparison_original_assocc.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
+
+# plot for DCSD ASSOCC
+df_time_dcsd_assocc <- gather(df_incl_t_ms_mean_all[7:12, c(1,2,4,5)], time_type, incl_t_ms_mean, `Deliberation Time`:`Non-Deliberation Time`)
+
+p <- ggplot(df_time_dcsd_assocc, aes(x = Agents, y = incl_t_ms_mean, 
+                                         color = time_type,
+                                         fill = time_type,
+                                         linetype = time_type)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("DCSD ASSOCC - Time Comparison (n = ", n_experiments_active, ")", sep = ""),
+       x = "Agents at start",
+       y = "Incl execution time (ms)",
+       color = "Time Type",
+       fill = "Time Type",
+       linetype = "Time Type") +
+  theme_minimal()
+
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p
+
+if (plot_type == "one") 
+{
+  pdf(paste("plot_", directory_files, "_profiler_time_comparison_dcsd_assocc.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
 
 
+#==============================================
+# PLOTTING 55555555555555: Plot for required speed-up of non-deliberation time to be equal to deliberation time
+#==============================================
 
+# Calculate the speed up factor
+df_incl_t_ms_mean_all$`Required Speed-Up` = round(df_incl_t_ms_mean_all$`Non-Deliberation Time`/df_incl_t_ms_mean_all$`Deliberation Time`, 1)
 
+p <- ggplot(df_incl_t_ms_mean_all, aes(x = Agents, y = `Required Speed-Up`, 
+                                         color = Preset,
+                                         fill = Preset,
+                                         linetype = Preset)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Possible Speed-Up of Non-Deliberation (n = ", n_experiments_active, ")", sep = ""),
+       x = "Agents at start",
+       y = "Speed-up To Equalise",
+       color = "Model",
+       fill = "Model",
+       linetype = "Model") +
+  theme_minimal() + ylim(0, 150)
 
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p
 
+if (plot_type == "one") 
+{
+  pdf(paste("plot_", directory_files, "_profiler_non_deliberation_speed_up.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
 
+# From the figures above it can be seen that the Non-Deliberation time of Original ASSOCC
+# is about twice as much as the Non-Deliberation of DCSD ASSOCC. Thus what if we take the
+# Original ASSOCC Non-Deliberation time and calculate how much the speed-up factor required is then.
 
+# Data preparation
+df_incl_t_ms_mean_all$`Required Speed-Up Original` = df_incl_t_ms_mean_all$`Required Speed-Up`
+df_incl_t_ms_mean_all$`Required Speed-Up Original`[7:12] = round(df_incl_t_ms_mean_all$`Non-Deliberation Time`[1:6]/df_incl_t_ms_mean_all$`Deliberation Time`[7:12], 1)
+df_incl_t_ms_mean_all
 
+p <- ggplot(df_incl_t_ms_mean_all, aes(x = Agents, y = `Required Speed-Up Original`, 
+                                       color = Preset,
+                                       fill = Preset,
+                                       linetype = Preset)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5, show.legend = FALSE) +
+  labs(title = paste("Possible Speed-Up of Original ASSOCC Non-Deliberation (n = ", n_experiments_active, ")", sep = ""),
+       x = "Agents at start",
+       y = "Speed-up To Equalise",
+       color = "Model",
+       fill = "Model",
+       linetype = "Model") +
+  theme_minimal() + ylim(0, 150)
 
+p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
+p
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if (plot_type == "one") 
+{
+  pdf(paste("plot_", directory_files, "_profiler_non_deliberation_speed_up_original_assocc.pdf", sep=""), width=gl_pdf_width, height=gl_pdf_height) 
+  show(p)
+  dev.off()
+}
 
 
 
