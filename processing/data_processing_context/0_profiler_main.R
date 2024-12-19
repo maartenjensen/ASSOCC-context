@@ -42,6 +42,7 @@ plot_type <- "one"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 directory_files <- "2024_12_07_scalability_wh_autonomy"
+pdf_output_name <- "2024_12_07_scalability"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -52,7 +53,7 @@ source("../0_profiler_support.R")
 
 # C = context depth, H = households, A = action space, R = random seed
 
-n_experiments_active = 1
+n_experiments_active = 5
 random_seeds = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")[1:n_experiments_active]
 
 if (directory_files == "2024_12_07_scalability_wh_autonomy")
@@ -93,7 +94,7 @@ source("../0_profiler_plots.R")
 # SELECT ACTIVITY
 #==============================================
 df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
-plot_time_comparison_deliberation(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, directory_files, n_experiments_active, plot_type)
+plot_time_comparison_deliberation(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, pdf_output_name, n_experiments_active, plot_type)
 
 #== Data Printing ==
 
@@ -150,14 +151,14 @@ for (i in 1:6) {
 # GO
 #==============================================
 df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
-plot_time_comparison_go(df_p_overview_mean_GO, directory_files, n_experiments_active, plot_type) 
+plot_time_comparison_go(df_p_overview_mean_GO, pdf_output_name, n_experiments_active, plot_type) 
 
 
 #==============================================
 # FULL ASSOCC DELIBERATION
 #==============================================
 df_p_overview_mean_FULL_ASSOCC_DELIBERATION <- df_p_overview_mean[df_p_overview_mean$function_name == "FULL ASSOCC DELIBERATION", ]
-plot_time_comparison_full_assocc(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, directory_files, n_experiments_active, plot_type)
+plot_time_comparison_full_assocc(df_p_overview_mean_FULL_ASSOCC_DELIBERATION, pdf_output_name, n_experiments_active, plot_type)
 
 #== Data Printing ==
 df_p_overview_mean_FULL_ASSOCC_DELIBERATION[, c(1,2,3,6)]
@@ -198,7 +199,7 @@ df_p_overview_mean_DCSD_temporary = data.frame(preset, function_name, agents, in
 df_p_overview_mean_DCSD_selection <- rbind(df_p_overview_mean_DCSD_selection, df_p_overview_mean_DCSD_temporary)
 
 #== PLOT DETAILED DCSD ==
-plot_time_comparison_dcsd_detailed(df_p_overview_mean_DCSD_selection, directory_files, n_experiments_active, plot_type)
+plot_time_comparison_dcsd_detailed(df_p_overview_mean_DCSD_selection, pdf_output_name, n_experiments_active, plot_type)
 
 #== PRINT DATA ==
 df_p_overview_mean_DCSD_selection
@@ -224,22 +225,23 @@ colnames(df_incl_t_ms_mean_all) = c("Agents", "Preset", "Total Time", "Deliberat
 
 # plot for Original ASSOCC
 df_time_original_assocc <- gather(df_incl_t_ms_mean_all[1:6, c(1,2,4,5)], time_type, incl_t_ms_mean, `Deliberation Time`:`Non-Deliberation Time`)
-plot_time_comparison_original_assocc(df_time_original_assocc, directory_files, n_experiments_active, plot_type)
+plot_time_comparison_original_assocc(df_time_original_assocc, pdf_output_name, n_experiments_active, plot_type)
 
 # plot for DCSD ASSOCC
 df_time_dcsd_assocc <- gather(df_incl_t_ms_mean_all[7:12, c(1,2,4,5)], time_type, incl_t_ms_mean, `Deliberation Time`:`Non-Deliberation Time`)
-plot_time_comparison_dcsd_assocc(df_time_dcsd_assocc, directory_files, n_experiments_active, plot_type)
+plot_time_comparison_dcsd_assocc(df_time_dcsd_assocc, pdf_output_name, n_experiments_active, plot_type)
 
 #==============================================
 #==============================================
 # PLOT: Estimated total execution time of ASSOCC AND Non-deliberation time of ASSOCC + Deliberation time of DCSD
 #==============================================
 #==============================================
+dev.off()
 
 df_incl_t_ms_mean_all$`Total Time New` = df_incl_t_ms_mean_all$`Total Time`
 df_incl_t_ms_mean_all$`Total Time New`[7:12] = df_incl_t_ms_mean_all$`Non-Deliberation Time`[1:6] + df_incl_t_ms_mean_all$`Deliberation Time`[7:12]
 
-plot_estimated_total_execution_time(df_incl_t_ms_mean_all, directory_files, n_experiments_active, plot_type)
+plot_estimated_total_execution_time(df_incl_t_ms_mean_all, pdf_output_name, n_experiments_active, plot_type)
 
 #https://www.statology.org/quadratic-regression-r/
 
@@ -251,7 +253,7 @@ x2 = x^2
 y = dataOriginal$y
 quadraticModelOriginal <- lm(y ~ x + x2, data=dataOriginal)
 cfOriginal <- coef(quadraticModelOriginal)
-agentsValuesOriginal <- seq(0, 10000, 10)
+agentsValuesOriginal <- seq(0, 12000, 10)
 timePredictOriginal <- predict(quadraticModelOriginal,list(x=agentsValuesOriginal, x2=agentsValuesOriginal^2))
 
 plot(dataOriginal$x, dataOriginal$y, pch=16)
@@ -265,7 +267,7 @@ x2 = x^2
 y = dataDCSD$y
 quadraticModelDCSD <- lm(y ~ x + x2, data=dataDCSD)
 cfDCSD <- coef(quadraticModelDCSD)
-agentsValuesDCSD <- seq(0, 10000, 10)
+agentsValuesDCSD <- seq(0, 12000, 10)
 timePredictDCSD <- predict(quadraticModelDCSD,list(x=agentsValuesDCSD, x2=agentsValuesDCSD^2))
 
 #plot(dataDCSD$x, dataDCSD$y, pch=16)
@@ -274,14 +276,31 @@ lines(agentsValuesDCSD, timePredictDCSD, col='red')
 
 
 print("Quadratic Equation for Original ASSOCC")
-cat("y = ", cfOriginal["x2"], "(x)^2 + ", cfOriginal["x"], "(x) + ", cfOriginal["(Intercept)"], sep="")
+cat("y = ", cfOriginal["x2"], "*(x)^2 + ", cfOriginal["x"], "*(x) + ", cfOriginal["(Intercept)"], sep="")
 
 print("Quadratic Equation for DCSD ASSOCC")
-cat("y = ", cfDCSD["x2"], "(x)^2 + ", cfDCSD["x"], "(x) + ", cfDCSD["(Intercept)"], sep="")
+cat("y = ", cfDCSD["x2"], "*(x)^2 + ", cfDCSD["x"], "*(x) + ", cfDCSD["(Intercept)"], sep="")
 
-# NEXT EQUALISE THEM
+timePredictOriginal[100]
+timePredictDCSD[144]
+timePredictOriginal[1000]
+timePredictDCSD[1072]
+
+# https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:quadratic-formula-a1/a/quadratic-formula-explained-article
+
+n = 1000
+a1 = cfOriginal["x2"]
+b1 = cfOriginal["x"]
+c1 = cfOriginal["(Intercept)"]
+y = (a1*(n)^2 + b1*(n) + cfOriginal["(Intercept)"])
 
 
+leftPart = -1 * b1
+rightPart = sqrt(b1^2 - 4*a1*c1)
+leftPartFinal = leftPart / (2 * a1)
+rightPartFinal = rightPart / (2 * a1)
+leftPartFinal
+rightPartFinal
 
 
 
@@ -295,7 +314,7 @@ cat("y = ", cfDCSD["x2"], "(x)^2 + ", cfDCSD["x"], "(x) + ", cfDCSD["(Intercept)
 df_incl_t_ms_mean_all$`Required Speed-Up` = round(df_incl_t_ms_mean_all$`Non-Deliberation Time`/df_incl_t_ms_mean_all$`Deliberation Time`, 1)
 
 #=== SPEED UP NORMAL ===
-plot_possible_speed_up_normal(df_incl_t_ms_mean_all, directory_files, n_experiments_active, plot_type)
+plot_possible_speed_up_normal(df_incl_t_ms_mean_all, pdf_output_name, n_experiments_active, plot_type)
 
 
 # From the figures above it can be seen that the Non-Deliberation time of Original ASSOCC
@@ -307,4 +326,4 @@ df_incl_t_ms_mean_all$`Required Speed-Up Original` = df_incl_t_ms_mean_all$`Requ
 df_incl_t_ms_mean_all$`Required Speed-Up Original`[7:12] = round(df_incl_t_ms_mean_all$`Non-Deliberation Time`[1:6]/df_incl_t_ms_mean_all$`Deliberation Time`[7:12], 1)
 df_incl_t_ms_mean_all
 
-plot_possible_speed_up_original_assocc(df_incl_t_ms_mean_all, directory_files, n_experiments_active, plot_type)
+plot_possible_speed_up_original_assocc(df_incl_t_ms_mean_all, pdf_output_name, n_experiments_active, plot_type)

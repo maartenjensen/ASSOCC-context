@@ -30,7 +30,7 @@ plot_time_comparison_deliberation <- function(df_p_overview_mean_CONTEXT_SELECT_
     theme(legend.position="bottom", text = element_text(size=16)) + 
     guides(fill=guide_legend(nrow=1, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_deliberation.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_deliberation.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -54,7 +54,7 @@ plot_time_comparison_go <- function(df_p_overview_mean_GO, directory_files, n_ex
     theme(legend.position="bottom", text = element_text(size=16)) +
     guides(fill=guide_legend(nrow=1, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_go.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_go.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -75,7 +75,7 @@ plot_time_comparison_full_assocc <- function(df_p_overview_mean_FULL_ASSOCC_DELI
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_full_assocc.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_full_assocc.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -102,7 +102,7 @@ plot_time_comparison_dcsd_detailed <- function(df_p_overview_mean_DCSD_selection
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) +
     guides(fill=guide_legend(nrow=2, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_dcsd_in_detail.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_dcsd_in_detail.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -124,7 +124,7 @@ plot_time_comparison_original_assocc <- function(df_time_original_assocc, direct
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
 
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_original_assocc.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_original_assocc.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -147,7 +147,7 @@ plot_time_comparison_dcsd_assocc <- function(df_time_dcsd_assocc, directory_file
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
 
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_time_comparison_dcsd_assocc.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_dcsd_assocc.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -170,7 +170,7 @@ plot_estimated_total_execution_time <- function(df_incl_t_ms_mean_all, directory
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_estimated_total_execution_time.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_estimated_total_execution_time.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -193,7 +193,7 @@ plot_possible_speed_up_normal <- function(df_incl_t_ms_mean_all, directory_files
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
 
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_non_deliberation_speed_up.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_non_deliberation_speed_up.pdf", sep=""), p) }
   else { show(p) }
 }
 
@@ -216,6 +216,6 @@ plot_possible_speed_up_original_assocc <- function(df_incl_t_ms_mean_all, direct
   
   p <- p + theme_bw() + theme(legend.position="bottom", text = element_text(size=16)) + guides(fill=guide_legend(nrow=1, byrow=TRUE))
   
-  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_profiler_non_deliberation_speed_up_original_assocc.pdf", sep=""), p) }
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_non_deliberation_speed_up_original_assocc.pdf", sep=""), p) }
   else { show(p) }
 }
