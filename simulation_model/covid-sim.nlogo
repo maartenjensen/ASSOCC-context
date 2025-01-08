@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1225
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-13
+16
 
 INPUTBOX
 322
@@ -6190,22 +6190,10 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count workers with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
+    <metric>criteria_night_home</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
-      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
-      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
-      <value value="&quot;1.3 DCSD-1&quot;"/>
-      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
-      <value value="&quot;2.1 DCSD-2&quot;"/>
-      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
-      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
-      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
-      <value value="&quot;3.3 DCSD-3&quot;"/>
-      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
-      <value value="&quot;4.1 DCSD-4&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
-      <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
       <value value="&quot;0.1 Original ASSOCC&quot;"/>
-      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>

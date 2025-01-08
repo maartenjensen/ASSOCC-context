@@ -1,5 +1,5 @@
 ; Filename: context_select_activity.nls
-__includes [ "decision_context/profiler_speed_test_functions.nls"
+__includes [ "decision_context/profiler_speed_test_functions.nls" "decision_context/context_criteria_measurements.nls"
   "decision_context/context_state_sick_check_treatment.nls"
   "decision_context/context_state_night.nls" "decision_context/context_state_sick_night.nls"
   "decision_context/context_state_obligation.nls" "decision_context/context_state_sick_obligation.nls"

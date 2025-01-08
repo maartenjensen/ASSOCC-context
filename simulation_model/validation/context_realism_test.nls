@@ -1,0 +1,49 @@
+; context_realism_test.nls
+
+to run-context-realism-setup
+  set #random-seed 0
+  set ce-households-for-context-scenario 350
+  set ce-action-space 6
+  set ce-need-salient-threshold 0.5
+  set ce-need-critical-threshold 0.1
+  set ce-risk-avoidance-threshold-for-sd 0.75
+  set ce-private-leisure-by-risk true
+  set ce-risk-avoidance-private-leisure-preference 0.65
+  set ce-risk-avoidance-home-preference 0.5
+  set ce-enable-need-balancing false
+  set ce-log-agent false
+  set ce-log-agent-id 596
+end
+
+to run-context-realism-test
+  
+  disable-all-measures ; Reset measures
+  set ce-context-experiment-presets "0.0 Original ASSOCC-no-infections"
+  run-context-realism-setup
+  
+  ;;experiment protocol
+  load-and-setup
+  let total-#-nonessentialshoppers-in-first-weekend 0
+  let total-#-publicleisure-in-first-weekend 0
+  let total-number-peak-infected-people -1
+  let total-number-workers-at-work -1
+  let #workers count workers
+
+  ;while [any? people with [is-contagious?]] [
+  while [ticks < stop-before-tick] [
+    go
+    if (member? day-of-the-week ["saturday" "sunday"]) and (ticks < 28) [set total-#-nonessentialshoppers-in-first-weekend total-#-nonessentialshoppers-in-first-weekend + count people-at-non-essential-shops]
+    if (member? day-of-the-week ["saturday" "sunday"]) and (ticks < 28) [set total-#-publicleisure-in-first-weekend total-#-publicleisure-in-first-weekend + count people with [is-at-public-leisure-place?]]
+    if count people with [is-infected?] > total-number-peak-infected-people [set total-number-peak-infected-people count people with [is-infected?]]
+    if count workers with [is-at-work?] > total-number-workers-at-work [ set total-number-workers-at-work count workers with [is-at-work?] ]
+  ]
+
+  ;;saving all variables that can be relevant for later processing
+  let ratio-casualties-no-measures-tmp #dead-people / (count people + #dead-people)
+  save-on-file no-measures-behaviourspace-experiment-name ratio-casualties-behaviourspace-variable-name ratio-casualties-no-measures-tmp
+  save-on-file no-measures-behaviourspace-experiment-name #max-hospital-beds-taken-behaviourspace-variable-name #max-hospital-beds-taken-at-once
+  save-on-file no-measures-behaviourspace-experiment-name #-nonessentialshoppers-in-first-weekend-variable-name total-#-nonessentialshoppers-in-first-weekend
+  save-on-file no-measures-behaviourspace-experiment-name #-publicleisure-in-first-weekend-variable-name total-#-publicleisure-in-first-weekend
+  save-on-file no-measures-behaviourspace-experiment-name peak-infected-behaviourspace-variable-name total-number-peak-infected-people
+  save-on-file no-measures-behaviourspace-experiment-name ratio-working-at-work-behaviourspace-variable-name (total-number-workers-at-work / #workers)
+end

@@ -16,6 +16,7 @@ directory_files <- "2024_08_01_comparison"
 #directory_files <- "2024_08_09_comparison"
 directory_files <- "2024_08_12_comparison_full"
 directory_files <- "2024_08_14_comparison_extreme"
+directory_files <- "2024_12_19_realism"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -37,7 +38,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
-#plot_type <- "one" # One plot per pdf
+plot_type <- "one" # One plot per pdf
 #plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
@@ -51,7 +52,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 2
+random_seed = 0 # This was set to 2
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -85,22 +86,22 @@ plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot6Activi
 plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
                                                         "behaviourPlot3Quarantiners", "behaviourPlot1DeliberationType", "behaviourPlot1DeliberationType",
                                                         "behaviourPlot1DeliberationTypeConformity")
-plot_specifics_h <- hash()
-plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
-                                                        "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", 
-                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot6ActivitiesWorkStudyHome",
-                                                        "behaviourPlot7SocialDistancing")
-plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
-                                                            "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
-                                                            "behaviourPlot7SocialDistancing")
-
-plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
-                                                           "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
-                                                           "behaviourPlot7SocialDistancing")
-plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
-                                                           "behaviourPlot3Quarantiners", "behaviourPlot3QuarantinersAgeGroup", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
-                                                           "behaviourPlot7SocialDistancing")
-plot_specifics_h <- hash()
+#plot_specifics_h <- hash()
+# plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+#                                                         "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", 
+#                                                         "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot6ActivitiesWorkStudyHome",
+#                                                         "behaviourPlot7SocialDistancing")
+# plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+#                                                             "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
+#                                                             "behaviourPlot7SocialDistancing")
+# 
+# plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+#                                                            "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
+#                                                            "behaviourPlot7SocialDistancing")
+# plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
+#                                                            "behaviourPlot3Quarantiners", "behaviourPlot3QuarantinersAgeGroup", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
+#                                                            "behaviourPlot7SocialDistancing")
+#plot_specifics_h <- hash()
 plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome",
                                                                  "behaviourPlot6ActivitiesSimplified5", "behaviourPlot6ActivitiesSimplified4Leisure2Weeks")
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",

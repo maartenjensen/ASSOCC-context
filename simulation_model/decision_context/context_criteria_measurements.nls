@@ -1,0 +1,112 @@
+; Filename: context_criteria_measurements.nls
+
+; Work related
+; ----------------------
+; if is-technically-feasible-to-work-from-home? and I-know-of-working-from-home?
+; is-working-at-work? OR is-working?
+; should-I-stay-home?
+
+; Unaffected by being sick
+to-report criteria_night_home
+  if slice-of-the-day = "night"
+  [ 
+    let agents_all_relevant count people with [current-motivation != treatment-motive]  ; All the people that are not in treatment
+    let agents_at_home count people with [is-at-home?]                                  ; All the people that are at home
+    report (agents_at_home / agents_all_relevant) * 100 
+  ]
+  report -1
+end
+
+; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
+to-report criteria_not_skip_school
+   
+  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  [
+    let children_should_school count children with [not should-I-stay-home?]
+    let children_do_school count children with [not should-I-stay-home? and is-at-school?]
+
+    report (children_do_school / children_should_school) * 100
+  ]
+  report -1
+  
+end
+
+; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
+to-report criteria_not_skip_university
+   
+  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  [
+    let students_should_school count students with [not should-I-stay-home?]
+    let students_do_school count students with [not should-I-stay-home? and is-at-university?]
+
+    report (students_do_school / students_should_school) * 100
+  ]
+  report -1
+  
+end
+
+to-report criteria_people_staying_in_quarantine
+  if count officially-quarantiners > 0
+  [
+    let people_in_quarantine count people with [is-officially-asked-to-quarantine-for-plots? and is-in-quarantine?]
+    report (people_in_quarantine / count officially-quarantiners) * 100
+  ]
+  report -1
+end
+
+to-report criteria_children_staying_in_quarantine
+  if count officially-quarantiners-children > 0
+  [
+    let children_in_quarantine count children with [is-officially-asked-to-quarantine-for-plots? and is-in-quarantine?]
+    report (children_in_quarantine / count officially-quarantiners-children) * 100
+  ]
+  report -1
+end
+
+to-report criteria_students_staying_in_quarantine
+  if count officially-quarantiners-students > 0
+  [
+    let students_in_quarantine count students with [is-officially-asked-to-quarantine-for-plots? and is-in-quarantine?]
+    report (students_in_quarantine / count officially-quarantiners-students) * 100
+  ]
+  report -1
+end
+
+to-report criteria_workers_staying_in_quarantine
+  if count officially-quarantiners-workers > 0
+  [
+    let workers_in_quarantine count workers with [is-officially-asked-to-quarantine-for-plots? and is-in-quarantine?]
+    report (workers_in_quarantine / count officially-quarantiners-workers) * 100
+  ]
+  report -1
+end
+
+to-report criteria_retireds_staying_in_quarantine
+  if count officially-quarantiners-retireds > 0
+  [
+    let retireds_in_quarantine count retireds with [is-officially-asked-to-quarantine-for-plots? and is-in-quarantine?]
+    report (retireds_in_quarantine / count officially-quarantiners-retireds) * 100
+  ]
+  report -1
+end
+
+; Sick rest at home or treatment at hospital
+to-report criteria_rest_when_know_sick
+  
+  let people_know_sick count people with [criteria_function_agent_knows_sick]
+  
+  if people_know_sick > 0 [
+    let people_know_sick_that_rest count people with [criteria_function_agent_knows_sick and (current-motivation = "rest" or current-motivation = treatment-motive)]
+    
+    report (people_know_sick_that_rest / people_know_sick) * 100
+  ]
+  report -1
+end
+
+; ===============================
+; Helping functions
+; ===============================
+
+to-report criteria_function_agent_knows_sick
+  report has-internally-visible-symptoms? or is-believing-to-be-infected?
+end
