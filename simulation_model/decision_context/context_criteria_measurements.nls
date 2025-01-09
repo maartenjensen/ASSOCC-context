@@ -69,7 +69,8 @@ to-report criteria_not_skip_school
     let children_should_school count children with [not should-I-stay-home?]
     let children_do_school count children with [not should-I-stay-home? and is-at-school?]
 
-    report (children_do_school / children_should_school) * 100
+    if children_should_school > 0
+    [ report (children_do_school / children_should_school) * 100 ]
   ]
   report -1
   
@@ -83,7 +84,8 @@ to-report criteria_not_skip_university
     let students_should_school count students with [not should-I-stay-home?]
     let students_do_school count students with [not should-I-stay-home? and is-at-university?]
 
-    report (students_do_school / students_should_school) * 100
+    if students_should_school > 0
+    [ report (students_do_school / students_should_school) * 100 ]
   ]
   report -1
   

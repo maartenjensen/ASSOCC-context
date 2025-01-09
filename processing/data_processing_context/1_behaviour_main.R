@@ -30,6 +30,7 @@ source("../1_behaviour_plots_4_needs.R")
 source("../1_behaviour_plots_5_location_types.R")
 source("../1_behaviour_plots_6_activities.R")
 source("../1_behaviour_plots_7_mean_of_activities.R")
+source("../1_behaviour_plots_8_measure_criteria.R")
 
 libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 
@@ -124,10 +125,7 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
 plot_specifics_h <- hash()
-plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
-                                                        "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", 
-                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot6ActivitiesWorkStudyHome",
-                                                        "behaviourPlot7SocialDistancing", "behaviourPlot6ActivitiesSimplified5")
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot8Criteria")
 
 
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
