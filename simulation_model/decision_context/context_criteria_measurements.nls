@@ -6,9 +6,14 @@
 ; is-working-at-work? OR is-working?
 ; should-I-stay-home?
 
+; slice-of-the-day is actually one step ahead, at the end of the go function the slice-of-the-day is incremented by one
+; day-of-the-week is also one step ahead if the slice-of-the-day is morning (since the actual data is that of the night).
+
+; Criteria for normal life
+; ------------------------
 ; Unaffected by being sick
 to-report criteria_night_home
-  if slice-of-the-day = "night"
+  if actual-slice-of-the-day = "night"
   [ 
     let agents_all_relevant count people with [current-motivation != treatment-motive]  ; All the people that are not in treatment
     let agents_at_home count people with [is-at-home?]                                  ; All the people that are at home
@@ -17,10 +22,49 @@ to-report criteria_night_home
   report -1
 end
 
+to-report criteria_leisure_not_sick_not_night
+  if actual-slice-of-the-day != "night"
+  [
+    let agents_can_leisure count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_do_leisure count people with [is-relaxing?]
+    
+    if agents_can_leisure > 0
+    [ report (agents_do_leisure / agents_can_leisure) * 100 ]
+  ]
+  report -1
+end
+
+to-report criteria_ess_shopping_not_sick_not_night
+  if actual-slice-of-the-day != "night"
+  [
+    let agents_can_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_do_ess_shop count people with [is-performing-essential-shopping?]
+    
+    if agents_can_ess_shop > 0
+    [ report (agents_do_ess_shop / agents_can_ess_shop) * 100 ]
+  ]
+  report -1
+end
+
+to-report criteria_non_ess_shopping_not_sick_not_night
+  if actual-slice-of-the-day != "night"
+  [
+    let agents_can_non_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_do_non_ess_shop count people with [is-performing-non-essential-shopping?]
+    
+    if agents_can_non_ess_shop > 0
+    [ report (agents_do_non_ess_shop / agents_can_non_ess_shop) * 100 ]
+  ]
+  report -1
+end
+
+
+; Criteria for working life
+; -----------------------
 ; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
 to-report criteria_not_skip_school
    
-  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
   [
     let children_should_school count children with [not should-I-stay-home?]
     let children_do_school count children with [not should-I-stay-home? and is-at-school?]
@@ -34,7 +78,7 @@ end
 ; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
 to-report criteria_not_skip_university
    
-  if (slice-of-the-day = "morning" or slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
   [
     let students_should_school count students with [not should-I-stay-home?]
     let students_do_school count students with [not should-I-stay-home? and is-at-university?]
@@ -45,6 +89,10 @@ to-report criteria_not_skip_university
   
 end
 
+; Add criteria for working
+
+; Criteria for pandemic
+; ---------------------
 to-report criteria_people_staying_in_quarantine
   if count officially-quarantiners > 0
   [
@@ -109,4 +157,41 @@ end
 
 to-report criteria_function_agent_knows_sick
   report has-internally-visible-symptoms? or is-believing-to-be-infected?
+end
+
+to-report actual-slice-of-the-day
+  report slice-of-the-day-of-current-plots-and-data
+end
+
+to-report actual-day-of-the-week
+  if slice-of-the-day = "morning"
+  [
+    if day-of-the-week = "monday"
+    [ report "sunday"]
+    if day-of-the-week = "tuesday"
+    [ report "monday"]
+    if day-of-the-week = "wednesday"
+    [ report "tuesday"]
+    if day-of-the-week = "thursday"
+    [ report "wednesday"]
+    if day-of-the-week = "friday"
+    [ report "thursday"]
+    if day-of-the-week = "saturday"
+    [ report "friday"]
+    if day-of-the-week = "sunday"
+    [ report "saturday"]
+  ]
+  report day-of-the-week
+end
+
+to-report actually-is-working-day-for-me?
+  if is-gathering-point? self [ ifelse is-shop? [report is-shops-open-today?] [report not (actual-day-of-the-week = "saturday" or actual-day-of-the-week = "sunday")]]
+  
+  if is-person? self 
+  [
+    if is-worker? [report [actually-is-working-day-for-me?] of my-work]
+    report not (actual-day-of-the-week = "saturday" or actual-day-of-the-week = "sunday")
+  ]
+
+  error (sentence "wrong user of this function" self [age] of self)
 end

@@ -17,6 +17,7 @@ directory_files <- "2024_08_01_comparison"
 directory_files <- "2024_08_12_comparison_full"
 directory_files <- "2024_08_14_comparison_extreme"
 directory_files <- "2024_12_19_realism"
+directory_files <- "2025_01_09_criteria_test"
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -122,7 +123,13 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot7SocialDistancing", "behaviourPlot6ActivitiesSimplified5",
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
-#plot_specifics_h <- hash()
+plot_specifics_h <- hash()
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
+                                                        "behaviourPlot3Quarantiners", "behaviourPlot6ActivitiesSimplified4Leisure", 
+                                                        "behaviourPlot4Needs", "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot6ActivitiesWorkStudyHome",
+                                                        "behaviourPlot7SocialDistancing", "behaviourPlot6ActivitiesSimplified5")
+
+
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 #plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 
