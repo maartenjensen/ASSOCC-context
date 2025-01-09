@@ -64,7 +64,7 @@ end
 ; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
 to-report criteria_not_skip_school
    
-  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (actual-day-of-the-week = "saturday" or actual-day-of-the-week = "sunday")
   [
     let children_should_school count children with [not should-I-stay-home?]
     let children_do_school count children with [not should-I-stay-home? and is-at-school?]
@@ -78,7 +78,7 @@ end
 ; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
 to-report criteria_not_skip_university
    
-  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (day-of-the-week = "saturday" or day-of-the-week = "sunday")
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon") and not (actual-day-of-the-week = "saturday" or actual-day-of-the-week = "sunday")
   [
     let students_should_school count students with [not should-I-stay-home?]
     let students_do_school count students with [not should-I-stay-home? and is-at-university?]
