@@ -6203,7 +6203,21 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>criteria_retireds_staying_in_quarantine</metric>
     <metric>criteria_rest_when_know_sick</metric>
     <enumeratedValueSet variable="ce-context-experiment-presets">
+      <value value="&quot;1.1 rigid-habits-no-infected&quot;"/>
+      <value value="&quot;1.2 rigid-habits-infected&quot;"/>
+      <value value="&quot;1.3 DCSD-1&quot;"/>
+      <value value="&quot;1.4 DCSD-1-leisure-habits&quot;"/>
+      <value value="&quot;2.1 DCSD-2&quot;"/>
+      <value value="&quot;2.2 DCSD-2-obligation-constraint&quot;"/>
+      <value value="&quot;3.1 DCSD-3-rigid-norms&quot;"/>
+      <value value="&quot;3.2 DCSD-3-rigid-norms-lockdown&quot;"/>
+      <value value="&quot;3.3 DCSD-3&quot;"/>
+      <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
+      <value value="&quot;4.1 DCSD-4&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
+      <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
+      <value value="&quot;0.1 Original ASSOCC&quot;"/>
+      <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
