@@ -125,8 +125,26 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
 plot_specifics_h <- hash()
-plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot8Criteria")
 
+plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot8Criteria")
+plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]] <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot8Criteria")
 
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 #plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
@@ -172,7 +190,7 @@ df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 
 # Print the data for the comparison section
 behaviourPlot7MeanOfActivities()
-
+behaviourPlot8CriteriaResultsInitialise()
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================
