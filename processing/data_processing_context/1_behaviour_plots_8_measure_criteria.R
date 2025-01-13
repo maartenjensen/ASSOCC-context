@@ -9,7 +9,7 @@ behaviourPlot8Criteria <- function(plot_specific_f_name) {
   print("-- Plot Criteria Measurements --")
   #colnames(subset_df)
   
-  df_criteria <<- subset_df[, c(1, 2, 3, 15, 192:203)]
+  df_criteria <<- subset_df[, c(1, 2, 3, 15, 192:205, 24)] # 24 = infected
   colnames(df_criteria)
   
   # Create results criteria
@@ -22,7 +22,7 @@ behaviourPlot8Criteria <- function(plot_specific_f_name) {
   # Make the data.frame global (using <<-)
   df_criteria_single_results <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
   
-  crit_n <<- 0
+  crit_n <<- 1
   
   # Normal life
   behaviourPlot8CriteriaNightHome()
@@ -31,12 +31,22 @@ behaviourPlot8Criteria <- function(plot_specific_f_name) {
   behaviourPlot8CriteriaNonEssShop()
   
   # Obligations
+  behaviourPlot8CriteriaNotSkipWork()
+  behaviourPlot8CriteriaWorkAtWorkplaceNotAtHome()
+  
   behaviourPlot8CriteriaNotSkipSchool()
   behaviourPlot8CriteriaNotSkipUniversity()
   
   # Covid
-  behaviourPlot8CriteriaRestWhenKnowSick()
+  behaviourPlot8CriteriaQuarantinePeople()
   behaviourPlot8CriteriaQuarantineChildren()
+  behaviourPlot8CriteriaQuarantineStudents()
+  behaviourPlot8CriteriaQuarantineWorkers()
+  behaviourPlot8CriteriaQuarantineRetireds()
+  
+  behaviourPlot8CriteriaRestWhenKnowSick()
+  
+  behaviourPlot8CriteriaInfectionCurvePeak()
   
   # Remove the initial row
   df_criteria_single_results <<- df_criteria_single_results %>% filter(criteria_n != -1)
@@ -165,9 +175,33 @@ behaviourPlot8CriteriaNonEssShop <- function() {
 # Obligation
 # =====================================
 
+behaviourPlot8CriteriaNotSkipWork <- function() {
+  
+  df_criteria_not_skip_work <<- df_criteria[, c(4,9)]
+  df_criteria_not_skip_work <<- df_criteria_not_skip_work %>% filter(criteria_not_skip_work != -1)
+  
+  criteria_text   <- "Critera Not Skip Work, mean > 99%"
+  criteria_value  <- round(mean(df_criteria_not_skip_work$criteria_not_skip_work), 2)
+  criteria_passed <- criteria_value > 99
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
+behaviourPlot8CriteriaWorkAtWorkplaceNotAtHome <- function() {
+  
+  df_criteria_work_at_workplace <<- df_criteria[, c(4,10)]
+  df_criteria_work_at_workplace <<- df_criteria_work_at_workplace %>% filter(criteria_when_possible_work_at_workplace_and_not_from_home != -1)
+  
+  criteria_text   <- "Critera Work at Workplace when possible, not at home, mean > 99%"
+  criteria_value  <- round(mean(df_criteria_work_at_workplace$criteria_when_possible_work_at_workplace_and_not_from_home), 2)
+  criteria_passed <- criteria_value > 99
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
 behaviourPlot8CriteriaNotSkipSchool <- function() {
   
-  df_criteria_not_skip_school <<- df_criteria[, c(4,9)]
+  df_criteria_not_skip_school <<- df_criteria[, c(4,11)]
   df_criteria_not_skip_school <<- df_criteria_not_skip_school %>% filter(criteria_not_skip_school != -1)
   
   criteria_text   <- "Critera Not Skip School, mean > 95%"
@@ -179,7 +213,7 @@ behaviourPlot8CriteriaNotSkipSchool <- function() {
 
 behaviourPlot8CriteriaNotSkipUniversity <- function() {
   
-  df_criteria_not_skip_university <<- df_criteria[, c(4,10)]
+  df_criteria_not_skip_university <<- df_criteria[, c(4,12)]
   df_criteria_not_skip_university <<- df_criteria_not_skip_university %>% filter(criteria_not_skip_university != -1)
   
   criteria_text   <- "Critera Not Skip University, mean > 95%"
@@ -193,9 +227,69 @@ behaviourPlot8CriteriaNotSkipUniversity <- function() {
 # COVID
 # =====================================
 
+behaviourPlot8CriteriaQuarantinePeople <- function() {
+  
+  df_criteria_quarantine_people <<- df_criteria[, c(4,13)]
+  df_criteria_quarantine_people <<- df_criteria_quarantine_people %>% filter(criteria_people_staying_in_quarantine != -1)
+  
+  criteria_text   <- "Critera People in Quarantine, mean > 80%"
+  criteria_value  <- round(mean(df_criteria_quarantine_people$criteria_people_staying_in_quarantine), 2)
+  criteria_passed <- criteria_value > 80
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
+behaviourPlot8CriteriaQuarantineChildren <- function() {
+  
+  df_criteria_quarantine_children <<- df_criteria[, c(4,14)]
+  df_criteria_quarantine_children <<- df_criteria_quarantine_children %>% filter(criteria_children_staying_in_quarantine != -1)
+  
+  criteria_text   <- "Critera Children in Quarantine, mean > 80%"
+  criteria_value  <- round(mean(df_criteria_quarantine_children$criteria_children_staying_in_quarantine), 2)
+  criteria_passed <- criteria_value > 80
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
+behaviourPlot8CriteriaQuarantineStudents <- function() {
+  
+  df_criteria_quarantine_students <<- df_criteria[, c(4,15)]
+  df_criteria_quarantine_students <<- df_criteria_quarantine_students %>% filter(criteria_students_staying_in_quarantine != -1)
+  
+  criteria_text   <- "Critera Students in Quarantine, mean > 80%"
+  criteria_value  <- round(mean(df_criteria_quarantine_students$criteria_students_staying_in_quarantine), 2)
+  criteria_passed <- criteria_value > 80
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
+behaviourPlot8CriteriaQuarantineWorkers <- function() {
+  
+  df_criteria_quarantine_workers <<- df_criteria[, c(4,16)]
+  df_criteria_quarantine_workers <<- df_criteria_quarantine_workers %>% filter(criteria_workers_staying_in_quarantine != -1)
+  
+  criteria_text   <- "Critera Workers in Quarantine, mean > 80%"
+  criteria_value  <- round(mean(df_criteria_quarantine_workers$criteria_workers_staying_in_quarantine), 2)
+  criteria_passed <- criteria_value > 80
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
+behaviourPlot8CriteriaQuarantineRetireds <- function() {
+  
+  df_criteria_quarantine_retireds <<- df_criteria[, c(4,17)]
+  df_criteria_quarantine_retireds <<- df_criteria_quarantine_retireds %>% filter(criteria_retireds_staying_in_quarantine != -1)
+  
+  criteria_text   <- "Critera Retireds in Quarantine, mean > 80%"
+  criteria_value  <- round(mean(df_criteria_quarantine_retireds$criteria_retireds_staying_in_quarantine), 2)
+  criteria_passed <- criteria_value > 80
+  
+  behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
+}
+
 behaviourPlot8CriteriaRestWhenKnowSick <- function() {
   
-  df_criteria_rest_when_know_sick <<- df_criteria[, c(4,16)]
+  df_criteria_rest_when_know_sick <<- df_criteria[, c(4,18)]
   df_criteria_rest_when_know_sick <<- df_criteria_rest_when_know_sick %>% filter(criteria_rest_when_know_sick != -1)
   
   criteria_text   <- "Critera Rest When Know Sick, mean > 90%"
@@ -205,14 +299,21 @@ behaviourPlot8CriteriaRestWhenKnowSick <- function() {
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
 }
 
-behaviourPlot8CriteriaQuarantineChildren <- function() {
+behaviourPlot8CriteriaInfectionCurvePeak <- function() {
   
-  df_criteria_quarantine_children <<- df_criteria[, c(4,12)]
-  df_criteria_quarantine_children <<- df_criteria_quarantine_children %>% filter(criteria_children_staying_in_quarantine != -1)
+  df_criteria_infection_curve_peak <<- df_criteria[, c(4,19)]
+  infection_curve_peak_tick_row <- df_criteria_infection_curve_peak[which.max(df_criteria_infection_curve_peak$infected),]
   
-  criteria_text   <- "Critera Children in Quarantine, mean > 80%"
-  criteria_value  <- round(mean(df_criteria_quarantine_children$criteria_children_staying_in_quarantine), 2)
-  criteria_passed <- criteria_value > 80
+  if (!grepl("lockdown", experiment_preset, fixed = TRUE)) { # No Lockdown
+    criteria_text   <- "Criteria Infection Peak Tick is > 75 and < 150"
+    criteria_value  <- infection_curve_peak_tick_row$tick
+    criteria_passed <- criteria_value > 75 && criteria_value < 150
+  }
+  else { # Lockdown
+    criteria_text   <- "Criteria Infection Peak Tick is > 250 and < 400"
+    criteria_value  <- infection_curve_peak_tick_row$tick
+    criteria_passed <- criteria_value > 250 && criteria_value < 400
+  }
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
 }

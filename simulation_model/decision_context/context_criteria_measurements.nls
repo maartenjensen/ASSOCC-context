@@ -105,8 +105,8 @@ to-report criteria_when_possible_work_at_workplace_and_not_from_home
  
   if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon")
   [
-    let workers_should_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home?]
-    let workers_do_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home? and is-working-at-work?]
+    let workers_should_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home? and actually-is-working-day-for-me?]
+    let workers_do_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home? and actually-is-working-day-for-me? and is-working-at-work?]
 
     if workers_should_work_at_workplace > 0
     [ report (workers_do_work_at_workplace / workers_should_work_at_workplace) * 100 ]
