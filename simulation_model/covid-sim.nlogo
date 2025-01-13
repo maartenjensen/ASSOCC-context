@@ -6216,8 +6216,10 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
       <value value="&quot;3.3 DCSD-3&quot;"/>
       <value value="&quot;3.4 DCSD-3-lockdown&quot;"/>
       <value value="&quot;4.1 DCSD-4&quot;"/>
+      <value value="&quot;5.0 DCSD-5-optimisation-no-infections&quot;"/>
       <value value="&quot;5.1 DCSD-5-optimisation&quot;"/>
       <value value="&quot;5.2 DCSD-5-optimisation-lockdown&quot;"/>
+      <value value="&quot;0.0 Original ASSOCC-no-infections&quot;"/>
       <value value="&quot;0.1 Original ASSOCC&quot;"/>
       <value value="&quot;0.2 Original ASSOCC-lockdown&quot;"/>
     </enumeratedValueSet>
