@@ -25,7 +25,7 @@ end
 to-report criteria_leisure_not_sick_not_night
   if actual-slice-of-the-day != "night"
   [
-    let agents_can_leisure count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_can_leisure count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
     let agents_do_leisure count people with [is-relaxing?]
     
     if agents_can_leisure > 0
@@ -37,7 +37,7 @@ end
 to-report criteria_ess_shopping_not_sick_not_night
   if actual-slice-of-the-day != "night"
   [
-    let agents_can_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_can_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
     let agents_do_ess_shop count people with [is-performing-essential-shopping?]
     
     if agents_can_ess_shop > 0
@@ -49,7 +49,7 @@ end
 to-report criteria_non_ess_shopping_not_sick_not_night
   if actual-slice-of-the-day != "night"
   [
-    let agents_can_non_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not is-working-day-for-me?) or age = retired-age)]
+    let agents_can_non_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
     let agents_do_non_ess_shop count people with [is-performing-non-essential-shopping?]
     
     if agents_can_non_ess_shop > 0
@@ -57,7 +57,6 @@ to-report criteria_non_ess_shopping_not_sick_not_night
   ]
   report -1
 end
-
 
 ; Criteria for working life
 ; -----------------------
@@ -73,7 +72,6 @@ to-report criteria_not_skip_school
     [ report (children_do_school / children_should_school) * 100 ]
   ]
   report -1
-  
 end
 
 ; The only reason when children can skip school is when they need to stay at home, if they are getting treatment they also should stay at home
@@ -88,8 +86,34 @@ to-report criteria_not_skip_university
     [ report (students_do_school / students_should_school) * 100 ]
   ]
   report -1
-  
 end
+
+to-report criteria_not_skip_work
+ 
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon")
+  [
+    let workers_should_work count workers with [(not should-I-stay-home? or (is-technically-feasible-to-work-from-home? and not criteria_function_agent_knows_sick)) and actually-is-working-day-for-me?]
+    let workers_do_work count workers with [(not should-I-stay-home? or (is-technically-feasible-to-work-from-home? and not criteria_function_agent_knows_sick)) and actually-is-working-day-for-me? and is-working?]
+
+    if workers_should_work > 0
+    [ report (workers_do_work / workers_should_work) * 100 ]
+  ]
+  report -1
+end
+
+to-report criteria_when_possible_work_at_workplace_and_not_from_home
+ 
+  if (actual-slice-of-the-day = "morning" or actual-slice-of-the-day = "afternoon")
+  [
+    let workers_should_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home?]
+    let workers_do_work_at_workplace count workers with [is-technically-feasible-to-work-from-home? and not should-I-stay-home? and is-working-at-work?]
+
+    if workers_should_work_at_workplace > 0
+    [ report (workers_do_work_at_workplace / workers_should_work_at_workplace) * 100 ]
+  ]
+  report -1
+end
+
 
 ; Add criteria for working
 

@@ -6194,6 +6194,8 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>criteria_leisure_not_sick_not_night</metric>
     <metric>criteria_ess_shopping_not_sick_not_night</metric>
     <metric>criteria_non_ess_shopping_not_sick_not_night</metric>
+    <metric>criteria_not_skip_work</metric>
+    <metric>criteria_when_possible_work_at_workplace_and_not_from_home</metric>
     <metric>criteria_not_skip_school</metric>
     <metric>criteria_not_skip_university</metric>
     <metric>criteria_people_staying_in_quarantine</metric>
