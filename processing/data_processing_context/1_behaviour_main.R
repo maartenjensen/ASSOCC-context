@@ -17,7 +17,9 @@ directory_files <- "2024_08_01_comparison"
 directory_files <- "2024_08_12_comparison_full"
 directory_files <- "2024_08_14_comparison_extreme"
 directory_files <- "2024_12_19_realism"
-directory_files <- "2025_01_13_criteria"
+directory_files <- "2025_01_13_criteria_multi"
+
+criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
 setwd(paste("D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context", directory_files, sep="/"))
 getwd()
@@ -140,11 +142,13 @@ plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criter
 
 plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
 
-plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot8Criteria")
-plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
 
-plot_specifics_h[["0.1 Original ASSOCC"]]             <- c("behaviourPlot8Criteria")
-plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
 
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 #plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
@@ -184,7 +188,7 @@ df_final <- behaviourAddNormalizedColumns(df_renamed)
 
 behaviourPlot7InfectionsComparison()
 
-# Filter on one random seed, since this is a single run
+# Filter on one random seed, since the plots are from a single run
 df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 # df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.80, ]  # 0.75 0.76 0.77 0.78 0.79 0.80 0.85 0.90
 
