@@ -4467,7 +4467,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
@@ -6191,9 +6191,9 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     <metric>count officially-quarantiners-retireds</metric>
     <metric>count retireds with [is-officially-asked-to-quarantine-for-plots? and not is-in-quarantine?]</metric>
     <metric>criteria_night_home</metric>
-    <metric>criteria_leisure_not_sick_not_night</metric>
-    <metric>criteria_ess_shopping_not_sick_not_night</metric>
-    <metric>criteria_non_ess_shopping_not_sick_not_night</metric>
+    <metric>criteria_recently_leisure</metric>
+    <metric>criteria_recently_ess_shopping</metric>
+    <metric>criteria_recently_non_ess_shopping</metric>
     <metric>criteria_not_skip_work</metric>
     <metric>criteria_when_possible_work_at_workplace_and_not_from_home</metric>
     <metric>criteria_not_skip_school</metric>

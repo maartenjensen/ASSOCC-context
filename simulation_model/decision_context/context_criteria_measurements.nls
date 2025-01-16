@@ -22,41 +22,59 @@ to-report criteria_night_home
   report -1
 end
 
-to-report criteria_leisure_not_sick_not_night
-  if actual-slice-of-the-day != "night"
-  [
-    let agents_can_leisure count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
-    let agents_do_leisure count people with [is-relaxing?]
+to-report criteria_recently_leisure
+  let agents_total count people
+  let agents_recently_did_leisure count people with [criteria-days-without-leisure <= 14]
     
-    if agents_can_leisure > 0
-    [ report (agents_do_leisure / agents_can_leisure) * 100 ]
-  ]
+  if agents_total > 0
+  [ report (agents_recently_did_leisure / agents_total) * 100 ]
   report -1
 end
 
-to-report criteria_ess_shopping_not_sick_not_night
-  if actual-slice-of-the-day != "night"
-  [
-    let agents_can_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
-    let agents_do_ess_shop count people with [is-performing-essential-shopping?]
+to-report criteria_recently_ess_shopping
+  let agents_total count people
+  let agents_recently_did_ess_shopping count people with [criteria-days-without-essential-shopping <= 14]
     
-    if agents_can_ess_shop > 0
-    [ report (agents_do_ess_shop / agents_can_ess_shop) * 100 ]
-  ]
+  if agents_total > 0
+  [ report (agents_recently_did_ess_shopping / agents_total) * 100 ]
   report -1
 end
 
-to-report criteria_non_ess_shopping_not_sick_not_night
-  if actual-slice-of-the-day != "night"
-  [
-    let agents_can_non_ess_shop count people with [not should-I-stay-home? and (actual-slice-of-the-day = "evening" or (not actually-is-working-day-for-me?) or age = retired-age)]
-    let agents_do_non_ess_shop count people with [is-performing-non-essential-shopping?]
+to-report criteria_recently_non_ess_shopping
+  let agents_total count people
+  let agents_recently_did_non_ess_shopping count people with [criteria-days-without-non-essential-shopping <= 14]
     
-    if agents_can_non_ess_shop > 0
-    [ report (agents_do_non_ess_shop / agents_can_non_ess_shop) * 100 ]
-  ]
+  if agents_total > 0
+  [ report (agents_recently_did_non_ess_shopping / agents_total) * 100 ]
   report -1
 end
+
+to criteria_free_time_initialise_variables
+  set criteria-days-without-leisure 0
+  set criteria-days-without-essential-shopping 0
+  set criteria-days-without-non-essential-shopping 0
+end
+
+to criteria_free_time_calculate_variables
+  
+  ask people [
+    ; Increment at the start of a new day, unless
+    if actual-slice-of-the-day = "morning" and not should-I-stay-home?
+    [
+      set criteria-days-without-leisure (criteria-days-without-leisure + 1)
+      set criteria-days-without-essential-shopping (criteria-days-without-essential-shopping + 1)
+      set criteria-days-without-non-essential-shopping (criteria-days-without-non-essential-shopping + 1)
+    ]
+    ; Dependent on the action taken reset the counter
+    if is-relaxing?
+    [ set criteria-days-without-leisure 0 ]
+    if is-performing-essential-shopping?
+    [ set criteria-days-without-essential-shopping 0 ]
+    if is-performing-non-essential-shopping? 
+    [ set criteria-days-without-non-essential-shopping 0 ]
+  ]
+end
+
 
 ; Criteria for working life
 ; -----------------------

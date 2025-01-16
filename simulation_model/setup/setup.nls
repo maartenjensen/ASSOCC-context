@@ -282,6 +282,9 @@ to setup-person [current-home l-age]
     context-init-variables
     if ce-leisure-habits and ce-context-depth > 0
     [ context-habits-init-variables ]
+    
+    ; Variables for measuring criteria
+    criteria_free_time_initialise_variables
   ]
 end
 

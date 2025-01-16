@@ -194,6 +194,11 @@ people-own [
   luxury-satisfaction-balanced
   sleep-satisfaction-balanced
   food-safety-satisfaction-balanced
+  
+  ; variables for measuring criteria
+  criteria-days-without-leisure
+  criteria-days-without-essential-shopping
+  criteria-days-without-non-essential-shopping
 ]
 
 to update-people-epistemic-status

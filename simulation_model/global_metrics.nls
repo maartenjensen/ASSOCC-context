@@ -107,6 +107,7 @@ to update-metrics
   if ratio-infected > 0.05 and when-has-5%-infected-threshold-first-been-met? = "never"
   [set when-has-5%-infected-threshold-first-been-met? ticks]
 
+  criteria_free_time_calculate_variables
 end
 
 to reset-metrics
