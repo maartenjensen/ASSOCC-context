@@ -81,9 +81,9 @@ behaviourPlot8Criteria <- function(plot_specific_f_name) {
   
   # Normal life
   behaviourPlot8CriteriaNightHome()
-  behaviourPlot8CriteriaLeisureNotSickNotNight()
-  behaviourPlot8CriteriaEssShop()
-  behaviourPlot8CriteriaNonEssShop()
+  behaviourPlot8CriteriaRecentlyLeisure()
+  behaviourPlot8CriteriaRecentlyEssShop()
+  behaviourPlot8CriteriaRecentlyNonEssShop()
   
   # Obligations
   behaviourPlot8CriteriaNotSkipWork()
@@ -160,66 +160,66 @@ behaviourPlot8CriteriaNightHome <- function() {
   print(p)
 }
 
-behaviourPlot8CriteriaLeisureNotSickNotNight <- function() {
+behaviourPlot8CriteriaRecentlyLeisure <- function() {
   
-  df_criteria_leisure <<- select(df_criteria, tick, criteria_leisure_not_sick_not_night)
-  df_criteria_leisure <<- df_criteria_leisure %>% filter(criteria_leisure_not_sick_not_night != -1)
-  mean(df_criteria_leisure$criteria_leisure_not_sick_not_night)
+  df_criteria_leisure <<- select(df_criteria, tick, criteria_recently_leisure)
+  df_criteria_leisure <<- df_criteria_leisure %>% filter(criteria_recently_leisure != -1)
+  mean(df_criteria_leisure$criteria_recently_leisure)
   
-  criteria_text   <- "Critera Leisure, 3% < mean < 65%"
-  criteria_value  <- round(mean(df_criteria_leisure$criteria_leisure_not_sick_not_night), 2)
-  criteria_passed <- 3 < criteria_value && criteria_value < 65
+  criteria_text   <- "Critera Recently Leisure, mean > 99%"
+  criteria_value  <- round(mean(df_criteria_leisure$criteria_recently_leisure), 2)
+  criteria_passed <- criteria_value > 99
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
 
   # Plotting
-  p <- ggplot(df_criteria_leisure, aes(x = tick, y = criteria_leisure_not_sick_not_night)) +
+  p <- ggplot(df_criteria_leisure, aes(x = tick, y = criteria_recently_leisure)) +
     geom_line(color = "orange", linewidth = 1.2) +
-    labs(title = "Line Plot of Criteria Leisure", x = "Tick", y = "Criteria Leisure Not Sick Not Night") +
+    labs(title = "Line Plot of Criteria Leisure", x = "Tick", y = "Criteria Recently Leisure") +
     theme_minimal(base_size = 14) + # Use a clean theme with adjusted text size
     coord_equal(xlim = c(0, gl_limits_x_max), ylim = c(0, 100))
   
   print(p)
 }
 
-behaviourPlot8CriteriaEssShop <- function() {
+behaviourPlot8CriteriaRecentlyEssShop <- function() {
   
-  df_criteria_ess_shop <<- select(df_criteria, tick, criteria_ess_shopping_not_sick_not_night) 
-  df_criteria_ess_shop <<- df_criteria_ess_shop %>% filter(criteria_ess_shopping_not_sick_not_night != -1)
-  mean(df_criteria_ess_shop$criteria_ess_shopping_not_sick_not_night)
+  df_criteria_ess_shop <<- select(df_criteria, tick, criteria_recently_ess_shopping) 
+  df_criteria_ess_shop <<- df_criteria_ess_shop %>% filter(criteria_recently_ess_shopping != -1)
+  mean(df_criteria_ess_shop$criteria_recently_ess_shopping)
   
-  criteria_text   <- "Critera Ess Shopping, 3% < mean < 65%"
-  criteria_value  <- round(mean(df_criteria_ess_shop$criteria_ess_shopping_not_sick_not_night), 2)
-  criteria_passed <- 3 < criteria_value && criteria_value < 65
+  criteria_text   <- "Critera Recently Ess Shopping, mean > 99%"
+  criteria_value  <- round(mean(df_criteria_ess_shop$criteria_recently_ess_shopping), 2)
+  criteria_passed <- criteria_value > 99
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
   
   # Plotting
-  p <- ggplot(df_criteria_ess_shop, aes(x = tick, y = criteria_ess_shopping_not_sick_not_night)) +
+  p <- ggplot(df_criteria_ess_shop, aes(x = tick, y = criteria_recently_ess_shopping)) +
     geom_line(color = "purple", linewidth = 1.2) +
-    labs(title = "Line Plot of Criteria Ess Shopping", x = "Tick", y = "Criteria Ess Shopping") +
+    labs(title = "Line Plot of Criteria Ess Shopping", x = "Tick", y = "Criteria Recently Ess Shopping") +
     theme_minimal(base_size = 14) + # Use a clean theme with adjusted text size
     coord_equal(xlim = c(0, gl_limits_x_max), ylim = c(0, 100))
   
   print(p)
 }
 
-behaviourPlot8CriteriaNonEssShop <- function() {
+behaviourPlot8CriteriaRecentlyNonEssShop <- function() {
   
-  df_criteria_non_ess_shop <<- select(df_criteria, tick, criteria_non_ess_shopping_not_sick_not_night)
-  df_criteria_non_ess_shop <<- df_criteria_non_ess_shop %>% filter(criteria_non_ess_shopping_not_sick_not_night != -1)
-  mean(df_criteria_non_ess_shop$criteria_non_ess_shopping_not_sick_not_night)
+  df_criteria_non_ess_shop <<- select(df_criteria, tick, criteria_recently_non_ess_shopping)
+  df_criteria_non_ess_shop <<- df_criteria_non_ess_shop %>% filter(criteria_recently_non_ess_shopping != -1)
+  mean(df_criteria_non_ess_shop$criteria_recently_non_ess_shopping)
   
-  criteria_text   <- "Critera Non-Ess Shopping, 3% < mean < 65%"
-  criteria_value  <- round(mean(df_criteria_non_ess_shop$criteria_non_ess_shopping_not_sick_not_night), 2)
-  criteria_passed <- 3 < criteria_value && criteria_value < 65
+  criteria_text   <- "Critera Recently Non-Ess Shopping, mean > 99%"
+  criteria_value  <- round(mean(df_criteria_non_ess_shop$criteria_recently_non_ess_shopping), 2)
+  criteria_passed <- criteria_value > 99
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
   
   # Plotting
-  p <- ggplot(df_criteria_non_ess_shop, aes(x = tick, y = criteria_non_ess_shopping_not_sick_not_night)) +
+  p <- ggplot(df_criteria_non_ess_shop, aes(x = tick, y = criteria_recently_non_ess_shopping)) +
     geom_line(color = "brown", linewidth = 1.2) +
-    labs(title = "Line Plot of Criteria Non-Ess Shopping", x = "Tick", y = "Criteria Non-Ess Shopping") +
+    labs(title = "Line Plot of Criteria Non-Ess Shopping", x = "Tick", y = "Criteria Recently Non-Ess Shopping") +
     theme_minimal(base_size = 14) + # Use a clean theme with adjusted text size
     coord_equal(xlim = c(0, gl_limits_x_max), ylim = c(0, 100))
   

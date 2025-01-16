@@ -18,6 +18,7 @@ directory_files <- "2024_08_12_comparison_full"
 directory_files <- "2024_08_14_comparison_extreme"
 directory_files <- "2024_12_19_realism"
 directory_files <- "2025_01_13_criteria_multi"
+directory_files <- "2025_01_14_criteria_multi"
 
 criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
