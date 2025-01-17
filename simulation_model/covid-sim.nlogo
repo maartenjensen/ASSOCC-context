@@ -2844,7 +2844,7 @@ INPUTBOX
 914
 87
 #random-seed
-0.0
+3.0
 1
 0
 Number
@@ -4439,10 +4439,10 @@ ce-enable-global-lockdown
 -1000
 
 INPUTBOX
-1444
-221
-1586
-281
+1417
+202
+1559
+262
 ce-need-salient-threshold
 0.5
 1
@@ -4450,10 +4450,10 @@ ce-need-salient-threshold
 Number
 
 INPUTBOX
-1444
-286
-1577
-346
+1417
+264
+1550
+324
 ce-need-critical-threshold
 0.1
 1
@@ -4467,7 +4467,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-0
+1
 1
 -1000
 
@@ -4514,10 +4514,10 @@ Needs balancing
 1
 
 TEXTBOX
-1446
-201
-1596
-219
+1419
+186
+1569
+204
 General context settings
 12
 125.0
@@ -4769,10 +4769,10 @@ ce-forced-habits
 -1000
 
 INPUTBOX
-1444
-349
-1619
-409
+1417
+326
+1592
+386
 ce-risk-avoidance-threshold-for-sd
 0.75
 1
@@ -5018,6 +5018,17 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot #beds-available-for-admission - #taken-hospital-beds"
+
+INPUTBOX
+1418
+388
+1630
+448
+ce-compliance-quarantine-threshold-for-sd
+0.57
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -6244,6 +6255,9 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-risk-avoidance-threshold-for-sd">
       <value value="0.75"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-compliance-quarantine-threshold-for-sd">
+      <value value="0.57"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-private-leisure-by-risk">
       <value value="true"/>

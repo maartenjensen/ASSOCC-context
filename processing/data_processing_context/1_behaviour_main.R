@@ -19,6 +19,7 @@ directory_files <- "2024_08_14_comparison_extreme"
 directory_files <- "2024_12_19_realism"
 directory_files <- "2025_01_13_criteria_multi"
 directory_files <- "2025_01_14_criteria_multi"
+directory_files <- "2025_01_17_criteria_multi"
 
 criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
@@ -44,7 +45,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "one" # One plot per pdf
-#plot_type <- "all" # All plots in one pdf
+plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
 plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
@@ -57,7 +58,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 1 # This was set to 2
+random_seed = 4 # This was set to 2
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -106,7 +107,7 @@ plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot6Activitie
 # plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay", "behaviourPlot2InfectionsBelieveInfected",
 #                                                            "behaviourPlot3Quarantiners", "behaviourPlot3QuarantinersAgeGroup", "behaviourPlot6ActivitiesSimplified4Leisure", "behaviourPlot6ActivitiesWorkStudyHome",
 #                                                            "behaviourPlot7SocialDistancing")
-#plot_specifics_h <- hash()
+plot_specifics_h <- hash()
 plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome",
                                                                  "behaviourPlot6ActivitiesSimplified5", "behaviourPlot6ActivitiesSimplified4Leisure2Weeks")
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]      <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot2InfectionsBelieveInfected",
@@ -127,29 +128,29 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot7SocialDistancing", "behaviourPlot6ActivitiesSimplified5",
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
-plot_specifics_h <- hash()
-plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
-plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
-plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
-plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot8Criteria")
-
-plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot8Criteria")
-plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot8Criteria")
-
-plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot8Criteria")
-plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot8Criteria")
-plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot8Criteria")
-plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criteria")
-
-plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
-
-plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
-plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
-plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
-
-plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
-plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
-plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
+# plot_specifics_h <- hash()
+# plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot8Criteria")
+# 
+# plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot8Criteria")
+# 
+# plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criteria")
+# 
+# plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
+# 
+# plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
+# 
+# plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
+# plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
 
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 #plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
