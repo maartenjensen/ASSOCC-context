@@ -128,7 +128,7 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot7SocialDistancing", "behaviourPlot6ActivitiesSimplified5",
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
-# plot_specifics_h <- hash()
+plot_specifics_h <- hash()
 # plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
 # plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
 # plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
@@ -145,12 +145,12 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
 # plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
 # 
 # plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
+plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
 # 
 # plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
 
 #plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")
 #plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot6ActivitiesSimplified4RestAndWorkHome", "behaviourPlot6ActivitiesSimplified5")

@@ -653,10 +653,10 @@ Disease Model
 1
 
 TEXTBOX
-1246
-98
-1540
-131
+1214
+105
+1508
+138
 Time between transitions
 11
 15.0
@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -4245,10 +4245,10 @@ Context-sensitive deliberation
 1
 
 PLOT
-2170
-307
-2411
-457
+2254
+517
+2458
+637
 Global deliberation time
 NIL
 NIL
@@ -4489,7 +4489,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1225
@@ -4774,7 +4774,7 @@ INPUTBOX
 1592
 386
 ce-risk-avoidance-threshold-for-sd
-0.75
+0.78
 1
 0
 Number
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-14
+17
 
 INPUTBOX
 322
@@ -5029,6 +5029,26 @@ ce-compliance-quarantine-threshold-for-sd
 1
 0
 Number
+
+PLOT
+2089
+280
+2419
+465
+Free time choices
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Leisure" 1.0 0 -955883 true "" "plot criteria_recently_leisure"
+"Grocery" 1.0 0 -5825686 true "" "plot criteria_recently_ess_shopping"
+"Luxury" 1.0 0 -8431303 true "" "plot criteria_recently_non_ess_shopping"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -6254,7 +6274,7 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
       <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-risk-avoidance-threshold-for-sd">
-      <value value="0.75"/>
+      <value value="0.78"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-compliance-quarantine-threshold-for-sd">
       <value value="0.57"/>
