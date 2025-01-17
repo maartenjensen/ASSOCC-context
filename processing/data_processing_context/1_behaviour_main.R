@@ -57,7 +57,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 0 # This was set to 2
+random_seed = 1 # This was set to 2
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
