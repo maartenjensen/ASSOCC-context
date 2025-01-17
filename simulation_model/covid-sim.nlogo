@@ -4774,7 +4774,7 @@ INPUTBOX
 1592
 386
 ce-risk-avoidance-threshold-for-sd
-0.78
+0.77
 1
 0
 Number
@@ -5025,7 +5025,7 @@ INPUTBOX
 1630
 448
 ce-compliance-quarantine-threshold-for-sd
-0.57
+0.56
 1
 0
 Number
