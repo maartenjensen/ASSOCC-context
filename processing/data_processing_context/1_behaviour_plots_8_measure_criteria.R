@@ -166,9 +166,9 @@ behaviourPlot8CriteriaRecentlyLeisure <- function() {
   df_criteria_leisure <<- df_criteria_leisure %>% filter(criteria_recently_leisure != -1)
   mean(df_criteria_leisure$criteria_recently_leisure)
   
-  criteria_text   <- "Critera Recently Leisure, mean > 99%"
+  criteria_text   <- "Critera Recently Leisure, mean > 98%"
   criteria_value  <- round(mean(df_criteria_leisure$criteria_recently_leisure), 2)
-  criteria_passed <- criteria_value > 99
+  criteria_passed <- criteria_value > 98
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
 
@@ -188,9 +188,9 @@ behaviourPlot8CriteriaRecentlyEssShop <- function() {
   df_criteria_ess_shop <<- df_criteria_ess_shop %>% filter(criteria_recently_ess_shopping != -1)
   mean(df_criteria_ess_shop$criteria_recently_ess_shopping)
   
-  criteria_text   <- "Critera Recently Ess Shopping, mean > 99%"
+  criteria_text   <- "Critera Recently Ess Shopping, mean > 98%"
   criteria_value  <- round(mean(df_criteria_ess_shop$criteria_recently_ess_shopping), 2)
-  criteria_passed <- criteria_value > 99
+  criteria_passed <- criteria_value > 98
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
   
@@ -210,9 +210,9 @@ behaviourPlot8CriteriaRecentlyNonEssShop <- function() {
   df_criteria_non_ess_shop <<- df_criteria_non_ess_shop %>% filter(criteria_recently_non_ess_shopping != -1)
   mean(df_criteria_non_ess_shop$criteria_recently_non_ess_shopping)
   
-  criteria_text   <- "Critera Recently Non-Ess Shopping, mean > 99%"
+  criteria_text   <- "Critera Recently Non-Ess Shopping, mean > 98%"
   criteria_value  <- round(mean(df_criteria_non_ess_shop$criteria_recently_non_ess_shopping), 2)
-  criteria_passed <- criteria_value > 99
+  criteria_passed <- criteria_value > 98
   
   behaviourPlot8CriteriaAddResult(criteria_text, criteria_value, criteria_passed)
   

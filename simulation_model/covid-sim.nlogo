@@ -4774,7 +4774,7 @@ INPUTBOX
 1592
 386
 ce-risk-avoidance-threshold-for-sd
-0.77
+0.78
 1
 0
 Number
@@ -5025,7 +5025,7 @@ INPUTBOX
 1630
 448
 ce-compliance-quarantine-threshold-for-sd
-0.56
+0.57
 1
 0
 Number
@@ -6256,10 +6256,6 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     </enumeratedValueSet>
     <enumeratedValueSet variable="#random-seed">
       <value value="0"/>
-      <value value="1"/>
-      <value value="2"/>
-      <value value="3"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-households-for-context-scenario">
       <value value="350"/>

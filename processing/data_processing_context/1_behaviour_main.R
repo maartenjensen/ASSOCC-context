@@ -20,6 +20,7 @@ directory_files <- "2024_12_19_realism"
 directory_files <- "2025_01_13_criteria_multi"
 directory_files <- "2025_01_14_criteria_multi"
 directory_files <- "2025_01_17_criteria_multi"
+directory_files <- "2025_01_18_criteria_sd_test"
 
 criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
@@ -187,16 +188,26 @@ filesNames   <- c(paste(directory_files, "csv", sep = "."))
 df_initial = behaviourLoadDataframe(filesPath, filesNames)
 df_renamed <- behaviourRenameDataframe(df_initial)
 df_final <- behaviourAddNormalizedColumns(df_renamed)
+df_final_copy <- df_final 
+
+# Temporary select the right compliance quarantine threshold
+df_final <- df_final_copy[df_final_copy$ce_compliance_quarantine_threshold_for_sd == 0.57, ]
 
 behaviourPlot7InfectionsComparison()
 
 # Filter on one random seed, since the plots are from a single run
-df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
+df_final_filtered <- df_final[df_final$random_seed == 11, ]
 # df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.80, ]  # 0.75 0.76 0.77 0.78 0.79 0.80 0.85 0.90
 
 # Print the data for the comparison section
 behaviourPlot7MeanOfActivities()
+
+
+#=============================================================
+#================ PLOT FOR LOOP CRITERIA =====================
+#=============================================================
 behaviourPlot8CriteriaResultsInitialise()
+
 
 #=============================================================
 #============= PLOT FOR LOOP FOR EVERYTHING ==================
