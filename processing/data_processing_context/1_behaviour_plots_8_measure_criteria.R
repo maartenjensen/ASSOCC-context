@@ -20,6 +20,211 @@
 # df_1_to_5$value_4 <- df_criteria_results_4$crit_value_4
 # df_1_to_5$pass_4 <- df_criteria_results_4$crit_pass_4
 
+behaviourPlot8CriteriaDetermineForAll <- function() {
+  
+  df_criteria_multi_01_passed <- select(df_criteria_multi_01, criteria_passed, pass_1, pass_2, pass_3, pass_4, pass_5, pass_6, pass_7, 
+         pass_8, pass_9, pass_10, pass_11, pass_12, pass_13, pass_14, pass_15, 
+         pass_16, pass_17, pass_18, pass_19, pass_20, pass_21, pass_22, pass_23, pass_24)
+  
+  true_count <- c(0)
+  for(i in 1:nrow(df_criteria_multi_01_passed)) {
+    a_counter = 0
+    for (j in 1:ncol(df_criteria_multi_01_passed)) {
+      if (df_criteria_multi_01_passed[i,j] == "TRUE") {
+        a_counter = a_counter + 1
+      }
+    }
+    true_count <- c(true_count, a_counter)
+  }
+  print("01")
+  print(true_count)
+  
+  df_criteria_multi_02_passed <- select(df_criteria_multi_02, criteria_passed, pass_1, pass_2, pass_3, pass_4, pass_5, pass_6, pass_7, 
+                                        pass_8, pass_9, pass_10, pass_11, pass_12, pass_13, pass_14, pass_15, 
+                                        pass_16, pass_17, pass_18, pass_19, pass_20, pass_21, pass_22, pass_23, pass_24)
+  
+  true_count <- c(0)
+  for(i in 1:nrow(df_criteria_multi_02_passed)) {
+    a_counter = 0
+    for (j in 1:ncol(df_criteria_multi_02_passed)) {
+      if (df_criteria_multi_02_passed[i,j] == "TRUE") {
+        a_counter = a_counter + 1
+      }
+    }
+    true_count <- c(true_count, a_counter)
+  }
+  print("02")
+  print(true_count)
+  
+  df_criteria_multi_51_passed <- select(df_criteria_multi_51, criteria_passed, pass_1, pass_2, pass_3, pass_4, pass_5, pass_6, pass_7, 
+                                        pass_8, pass_9, pass_10, pass_11, pass_12, pass_13, pass_14, pass_15, 
+                                        pass_16, pass_17, pass_18, pass_19, pass_20, pass_21, pass_22, pass_23, pass_24)
+  
+  true_count <- c(0)
+  for(i in 1:nrow(df_criteria_multi_51_passed)) {
+    a_counter = 0
+    for (j in 1:ncol(df_criteria_multi_51_passed)) {
+      if (df_criteria_multi_51_passed[i,j] == "TRUE") {
+        a_counter = a_counter + 1
+      }
+    }
+    true_count <- c(true_count, a_counter)
+  }
+  print("51")
+  print(true_count)
+  
+  df_criteria_multi_52_passed <- select(df_criteria_multi_52, criteria_passed, pass_1, pass_2, pass_3, pass_4, pass_5, pass_6, pass_7, 
+                                        pass_8, pass_9, pass_10, pass_11, pass_12, pass_13, pass_14, pass_15, 
+                                        pass_16, pass_17, pass_18, pass_19, pass_20, pass_21, pass_22, pass_23, pass_24)
+  
+  true_count <- c(0)
+  for(i in 1:nrow(df_criteria_multi_52_passed)) {
+    a_counter = 0
+    for (j in 1:ncol(df_criteria_multi_52_passed)) {
+      if (df_criteria_multi_52_passed[i,j] == "TRUE") {
+        a_counter = a_counter + 1
+      }
+    }
+    true_count <- c(true_count, a_counter)
+  }
+  print("52")
+  print(true_count)
+}
+
+behaviourPlot8CriteriaDetermineForAll <- function() {
+  
+  # Create results criteria
+  preset <- c('no_preset')
+  criteria_n <- c(-1)
+  criteria_text <- c('criteria')
+  criteria_value <- c(100)
+  criteria_passed <- c(FALSE)
+  
+  for (a_experiment_preset in experiment_presets)
+  {
+    experiment_preset <<- a_experiment_preset
+    if (a_experiment_preset == "0.1 Original ASSOCC") {
+      df_criteria_multi_01 <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
+    }
+    if (a_experiment_preset == "0.2 Original ASSOCC-lockdown") {
+      df_criteria_multi_02 <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
+    }
+    if (a_experiment_preset == "5.1 DCSD-5-optimisation") {
+      df_criteria_multi_51 <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
+    }
+    if (a_experiment_preset == "5.2 DCSD-5-optimisation-lockdown") {
+      df_criteria_multi_52 <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
+    }
+    
+    all_random_seeds <- sort(unique(df_final$random_seed))
+    for (a_random_seed in all_random_seeds) {
+      
+      df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
+      
+      # Only selecting the current experiment
+      temp_df_final_preset <<- df_final[df_final$ce_context_experiment_presets == a_experiment_preset, ]
+      temp_df_final_preset <<- temp_df_final_preset[temp_df_final_preset$random_seed == a_random_seed, ]
+      
+      depth_value <- unique(temp_df_final_preset$ce_context_depth)[1] # This is the same for the whole column since its data of ONE preset
+      gl_limits_x_max <<- temp_df_final_preset$stop_before_tick[1]
+      
+      print(paste("Preset:", a_experiment_preset, ", random seed:", a_random_seed))
+      behaviourPlot8CriteriaDetermineForAllMain()
+      
+      if (a_experiment_preset == "0.1 Original ASSOCC") {
+        if (a_random_seed == 0) {
+          df_criteria_multi_01 <<- df_criteria_single_results
+        } else {
+          df_criteria_multi_01[paste("value_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_value
+          df_criteria_multi_01[paste("pass_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_passed
+        }
+      }
+      if (a_experiment_preset == "0.2 Original ASSOCC-lockdown") {
+        if (a_random_seed == 0) {
+          df_criteria_multi_02 <<- df_criteria_single_results
+        } else {
+          df_criteria_multi_02[paste("value_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_value
+          df_criteria_multi_02[paste("pass_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_passed
+        }
+      }
+      if (a_experiment_preset == "5.1 DCSD-5-optimisation") {
+        if (a_random_seed == 0) {
+          df_criteria_multi_51 <<- df_criteria_single_results
+        } else {
+          df_criteria_multi_51[paste("value_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_value
+          df_criteria_multi_51[paste("pass_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_passed
+        }
+      }
+      if (a_experiment_preset == "5.2 DCSD-5-optimisation-lockdown") {
+        if (a_random_seed == 0) {
+          df_criteria_multi_52 <<- df_criteria_single_results
+        } else {
+          df_criteria_multi_52[paste("value_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_value
+          df_criteria_multi_52[paste("pass_", a_random_seed, sep = "")] <<- df_criteria_single_results$criteria_passed
+        }
+      }
+    }
+  }
+}
+
+behaviourPlot8CriteriaDetermineForAllMain <- function(plot_specific_f_name) {
+  
+  print("-- Plot Criteria Measurements --")
+  #colnames(subset_df)
+  
+  df_criteria <<- temp_df_final_preset #behaviourPlot8CriteriaGetCriteriaDf()
+  
+  #df_criteria <<- select(subset_df, ce_context_experiment_presets, tick,
+  #                       criteria_night_home:criteria_rest_when_know_sick, infected)
+  colnames(df_criteria)
+  
+  # Create results criteria
+  preset <- c('no_preset')
+  criteria_n <- c(-1)
+  criteria_text <- c('criteria')
+  criteria_value <- c(100)
+  criteria_passed <- c(FALSE)
+  
+  # Make the data.frame global (using <<-)
+  df_criteria_single_results <<- data.frame(preset, criteria_n, criteria_text, criteria_value, criteria_passed)
+  
+  crit_n <<- 1
+  
+  # Normal life
+  behaviourPlot8CriteriaNightHome()
+  behaviourPlot8CriteriaRecentlyLeisure()
+  behaviourPlot8CriteriaRecentlyEssShop()
+  behaviourPlot8CriteriaRecentlyNonEssShop()
+  
+  # Obligations
+  behaviourPlot8CriteriaNotSkipWork()
+  behaviourPlot8CriteriaWorkAtWorkplaceNotAtHome()
+  
+  behaviourPlot8CriteriaNotSkipSchool()
+  behaviourPlot8CriteriaNotSkipUniversity()
+  
+  # Covid
+  behaviourPlot8CriteriaRestWhenKnowSick()
+  
+  behaviourPlot8CriteriaQuarantinePeople()
+  behaviourPlot8CriteriaQuarantineChildren()
+  behaviourPlot8CriteriaQuarantineStudents()
+  behaviourPlot8CriteriaQuarantineWorkers()
+  behaviourPlot8CriteriaQuarantineRetireds()
+  
+  behaviourPlot8CriteriaInfectionCurvePeak()
+  
+  # Remove the initial row
+  df_criteria_single_results <<- df_criteria_single_results %>% filter(criteria_n != -1)
+  
+  # Print the criteria results
+  df_criteria_single_results
+  
+  # Add the criteria results to the bigger data frame
+  df_criteria_results <<- rbind(df_criteria_results, df_criteria_single_results)
+  df_criteria_results <<- df_criteria_results %>% filter(criteria_n != -1)
+}
+
 behaviourPlot8CriteriaGetCriteriaDf <- function() {
 
   if (criteria_get_mean_off_runs) {

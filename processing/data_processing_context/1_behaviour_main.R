@@ -21,6 +21,9 @@ directory_files <- "2025_01_13_criteria_multi"
 directory_files <- "2025_01_14_criteria_multi"
 directory_files <- "2025_01_17_criteria_multi"
 directory_files <- "2025_01_18_criteria_sd_test"
+directory_files <- "2025_01_18_criteria_sd_test"
+directory_files <- "2025_01_18_realism_full" # All different presets
+directory_files <- "2025_01_18_realism_multi" # 25x comparison Original ASSOCC and DCSD ASSOCC
 
 criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
@@ -46,7 +49,7 @@ libraries_loaded <- behaviourLoadLibraries(libraries_need_to_be_loaded)
 # Plot type
 plot_type <- "none" # Generate no pdf's, just generate it in the viewer
 plot_type <- "one" # One plot per pdf
-plot_type <- "all" # All plots in one pdf
+#plot_type <- "all" # All plots in one pdf
 
 # Create functions that have to be called
 plot_specifics_only <- TRUE # if there are specific plots for the setting, only plot specific plots
@@ -59,7 +62,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 4 # This was set to 2
+random_seed = 16 # This was set to 2
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -145,11 +148,11 @@ plot_specifics_h <- hash()
 # 
 # plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
 # 
-# plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
 plot_specifics_h[["5.2 DCSD-5-optimisation-lockdown"]]      <- c("behaviourPlot8Criteria", "behaviourPlot2InfectionsBelieveInfected")
 # 
-# plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["0.0 Original ASSOCC-no-infections"]] <- c("behaviourPlot8Criteria")
 plot_specifics_h[["0.1 Original ASSOCC"]]               <- c("behaviourPlot8Criteria")
 plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]      <- c("behaviourPlot8Criteria")
 
@@ -188,15 +191,15 @@ filesNames   <- c(paste(directory_files, "csv", sep = "."))
 df_initial = behaviourLoadDataframe(filesPath, filesNames)
 df_renamed <- behaviourRenameDataframe(df_initial)
 df_final <- behaviourAddNormalizedColumns(df_renamed)
-df_final_copy <- df_final 
+#df_final_copy <- df_final 
 
 # Temporary select the right compliance quarantine threshold
-df_final <- df_final_copy[df_final_copy$ce_compliance_quarantine_threshold_for_sd == 0.57, ]
+#df_final <- df_final_copy[df_final_copy$ce_compliance_quarantine_threshold_for_sd == 0.57, ]
 
 behaviourPlot7InfectionsComparison()
 
 # Filter on one random seed, since the plots are from a single run
-df_final_filtered <- df_final[df_final$random_seed == 11, ]
+df_final_filtered <- df_final[df_final$random_seed == random_seed, ]
 # df_final_filtered <- df_final_filtered[df_final_filtered$ce_risk_avoidance_threshold_for_sd == 0.80, ]  # 0.75 0.76 0.77 0.78 0.79 0.80 0.85 0.90
 
 # Print the data for the comparison section
