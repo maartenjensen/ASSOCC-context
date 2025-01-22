@@ -23,7 +23,7 @@ directory_files <- "2025_01_17_criteria_multi"
 directory_files <- "2025_01_18_criteria_sd_test"
 directory_files <- "2025_01_18_criteria_sd_test"
 directory_files <- "2025_01_18_realism_full" # All different presets
-directory_files <- "2025_01_18_realism_multi" # 25x comparison Original ASSOCC and DCSD ASSOCC
+#directory_files <- "2025_01_18_realism_multi" # 25x comparison Original ASSOCC and DCSD ASSOCC
 
 criteria_get_mean_off_runs <- FALSE # FALSE: Use the single random seed run
 
@@ -62,7 +62,7 @@ plot_full_functions <- c("behaviourPlot1DeliberationType", "behaviourPlot1Delibe
                          "behaviourPlot6Activities", "behaviourPlot6ActivitiesSimplified4RestAndWorkHome")
 # There are more!
 
-random_seed = 16 # This was set to 2
+random_seed = 0
 
 # To determine later! Probably I need to change the plots of 1 until 2, that show the activities to have a combined rest and work at home! But let's see whether it changes later on.
 plot_specifics_h <- hash()
@@ -133,20 +133,20 @@ plot_specifics_h[["0.2 Original ASSOCC-lockdown"]]    <- c("behaviourPlot6Activi
                                                            "behaviourPlot4NeedsLeisureAndShopping", "behaviourPlot4NeedsLeisureAndShoppingIndividual")
 
 plot_specifics_h <- hash()
-# plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot8Criteria")
-# 
-# plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot8Criteria")
-# 
-# plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot8Criteria")
-# plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criteria")
-# 
-# plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.1 rigid-habits-no-infected"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.2 rigid-habits-infected"]]    <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.3 DCSD-1"]]                   <- c("behaviourPlot8Criteria")
+plot_specifics_h[["1.4 DCSD-1-leisure-habits"]]    <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["2.1 DCSD-2"]]                   <- c("behaviourPlot8Criteria")
+plot_specifics_h[["2.2 DCSD-2-obligation-constraint"]]  <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["3.1 DCSD-3-rigid-norms"]]       <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.2 DCSD-3-rigid-norms-lockdown"]] <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.3 DCSD-3"]]                      <- c("behaviourPlot8Criteria")
+plot_specifics_h[["3.4 DCSD-3-lockdown"]]             <- c("behaviourPlot8Criteria")
+
+plot_specifics_h[["4.1 DCSD-4"]]                   <- c("behaviourPlot8Criteria")
 # 
 plot_specifics_h[["5.0 DCSD-5-optimisation-no-infections"]] <- c("behaviourPlot8Criteria")
 plot_specifics_h[["5.1 DCSD-5-optimisation"]]               <- c("behaviourPlot8Criteria")
