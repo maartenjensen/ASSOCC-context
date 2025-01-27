@@ -537,7 +537,7 @@ behaviourPlot6ActivitiesSimplified4RestAndWorkHomeDay <- function(plot_specific_
   p_smooth <- p + geom_smooth(se = TRUE, span = .75)
   p <- p + geom_line()
   
-  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_day_rest_and_work_home", sep="")) }
+  if (plot_type == "one") { behaviourEnablePdf(paste(plot_base_name, "_activities_4_day_rest_and_work_home_day", sep="")) }
   show(p)
   if (plot_type == "one") { dev.off() }
 }

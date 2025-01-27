@@ -1670,7 +1670,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-3.0
+4.0
 1
 1
 NIL
@@ -4467,7 +4467,7 @@ SWITCH
 71
 ce-log-agent
 ce-log-agent
-1
+0
 1
 -1000
 
@@ -4584,7 +4584,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-1
+4
 
 SWITCH
 1225
@@ -4742,7 +4742,7 @@ SWITCH
 443
 ce-should-rigidly-follow-quarantine
 ce-should-rigidly-follow-quarantine
-1
+0
 1
 -1000
 
@@ -4864,7 +4864,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-1
+0
 1
 -1000
 
@@ -4896,7 +4896,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-1
+0
 1
 -1000
 
@@ -4918,7 +4918,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-1
+0
 1
 -1000
 
@@ -4940,7 +4940,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-17
+8
 
 INPUTBOX
 322

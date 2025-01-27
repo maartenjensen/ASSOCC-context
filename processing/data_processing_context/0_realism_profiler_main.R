@@ -15,6 +15,7 @@ if (!exists("libraries_loaded") || getwd() == "C:/Users/maart/OneDrive/Documente
   library(sjmisc)
   library(readr)
   library(viridis)
+  library(dplyr)
   
   #first empty working memory 
   rm(list=ls())
@@ -41,50 +42,119 @@ plot_type <- "one"
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-directory_files <- "2024_12_07_scalability_wh_autonomy"
-pdf_output_name <- "2024_12_07_scalability"
+directory_files <- "2025_01_18_realism_full_2"
+pdf_output_name <- "2025_01_18_realism_full_2"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
 setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
-source("../0_profiler_support.R")
+source("../0_realism_profiler_support.R")
 
 # C = context depth, H = households, A = action space, R = random seed
 
-n_experiments_active = 5
-random_seeds = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")[1:n_experiments_active]
+n_experiments_active = 1
+#random_seeds = c("0")[1:n_experiments_active]
 
-if (directory_files == "2024_12_07_scalability_wh_autonomy")
+if (directory_files == "2025_01_18_realism_full_2")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"), random_seeds)
-}
-
-if (directory_files == "2025_01_18_realism_full_0")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"), random_seeds)
+  filenames_profiler <- retrieve_filenames_profiler(c("1.4 DCSD-1-leisure-habits", "2.2 DCSD-2-obligation-constraint",
+                                                      "3.3 DCSD-3", "4.1 DCSD-4", "5.1 DCSD-5-optimisation"),
+                                                    c("350"),
+                                                    c("6"), c("2"))
 }
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
-#--------------------------------------
-p_filepath_workspace <- paste(directory_r, directory_files, sep="/")
-p_filenames_profiler <- filenames_profiler
-
 df_profiler = profilerLoadData(paste(directory_r, directory_files, sep="/"), filenames_profiler)
 df_p_overview = profilerLoadSpecificData(df_profiler, c("GO", "MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR", "CONTEXT-SELECT-ACTIVITY", "SELECT-ACTIVITY"))
 df_p_overview = profilerPrepareOverviewDataframe(df_p_overview)
-df_p_overview_mean = profilerGetOverviewMean(df_p_overview)
+
+#--------------------------------------
+#---           PLOTTING            ---
+
+for (a_preset in unique(df_profiler$preset))
+{
+  relevant_function_names <- c("CSFT-FUNCTION", "CSN-FUNCTION", "CSO-FUNCTION", "CSOWH-FUNCTION",
+                               "CSSFT-FUNCTION", "CSSN-FUNCTION", "CSSO-FUNCTION", "CSSOWH-FUNCTION",
+                               "CSFT-FUNCTION-SUCCEEDED", "CSN-FUNCTION-SUCCEEDED", "CSO-FUNCTION-SUCCEEDED", "CSOWH-FUNCTION-SUCCEEDED",
+                               "CSSFT-FUNCTION-SUCCEEDED", "CSSN-FUNCTION-SUCCEEDED", "CSSO-FUNCTION-SUCCEEDED", "CSSOWH-FUNCTION-SUCCEEDED")
+  
+  df_profiler_a_preset <- df_profiler[df_profiler$preset==a_preset, ]
+  
+  df_profiler_a_preset_filtered <- df_profiler_a_preset[c("function_name", "calls")]
+  df_profiler_a_preset_filtered <- df_profiler_a_preset_filtered[df_profiler_a_preset_filtered$function_name %in% relevant_function_names, ]
+  
+  relevant_function_names_succeeded <- c("CSFT-FUNCTION-SUCCEEDED", "CSN-FUNCTION-SUCCEEDED", "CSO-FUNCTION-SUCCEEDED", "CSOWH-FUNCTION-SUCCEEDED",
+                                         "CSSFT-FUNCTION-SUCCEEDED", "CSSN-FUNCTION-SUCCEEDED", "CSSO-FUNCTION-SUCCEEDED", "CSSOWH-FUNCTION-SUCCEEDED")
+  
+  for (name in unique(relevant_function_names_succeeded)) {
+    if (!name %in% df_profiler_a_preset_filtered$function_name) {
+      df_profiler_a_preset_filtered <- rbind(df_profiler_a_preset_filtered, list(name, 0))
+    }
+  }
+  
+  df_profiler_a_preset_filtered <- df_profiler_a_preset_filtered[order(df_profiler_a_preset_filtered$function_name, decreasing = FALSE), ]
+  data <- df_profiler_a_preset_filtered
+  
+  
+  
+  # Ensure the data has the correct column names
+  colnames(data) <- c("function_name", "calls")
+
+  # Create a grouping column to pair -FUNCTION and -FUNCTION-SUCCEEDED
+  data <- data %>%
+    mutate(group = sub("-SUCCEEDED", "", function_name))
+
+  # Map custom labels to groups
+  label_map <- c(
+    "CSFT-FUNCTION" = "Freetime",
+    "CSSFT-FUNCTION" = "Freetime Sick",
+    "CSN-FUNCTION" = "Night",
+    "CSSN-FUNCTION" = "Night Sick",
+    "CSO-FUNCTION" = "Obligation",
+    "CSSO-FUNCTION" = "Obligation Sick",
+    "CSOWH-FUNCTION" = "Obligation WH",
+    "CSSOWH-FUNCTION" = "Obligation WH Sick"
+  )
+
+  data <- data %>% mutate(group_label = label_map[group])
+
+  # Prepare the data for plotting
+  data <- data %>% mutate(function_type = ifelse(grepl("-SUCCEEDED", function_name), "Succeeded", "Calls"))
+
+  # Plot using ggplot
+  p <- ggplot(data, aes(x = group_label, y = calls, fill = function_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    scale_fill_manual(values = c("Calls" = "green", "Succeeded" = "darkgreen")) +
+    labs(title = "Function Calls and Successes",
+         x = "Function Name",
+         y = "Number of Calls",
+         fill = "Type") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(legend.position="bottom", text = element_text(size=16))
+
+  
+  
+  if (plot_type == "one") { profilerEnablePdf(paste("plot_2025_01_18_realism_full_2_profiler_", a_preset, sep="")) }
+  show(p)
+  if (plot_type == "one") { dev.off() }
+}
+
+
+
+
+
+
+
+
 
 #==============================================
 #==== PLOTTING                              ===
 #==============================================
-source("../0_profiler_plots.R")
+source("../0_realism_profiler_plots.R")
 
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
