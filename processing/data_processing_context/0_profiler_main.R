@@ -44,6 +44,9 @@ directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_
 directory_files <- "2024_12_07_scalability_wh_autonomy"
 pdf_output_name <- "2024_12_07_scalability"
 
+directory_files <- "2025_01_23_scalability_final"
+pdf_output_name <- "2025_01_23_scalability_final"
+
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
 setwd(paste(directory_r, directory_files, sep="/"))
@@ -54,7 +57,7 @@ source("../0_profiler_support.R")
 # C = context depth, H = households, A = action space, R = random seed
 
 n_experiments_active = 5
-random_seeds = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")[1:n_experiments_active]
+random_seeds = c("0", "1", "2", "3", "4")[1:n_experiments_active]
 
 if (directory_files == "2024_12_07_scalability_wh_autonomy")
 {
@@ -64,6 +67,13 @@ if (directory_files == "2024_12_07_scalability_wh_autonomy")
 }
 
 if (directory_files == "2025_01_18_realism_full_0")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+                                                    c("350", "700", "1400", "2100", "2800", "3500"),
+                                                    c("6"), random_seeds)
+}
+
+if (directory_files == "2025_01_23_scalability_final")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
