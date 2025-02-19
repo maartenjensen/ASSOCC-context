@@ -41,44 +41,26 @@ plot_type <- "one"
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-directory_files <- "2024_12_07_scalability_wh_autonomy"
-pdf_output_name <- "2024_12_07_scalability"
 
-directory_files <- "2025_01_23_scalability_final"
-pdf_output_name <- "2025_01_23_scalability_final"
-
-#p_filepath_workspace = paste(directory_r, directory_files, sep="/")
-#p_filenames_profiler = filenames_profiler
+directory_files <- "2025_02_13_scalability_lvanhee"
+pdf_output_name <- "2025_02_13_scalability_lvanhee"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
 setwd(paste(directory_r, directory_files, sep="/"))
 getwd()
 
-source("../0_profiler_support.R")
+source("../0_profiler_lois_assocc_support.R")
 
 # C = context depth, H = households, A = action space, R = random seed
 
-n_experiments_active = 5
-random_seeds = c("0", "1", "2", "3", "4")[1:n_experiments_active]
+n_experiments_active = 1
+random_seeds = c("2")[1:n_experiments_active]
 
-if (directory_files == "2024_12_07_scalability_wh_autonomy")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"), random_seeds)
-}
 
-if (directory_files == "2025_01_18_realism_full_0")
+if (directory_files == "2025_02_13_scalability_lvanhee")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
-                                                    c("350", "700", "1400", "2100", "2800", "3500"),
-                                                    c("6"), random_seeds)
-}
-
-if (directory_files == "2025_01_23_scalability_final")
-{
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
+  filenames_profiler <- retrieve_filenames_profiler(c("profiler_lvanhee"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
                                                     c("6"), random_seeds)
 }
@@ -97,7 +79,7 @@ df_p_overview_mean = profilerGetOverviewMean(df_p_overview)
 #==============================================
 #==== PLOTTING                              ===
 #==============================================
-source("../0_profiler_plots.R")
+source("../0_profiler_lois_assocc_plots.R")
 
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -107,6 +89,38 @@ source("../0_profiler_plots.R")
 
 
 
+
+#==============================================
+# GO
+#==============================================
+df_p_overview_mean_GO <- df_p_overview_mean[df_p_overview_mean$function_name == "GO", ]
+#plot_time_comparison_go(df_p_overview_mean_GO, pdf_output_name, n_experiments_active, plot_type) 
+
+#==============================================
+# SELECT ACTIVITY
+#==============================================
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+#plot_time_comparison_deliberation(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, pdf_output_name, n_experiments_active, plot_type)
+
+
+
+# Data preparations
+round_i = 0
+v_incl_t_ms_mean_non_deliberation = df_p_overview_mean_GO$incl_t_ms_mean - df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean
+
+df_incl_t_ms_mean_all <- data.frame(df_p_overview_mean_GO$agents, df_p_overview_mean_GO$preset, 
+                                    round(df_p_overview_mean_GO$incl_t_ms_mean, round_i),
+                                    round(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$incl_t_ms_mean, round_i),
+                                    round(v_incl_t_ms_mean_non_deliberation, round_i))
+
+colnames(df_incl_t_ms_mean_all) = c("Agents", "Preset", "Total Time", "Deliberation Time", "Non-Deliberation Time")
+
+# plot for Original ASSOCC
+df_time_original_assocc <- gather(df_incl_t_ms_mean_all[1:6, c(1,2,4,5)], time_type, incl_t_ms_mean, `Deliberation Time`:`Non-Deliberation Time`)
+plot_time_comparison_original_assocc(df_time_original_assocc, pdf_output_name, n_experiments_active, plot_type)
+
+# the table data
+df_time_original_assocc
 
 
 
@@ -347,15 +361,3 @@ df_incl_t_ms_mean_all$`Required Speed-Up Original`[7:12] = round(df_incl_t_ms_me
 df_incl_t_ms_mean_all
 
 plot_possible_speed_up_original_assocc(df_incl_t_ms_mean_all, pdf_output_name, n_experiments_active, plot_type)
-
-
-#==============================================
-#==============================================
-# Table In Depth DCSD with Calls
-#==============================================
-#==============================================
-
-df_p_overview_mean_DCSD_in_depth <- df_p_overview_mean[df_p_overview_mean$preset == "5.1 DCSD-5-optimisation", ]
-df_p_overview_mean_DCSD_in_depth <- df_p_overview_mean_DCSD_in_depth[df_p_overview_mean_DCSD_in_depth$agents == 1004, ]
-
-df_p_overview_mean_DCSD_in_depth
