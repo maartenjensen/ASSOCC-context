@@ -348,6 +348,26 @@ df_incl_t_ms_mean_all
 
 plot_possible_speed_up_original_assocc(df_incl_t_ms_mean_all, pdf_output_name, n_experiments_active, plot_type)
 
+#----------------------------------------------
+# Table for speed-up factor
+#----------------------------------------------
+
+df_incl_t_ms_mean_all$delib_time_perc_new <- df_incl_t_ms_mean_all$`Deliberation Time`/df_incl_t_ms_mean_all$`Total Time New`*100
+
+#\begin{table}[!ht]
+#\begin{tabular}{ll|llll}
+#\textbf{Agents} & \textbf{Preset} & \textbf{Delib Time} & \textbf{Tot Time New} & \textbf{Speed-up factor} % \textbf{Delib Perc} \\ \hline
+#
+for (i in 1:12) {
+  cat(df_incl_t_ms_mean_all$Agents[i], "&", df_incl_t_ms_mean_all$Preset[i], "&", round(df_incl_t_ms_mean_all$`Deliberation Time`[i], digits = 0), "ms &",
+      round(df_incl_t_ms_mean_all$`Total Time New`[i], digits = 0), "ms &",  round(df_incl_t_ms_mean_all$`Required Speed-Up Original`[i], digits = 1), "&", 
+      round(df_incl_t_ms_mean_all$delib_time_perc_new[i], digits = 2), "\\%", "\\\\ \n") 
+}
+
+#\end{tabular}
+#\caption{Summary Table Scalability - DCSD vs ASSOCC}
+#\label{tab:results_scalability_summary_dcsd_vs_assocc}
+#\end{table}
 
 #==============================================
 #==============================================
