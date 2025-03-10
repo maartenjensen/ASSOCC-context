@@ -1,5 +1,8 @@
 profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
+  # p_filepath_workspace = paste(directory_r, directory_files, sep="/")
+  # p_filenames_profiler = filenames_profiler
+  
   df_results = data.frame(preset=NA, households=NA, action_space=NA, random_seed=NA, context = NA,  
                           function_name=NA, calls=NA, incl_t_ms=NA, excl_t_ms=NA, excl_calls=NA)[numeric(0), ]
 
@@ -8,6 +11,7 @@ profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
   # Read in datafiles using filesNames and filesPath variables
   for (i in 1:length(p_filenames_profiler)) {
+    
     file_name = p_filenames_profiler[i]
     file_path_name = paste(p_filepath_workspace, p_filenames_profiler[i], sep="/")
 

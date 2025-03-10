@@ -41,14 +41,9 @@ plot_type <- "one"
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-directory_files <- "2024_12_07_scalability_wh_autonomy"
-pdf_output_name <- "2024_12_07_scalability"
 
-directory_files <- "2025_03_07_scalability_deliberation"
-pdf_output_name <- "2025_03_07_scalability_deliberation"
-
-#p_filepath_workspace = paste(directory_r, directory_files, sep="/")
-#p_filenames_profiler = filenames_profiler
+directory_files <- "2025_03_08_scalability_layers"
+pdf_output_name <- "2025_03_08_scalability_layers"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -62,14 +57,20 @@ source("../0_profiler_layers_support.R")
 n_experiments_active = 5
 random_seeds = c("0", "1", "2", "3", "4")[1:n_experiments_active]
 
-if (directory_files == "2025_03_07_scalability_deliberation")
+if (directory_files == "2025_03_08_scalability_layers")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "1.2 rigid-habits-infected", "1.4 DCSD-1-leisure-habits", 
+  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "1.2 rigid-habits-infected", "1.4 DCSD-1-leisure-habits",
                                                       "2.2 DCSD-2-obligation-constraint", "3.1 DCSD-3-rigid-norms", "3.3 DCSD-3",
                                                       "4.1 DCSD-4", "5.1 DCSD-5-optimisation"),
-                                                    c("350"),
-                                                    c("6"), random_seeds)
+                                                      c("350"), c("6"), random_seeds)
 }
+# No infections is excluded from this list, also the following is excluded:
+# "0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown" ,
+# "1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected", "1.3 DCSD-1",
+# "1.4 DCSD-1-leisure-habits", "2.1 DCSD-2", "2.2 DCSD-2-obligation-constraint",
+# "3.1 DCSD-3-rigid-norms", "3.2 DCSD-3-rigid-norms-lockdown", "3.3 DCSD-3",
+# "3.4 DCSD-3-lockdown", "4.1 DCSD-4",
+# "5.1 DCSD-5-optimisation", "5.2 DCSD-5-optimisation-lockdown")
 
 #--------------------------------------
 #---    LOAD ALL PROFILER DATA      ---
