@@ -1,0 +1,58 @@
+Original ASSOCC
+------------------------------------------
+SELECT-ACTIVITY                   240233  96583.818    571.129      0.002
+SELECT-ACTIVITY                   240203  96106.924    564.216      0.002
+SELECT-ACTIVITY                   240511  95951.445    562.104      0.002
+SELECT-ACTIVITY                   239762  95554.549    559.862      0.002
+SELECT-ACTIVITY                   240257  95855.908    558.762      0.002
+
+Mean (96583.818 + 96106.924 + 95951.445 + 95554.549 + 95855.908) = 96010.5288
+
+DCSD ASSOCCC: Non mouth mask results
+------------------------------------------
+CONTEXT-SELECT-ACTIVITY           240340   5629.542    307.539      0.001
+CONTEXT-SELECT-ACTIVITY           240385   5934.996    303.363      0.001
+CONTEXT-SELECT-ACTIVITY           240420   5803.689    304.349      0.001
+CONTEXT-SELECT-ACTIVITY           240023   5604.592    308.056      0.001
+CONTEXT-SELECT-ACTIVITY           240618   5834.005    310.119      0.001
+
+Mean (5629.542 + 5934.996 + 5803.689 + 5604.592 + 5834.005) = 5761.3648 ms
+
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2200    969.320     15.065      0.007
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2593   1160.383     17.569      0.007
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2582   1162.110     17.516      0.007
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2308   1028.583     16.002      0.007
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2649   1187.259     18.381      0.007
+
+Mean (969.320 + 1160.383 + 1162.110 + 1028.583 + 1187.259) = 1101.531 ms
+
+DCSD mean: 5761.3648 - 1101.531 = 4659.8338 ms
+
+DCSD ASSOCCC: Mouth mask results
+------------------------------------------
+CONTEXT-SELECT-ACTIVITY           240395   6814.435    316.312      0.001
+CONTEXT-SELECT-ACTIVITY           240535   6131.837    302.120      0.001
+CONTEXT-SELECT-ACTIVITY           240432   6001.333    291.663      0.001
+CONTEXT-SELECT-ACTIVITY           240482   5897.072    291.179      0.001
+CONTEXT-SELECT-ACTIVITY           240443   6018.410    292.100      0.001
+
+Mean (6814.435 + 6131.837 + 6001.333 + 5897.072 + 6018.410) = 6172.6174 ms
+
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2188   1239.213     24.375      0.011
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2514   1147.748     19.816      0.008
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2541   1159.019     19.387      0.008
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2389   1055.511     17.302      0.007
+MY-PREFERRED-AVAILABLE-ACTIVITY-DESCRIPTOR      2586   1154.235     17.941      0.007
+
+Mean (1239.213 + 1147.748 + 1159.019 + 1055.511 + 1154.235) = 1151.1452 ms
+
+DCSD mean: 6172.6174 - 1151.1452 = 5021.4722 ms
+
+Discussion:
+We tested what would happen if an calculation is added to represent the calculation of mouth masks. To do this we added the social distancing calculation again, it is assumed that with such a calculation applying mouth masks could be calculated as well. The deliberation time of purely the DCSD increases by 7.7\%. The mean deliberation execution time of DCSD goes from 4659.8 ms to 5021.4 ms (when comparing with five runs). Then we have to account for the need-based deliberation that takes at least double the time 2302.3 ms (1151.1452 * 2), since the need-based deliberation was not adjusted. Adding these values 5021.4 for DCSD execution time and 2302.3 for need-based deliberation time gives us 7323.7 ms as hypothetical deliberation execution time. 
+
+This means that in the deliberation in DCSD ASSOCC, assuming that we
+
+Mean while Original ASSOCC takes 96010.5 ms for deliberation without mouthmasks. If we were to add the mouth mask sub action, it would at least double the deliberation execution time (if no hard cut outs are made, e.g. inside of home an agent does not wear a mouth mask so that action is removed). Doubling the deliberation execution time would mean 192021 ms, or 19.2 seconds for deliberation with Original ASSOCC in such a scenario.
+
+Comparing DCSD and Original ASSOCC, while first there was a speed-up of 16.7 times (96010.5288/5761.3648). Now we calculate the speed-up by dividing 192021 by 7323.7, the speed-up is 26.2, which is much more than before. This shows that DCSD can potentially scale even better when the original model has even more deliberative aspects such as actions, but this would also work for needs.

@@ -18,6 +18,9 @@ globals [
   global-deliberation-time
   action_saving_table ; This was only used to save all the actions taken by agents into a table
   context-day-time
+
+  ce-actions-available-total
+  ce-actions-available-count
 ]
 
 to go-profile
@@ -1670,7 +1673,7 @@ days-of-rations-bought
 days-of-rations-bought
 1
 28
-4.0
+3.0
 1
 1
 NIL
@@ -1944,8 +1947,8 @@ PENS
 PLOT
 1131
 511
-1680
-812
+1698
+831
 Activities
 NIL
 NIL
@@ -3439,7 +3442,7 @@ SWITCH
 1456
 food-delivered-to-isolators?
 food-delivered-to-isolators?
-0
+1
 1
 -1000
 
@@ -3485,7 +3488,7 @@ ratio-self-quarantining-when-a-family-member-is-symptomatic
 ratio-self-quarantining-when-a-family-member-is-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -3498,7 +3501,7 @@ SWITCH
 1362
 is-infected-and-their-families-requested-to-stay-at-home?
 is-infected-and-their-families-requested-to-stay-at-home?
-0
+1
 1
 -1000
 
@@ -3509,7 +3512,7 @@ SWITCH
 1362
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
 all-self-isolate-for-35-days-when-first-hitting-2%-infected?
-0
+1
 1
 -1000
 
@@ -3552,7 +3555,7 @@ ratio-self-quarantining-when-symptomatic
 ratio-self-quarantining-when-symptomatic
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -4434,7 +4437,7 @@ SWITCH
 390
 ce-enable-global-lockdown
 ce-enable-global-lockdown
-0
+1
 1
 -1000
 
@@ -4489,7 +4492,7 @@ SWITCH
 332
 ce-enable-salient-food-luxury-forced-obligation
 ce-enable-salient-food-luxury-forced-obligation
-0
+1
 1
 -1000
 
@@ -4584,7 +4587,7 @@ CHOOSER
 ce-context-depth
 ce-context-depth
 -1 0 1 2 3 4 5
-6
+1
 
 SWITCH
 1225
@@ -4864,7 +4867,7 @@ SWITCH
 502
 ce-leisure-habits
 ce-leisure-habits
-0
+1
 1
 -1000
 
@@ -4896,7 +4899,7 @@ SWITCH
 502
 ce-only-obligation-when-health-riskfree-enough
 ce-only-obligation-when-health-riskfree-enough
-0
+1
 1
 -1000
 
@@ -4918,7 +4921,7 @@ SWITCH
 502
 ce-more-likely-to-essential-shop
 ce-more-likely-to-essential-shop
-0
+1
 1
 -1000
 
@@ -4940,7 +4943,7 @@ CHOOSER
 ce-context-experiment-presets
 ce-context-experiment-presets
 "no-presets" "1.1 rigid-habits-no-infected" "1.2 rigid-habits-infected" "1.3 DCSD-1" "1.4 DCSD-1-leisure-habits" "2.1 DCSD-2" "2.2 DCSD-2-obligation-constraint" "3.1 DCSD-3-rigid-norms" "3.2 DCSD-3-rigid-norms-lockdown" "3.3 DCSD-3" "3.4 DCSD-3-lockdown" "4.1 DCSD-4" "5.0 DCSD-5-optimisation-no-infections" "5.1 DCSD-5-optimisation" "5.2 DCSD-5-optimisation-lockdown" "0.0 Original ASSOCC-no-infections" "0.1 Original ASSOCC" "0.2 Original ASSOCC-lockdown"
-14
+16
 
 INPUTBOX
 322
@@ -4948,7 +4951,7 @@ INPUTBOX
 448
 531
 stop-before-tick
-481.0
+241.0
 1
 0
 Number
@@ -5049,6 +5052,17 @@ PENS
 "Leisure" 1.0 0 -955883 true "" "plot criteria_recently_leisure"
 "Grocery" 1.0 0 -5825686 true "" "plot criteria_recently_ess_shopping"
 "Luxury" 1.0 0 -8431303 true "" "plot criteria_recently_non_ess_shopping"
+
+SWITCH
+1206
+356
+1410
+389
+ce-testing-action-disabled?
+ce-testing-action-disabled?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -6256,6 +6270,9 @@ if #households &gt; 500 [ set ce-log-agent-id ([who] of one-of children) ]</setu
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-action-space">
       <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="ce-testing-action-disabled?">
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="ce-need-salient-threshold">
       <value value="0.5"/>

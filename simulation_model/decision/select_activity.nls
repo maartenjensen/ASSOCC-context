@@ -76,7 +76,7 @@ to-report my-available-activity-descriptors
   [
     set ret filter [[x] -> location-of x = my-home] ret
   ]
-
+  
   report ret
 end
 
@@ -133,7 +133,8 @@ to-report my-available-activity-descriptors-action-space
     ]
   ]
 
-  set activities lput (list my-hospital "get-tested") activities
+  if (not ce-testing-action-disabled?) 
+  [ set activities lput (list my-hospital "get-tested") activities ]
   set activities filter [ i -> [is-accessible?] of first i] activities
 
   ;show [gathering-type] of (turtle-set map [ad -> first ad] activities)
@@ -158,7 +159,9 @@ to-report my-available-activity-descriptors-action-space
   [
     set ret filter [[x] -> location-of x = my-home] ret
   ]
-
+  if ce-log-agent and who = ce-log-agent-id [ print length(ret) ] ; Added by Maarten
+  set ce-actions-available-total (ce-actions-available-total + length(ret))
+  set ce-actions-available-count (ce-actions-available-count + 1)
   report ret
 end
 

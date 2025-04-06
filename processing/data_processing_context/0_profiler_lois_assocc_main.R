@@ -42,8 +42,8 @@ plot_type <- "one"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
-directory_files <- "2025_02_13_scalability_lvanhee"
-pdf_output_name <- "2025_02_13_scalability_lvanhee"
+directory_files <- "2025_04_01_scalability_lvanhee"
+pdf_output_name <- "2025_04_01_scalability_lvanhee"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -58,7 +58,7 @@ n_experiments_active = 1
 random_seeds = c("2")[1:n_experiments_active]
 
 
-if (directory_files == "2025_02_13_scalability_lvanhee")
+if (directory_files == "2025_04_01_scalability_lvanhee")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("profiler_lvanhee"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
@@ -128,7 +128,16 @@ df_time_original_assocc
 # SELECT ACTIVITY
 #==============================================
 df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
+
+# Rename preset
+df_p_overview_mean_CONTEXT_SELECT_ACTIVITY$preset <- c("Deliberation Time", "Deliberation Time", "Deliberation Time", 
+                                                       "Deliberation Time", "Deliberation Time", "Deliberation Time")
+
+
 plot_time_comparison_deliberation(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, pdf_output_name, n_experiments_active, plot_type)
+
+
+
 
 #== Data Printing ==
 

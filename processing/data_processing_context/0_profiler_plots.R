@@ -34,6 +34,32 @@ plot_time_comparison_deliberation <- function(df_p_overview_mean_CONTEXT_SELECT_
   else { show(p) }
 }
 
+
+# Deliberation
+plot_time_comparison_deliberation_original <- function(df_p_overview_mean_ORIGINAL, directory_files, n_experiments_active, plot_type) {
+  
+  p <- ggplot(df_p_overview_mean_ORIGINAL, aes(x = agents, y = incl_t_ms, 
+                                                              color = preset,
+                                                              fill = preset,
+                                                              linetype = preset)) +
+    geom_line(linewidth = 1.2) +
+    geom_point(size = 2.5, show.legend = FALSE) +
+    labs(title = paste("Execution time comparison of Deliberation (n = 1)", sep = ""),
+         x = "Agents at start",
+         y = "Incl execution time (ms)",
+         color = "Model",
+         fill = "Model",
+         linetype = "Model")
+  
+  p <- p + theme_bw() +
+    theme(legend.position="bottom", text = element_text(size=16)) + 
+    guides(fill=guide_legend(nrow=1, byrow=TRUE), linetype = guide_legend(nrow = 1, byrow = TRUE)) +
+    coord_cartesian(ylim = c(0, 6400000))
+  
+  if (plot_type == "one") { safe_to_pdf(paste("plot_", directory_files, "_comparison_deliberation_original.pdf", sep=""), p) }
+  else { show(p) }
+}
+
 # GO
 plot_time_comparison_go <- function(df_p_overview_mean_GO, directory_files, n_experiments_active, plot_type) {
   

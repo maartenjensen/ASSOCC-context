@@ -41,11 +41,9 @@ plot_type <- "one"
 #plot_type <- "all"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
-directory_files <- "2024_12_07_scalability_wh_autonomy"
-pdf_output_name <- "2024_12_07_scalability"
 
-directory_files <- "2025_01_23_scalability_final"
-pdf_output_name <- "2025_01_23_scalability_final"
+directory_files <- "2025_03_30_scalability_final"
+pdf_output_name <- "2025_03_30_scalability_final"
 
 #p_filepath_workspace = paste(directory_r, directory_files, sep="/")
 #p_filenames_profiler = filenames_profiler
@@ -76,7 +74,7 @@ if (directory_files == "2025_01_18_realism_full_0")
                                                     c("6"), random_seeds)
 }
 
-if (directory_files == "2025_01_23_scalability_final")
+if (directory_files == "2025_03_30_scalability_final")
 {
   filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "5.1 DCSD-5-optimisation"),
                                                     c("350", "700", "1400", "2100", "2800", "3500"),
@@ -115,6 +113,11 @@ source("../0_profiler_plots.R")
 #==============================================
 df_p_overview_mean_CONTEXT_SELECT_ACTIVITY <- df_p_overview_mean[df_p_overview_mean$function_name == "CONTEXT-SELECT-ACTIVITY", ]
 plot_time_comparison_deliberation(df_p_overview_mean_CONTEXT_SELECT_ACTIVITY, pdf_output_name, n_experiments_active, plot_type)
+
+df_p_overview_mean_ORIGINAL <- df_p_overview[df_p_overview$random_seed == 2 & df_p_overview$function_name == "CONTEXT-SELECT-ACTIVITY" &
+                                               df_p_overview$preset == "0.1 Original ASSOCC", ]
+
+plot_time_comparison_deliberation_original(df_p_overview_mean_ORIGINAL, pdf_output_name, n_experiments_active, plot_type)
 
 #== Data Printing ==
 

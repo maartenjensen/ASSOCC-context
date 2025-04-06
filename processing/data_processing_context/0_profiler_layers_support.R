@@ -1,5 +1,7 @@
 profilerLoadData <- function(p_filepath_workspace, p_filenames_profiler) {
   
+  # If there is a warning with 'names' attribute [10] must be the same length as the vector [9]
+  # The bug is in profilerGetContextDepth(), where the preset should be added
   # p_filepath_workspace = paste(directory_r, directory_files, sep="/")
   # p_filenames_profiler = filenames_profiler
   
@@ -251,11 +253,17 @@ profilerGetContextDepth <- function(p_preset) {
   else if (p_preset == "4.1 DCSD-4") {
     return(4)
   }
+  else if (p_preset == "5.0 DCSD-5-optimisation-no-infections") {
+    return(5)
+  }
   else if (p_preset == "5.1 DCSD-5-optimisation") {
     return(5)
   }
   else if (p_preset == "5.2 DCSD-5-optimisation-lockdown") {
     return(5)
+  }
+  else if (p_preset == "0.0 Original ASSOCC-no-infections") {
+    return(0)
   }
   else if (p_preset == "0.1 Original ASSOCC") {
     return(0)

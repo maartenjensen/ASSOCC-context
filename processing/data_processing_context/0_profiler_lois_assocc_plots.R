@@ -19,7 +19,7 @@ plot_time_comparison_deliberation <- function(df_p_overview_mean_CONTEXT_SELECT_
                                                               linetype = preset)) +
     geom_line(linewidth = 1.2) +
     geom_point(size = 2.5, show.legend = FALSE) +
-    labs(title = paste("Execution time comparison of Deliberation (n = ", n_experiments_active, ")", sep = ""),
+    labs(title = paste("Deliberation Execution Time in ASSOCC (n = ", n_experiments_active, ")", sep = ""),
          x = "Agents at start",
          y = "Incl execution time (ms)",
          color = "Model",

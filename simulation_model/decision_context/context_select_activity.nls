@@ -23,6 +23,9 @@ to context-init-variables
   
   set need-critical-threshold 0.4
   set table-profiler-salient-needs table:make
+  
+  set ce-actions-available-total 0
+  set ce-actions-available-count 0
 end
 
 to context-habits-init-variables

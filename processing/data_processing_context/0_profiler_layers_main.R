@@ -42,8 +42,8 @@ plot_type <- "one"
 
 directory_r <- "D:/SimulationToolkits/ASSOCC-context/processing/data_processing_context"
 
-directory_files <- "2025_03_08_scalability_layers"
-pdf_output_name <- "2025_03_08_scalability_layers"
+directory_files <- "2025_03_30_scalability_layers"
+pdf_output_name <- "2025_03_30_scalability_layers"
 
 #--- WORKSPACE AND DIRECTORY ---
 #-   CHANGE DIRECTORY   -
@@ -57,14 +57,29 @@ source("../0_profiler_layers_support.R")
 n_experiments_active = 5
 random_seeds = c("0", "1", "2", "3", "4")[1:n_experiments_active]
 
-if (directory_files == "2025_03_08_scalability_layers")
+if (directory_files == "2025_03_30_scalability_layers")
 {
-  filenames_profiler <- retrieve_filenames_profiler(c("0.1 Original ASSOCC", "1.2 rigid-habits-infected", "1.4 DCSD-1-leisure-habits",
-                                                      "2.2 DCSD-2-obligation-constraint", "3.1 DCSD-3-rigid-norms", "3.3 DCSD-3",
-                                                      "4.1 DCSD-4", "5.1 DCSD-5-optimisation"),
+  filenames_profiler <- retrieve_filenames_profiler(c("0.0 Original ASSOCC-no-infections", "0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown",
+                                                      "0.1 Original ASSOCC", "1.4 DCSD-1-leisure-habits",
+                                                      "2.2 DCSD-2-obligation-constraint", "3.3 DCSD-3",
+                                                      "4.1 DCSD-4", "5.0 DCSD-5-optimisation-no-infections", 
+                                                      "5.1 DCSD-5-optimisation", "5.2 DCSD-5-optimisation-lockdown"),
                                                       c("350"), c("6"), random_seeds)
 }
+
+
+if (directory_files == "2025_03_30_scalability_layers")
+{
+  filenames_profiler <- retrieve_filenames_profiler(c("0.0 Original ASSOCC-no-infections", "0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown",
+                                                      "0.1 Original ASSOCC", "1.4 DCSD-1-leisure-habits",
+                                                      "2.2 DCSD-2-obligation-constraint", "3.3 DCSD-3",
+                                                      "4.1 DCSD-4", "5.0 DCSD-5-optimisation-no-infections", 
+                                                      "5.1 DCSD-5-optimisation", "5.2 DCSD-5-optimisation-lockdown"),
+                                                    c("350"), c("6"), random_seeds)
+}
+
 # No infections is excluded from this list, also the following is excluded:
+# "0.0 Original ASSOCC-no-infections"
 # "0.1 Original ASSOCC", "0.2 Original ASSOCC-lockdown" ,
 # "1.1 rigid-habits-no-infected", "1.2 rigid-habits-infected", "1.3 DCSD-1",
 # "1.4 DCSD-1-leisure-habits", "2.1 DCSD-2", "2.2 DCSD-2-obligation-constraint",
@@ -98,24 +113,20 @@ baseline_01_delib_time <- df_p_overview_mean[df_p_overview_mean$preset=="0.1 Ori
 #\begin{tabular}{ll|lll}
 #\textbf{Agents} & \textbf{Households} & \textbf{\begin{tabular}[c]{@{}l@{}}Original\\ ASSOCC\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}DCSD\\ ASSOCC\end{tabular}} & \textbf{Speed-up factor} \\ \hline
 #\textbf{\begin{tabular}[c]{@{}l@{}}DCSD\\ ASSOCC\end{tabular}} & \textbf{Speed-up factor} \\ \hline
-for (i in 1:8) { # Per three
+for (i in 1:10) { # Per three
   row_select_activity <- df_p_overview_mean[(i-1) * 3 + 1, ]
   row_need_based      <- df_p_overview_mean[(i-1) * 3 + 2, ]
   current_preset      <- row_select_activity$preset
   current_delib_time  <- row_select_activity$incl_t_ms_mean
   current_speed_up    <- baseline_01_delib_time / row_select_activity$incl_t_ms_mean
+  current_percentage_of_baseline_delib_time <-  round((row_select_activity$incl_t_ms_mean / baseline_01_delib_time) * 100, 1)
   current_need_calls_percentage <- (row_need_based$calls_mean/row_select_activity$calls_mean) * 100
   current_dcsd_calls_percentage <- round(100 - current_need_calls_percentage, 2)
   current_need_calls_percentage <- round(current_need_calls_percentage, 2)
   if (current_preset == "0.1 Original ASSOCC") { current_dcsd_calls_percentage = "-" }
     
-  if (current_preset != "1.2 rigid-habits-infected") {
-    cat(current_preset, "&", round(current_delib_time, 1), "ms &", round(current_speed_up, 1), "&", current_dcsd_calls_percentage, 
-        "\\% &", current_need_calls_percentage , "\\% \\\\ \n")
-  }
-  else { # Rigid habits
-    cat(current_preset, "&", round(current_delib_time, 1), "ms &", round(current_speed_up, 1), "&", "-" , "&", "-", "\\\\ \n")
-  }
+  cat(current_preset, "&", round(current_delib_time, 1), "ms &", round(current_speed_up, 1), "&", current_percentage_of_baseline_delib_time,
+        "\\% &", current_dcsd_calls_percentage, "\\% &", current_need_calls_percentage , "\\% \\\\ \n")
 }
 
 #cat(df_speed_up$agents[i], "&", round(df_speed_up$incl_t_original_assocc[i], digits = 0), "ms &",
