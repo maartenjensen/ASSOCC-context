@@ -11,3 +11,4 @@ tmp_*.csv
 *.csv
 *.pdf
 *.RData
+!country-specific-data.csv
